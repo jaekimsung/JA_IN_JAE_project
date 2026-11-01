@@ -1,0 +1,34 @@
+Warning: Ambiguity in turnarounds computation at junction '112'.
+Warning: Ambiguity in turnarounds computation at junction '176'.
+Warning: Ambiguity in turnarounds computation at junction '477'.
+Warning: Ambiguity in turnarounds computation at junction '747'.
+Warning: Found sharp turn with radius 6.15 at the end of edge '-15'.
+Warning: Found sharp turn with radius 3.12 at the end of edge '-19'.
+Warning: Found sharp turn with radius 8.22 at the start of edge '-86'.
+Warning: Found sharp turn with radius 6.15 at the start of edge '15'.
+Warning: Found sharp turn with radius 3.12 at the start of edge '19'.
+Warning: Lane '-3#2_0' is not connected from any incoming edge at junction '3#2'.
+Warning: Lane '-36#1_1' is not connected from any incoming edge at junction '36#1'.
+Warning: Lane '-41_0' is not connected from any incoming edge at junction '662'.
+Warning: Lane '3#6_0' is not connected from any incoming edge at junction '3#7'.
+Warning: Lane '66_1' is not connected from any incoming edge at junction '537'.
+Warning: Intersecting left turns at junction '112' from lane '-75_0' and lane '-14_0' (increase junction radius to avoid this).
+Warning: Intersecting left turns at junction '112' from lane '44_0' and lane '-45_0' (increase junction radius to avoid this).
+Warning: Intersecting left turns at junction '112' from lane '44_0' and lane '-14_0' (increase junction radius to avoid this).
+Warning: Intersecting left turns at junction '112' from lane '44_0' and lane '-14_0' (increase junction radius to avoid this).
+Warning: Intersecting left turns at junction '176' from lane '45_0' and lane '-64_0' (increase junction radius to avoid this).
+Warning: Custom shape has distance 8.64 to outgoing lane for connection 45_0->64_0.
+Warning: Custom shape has distance 29.39 to outgoing lane for connection 10_0->85_0.
+Warning: Custom shape has distance 29.39 to outgoing lane for connection 58_0->85_0.
+Warning: Custom shape has distance 30.99 to incoming lane for connection -85_0->-58_0.
+Warning: Custom shape has distance 30.99 to incoming lane for connection -85_0->-10_0.
+Warning: Speed of straight connection '71_0->13_0' reduced by 6.39 due to turning radius of 23.99 (length=21.45, angle=68.17).
+Warning: Speed of straight connection '-43_0->-15_0' reduced by 5.23 due to turning radius of 29.08 (length=13.40, angle=42.22).
+Warning: Custom shape has distance 4.52 to outgoing lane for connection -15_0->-22_0.
+Warning: Custom shape has distance 4.57 to incoming lane for connection 22_0->15_0.
+Warning: Custom shape has distance 6.88 to incoming lane for connection -17_0->-59_0.
+Warning: Speed of straight connection '-17_0->-59_0' reduced by 8.89 due to turning radius of 14.70 (length=15.13, angle=77.73).
+Warning: Custom shape has distance 9.48 to incoming lane for connection -77_0->-54_0.
+Warning: Speed of straight connection '-77_0->-54_0' reduced by 9.45 due to turning radius of 12.93 (length=12.85, angle=76.08).
+Warning: Custom shape has distance 12.26 to outgoing lane for connection 54_0->77_0.
+Warning: 15 total messages of type: Intersecting left turns at junction '%' from lane '%' and lane '%' (increase junction radius to avoid this).

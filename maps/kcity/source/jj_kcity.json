@@ -1,0 +1,20 @@
+{
+  "href": "https://services.arcgisonline.com/arcgis/rest/directories/arcgisoutput/World_Imagery_MapServer/_ags_map072976546cce4a2ab0b4971f400f5efb.jpg",
+  "width": 2048,
+  "height": 1741,
+  "extent": {
+    "xmin": 126.76299999999996,
+    "ymin": 37.2299990234375,
+    "xmax": 126.78299999999996,
+    "ymax": 37.2470009765625,
+    "spatialReference": {
+      "wkid": 4326,
+      "latestWkid": 4326
+    }
+  },
+  "scale": 4108.732830497164,
+  "request_url": "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox=126.763%2C37.23%2C126.783%2C37.247&bboxSR=4326&imageSR=4326&size=2048%2C1741&format=jpg&f=pjson",
+  "attribution": "Source: Esri, Vantor, Earthstar Geographics, and the GIS User Community",
+  "downloaded_utc": "2026-09-11T17:26:24Z",
+  "area": "kcity"
+}

@@ -1,0 +1,8 @@
+# Build/audit only. SUMO 1.28.0 and its bundled traci/sumolib tools are required separately.
+numpy
+networkx
+PyYAML
+pyproj
+scipy
+matplotlib
+Pillow

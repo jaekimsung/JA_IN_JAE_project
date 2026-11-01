@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<nodes>
+  <node id="112" x="-96.1" y="1.68" type="allway_stop" />
+  <node id="176" x="-97.27" y="120.36" type="allway_stop" />
+  <node id="477" x="121.79" y="-147.57" type="allway_stop" />
+  <node id="747" x="91.72" y="-235.04" type="allway_stop" />
+</nodes>

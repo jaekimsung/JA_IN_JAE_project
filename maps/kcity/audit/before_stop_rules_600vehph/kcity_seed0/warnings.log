@@ -1,0 +1,4 @@
+Warning: Vehicle 'hv_058' performs emergency braking on lane ':655_1_0' with decel=8.00, wished=4.50, severity=1.00, time=361.60.
+Warning: Vehicle 'hv_045' performs emergency braking on lane '-44_0' with decel=8.00, wished=4.50, severity=1.00, time=390.80.
+Warning: Vehicle 'hv_073' performs emergency braking on lane ':780_9_0' with decel=8.00, wished=4.50, severity=1.00, time=501.30.
+Warning: Vehicle 'hv_162' performs emergency braking on lane '83_0' with decel=8.00, wished=4.50, severity=1.00, time=1074.80.
