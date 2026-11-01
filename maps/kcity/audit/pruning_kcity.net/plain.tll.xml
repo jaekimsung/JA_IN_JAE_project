@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2026-11-01T17:26:54.615003+09:00 by Eclipse SUMO netconvert 1.28.0
+<netconvertConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <input>
+        <sumo-net-file value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.net.xml"/>
+    </input>
+
+    <output>
+        <plain-output-prefix value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/audit/pruning_kcity.net/plain"/>
+        <plain-output.lanes value="true"/>
+    </output>
+
+    <processing>
+        <geometry.min-radius.fix.railways value="false"/>
+        <geometry.avoid-overlap value="false"/>
+        <geometry.max-grade.fix value="false"/>
+        <offset.disable-normalization value="true"/>
+    </processing>
+
+    <junctions>
+        <no-turnarounds value="true"/>
+        <rectangular-lane-cut value="1"/>
+    </junctions>
+
+</netconvertConfiguration>
+-->
+
+<tlLogics version="1.20" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tllogic_file.xsd">
+    <tlLogic id="169" type="static" programID="0" offset="0">
+        <phase duration="20" state="GGGgrr"/>
+        <phase duration="3"  state="yyyyrr"/>
+        <phase duration="2"  state="rrrrrr"/>
+        <phase duration="20" state="GrrrGG"/>
+        <phase duration="3"  state="yrrryy"/>
+        <phase duration="2"  state="rrrrrr"/>
+    </tlLogic>
+    <tlLogic id="268" type="static" programID="0" offset="0">
+        <phase duration="20" state="GGgrrrGGgrrr"/>
+        <phase duration="3"  state="yyyrrryyyrrr"/>
+        <phase duration="2"  state="rrrrrrrrrrrr"/>
+        <phase duration="20" state="rrrGGgrrrGGg"/>
+        <phase duration="3"  state="rrryyyrrryyy"/>
+        <phase duration="2"  state="rrrrrrrrrrrr"/>
+    </tlLogic>
+
+    <connection from="-0" to="-77" fromLane="0" toLane="0" tl="169" linkIndex="4">
+        <param key="origId" value="172_-1"/>
+    </connection>
+    <connection from="-0" to="42" fromLane="0" toLane="0" tl="169" linkIndex="5">
+        <param key="origId" value="170_-1"/>
+    </connection>
+    <connection from="-42" to="0" fromLane="0" toLane="0" tl="169" linkIndex="0">
+        <param key="origId" value="171_-1"/>
+    </connection>
+    <connection from="-42" to="-77" fromLane="0" toLane="0" tl="169" linkIndex="1">
+        <param key="origId" value="174_-1"/>
+    </connection>
+    <connection from="-65" to="-31" fromLane="0" toLane="0" tl="268" linkIndex="6">
+        <param key="origId" value="282_-1"/>
+    </connection>
+    <connection from="-65" to="-36#0" fromLane="0" toLane="1" tl="268" linkIndex="7">
+        <param key="origId" value="277_-1"/>
+    </connection>
+    <connection from="-65" to="71" fromLane="0" toLane="0" tl="268" linkIndex="8">
+        <param key="origId" value="272_-1"/>
+    </connection>
+    <connection from="-71" to="65" fromLane="0" toLane="0" tl="268" linkIndex="9">
+        <param key="origId" value="271_-1"/>
+    </connection>
+    <connection from="-71" to="-31" fromLane="0" toLane="0" tl="268" linkIndex="10">
+        <param key="origId" value="275_-1"/>
+    </connection>
+    <connection from="-71" to="-36#0" fromLane="0" toLane="1" tl="268" linkIndex="11">
+        <param key="origId" value="269_-1"/>
+    </connection>
+    <connection from="31" to="-36#0" fromLane="0" toLane="0" tl="268" linkIndex="3">
+        <param key="origId" value="281_1"/>
+    </connection>
+    <connection from="31" to="71" fromLane="0" toLane="0" tl="268" linkIndex="4">
+        <param key="origId" value="273_1"/>
+    </connection>
+    <connection from="31" to="65" fromLane="0" toLane="0" tl="268" linkIndex="5">
+        <param key="origId" value="284_1"/>
+    </connection>
+    <connection from="36#0" to="71" fromLane="0" toLane="0" tl="268" linkIndex="0">
+        <param key="origId" value="270_1"/>
+    </connection>
+    <connection from="36#0" to="65" fromLane="0" toLane="0" tl="268" linkIndex="1">
+        <param key="origId" value="278_1"/>
+    </connection>
+    <connection from="36#0" to="-31" fromLane="0" toLane="0" tl="268" linkIndex="2">
+        <param key="origId" value="279_1"/>
+    </connection>
+    <connection from="77" to="42" fromLane="0" toLane="0" tl="169" linkIndex="2">
+        <param key="origId" value="175_1"/>
+    </connection>
+    <connection from="77" to="0" fromLane="0" toLane="0" tl="169" linkIndex="3">
+        <param key="origId" value="173_1"/>
+    </connection>
+</tlLogics>

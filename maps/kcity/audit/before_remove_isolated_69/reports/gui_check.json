@@ -1,0 +1,20 @@
+{
+  "simulation_time": 60.1,
+  "vehicles": 12,
+  "screenshot": "sumo_gui.png",
+  "version": [
+    22,
+    "SUMO 1.28.0"
+  ],
+  "boundary": [
+    [
+      -750.9076433121019,
+      -595.4166666666666
+    ],
+    [
+      750.9076433121019,
+      595.4166666666666
+    ]
+  ],
+  "aerial_settings_loaded": true
+}

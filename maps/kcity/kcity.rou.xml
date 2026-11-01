@@ -162,7 +162,6 @@
   <route id="coverage_154" edges="20 27 -53 24 66 -38 41 -70 -25 23 26 20" />
   <route id="coverage_155" edges="2 67 -70 -25 64 2" />
   <route id="coverage_156" edges="-23 25 70 -41 -55 -58 13 68 -9 33 -13 58 55 -74 -75 14 64 2" />
-  <route id="coverage_157" edges="69" />
   <route id="coverage_158" edges="-30 -60 -85 -10 -61 -38 -74 -28 -78 -76 -82 -83 70 -41 -74 -75 -30" />
   <route id="coverage_159" edges="58 -10 1 36#2 36#1 36#0 71 13 -33 9 -68 -13 58" />
   <route id="coverage_160" edges="23 26 20 27 -53 24 -35 -70 83 82 72 40 -83 -25 23" />
@@ -341,7 +340,6 @@
   <vehicle id="hv_154" type="hv_EIDM" route="coverage_154" depart="924.0" departLane="best" departSpeed="0" />
   <vehicle id="hv_155" type="hv_ACC" route="coverage_155" depart="930.0" departLane="best" departSpeed="0" />
   <vehicle id="hv_156" type="hv_Krauss" route="coverage_156" depart="936.0" departLane="best" departSpeed="0" />
-  <vehicle id="hv_157" type="hv_IDM" route="coverage_157" depart="942.0" departLane="best" departSpeed="0" />
   <vehicle id="hv_158" type="hv_EIDM" route="coverage_158" depart="948.0" departLane="best" departSpeed="0" />
   <vehicle id="hv_159" type="hv_ACC" route="coverage_159" depart="954.0" departLane="best" departSpeed="0" />
   <vehicle id="hv_160" type="hv_Krauss" route="coverage_160" depart="960.0" departLane="best" departSpeed="0" />

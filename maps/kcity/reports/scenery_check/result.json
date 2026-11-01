@@ -1,0 +1,18 @@
+{
+  "seed": 0,
+  "arrived": 177,
+  "tripinfo_attributes_identical": true,
+  "traffic_file_hashes_unchanged": {
+    "kcity.net.xml": "cfc9be136736b5f5e7874fce34992e90f9ac7d8d76422a7f67a27e2deb3e4894",
+    "kcity.reference.net.xml": "156f4b53035b8293211a884337f1ec8eb30b8e3f74b004937a2a1f084be520f3",
+    "kcity.rou.xml": "dfb35f886fa2b5b669109122e50666e1a784d47e938cdbf0fd817e429756a2db",
+    "kcity.signals.add.xml": "0643c2047f47f032ad0f88fc2fea1dda5f9c49e93f4d3e24cc438ba1a2616489"
+  },
+  "gui_polygons": 2957,
+  "gui_signals": 14,
+  "gui_vehicles_at_60_seconds": 12,
+  "screenshots": [
+    "scenery_overview.png",
+    "scenery_detail.png"
+  ]
+}

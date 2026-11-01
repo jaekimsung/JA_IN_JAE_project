@@ -1,0 +1,8 @@
+Warning: Environment variable SUMO_HOME is not set properly, disabling XML validation. Set 'auto' or 'always' for web lookups.
+Warning: Vehicle 'hv_021' performs emergency braking on lane '24_0' with decel=8.00, wished=4.50, severity=1.00, time=288.00.
+Warning: Vehicle 'hv_069' performs emergency braking on lane '-70_0' with decel=8.00, wished=4.50, severity=1.00, time=640.80.
+Warning: Vehicle 'hv_069' performs emergency braking on lane ':655_1_0' with decel=8.00, wished=4.50, severity=1.00, time=655.20.
+Warning: Vehicle 'hv_093' performs emergency braking on lane '-55_1' with decel=8.00, wished=4.50, severity=1.00, time=700.00.
+Warning: Vehicle 'hv_105' performs emergency braking on lane '83_0' with decel=8.00, wished=4.50, severity=1.00, time=796.40.
+Warning: Vehicle 'hv_118' performs emergency braking on lane '49_0' with decel=8.00, wished=4.50, severity=1.00, time=850.60.
+Warning: Vehicle 'hv_166' performs emergency braking on lane ':89_1_0' with decel=8.00, wished=4.50, severity=1.00, time=1060.70.

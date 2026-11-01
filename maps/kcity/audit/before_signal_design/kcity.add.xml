@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<additional>
+  <poi id="START" x="-42.5" y="-395.3" color="0.95,0.55,0.05" type="CARLA reference marker" layer="10" />
+  <poi id="FINISH" x="-49.3" y="-391.4" color="0.95,0.55,0.05" type="CARLA reference marker" layer="10" />
+  <poi id="Q_STOP1" x="-18.6" y="-236.0" color="0.95,0.55,0.05" type="CARLA reference marker" layer="10" />
+  <poi id="Q_SIGNAL1" x="22.1804" y="-236.3491" color="0.95,0.55,0.05" type="CARLA reference marker" layer="10" />
+  <poi id="Q_STOP2" x="63.0" y="-258.2" color="0.95,0.55,0.05" type="CARLA reference marker" layer="10" />
+  <poi id="Q_SIGNAL2" x="58.0567" y="-297.7779" color="0.95,0.55,0.05" type="CARLA reference marker" layer="10" />
+</additional>

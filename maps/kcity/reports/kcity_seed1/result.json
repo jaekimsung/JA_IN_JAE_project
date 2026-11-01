@@ -1,18 +1,18 @@
 {
   "seed": 1,
   "profile": "kcity",
-  "simulated_seconds": 1278.1,
-  "wall_seconds": 6.215655093983514,
-  "departed": 178,
-  "arrived": 178,
+  "simulated_seconds": 1346.5,
+  "wall_seconds": 7.630724779010052,
+  "departed": 177,
+  "arrived": 177,
   "remaining_expected": 0,
   "running_at_end": [],
   "collided_vehicle_ids": [],
   "teleport_vehicle_ids": [],
   "collision_event_steps": 0,
   "events": [],
-  "peak_running": 33,
-  "peak_time_s": 318.1,
+  "peak_running": 45,
+  "peak_time_s": 648.1,
   "sampled_visited_edges": [
     "-0",
     "-1",
@@ -36,6 +36,9 @@
     "-28",
     "-29",
     "-3#0",
+    "-3#1",
+    "-3#2",
+    "-3#3",
     "-3#4",
     "-3#5",
     "-3#6",
@@ -46,7 +49,6 @@
     "-34",
     "-35",
     "-36#0",
-    "-36#1",
     "-36#2",
     "-38",
     "-39",
@@ -88,6 +90,7 @@
     "-77",
     "-78",
     "-79",
+    "-8",
     "-80",
     "-81",
     "-82",
@@ -118,9 +121,12 @@
     "27",
     "28",
     "3#0",
-    "3#3",
+    "3#1",
+    "3#2",
     "3#4",
+    "3#5",
     "3#6",
+    "3#7",
     "3#8",
     "30",
     "31",
@@ -160,7 +166,6 @@
     "66",
     "67",
     "68",
-    "69",
     "70",
     "71",
     "72",
@@ -181,51 +186,51 @@
     "88",
     "9"
   ],
-  "sampled_lane_changes": 43,
-  "max_continuous_wait_s": 54.3,
+  "sampled_lane_changes": 72,
+  "max_continuous_wait_s": 69.5,
   "longest_waits": [
     [
-      "hv_137",
+      "hv_012",
+      69.5
+    ],
+    [
+      "hv_059",
+      63.0
+    ],
+    [
+      "hv_055",
+      58.8
+    ],
+    [
+      "hv_077",
+      58.8
+    ],
+    [
+      "hv_031",
+      57.8
+    ],
+    [
+      "hv_060",
+      55.6
+    ],
+    [
+      "hv_119",
+      55.1
+    ],
+    [
+      "hv_067",
+      55.0
+    ],
+    [
+      "hv_072",
+      54.7
+    ],
+    [
+      "hv_083",
       54.3
-    ],
-    [
-      "hv_120",
-      53.0
-    ],
-    [
-      "hv_038",
-      51.3
-    ],
-    [
-      "hv_047",
-      35.6
-    ],
-    [
-      "hv_021",
-      33.8
-    ],
-    [
-      "hv_122",
-      28.6
-    ],
-    [
-      "hv_099",
-      27.7
-    ],
-    [
-      "hv_014",
-      27.2
-    ],
-    [
-      "hv_028",
-      27.1
-    ],
-    [
-      "hv_027",
-      25.8
     ]
   ],
-  "mean_trip_duration_s": 167.8893258426967,
+  "mean_trip_duration_s": 239.86327683615812,
   "completed_witness_targets": [
     "-0",
     "-1",
@@ -384,7 +389,6 @@
     "66",
     "67",
     "68",
-    "69",
     "70",
     "71",
     "72",
@@ -405,15 +409,212 @@
     "88",
     "9"
   ],
-  "emergency_braking_warnings": 17,
+  "emergency_braking_warnings": 9,
   "demo_ego": {
     "departed": true,
     "arrived": true,
     "collided": false,
     "max_wait_s": 0.0
   },
-  "network_sha256": "61badb96190dec5b80db1b19e4e53a8682e2887f88167b492d2761377e2394cb",
-  "routes_sha256": "b95167141051eeb2997e4faa63f88edba9298fa2c5f0ec5f8b9989ebb1cf769e",
+  "network_sha256": "cfc9be136736b5f5e7874fce34992e90f9ac7d8d76422a7f67a27e2deb3e4894",
+  "routes_sha256": "dfb35f886fa2b5b669109122e50666e1a784d47e938cdbf0fd817e429756a2db",
+  "signals_sha256": "0643c2047f47f032ad0f88fc2fea1dda5f9c49e93f4d3e24cc438ba1a2616489",
+  "signal_programs": {
+    "112": [
+      "assumed_actuated_v1"
+    ],
+    "169": [
+      "assumed_actuated_v1"
+    ],
+    "176": [
+      "assumed_actuated_v1"
+    ],
+    "268": [
+      "assumed_actuated_v1"
+    ],
+    "286": [
+      "assumed_actuated_v1"
+    ],
+    "340": [
+      "assumed_actuated_v1"
+    ],
+    "353": [
+      "assumed_actuated_v1"
+    ],
+    "414": [
+      "assumed_actuated_v1"
+    ],
+    "537": [
+      "assumed_actuated_v1"
+    ],
+    "565": [
+      "assumed_actuated_v1"
+    ],
+    "647": [
+      "assumed_actuated_v1"
+    ],
+    "662": [
+      "assumed_actuated_v1"
+    ],
+    "742": [
+      "assumed_actuated_v1"
+    ],
+    "764": [
+      "assumed_actuated_v1"
+    ]
+  },
+  "signal_states_observed": {
+    "112": [
+      "GGGGrrrrrrrrrrr",
+      "rrrrGGGrrrrrrrr",
+      "rrrrrrrGGrrrrrr",
+      "rrrrrrrrrGGrrrr",
+      "rrrrrrrrrrrGGGG",
+      "rrrrrrrrrrrrrrr",
+      "rrrrrrrrrrryyyy",
+      "rrrrrrrrryyrrrr",
+      "rrrrrrryyrrrrrr",
+      "rrrryyyrrrrrrrr",
+      "yyyyrrrrrrrrrrr"
+    ],
+    "169": [
+      "GGrrrr",
+      "rrGGrr",
+      "rrrrGG",
+      "rrrrrr",
+      "rrrryy",
+      "rryyrr",
+      "yyrrrr"
+    ],
+    "176": [
+      "GGGrrrrrrrrrrrrr",
+      "rrrGGGGrrrrrrrrr",
+      "rrrrrrrGGGGrrrrr",
+      "rrrrrrrrrrrGGGrr",
+      "rrrrrrrrrrrrrrGG",
+      "rrrrrrrrrrrrrrrr",
+      "rrrrrrrrrrrrrryy",
+      "rrrrrrrrrrryyyrr",
+      "rrrrrrryyyyrrrrr",
+      "rrryyyyrrrrrrrrr",
+      "yyyrrrrrrrrrrrrr"
+    ],
+    "268": [
+      "GGGrrrrrrr",
+      "rrrGGrrrrr",
+      "rrrrrGGrrr",
+      "rrrrrrrGGG",
+      "rrrrrrrrrr",
+      "rrrrrrryyy",
+      "rrrrryyrrr",
+      "rrryyrrrrr",
+      "yyyrrrrrrr"
+    ],
+    "286": [
+      "GGGrrrrrrrrrr",
+      "rrrGGGGrrrrrr",
+      "rrrrrrrGGGrrr",
+      "rrrrrrrrrrGGG",
+      "rrrrrrrrrrrrr",
+      "rrrrrrrrrryyy",
+      "rrrrrrryyyrrr",
+      "rrryyyyrrrrrr",
+      "yyyrrrrrrrrrr"
+    ],
+    "340": [
+      "GGGrrrrrrrrr",
+      "rrrGGGrrrrrr",
+      "rrrrrrGGGrrr",
+      "rrrrrrrrrGGG",
+      "rrrrrrrrrrrr",
+      "rrrrrrrrryyy",
+      "rrrrrryyyrrr",
+      "rrryyyrrrrrr",
+      "yyyrrrrrrrrr"
+    ],
+    "353": [
+      "GGGrrrrrrrrrr",
+      "rrrGGGGrrrrrr",
+      "rrrrrrrGGGrrr",
+      "rrrrrrrrrrGGG",
+      "rrrrrrrrrrrrr",
+      "rrrrrrrrrryyy",
+      "rrrrrrryyyrrr",
+      "rrryyyyrrrrrr",
+      "yyyrrrrrrrrrr"
+    ],
+    "414": [
+      "GGrrrrrrrrrrr",
+      "rrGGGGGrrrrrr",
+      "rrrrrrrGGGrrr",
+      "rrrrrrrrrrGGG",
+      "rrrrrrrrrrrrr",
+      "rrrrrrrrrryyy",
+      "rrrrrrryyyrrr",
+      "rryyyyyrrrrrr",
+      "yyrrrrrrrrrrr"
+    ],
+    "537": [
+      "GGrrrrrrrrr",
+      "rrGGGrrrrrr",
+      "rrrrrGGGrrr",
+      "rrrrrrrrGGG",
+      "rrrrrrrrrrr",
+      "rrrrrrrryyy",
+      "rrrrryyyrrr",
+      "rryyyrrrrrr",
+      "yyrrrrrrrrr"
+    ],
+    "565": [
+      "GGGrrrrrrr",
+      "rrrGGGrrrr",
+      "rrrrrrGGrr",
+      "rrrrrrrrGG",
+      "rrrrrrrrrr",
+      "rrrrrrrryy",
+      "rrrrrryyrr",
+      "rrryyyrrrr",
+      "yyyrrrrrrr"
+    ],
+    "647": [
+      "Grrr",
+      "rGrr",
+      "rrGG",
+      "rrrr",
+      "rryy",
+      "ryrr",
+      "yrrr"
+    ],
+    "662": [
+      "GGGrrrrrrrrr",
+      "rrrGGGrrrrrr",
+      "rrrrrrGGGrrr",
+      "rrrrrrrrrGGG",
+      "rrrrrrrrrrrr",
+      "rrrrrrrrryyy",
+      "rrrrrryyyrrr",
+      "rrryyyrrrrrr",
+      "yyyrrrrrrrrr"
+    ],
+    "742": [
+      "Grrr",
+      "rGrr",
+      "rrGG",
+      "rrrr",
+      "rryy",
+      "ryrr",
+      "yrrr"
+    ],
+    "764": [
+      "GGrrrr",
+      "rrGGrr",
+      "rrrrGG",
+      "rrrrrr",
+      "rrrryy",
+      "rryyrr",
+      "yyrrrr"
+    ]
+  },
   "sumo_version": "Eclipse SUMO sumo 1.28.0",
   "passed": true,
   "limitations": [

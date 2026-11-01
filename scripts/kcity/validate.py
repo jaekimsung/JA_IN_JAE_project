@@ -28,6 +28,11 @@ def topology_check(map_dir):
             if net.getEdge(b) not in net.getEdge(a).getOutgoing():
                 errors.append(f"Disconnected route {route.get('id')}: {a} -> {b}")
     build = json.loads((map_dir / "reports" / "build.json").read_text())
+    if len(build['weak_components']) != 1:
+        errors.append('Network must have one weakly connected component')
+    for edge_id in build.get('intentionally_excluded_source_roads', {}):
+        if net.hasEdge(edge_id):
+            errors.append(f'Excluded edge still exists: {edge_id}')
     for route, target in build["coverage_targets"].items():
         if target not in routes[route]:
             errors.append(f"Coverage target absent: {route} / {target}")
@@ -47,6 +52,12 @@ def run(map_dir, seed, seconds, profile="kcity"):
     stdout = (output / "stdout.log").open("w")
     traci.start(command, label=label, stdout=stdout)
     connection = traci.getConnection(label)
+    signal_ids = list(connection.trafficlight.getIDList())
+    for tid in signal_ids:
+        connection.trafficlight.subscribe(tid, [traci.constants.TL_CURRENT_PROGRAM,
+                                               traci.constants.TL_RED_YELLOW_GREEN_STATE])
+    signal_states = {tid: set() for tid in signal_ids}
+    signal_programs = {tid: set() for tid in signal_ids}
     departed, arrived, collided, teleporting, visited = set(), set(), set(), set(), set()
     max_running = 0
     peak_time = 0
@@ -72,6 +83,9 @@ def run(map_dir, seed, seconds, profile="kcity"):
                 max_running, peak_time = len(ids), now
             # Sample states every second, collision/arrival events every 0.1 s.
             if abs(now - round(now)) < 1e-5:
+                for tid, values in connection.trafficlight.getAllSubscriptionResults().items():
+                    signal_states[tid].add(values[traci.constants.TL_RED_YELLOW_GREEN_STATE])
+                    signal_programs[tid].add(values[traci.constants.TL_CURRENT_PROGRAM])
                 for vid in ids:
                     edge = connection.vehicle.getRoadID(vid)
                     lane = connection.vehicle.getLaneIndex(vid)
@@ -116,6 +130,9 @@ def run(map_dir, seed, seconds, profile="kcity"):
                   emergency_braking_warnings=warnings.count("performs emergency braking"),
                   demo_ego=demo, network_sha256=sha256(map_dir / f"{profile}.net.xml"),
                   routes_sha256=sha256(map_dir / "kcity.rou.xml"),
+                  signals_sha256=sha256(map_dir / 'kcity.signals.add.xml') if profile == 'kcity' and (map_dir / 'kcity.signals.add.xml').exists() else None,
+                  signal_programs={k: sorted(v) for k, v in signal_programs.items()},
+                  signal_states_observed={k: sorted(v) for k, v in signal_states.items()},
                   sumo_version=__import__("subprocess").check_output([sumolib.checkBinary("sumo"), "--version"], text=True).splitlines()[0],
                   passed=not collided and not teleporting and remaining == 0 and demo["arrived"],
                   limitations=["SUMO built-in car-following controllers, not AV learning evaluation",

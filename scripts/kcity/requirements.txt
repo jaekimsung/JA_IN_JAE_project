@@ -6,3 +6,4 @@ pyproj
 scipy
 matplotlib
 Pillow
+shapely>=2,<3

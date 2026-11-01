@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "scripts" / "kcity"))
 from common import MAP, sumo_tools
@@ -30,6 +31,11 @@ def main():
             command += ["--no-step-log", "true", "--duration-log.statistics", "true"]
         elif args.aerial:
             command += ["--gui-settings-file", str(MAP / "kcity.aerial.gui.xml")]
+            # Decorative buildings/trees belong to the non-aerial view only.
+            cfg = ET.parse(MAP / f'{profile}.sumocfg').getroot()
+            files = cfg.find('input/additional-files').get('value').split(',')
+            command += ['--additional-files', ','.join(str(MAP / f) for f in files
+                                                       if f != 'kcity.scenery.add.xml')]
     print("K-City: synthetic traffic; red demo_ego is IDM, not a trained AV.", flush=True)
     raise SystemExit(subprocess.call(command))
 

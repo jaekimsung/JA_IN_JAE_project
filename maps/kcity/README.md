@@ -15,24 +15,52 @@ python view_kcity.py --nogui          # 화면 없이 전체 데모 실행
 
 빨간 `demo_ego`는 **SUMO IDM 차량**이다. PPO/BC 또는 HEVEN 주행 스택의 성능을 보여주는 차량이 아니다. 다른 차량은 Krauss / IDM / EIDM / ACC를 순환 배정한 합성 교통이다.
 
+## 항공사진 없는 기본 화면
+
+기본 실행에는 가상 건물 **30동**, 가로수·조경수 **808그루**, 녹지 **10곳**을 표시한다. 지붕·창·그림자, 녹지 산책로, 도로 가장자리 포장도 함께 배치했다. 실제 K-CITY 건물/수목 위치를 복원한 것은 아니다.
+
+건물과 나무는 도로 가장자리에서 최소 3m, 신호 교차로 중심에서 13m 이상 이격했다. SUMO의 시각화용 polygon이므로 차량의 장애물·충돌 대상이 아니며, 도로·신호·차량 경로를 바꾸지 않는다. seed 0의 177대 주행 결과는 조경 표시 유무에 따라 모든 tripinfo 속성이 동일했다.
+
+```bash
+python view_kcity.py          # 건물·가로수·녹지 표시
+python view_kcity.py --aerial # 항공사진 표시, 가상 조경 제외
+python scripts/kcity/scenery.py # 조경과 기본 화면 설정만 재생성
+```
+
+`build.py`에서도 조경을 자동 생성한다. 생성 의존성은 `shapely>=2,<3`이며 `scripts/kcity/requirements.txt`에 포함했다. [배치 목록](reports/scenery.json), [비교 검증](reports/scenery_check/result.json), [SUMO polygon 문서](https://sumo.dlr.de/docs/Simulation/Shapes.html).
+
+![항공사진 없는 도심 화면](reports/scenery_detail.png)
+
 ## 두 가지 맵
 
 | 파일 | 용도 |
 |---|---|
-| `kcity.sumocfg` / `kcity.net.xml` | 검증한 데모: 추정 위치의 신호 2곳 + 비정형 교차로 4곳의 전방향 정지 규칙 |
+| `kcity.sumocfg` / `kcity.net.xml` | 검증한 데모: 감응식 신호 제어 교차로 14곳 + 전방향 정지 규칙 2곳 |
 | `kcity.reference.sumocfg` / `kcity.reference.net.xml` | 원본을 SUMO로 변환한 비교용 맵. 신호·추가 정지 규칙 없음 |
 
 `python view_kcity.py --reference`로 비교용 맵을 열 수 있다. 이 맵의 우선권도 SUMO의 추론 결과이며 실측 교통 규칙이 아니다. 데모의 통과 결과를 비교용 맵에 적용해서는 안 된다.
 
+고립 도로 `69`는 사용자 요청으로 데모·비교용 맵 모두에서 제거했다. 현재 도로망은 하나의 연결 성분이다. `traffic_plan.json`으로 나머지 교통 경로·차량·투입 시각을 유지한다.
+
+미사용 차선도 데모·비교용 맵에서 제거했다. 일반 차선 17개(최초 15개 + 재검사 2개), 미사용 회전 연결 53개가 대상이다. 내부 차선은 이후 신호화 재계산을 거쳐 346개이며, 현재 198개 일반 차선과 346개 내부 차선 모두 seed 0/1/2 중 적어도 한 번 통행했다. **현재 합성 교통 기준**이며 실제 K-CITY의 폐쇄·미사용 차선 판정이 아니다. [삭제 내역](reports/LANE_PRUNING.md)을 참고한다.
+
+## 신호 운영
+
+**14개 교차로에서 수요 감응식 신호**를 운영한다. 녹색 6–25초, 황색 3초, 전적색 3–7초이며 수요에 따라 다음 방향을 선택한다. 배치 12곳은 MGEO 신호/정지 노드 후보, 2곳은 복잡한 교차 흐름을 근거로 한 가정이다. 실제 K-CITY 현시표를 복원한 것은 아니다. [배치·운영·검증 보고서](reports/SIGNAL_DESIGN.md)를 참고한다.
+
+![신호 배치](reports/signal_layout.png)
+
+기본·2배·3배 투입과 별도 무작위 OD, 각 3개 시드에서 **2,124/2,124대 도착, 충돌·텔레포트 0**. 신호가 적었던 변경 전보다 기본 수요의 정지시간은 증가했다. 차량 총수가 유한한 시험이며 지속적 포화 수요를 보장하지 않는다.
+
 ## 구현 범위와 확인 결과
 
 - 원본 OpenDRIVE: 일반 도로 84개 + 교차로 연결 도로 363개, 교차로 56개.
-- SUMO: 일반 Edge 177개, 일반 Lane 216개. 일반 도로 원본 ID 84개 모두 포함.
+- SUMO: 일반 Edge 176개, 일반 Lane 198개. 원본 일반 도로 84개 중 고립 도로 `69`를 제외한 83개 포함.
 - 북쪽 회전교차로의 SUMO roundabout 정의, 다차선 도로, 차선별 연결, 높이·곡선·도로 폭 정보.
-- 모든 일반 Edge를 대상으로 하는 경로 177개 + CARLA qualifier 기반 데모 경로 1개.
-- seed 0/1/2, 각 178대, 최대 1,800초의 종료 조건으로 검사: **534/534대 도착, 충돌·텔레포트 0**.
-- 각 seed에서 동시에 최대 33대가 주행했다. 전방향 정지·신호 대기를 포함한 최대 연속 대기는 46.3 / 54.3 / 58.3초였다.
-- 급제동 경고 9 / 17 / 19건은 남아 있다. 매끄러운 주행, 모든 부하에서의 안정성, 학습 AV의 Collision Rate를 검증한 결과는 아니다.
+- 모든 일반 Edge를 대상으로 하는 경로 176개 + CARLA qualifier 기반 데모 경로 1개.
+- seed 0/1/2, 각 177대, 최대 1,800초의 종료 조건으로 검사: **531/531대 도착, 충돌·텔레포트 0**.
+- 각 seed의 최대 동시 주행은 47 / 45 / 45대, 최대 연속 대기는 73.9 / 69.5 / 69.7초였다.
+- 급제동 경고 7 / 9 / 6건은 남아 있다. 매끄러운 주행, 모든 부하에서의 안정성, 학습 AV의 Collision Rate를 검증한 결과는 아니다.
 
 상세 한계·필요한 추가 자료는 [구현 보고서](reports/IMPLEMENTATION_REPORT.md)를 참고한다.
 
@@ -48,7 +76,10 @@ python -m pip install -r scripts/kcity/requirements.txt
 
 python scripts/kcity/build.py
 python scripts/kcity/audit_sources.py
+python scripts/kcity/render_signals.py
+python scripts/kcity/validate_signals.py
 python scripts/kcity/validate.py --seeds 0 1 2
+python scripts/kcity/lane_usage.py
 ```
 
 `build.py`는 `source/manifest.json`의 SHA-256을 검사한 뒤 로컬 스냅샷을 입력으로 사용한다. 외부 ROS/CARLA/MORAI 프로세스를 시작하거나 원본 워크스페이스를 수정하지 않는다. 재생성하면 이 디렉터리의 생성된 맵·경로·설정·build 보고서를 갱신한다. 이전 검증 결과는 이전 네트워크 해시를 가리킬 수 있으므로 **재생성 후에는 검증도 다시 실행**한다.
@@ -57,10 +88,12 @@ python scripts/kcity/validate.py --seeds 0 1 2
 
 | 위치 | 내용 |
 |---|---|
+| `lane_pruning.json` | 차선·회전 연결 삭제 정책과 기준 해시 |
 | `source/manifest.json` | 원본 위치·역할·해시, 제외한 JJ 기록의 사유 |
 | `source/` | 변환 및 비교에 사용한 원본 스냅샷 |
-| `kcity.rou.xml` | 178개 경로와 차량 투입 계획 |
-| `kcity.junctions.nod.xml` | 데모 전용 전방향 정지 규칙 4곳 |
+| `kcity.rou.xml` | 177개 경로와 차량 투입 계획 |
+| `kcity.junctions.nod.xml` | 초기 변환 정지 규칙. 최종 신호 적용 후 정지 규칙은 477/747 두 곳 |
+| `signal_policy.json` / `kcity.signals.add.xml` | 신호 배치 정책 / 실제 로드할 감응식 운영 프로그램 |
 | `kcity.add.xml` | CARLA의 시작·종료·정지·신호 위치 참고 POI; 정지선 강제 로직은 아님 |
 | `kcity.aerial.gui.xml` | JJ 항공사진의 좌표 범위 기반 배경 |
 | `reports/build.json` | 도로·연결·신호·경로 대응 및 빌드 명령 |

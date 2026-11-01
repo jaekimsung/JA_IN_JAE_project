@@ -1,0 +1,29 @@
+{
+  "seed": 20261102,
+  "buildings": 30,
+  "trees": 808,
+  "parks": 10,
+  "polygons": 2957,
+  "counts": {
+    "ground": 1,
+    "paving": 264,
+    "lawn": 15,
+    "park_path": 13,
+    "building_plot": 30,
+    "building_shadow": 30,
+    "building_wall": 30,
+    "building_roof": 30,
+    "roof_ridge": 30,
+    "skylight": 60,
+    "roof_equipment": 30,
+    "tree_shadow": 808,
+    "tree_crown": 808,
+    "tree_highlight": 808
+  },
+  "road_clearance_m": 3,
+  "signal_clearance_m": 13,
+  "source": "procedural decorative placement; not actual K-CITY building or tree locations",
+  "network_sha256": "cfc9be136736b5f5e7874fce34992e90f9ac7d8d76422a7f67a27e2deb3e4894",
+  "scenery_sha256": "aa1f4b82d758ba796cd16765c802a95105e019252e9adda70a86848da21ea1a2",
+  "traffic_effect": "SUMO drawing polygons only; no collision objects, routes or lane changes"
+}

@@ -1,0 +1,26 @@
+{
+  "profile": "before",
+  "demand": "random_od",
+  "seed": 2,
+  "expected": 177,
+  "arrived": 177,
+  "unfinished": [],
+  "collisions": [],
+  "teleports": {
+    "total": "0",
+    "jam": "0",
+    "yield": "0",
+    "wrongLane": "0"
+  },
+  "mean_duration_s": 113.35310734463275,
+  "mean_wait_s": 2.3587570621468936,
+  "mean_time_loss_s": 15.938305084745755,
+  "mean_depart_delay_s": 0.028813559322033902,
+  "maximum_trip_wait_s": 43.9,
+  "max_sampled_queue_m": 11.97,
+  "emergency_braking_warnings": 21,
+  "network_sha256": "a96277df594a2db91511f4b5e71850cc901455862ea381376a6220fb4ac68ba0",
+  "routes_sha256": "68bbc73de219a758363a0b273fbefe683eb5f5f06a5578c8dfaa0cbe866a30f0",
+  "signals_sha256": null,
+  "passed": true
+}

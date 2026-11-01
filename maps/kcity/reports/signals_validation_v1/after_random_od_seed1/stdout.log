@@ -1,0 +1,10 @@
+Warning: Vehicle 'od_014' performs emergency braking on lane '83_0' with decel=8.00, wished=4.50, severity=1.00, time=201.00.
+Warning: Vehicle 'od_014' performs emergency braking on lane ':89_1_0' with decel=8.00, wished=4.50, severity=1.00, time=206.30.
+Warning: Vehicle 'od_017' performs emergency braking on lane ':752_1_0' with decel=8.00, wished=4.50, severity=1.00, time=285.60.
+Warning: Vehicle 'od_013' performs emergency braking on lane ':89_1_0' with decel=8.00, wished=4.50, severity=1.00, time=286.80.
+Warning: Vehicle 'od_045' performs emergency braking on lane '83_0' with decel=8.00, wished=4.50, severity=1.00, time=368.90.
+Warning: Vehicle 'od_017' performs emergency braking on lane ':89_1_0' with decel=8.00, wished=4.50, severity=1.00, time=368.90.
+Warning: Vehicle 'od_045' performs emergency braking on lane ':655_1_0' with decel=8.00, wished=4.50, severity=1.00, time=376.60.
+Warning: Vehicle 'od_054' performs emergency braking on lane '83_0' with decel=8.00, wished=4.50, severity=1.00, time=398.50.
+Warning: Vehicle 'od_049' performs emergency braking on lane '83_0' with decel=8.00, wished=4.50, severity=1.00, time=442.80.
+Warning: Vehicle 'od_101' performs emergency braking on lane '75_0' with decel=8.00, wished=4.50, severity=1.00, time=698.60.

@@ -3,7 +3,7 @@
   <input>
     <net-file value="kcity.reference.net.xml" />
     <route-files value="kcity.rou.xml" />
-    <additional-files value="kcity.add.xml" />
+    <additional-files value="kcity.add.xml,kcity.scenery.add.xml" />
   </input>
   <time>
     <step-length value="0.1" />

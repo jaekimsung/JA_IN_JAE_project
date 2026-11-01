@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<configuration>
+  <input>
+    <net-file value="kcity.net.xml" />
+    <route-files value="kcity.rou.xml" />
+    <additional-files value="kcity.add.xml,kcity.signals.add.xml" />
+  </input>
+  <time>
+    <step-length value="0.1" />
+    <end value="1800" />
+  </time>
+  <processing>
+    <time-to-teleport value="-1" />
+    <collision.action value="warn" />
+    <collision.check-junctions value="true" />
+  </processing>
+  <gui_only>
+    <gui-settings-file value="kcity.gui.xml" />
+  </gui_only>
+</configuration>

@@ -62,7 +62,10 @@ def connector_audit(net_path, source_path, build):
                                 else "not represented in imported network; direction/topology needs review"))
     base_ids = {r.get("id") for r in roads.values() if r.get("junction") == "-1"}
     return dict(source_nonjunction_roads=len(base_ids),
-                missing_nonjunction_roads=sorted(base_ids - set(build["represented_source_road_ids"])),
+                intentionally_pruned_source_road_ids=build.get('intentionally_pruned_source_road_ids', []),
+                intentionally_excluded_source_roads=build.get('intentionally_excluded_source_roads', {}),
+                missing_nonjunction_roads=sorted(base_ids - set(build["represented_source_road_ids"])
+                                                 - set(build.get('intentionally_excluded_source_roads', {}))),
                 missing_original_id_count=len(records),
                 equivalent_connection_count=sum(r.get("same_lane_pair_present", False) for r in records),
                 unresolved=records)
@@ -108,7 +111,9 @@ def main():
     extent = image_meta["extent"]
     left, bottom = geo_to_sumo.transform(extent["xmin"], extent["ymin"])
     right, top = geo_to_sumo.transform(extent["xmax"], extent["ymax"])
-    gui = ET.parse(out / "kcity.gui.xml").getroot()
+    gui = ET.Element('viewsettings')
+    ET.SubElement(gui, 'scheme', name='real world')
+    ET.SubElement(gui, 'delay', value='40')
     ET.SubElement(gui, "decal", filename="source/jj_kcity.jpg", centerX=str((left + right) / 2),
                   centerY=str((bottom + top) / 2), width=str(right - left), height=str(top - bottom),
                   altitude="0", rotation="0", tilt="0", roll="0", layer="-100")
