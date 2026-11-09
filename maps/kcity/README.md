@@ -7,13 +7,35 @@ K-CITY의 로컬 OpenDRIVE 원본을 변환한 **도로·교통 데모**다. JJ�
 프로젝트 루트에서 실행한다. 기존 고속도로 예제의 `env/sumo/` 파일을 덮어쓰지 않는다.
 
 ```bash
-python view_kcity.py                 # SUMO GUI, ▶ 버튼으로 시작
+python view_kcity.py                 # 90도 회전, 차량 1배, 연속 주행 자동 시작
 python view_kcity.py --aerial        # JJ 항공사진을 배경으로 표시
 python view_kcity.py --netedit       # 도로·차선·Connection 편집기
-python view_kcity.py --nogui          # 화면 없이 전체 데모 실행
+python view_kcity.py --nogui --seconds 3600 # 화면 없이 1시간 검사
+python view_kcity.py --baseline      # 기존 177대 유한 교통, ▶ 버튼으로 시작
 ```
 
 빨간 `demo_ego`는 **SUMO IDM 차량**이다. PPO/BC 또는 HEVEN 주행 스택의 성능을 보여주는 차량이 아니다. 다른 차량은 Krauss / IDM / EIDM / ACC를 순환 배정한 합성 교통이다.
+
+### 녹화용 연속 주행
+
+기본 실행은 `scripts/kcity/live_demo.py`의 TraCI 제어를 사용한다. 빨간 차량은 시작부터 1대만 투입하며, 기존 qualifier 경로 뒤에 실제 차선 연결을 따르는 귀환 경로를 붙인다. 경로 끝에 도달하기 전에 다음 순환 경로를 연장하므로 같은 차량 ID와 위치·속도를 유지한다. 신호나 앞차 때문에 정차할 수 있지만 목적지 도착으로 퇴장하지 않는다.
+
+노란 차량은 기존 6초 간격 대신 **3초마다 최대 1대씩 계속 보충**한다. 주행 중인 차량과 투입 대기 차량을 합쳐 **60대**가 되면 추가 투입을 잠시 멈춘다. 차량 수는 출발·도착·혼잡에 따라 달라진다. GUI는 종료할 때까지 실행하며, `--seconds`를 지정하면 해당 시뮬레이션 시간에 종료한다. 차량 크기는 1배, 기본 화면 회전은 90도다. `/tmp`의 별도 설정 파일은 필요하지 않다.
+
+```bash
+python view_kcity.py --traffic-period 3 --max-traffic 60
+python view_kcity.py --follow-ego     # 빨간 차량을 화면 중앙에서 추적
+python view_kcity.py --follow-ego --zoom 300 # 추적하면서 더 넓게 보기
+python view_kcity.py --angle 0         # 원래 방향
+python view_kcity.py --delay 100       # 0.1초 스텝당 100ms 지연
+python view_kcity.py --nogui --seconds 3600 --report /tmp/kcity-live.json
+```
+
+`sumo-gui -c maps/kcity/kcity.sumocfg`로 직접 실행하면 기존 유한 교통이 실행된다. **빨간 차량 연속 주행에는 `python view_kcity.py`를 사용**한다. `--baseline`과 `--reference`에서는 연속 주행 옵션을 적용하지 않는다. 아래의 177대 및 2,124대 검증 수치는 기존 유한 교통에 대한 결과다.
+
+[연속 주행 검증](reports/live_demo_validation.json): seed 0/1/2에서 각각 시뮬레이션 1시간 동안 빨간 차량은 1회 생성, 도착·소실 0회, 약 18.0–18.4km 주행했다. 충돌·텔레포트는 0건, 빨간 차량의 최대 연속 대기는 32.1–41.5초였다. 초기 300초 이후 주변 차량은 평균 약 59대였다. 80대 상한을 시험했을 때는 일부 시드에서 충돌 또는 장시간 정체가 발생해 기본값을 60대로 낮췄다. 급제동 경고는 남아 있으며, 임의의 시드·무한 시간의 무정체를 보장하는 결과는 아니다.
+
+`--follow-ego`는 빨간 차량이 투입되면 카메라 추적을 켠다. 기본 추적 줌은 500이며, `--zoom` 값이 클수록 더 확대된다. 차량 자체의 표시 배율은 1배로 유지한다. 실행 중에는 마우스 휠로 화면 확대율을 조정할 수 있다.
 
 ## 항공사진 없는 기본 화면
 
