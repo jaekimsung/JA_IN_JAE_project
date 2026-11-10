@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2026-11-10T23:10:40.393509+09:00 by Eclipse SUMO sumo 1.28.0
+<sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.net.xml"/>
+        <route-files value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.rou.xml"/>
+        <additional-files value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.add.xml,/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.signals.add.xml,/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.scenery.add.xml"/>
+    </input>
+
+    <output>
+        <tripinfo-output value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/docs/research_checks/KC-AUDIT-20261110-01/evidence/finite.trips.xml"/>
+        <tripinfo-output.write-unfinished value="true"/>
+        <collision-output value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/docs/research_checks/KC-AUDIT-20261110-01/evidence/finite.collisions.xml"/>
+        <statistic-output value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/docs/research_checks/KC-AUDIT-20261110-01/evidence/finite.statistics.xml"/>
+    </output>
+
+    <time>
+        <end value="1800"/>
+        <step-length value="0.1"/>
+    </time>
+
+    <processing>
+        <collision.action value="warn"/>
+        <collision.check-junctions value="true"/>
+        <time-to-teleport value="-1"/>
+    </processing>
+
+    <report>
+        <duration-log.disable value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <random_number>
+        <seed value="43"/>
+    </random_number>
+
+    <gui_only>
+        <gui-settings-file value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.gui.xml"/>
+    </gui_only>
+
+</sumoConfiguration>
+-->
+
+<collisions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/collision_file.xsd">
+</collisions>

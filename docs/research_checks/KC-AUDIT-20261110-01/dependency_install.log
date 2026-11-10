@@ -1,0 +1,11 @@
+Collecting gymnasium==1.2.3
+  Downloading gymnasium-1.2.3-py3-none-any.whl (952 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 952.1/952.1 KB 1.7 MB/s eta 0:00:00
+Collecting farama-notifications>=0.0.1
+  Downloading farama_notifications-0.0.6-py3-none-any.whl (2.9 kB)
+Collecting cloudpickle>=1.2.0
+  Downloading cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+Requirement already satisfied: typing-extensions>=4.3.0 in /home/heven/.local/lib/python3.10/site-packages (from gymnasium==1.2.3) (4.15.0)
+Requirement already satisfied: numpy>=1.21.0 in /home/heven/.local/lib/python3.10/site-packages (from gymnasium==1.2.3) (1.24.4)
+Installing collected packages: farama-notifications, cloudpickle, gymnasium
+Successfully installed cloudpickle-3.1.2 farama-notifications-0.0.6 gymnasium-1.2.3

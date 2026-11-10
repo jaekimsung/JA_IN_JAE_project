@@ -1,0 +1,60 @@
+{
+  "time": "2026-11-10T23:20:46.376059+09:00",
+  "method": "read-only SHA256 comparison with source/manifest.json",
+  "checks": [
+    {
+      "path": "maps/kcity/source/kcity.xodr",
+      "expected": "24b6dd916c236891b039cc7aea13390e6c87989c5eff4d7153151efccb24a72b",
+      "actual": "24b6dd916c236891b039cc7aea13390e6c87989c5eff4d7153151efccb24a72b",
+      "matches": true
+    },
+    {
+      "path": "maps/kcity/source/jj_kcity.jpg",
+      "expected": "cf671be413100f3dbfa92cf5849ff5c0ed2f2f90db151261852c3ad639e37873",
+      "actual": "cf671be413100f3dbfa92cf5849ff5c0ed2f2f90db151261852c3ad639e37873",
+      "matches": true
+    },
+    {
+      "path": "maps/kcity/source/jj_kcity.json",
+      "expected": "c63b6c4e27becc0d504621e324ccd400288f3743f4fe629c89fec6ae1d9e7127",
+      "actual": "c63b6c4e27becc0d504621e324ccd400288f3743f4fe629c89fec6ae1d9e7127",
+      "matches": true
+    },
+    {
+      "path": "maps/kcity/source/qualifier.csv",
+      "expected": "91be54184807d600d20056f2df7f9387509a257728687dd249da5a64278bd9fc",
+      "actual": "91be54184807d600d20056f2df7f9387509a257728687dd249da5a64278bd9fc",
+      "matches": true
+    },
+    {
+      "path": "maps/kcity/source/qualifier.yaml",
+      "expected": "43f5337062458a87eb2b23634fa5198f61d0ce4d388413ae5947885d6c27f623",
+      "actual": "43f5337062458a87eb2b23634fa5198f61d0ce4d388413ae5947885d6c27f623",
+      "matches": true
+    },
+    {
+      "path": "maps/kcity/source/mgeo_global_info.json",
+      "expected": "bd74fa3f05830e0741c3c7f51d0f7935f389be3879251fd0231918538a05f133",
+      "actual": "bd74fa3f05830e0741c3c7f51d0f7935f389be3879251fd0231918538a05f133",
+      "matches": true
+    },
+    {
+      "path": "maps/kcity/source/mgeo_link_set.json",
+      "expected": "5ce0fd57da07b83221c0a4d117b0606b2d9c094c8de476a7d1176c78a4dc5b0f",
+      "actual": "5ce0fd57da07b83221c0a4d117b0606b2d9c094c8de476a7d1176c78a4dc5b0f",
+      "matches": true
+    },
+    {
+      "path": "maps/kcity/source/mgeo_node_set.json",
+      "expected": "baafc1acbb4a34eadcafe6136f2b3ac330cebf0cf5727a324c4f117a54eba7dc",
+      "actual": "baafc1acbb4a34eadcafe6136f2b3ac330cebf0cf5727a324c4f117a54eba7dc",
+      "matches": true
+    },
+    {
+      "path": "maps/kcity/source/jj_gnss_reference.yaml",
+      "expected": "813840e6aeafd2212d510ddd0037d880374d146833424076d97ca710dced496c",
+      "actual": "813840e6aeafd2212d510ddd0037d880374d146833424076d97ca710dced496c",
+      "matches": true
+    }
+  ]
+}

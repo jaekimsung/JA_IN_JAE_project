@@ -1,0 +1,3 @@
+/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/docs/research_checks/KC-AUDIT-20261110-01/run_audit.py:132: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  expected_incompatibility=error,hybrid_sample_vs_evaluate_max_logprob_error=float((lp-lp2).abs().max()),

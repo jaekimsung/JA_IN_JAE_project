@@ -1,0 +1,458 @@
+{
+  "structure": {
+    "normal_edges": 176,
+    "normal_lanes": 198,
+    "internal_lanes": 346,
+    "junction_types": {
+      "traffic_light": 14,
+      "priority": 50,
+      "allway_stop": 2,
+      "internal": 22
+    },
+    "finite_vehicles": 177,
+    "routes": 177,
+    "topology": {
+      "route_count": 177,
+      "coverage_target_count": 176,
+      "errors": []
+    },
+    "signals": {
+      "signal_count": 14,
+      "errors": [],
+      "checked": [
+        "no conflicting priority greens",
+        "all connections served",
+        "consistent indication for shared turn/straight lanes",
+        "mandatory yellow and all-red before every change of approach"
+      ]
+    }
+  },
+  "historical_HV": {
+    "runs": 12,
+    "arrivals": 2124,
+    "collision_records": 0,
+    "teleports": 0,
+    "emergency_braking_warnings": 126,
+    "hash_checks": [
+      {
+        "demand": "1",
+        "seed": 0,
+        "network_matches": true,
+        "signals_match": true,
+        "generated_route_file_matches": true
+      },
+      {
+        "demand": "1",
+        "seed": 1,
+        "network_matches": true,
+        "signals_match": true,
+        "generated_route_file_matches": true
+      },
+      {
+        "demand": "1",
+        "seed": 2,
+        "network_matches": true,
+        "signals_match": true,
+        "generated_route_file_matches": true
+      },
+      {
+        "demand": "2",
+        "seed": 0,
+        "network_matches": true,
+        "signals_match": true,
+        "generated_route_file_matches": true
+      },
+      {
+        "demand": "2",
+        "seed": 1,
+        "network_matches": true,
+        "signals_match": true,
+        "generated_route_file_matches": true
+      },
+      {
+        "demand": "2",
+        "seed": 2,
+        "network_matches": true,
+        "signals_match": true,
+        "generated_route_file_matches": true
+      },
+      {
+        "demand": "3",
+        "seed": 0,
+        "network_matches": true,
+        "signals_match": true,
+        "generated_route_file_matches": true
+      },
+      {
+        "demand": "3",
+        "seed": 1,
+        "network_matches": true,
+        "signals_match": true,
+        "generated_route_file_matches": true
+      },
+      {
+        "demand": "3",
+        "seed": 2,
+        "network_matches": true,
+        "signals_match": true,
+        "generated_route_file_matches": true
+      },
+      {
+        "demand": "random_od",
+        "seed": 0,
+        "network_matches": true,
+        "signals_match": true,
+        "generated_route_file_matches": true
+      },
+      {
+        "demand": "random_od",
+        "seed": 1,
+        "network_matches": true,
+        "signals_match": true,
+        "generated_route_file_matches": true
+      },
+      {
+        "demand": "random_od",
+        "seed": 2,
+        "network_matches": true,
+        "signals_match": true,
+        "generated_route_file_matches": true
+      }
+    ],
+    "scope": "stored finite synthetic traffic; not an AV policy result or a new rerun of all 12 cases"
+  },
+  "policy_fixture": {
+    "obs_dim": 31,
+    "act_dim": 2,
+    "BC_parameters": 74498,
+    "PPO_parameters": 75270,
+    "direct_BC_state_dict_loads_into_PPO": false,
+    "expected_incompatibility": "Error(s) in loading state_dict for HybridActorCritic:\n\tMissing key(s) in state_dict: \"log_std\", \"trunk.0.weight\", \"trunk.0.bias\", \"trunk.2.weight\", \"trunk.2.bias\", \"mu_head.weight\", \"mu_head.bias\", \"lane_head.weight\", \"lane_head.bias\", \"v_head.weight\", \"v_head.bias\". \n\tUnexpected key(s) in state_dict: \"obs_mean\", \"obs_std\", \"fc1.weight\", \"fc1.bias\", \"fc2.weight\", \"fc2.bias\", \"fc3.weight\", \"fc3.bias\". ",
+    "hybrid_sample_vs_evaluate_max_logprob_error": 0.0,
+    "unbounded_accel_samples_outside_Box": 14,
+    "sample_count": 128,
+    "CUDA_used": false,
+    "training_updates": 0
+  },
+  "truncation_fixture": {
+    "first_episode_truncated": true,
+    "second_episode_reset_value": 100,
+    "terminal_observation_value": 4,
+    "first_value": 2,
+    "first_reward": 1,
+    "stored_bootstrapped_reward": 4.96,
+    "observed_first_advantage": 101.95999908447266,
+    "correct_isolated_one_step_advantage": 2.96,
+    "detected_cross_episode_value_leak": true,
+    "training_updates": 0,
+    "evidence": "PPO.collect_rollout stores terminated only; RolloutBuffer.compute_gae therefore continues across truncation"
+  },
+  "legacy_dataset": {
+    "path": "data/dataset.npz",
+    "keys": [
+      "observation",
+      "action_raw",
+      "lane_change",
+      "reward",
+      "next_observation",
+      "terminated",
+      "truncated",
+      "episode",
+      "t",
+      "detected_xy",
+      "detected_offsets"
+    ],
+    "observations_shape": [
+      4941,
+      31
+    ],
+    "actions_shape": [
+      4941,
+      2
+    ],
+    "episode_count": 10,
+    "finite": true,
+    "source_seed_route_policy_version_recorded_in_npz": false,
+    "scope": "highway dataset, no K-CITY training proof"
+  },
+  "legacy_evaluation_logs": [
+    {
+      "path": "results/run_20260907_202220/eval_log.csv",
+      "rows": 19,
+      "last_row": {
+        "steps": "194560",
+        "collision_rate": "0.0",
+        "success_rate": "0.0",
+        "timeout_rate": "1.0",
+        "mean_speed": "16.687361467474158",
+        "mean_gap": "34.45589241377363",
+        "min_gap": "10.8785016184911",
+        "ep_return": "46.527091111533636",
+        "ep_length": "1000.0",
+        "lane_changes": "26.2"
+      }
+    }
+  ],
+  "legacy_env_smoke": {
+    "resets": [
+      {
+        "trial": 0,
+        "observation_shape": [
+          31
+        ],
+        "finite": true,
+        "initial_traffic_state_SHA256": "ecd004f5bb6f2c7ba2b9688d9dc1bc5755368b46b7721b306cab47c09bc90d0e",
+        "initial_vehicle_count": 159,
+        "ten_step_sim_seconds": 5.0,
+        "modes": {
+          "speedMode": 0,
+          "laneChangeMode": 0
+        },
+        "last_info": {
+          "collided": false,
+          "arrived": false,
+          "speed": 10.0,
+          "gap": null,
+          "accel_raw": 0.0,
+          "lane_change_raw": 0.0,
+          "lane_change": 0,
+          "lane_change_applied": true,
+          "lane_before": 1,
+          "lane_after": 1
+        }
+      },
+      {
+        "trial": 1,
+        "observation_shape": [
+          31
+        ],
+        "finite": true,
+        "initial_traffic_state_SHA256": "e3be459fca987c2b1e4e0bee85d640180c3f96e766397551200362ae27742cf6",
+        "initial_vehicle_count": 161,
+        "ten_step_sim_seconds": 5.0,
+        "modes": {
+          "speedMode": 0,
+          "laneChangeMode": 0
+        },
+        "last_info": {
+          "collided": false,
+          "arrived": false,
+          "speed": 10.0,
+          "gap": null,
+          "accel_raw": 0.0,
+          "lane_change_raw": 0.0,
+          "lane_change": 0,
+          "lane_change_applied": true,
+          "lane_before": 1,
+          "lane_after": 1
+        }
+      }
+    ],
+    "same_requested_seed_same_initial_state": false,
+    "training_updates": 0,
+    "steps_maximum": 20,
+    "generated_network_only_in": "docs/research_checks/KC-AUDIT-20261110-01/evidence/isolated_highway"
+  },
+  "finite_HV_new": {
+    "seed": 43,
+    "requested_vehicles": 177,
+    "arrived": 177,
+    "unfinished": 0,
+    "collision_records": 0,
+    "teleports": {
+      "total": "0",
+      "jam": "0",
+      "yield": "0",
+      "wrongLane": "0"
+    },
+    "wall_seconds": 0.7225633750203997,
+    "performance": {
+      "clockBegin": "1794319840.39",
+      "clockEnd": "1794319841.06",
+      "clockDuration": "0.66",
+      "traciDuration": "0.00",
+      "realTimeFactor": "2710.84",
+      "vehicleUpdatesPerSecond": "0.00",
+      "personUpdatesPerSecond": "0.00",
+      "begin": "0.00",
+      "end": "1800.00",
+      "duration": "1800.00"
+    },
+    "scope": "SUMO built-in controllers; no learned AV"
+  },
+  "live_IDM_new": {
+    "seed": 43,
+    "hv_period_s": 3.0,
+    "hv_limit_including_pending": 60,
+    "ego_loop": [
+      "-3#4",
+      "-3#5",
+      "-3#6",
+      "-3#7",
+      "-3#8",
+      "-68",
+      "-13",
+      "-71",
+      "-31",
+      "-42",
+      "-77",
+      "-54",
+      "3#8",
+      "3#7",
+      "3#6",
+      "3#5",
+      "3#4",
+      "3#3",
+      "3#2",
+      "3#1",
+      "3#0",
+      "49",
+      "80",
+      "11",
+      "19",
+      "-3#0",
+      "-3#1",
+      "-3#2",
+      "-3#3",
+      "-3#4"
+    ],
+    "ego_route_extensions": 4,
+    "ego_departures": 1,
+    "ego_arrivals": 0,
+    "ego_missing_steps_after_departure": 0,
+    "ego_distance_m": 3362.7304362414434,
+    "ego_max_continuous_wait_s": 6.8,
+    "collisions": 0,
+    "teleports": 0,
+    "max_hv_running": 60,
+    "hv_requested": 143,
+    "hv_arrived": 84,
+    "completed": true,
+    "net_sha256": "cfc9be136736b5f5e7874fce34992e90f9ac7d8d76422a7f67a27e2deb3e4894",
+    "signals_sha256": "0643c2047f47f032ad0f88fc2fea1dda5f9c49e93f4d3e24cc438ba1a2616489",
+    "time_s": 600.0,
+    "mean_hv_running_after_300s": 58.90033222591362
+  },
+  "TraCI_probe": {
+    "version": [
+      22,
+      "SUMO 1.28.0"
+    ],
+    "deltaT": 0.1,
+    "TLS_count": 14,
+    "signal_types": {
+      "112": [
+        3,
+        3
+      ],
+      "169": [
+        3,
+        3
+      ],
+      "176": [
+        3,
+        3
+      ],
+      "268": [
+        3,
+        3
+      ],
+      "286": [
+        3,
+        3
+      ],
+      "340": [
+        3,
+        3
+      ],
+      "353": [
+        3,
+        3
+      ],
+      "414": [
+        3,
+        3
+      ],
+      "537": [
+        3,
+        3
+      ],
+      "565": [
+        3,
+        3
+      ],
+      "647": [
+        3,
+        3
+      ],
+      "662": [
+        3,
+        3
+      ],
+      "742": [
+        3,
+        3
+      ],
+      "764": [
+        3,
+        3
+      ]
+    },
+    "demo_modes": {
+      "speedMode": 31,
+      "laneChangeMode": 1621
+    },
+    "demo_route": [
+      "-3#4",
+      "-3#5",
+      "-3#6",
+      "-3#7",
+      "-3#8",
+      "-68",
+      "-13",
+      "-71",
+      "-31",
+      "-42",
+      "-77",
+      "-54",
+      "3#8",
+      "3#7",
+      "3#6",
+      "3#5",
+      "3#4"
+    ],
+    "next_TLS": [
+      [
+        "647",
+        2,
+        219.81,
+        "r"
+      ],
+      [
+        "268",
+        8,
+        270.53,
+        "r"
+      ],
+      [
+        "764",
+        4,
+        315.85999999999996,
+        "r"
+      ],
+      [
+        "169",
+        1,
+        360.56999999999994,
+        "r"
+      ]
+    ],
+    "getBestLanes_available": true,
+    "getNextLinks_available": true
+  },
+  "preserved_originals": {
+    "all_selected_source_and_map_hashes_unchanged": true,
+    "changed": []
+  },
+  "ended_at": "2026-11-10T23:10:45.591986+09:00"
+}

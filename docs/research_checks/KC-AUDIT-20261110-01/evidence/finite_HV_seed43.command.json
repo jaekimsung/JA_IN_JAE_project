@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "sumo",
+    "-c",
+    "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.sumocfg",
+    "--seed",
+    "43",
+    "--end",
+    "1800",
+    "--no-step-log",
+    "true",
+    "--duration-log.disable",
+    "true",
+    "--tripinfo-output",
+    "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/docs/research_checks/KC-AUDIT-20261110-01/evidence/finite.trips.xml",
+    "--tripinfo-output.write-unfinished",
+    "true",
+    "--statistic-output",
+    "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/docs/research_checks/KC-AUDIT-20261110-01/evidence/finite.statistics.xml",
+    "--collision-output",
+    "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/docs/research_checks/KC-AUDIT-20261110-01/evidence/finite.collisions.xml"
+  ],
+  "returncode": 0,
+  "wall_seconds": 0.7225633750203997
+}

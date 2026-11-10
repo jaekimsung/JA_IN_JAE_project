@@ -1,0 +1,49 @@
+{
+  "time": "2026-11-10T23:25:48.249679+09:00",
+  "checkpoint": "results/run_20260907_202220/model.pt",
+  "SHA256": "2cbc54397d51fc634650ed3e54e52fe232facfebd0e345b6435d72631b66aa96",
+  "tensor_shapes": {
+    "log_std": [
+      1
+    ],
+    "trunk.0.weight": [
+      256,
+      31
+    ],
+    "trunk.0.bias": [
+      256
+    ],
+    "trunk.2.weight": [
+      256,
+      256
+    ],
+    "trunk.2.bias": [
+      256
+    ],
+    "mu_head.weight": [
+      1,
+      256
+    ],
+    "mu_head.bias": [
+      1
+    ],
+    "lane_head.weight": [
+      3,
+      256
+    ],
+    "lane_head.bias": [
+      3
+    ],
+    "v_head.weight": [
+      1,
+      256
+    ],
+    "v_head.bias": [
+      1
+    ]
+  },
+  "loads_into_current_train_hybrid_actor": true,
+  "error": null,
+  "training_updates": 0,
+  "scope": "CPU weight inspection only; no policy evaluation or training"
+}
