@@ -1,0 +1,111 @@
+{
+  "started_at": "2026-11-14T22:30:03.819947+09:00",
+  "ended_at": "2026-11-14T22:30:07.164462+09:00",
+  "runtime": {
+    "python": "3.10.12",
+    "numpy": "1.24.4",
+    "torch": "2.10.0+cu128",
+    "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.35",
+    "machine": "x86_64",
+    "torch_threads": 1,
+    "source_sha256": {
+      "algorithms/kcity_policy.py": "faabadfdf23bb45eaea59c026e747a78ba8f5f596614dc836122b30e32fd558c",
+      "algorithms/kcity_training.py": "1ae8fe264a43531f67f0ed67390da8a93bc497d5d9d1f5b703b02af3c5009e00",
+      "algorithms/ppo.py": "df9fbe04e645d5e733beffa022ffec5dd3a2079643c5ba313cd3320cde09ee3c",
+      "utils/networks.py": "98d675ebc30b27ec9b7a86dca4ce2cc979e92de62bd0a75c5053d2823255377b",
+      "utils/buffer.py": "db1241638ad9c55d1213d8feaecc5159e25760338961e1135795164cbd5c272a",
+      "env/kcity_env.py": "98e6700fb051e004ddb2e71202aa8ce4021f3a5a35051cbcd50d8c478b7fa302",
+      "env/kcity_config.py": "c6ea10544d5ad699b40743de09a5f86358488898e64d5bb0b388ae15cd350f52",
+      "env/kcity_observation.py": "2898d287f42a46cc8676eeb2a0c1cbeb1261448fdf829e62a807ce7526c57d79",
+      "env/kcity_route.py": "558eb0085c5ce12c48bdd71e9d3792e2237318a9fc5135eace6d3cecfcf507c7",
+      "scripts/kcity/scenarios.py": "9bf1c117e5748dad8f381d50fdff038c07b33f7c8059a6d2059e3aefef5a3dce",
+      "configs/kcity/v1/learning.json": "5723c2566dc868252ce9758b5a6a1a149de1bd70e35e086747e18c05b45bf52d"
+    }
+  },
+  "source_SHA256": {
+    "scripts/kcity/check_policy.py": "886cb50abe4be5c56b873a7378aaf6085d9b139bd8bbc24bd515ba37919de9da",
+    "tests/test_kcity_policy.py": "7aff808ed3c5c35321e2cbe3dc330e35d6e46bf498769b152f81eb20b6c6abf3"
+  },
+  "preset_sha256": "5723c2566dc868252ce9758b5a6a1a149de1bd70e35e086747e18c05b45bf52d",
+  "production_hidden_sizes": [
+    256,
+    256
+  ],
+  "parameter_counts": {
+    "total": 86022,
+    "bc_trainable": 85764
+  },
+  "fixture_hidden_sizes": [
+    16,
+    16
+  ],
+  "fixture_ppo_hparams": {
+    "lr": 0.0001,
+    "n_steps": 4,
+    "n_epochs": 1,
+    "minibatch_size": 4,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip_eps": 0.2,
+    "value_coef": 0.5,
+    "entropy_coef": 0.0,
+    "lane_entropy_coef": 0.01,
+    "max_grad_norm": 0.5,
+    "normalize_advantage": true
+  },
+  "bc_probe": {
+    "initial_losses": [
+      {
+        "loss": 0.707276463508606,
+        "accel_mse": 0.12265650182962418,
+        "lane_ce": 0.58461993932724
+      },
+      {
+        "loss": 0.7070614695549011,
+        "accel_mse": 0.12265238910913467,
+        "lane_ce": 0.5844090580940247
+      }
+    ],
+    "continuation_loss": {
+      "loss": 0.828253984451294,
+      "accel_mse": 0.11138176172971725,
+      "lane_ce": 0.7168722152709961
+    },
+    "resume_equal": true,
+    "value_head_and_std_unchanged": true,
+    "executed_optimizer_steps_across_branches": 4
+  },
+  "transfer": {
+    "max_deterministic_action_error": 0.0,
+    "critic_head_and_std_match_b2": true,
+    "sampled_vs_recomputed_logprob_error": 0.0,
+    "bc_source_manifest_sha256": "cdeac56eb74c40f69c9c1943e071ff67b62ebb8b576b8f5fadb89f84d4a3fe03"
+  },
+  "continuation": {
+    "checkpoint_transitions": 6,
+    "checkpoint_updates": 1,
+    "restored_pending_rows": 2,
+    "suffix_decisions_per_branch": 12,
+    "trace_equal": true,
+    "pending_training_state_equal": true,
+    "final_training_state_equal": true,
+    "final_observation_equal": true,
+    "update_metrics_equal": true,
+    "restored_control_steps": 6,
+    "restore_wall_s": 1.1229335480020382,
+    "final_transitions_per_branch": 18,
+    "final_updates_per_branch": 2,
+    "final_optimizer_steps_per_branch": 5
+  },
+  "artifacts": "/home/heven/kcity_research_runs/KC-04-20261114-01/validation_v1",
+  "validation_ppo_optimizer_steps_across_branches": 9,
+  "validation_collected_transitions_across_branches": 30,
+  "replay_transitions_counted_as_new_learning": false,
+  "research_training_started": false,
+  "research_training_transitions": 0,
+  "expert_dataset_transitions": 0,
+  "final_panel_cases_executed": 0,
+  "gpu_validation_performed": false,
+  "training_ready": false,
+  "passed": true
+}

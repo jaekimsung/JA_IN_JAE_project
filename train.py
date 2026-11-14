@@ -142,6 +142,14 @@ def snapshot_configs(run_dir: str):
 
 
 if __name__ == "__main__":
+    # Legacy highway uses the global TraCI connection; two instances would
+    # interfere. Fail before rebuilding maps or creating random checkpoints.
+    if EVAL_INTERVAL > 0:
+        raise RuntimeError(
+            "KC-03: periodic PPO evaluation now requires an independent eval_env. "
+            "This legacy highway launcher shares global TraCI. Set EVAL_INTERVAL=0 "
+            "to run without periodic evaluation; evaluate the saved policy separately "
+            "with test.py. The K-CITY research launcher is a later stage.")
     # 1) 도로 생성 (env/road_config.py 기준으로 매번 재생성)
     sumocfg = road_builder.build(ROAD, EGO, TRAFFIC,
                                  os.path.join(BASE, "env", "sumo"))

@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "<stdin>", line 8, in <module>
+  File "/home/heven/.cache/kcity-research-audit-20261110/venv/lib/python3.10/site-packages/gymnasium/utils/env_checker.py", line 412, in check_env
+    check_reset_seed_determinism(env)
+  File "/home/heven/.cache/kcity-research-audit-20261110/venv/lib/python3.10/site-packages/gymnasium/utils/env_checker.py", line 112, in check_reset_seed_determinism
+    if env.spec is not None and env.spec.nondeterministic is False:
+AttributeError: 'dict' object has no attribute 'nondeterministic'

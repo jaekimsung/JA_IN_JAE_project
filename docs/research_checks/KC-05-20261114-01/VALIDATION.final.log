@@ -1,0 +1,65 @@
+{
+  "checked_at": "2026-11-14T23:22:10.695618+09:00",
+  "dataset": "/home/heven/kcity_research_runs/KC-05-20261114-01/validation_v1",
+  "episode_aggregate": {
+    "metric_version": "KC-METRICS-v1-candidate",
+    "n_planned": 6,
+    "n_valid": 6,
+    "n_invalid_attempts": 0,
+    "n_unattempted": 0,
+    "n_missing_valid": 0,
+    "n_completed": 6,
+    "n_compliant_completed": 6,
+    "n_collision": 0,
+    "n_red_episode": 0,
+    "n_teleport": 0,
+    "n_removal": 0,
+    "n_deadline": 0,
+    "primary_end_reason_counts": {
+      "arrival": 6
+    },
+    "completion_rate": 1.0,
+    "collision_rate": 0.0,
+    "compliant_completion_rate": 1.0,
+    "n_red_crossings": 0,
+    "n_valid_tls_crossings": 10,
+    "n_unknown_tls_crossings": 0,
+    "signal_compliance": 1.0,
+    "signal_metric_supported": true,
+    "data_quality_valid": true,
+    "observed_collision_rate_below_5pct": true,
+    "evaluation_complete": true,
+    "n_elapsed_observed": 6,
+    "mean_elapsed_all": 49.916666666666664,
+    "mean_elapsed_completed": 49.916666666666664,
+    "penalized_time_all": 49.916666666666664,
+    "final_ready": false,
+    "training_ready": false
+  },
+  "learner_executed": false,
+  "optimizer_steps": 0,
+  "expert_pool_transitions_for_10M": 0,
+  "training_ready": false,
+  "bc_forward_check": {
+    "splits": {
+      "expert_train": {
+        "eligible_transitions": 303,
+        "untrained_forward_loss": 0.33208455853533037,
+        "accel_mse": 0.26932262228463744,
+        "lane_ce": 0.06276193782441293
+      },
+      "expert_val": {
+        "eligible_transitions": 299,
+        "untrained_forward_loss": 0.3236847935138538,
+        "accel_mse": 0.26008646051869744,
+        "lane_ce": 0.06359833618470259
+      }
+    },
+    "weights_unchanged": true,
+    "optimizer_state_empty": true,
+    "gradient_updates": 0,
+    "note": "Untrained random actor tensor/label compatibility only; not BC training performance"
+  },
+  "validation_wall_s": 2.0577857949974714,
+  "passed": true
+}

@@ -1,0 +1,127 @@
+test_actor_transfer_matches_b1_and_preserves_b2_critic_std (test_kcity_policy.PolicyTests) ... ERROR
+test_bc_checkpoint_resume_next_batch_and_update_exact (test_kcity_policy.PolicyTests) ... ERROR
+test_bc_invalid_label_and_mask_rejected (test_kcity_policy.PolicyTests) ... ok
+test_bc_updates_actor_not_value_head_or_std (test_kcity_policy.PolicyTests) ... ERROR
+test_checkpoint_immutable_hash_and_config_checked (test_kcity_policy.PolicyTests) ... ok
+test_default_parameter_count (test_kcity_policy.PolicyTests) ... ok
+test_deterministic_action_cannot_choose_masked_lane (test_kcity_policy.PolicyTests) ... ok
+test_invalid_observation_rejected (test_kcity_policy.PolicyTests) ... ok
+test_masked_keep_only_has_zero_lane_entropy (test_kcity_policy.PolicyTests) ... ok
+test_owned_rng_ignores_global_rng (test_kcity_policy.PolicyTests) ... ok
+test_sample_and_recomputed_logprob_match_with_masks (test_kcity_policy.PolicyTests) ... ERROR
+test_transfer_rejects_legacy_config_mismatch_and_nonfresh_target (test_kcity_policy.PolicyTests) ... ok
+test_wrong_mask_or_category_rejected (test_kcity_policy.PolicyTests) ... ERROR
+test_active_lane_request_mode_and_cooldown_restored (test_kcity_policy.ResumeTests) ... ok
+test_partial_rollout_sumo_rng_optimizer_resume (test_kcity_policy.ResumeTests) ... ERROR
+test_resume_across_case_boundary (test_kcity_policy.ResumeTests) ... ok
+test_resume_rejects_wrong_run_before_starting_sumo (test_kcity_policy.ResumeTests) ... ok
+
+======================================================================
+ERROR: test_actor_transfer_matches_b1_and_preserves_b2_critic_std (test_kcity_policy.PolicyTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/tests/test_kcity_policy.py", line 80, in test_actor_transfer_matches_b1_and_preserves_b2_critic_std
+    bc=KCityBC(small_config());bc.train_batch(*fixture_batch())
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_training.py", line 125, in train_batch
+    loss,parts=self.loss(obs,actions,masks)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_training.py", line 122, in loss
+    return bc_loss(self.policy,obs,actions,masks)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_policy.py", line 106, in bc_loss
+    policy.evaluate_actions(observations,action_raw,lane_masks)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_policy.py", line 62, in evaluate_actions
+    nd,cd,value=self.distributions(obs,lane_mask)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_policy.py", line 39, in distributions
+    if lane_mask is not None and not torch.isin(torch.as_tensor(lane_mask),torch.tensor([0,1],device=torch.as_tensor(lane_mask).device)).all():
+RuntimeError: Unsupported input type encountered for isin(): Bool
+
+======================================================================
+ERROR: test_bc_checkpoint_resume_next_batch_and_update_exact (test_kcity_policy.PolicyTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/tests/test_kcity_policy.py", line 105, in test_bc_checkpoint_resume_next_batch_and_update_exact
+    a=KCityBC(small_config());a.train_batch(*fixture_batch())
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_training.py", line 125, in train_batch
+    loss,parts=self.loss(obs,actions,masks)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_training.py", line 122, in loss
+    return bc_loss(self.policy,obs,actions,masks)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_policy.py", line 106, in bc_loss
+    policy.evaluate_actions(observations,action_raw,lane_masks)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_policy.py", line 62, in evaluate_actions
+    nd,cd,value=self.distributions(obs,lane_mask)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_policy.py", line 39, in distributions
+    if lane_mask is not None and not torch.isin(torch.as_tensor(lane_mask),torch.tensor([0,1],device=torch.as_tensor(lane_mask).device)).all():
+RuntimeError: Unsupported input type encountered for isin(): Bool
+
+======================================================================
+ERROR: test_bc_updates_actor_not_value_head_or_std (test_kcity_policy.PolicyTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/tests/test_kcity_policy.py", line 66, in test_bc_updates_actor_not_value_head_or_std
+    loss=bc.train_batch(*fixture_batch())
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_training.py", line 125, in train_batch
+    loss,parts=self.loss(obs,actions,masks)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_training.py", line 122, in loss
+    return bc_loss(self.policy,obs,actions,masks)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_policy.py", line 106, in bc_loss
+    policy.evaluate_actions(observations,action_raw,lane_masks)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_policy.py", line 62, in evaluate_actions
+    nd,cd,value=self.distributions(obs,lane_mask)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_policy.py", line 39, in distributions
+    if lane_mask is not None and not torch.isin(torch.as_tensor(lane_mask),torch.tensor([0,1],device=torch.as_tensor(lane_mask).device)).all():
+RuntimeError: Unsupported input type encountered for isin(): Bool
+
+======================================================================
+ERROR: test_sample_and_recomputed_logprob_match_with_masks (test_kcity_policy.PolicyTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/tests/test_kcity_policy.py", line 40, in test_sample_and_recomputed_logprob_match_with_masks
+    a,lp,_=p.sample(o,m,generator=torch.Generator().manual_seed(4))
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_policy.py", line 49, in sample
+    nd,cd,value=self.distributions(obs,lane_mask)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_policy.py", line 39, in distributions
+    if lane_mask is not None and not torch.isin(torch.as_tensor(lane_mask),torch.tensor([0,1],device=torch.as_tensor(lane_mask).device)).all():
+RuntimeError: Unsupported input type encountered for isin(): Bool
+
+======================================================================
+ERROR: test_wrong_mask_or_category_rejected (test_kcity_policy.PolicyTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/tests/test_kcity_policy.py", line 52, in test_wrong_mask_or_category_rejected
+    with self.assertRaises(ValueError):p.evaluate_actions(o,a,torch.tensor(wrong))
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_policy.py", line 62, in evaluate_actions
+    nd,cd,value=self.distributions(obs,lane_mask)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_policy.py", line 39, in distributions
+    if lane_mask is not None and not torch.isin(torch.as_tensor(lane_mask),torch.tensor([0,1],device=torch.as_tensor(lane_mask).device)).all():
+RuntimeError: Unsupported input type encountered for isin(): Bool
+
+======================================================================
+ERROR: test_partial_rollout_sumo_rng_optimizer_resume (test_kcity_policy.ResumeTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/tests/test_kcity_policy.py", line 134, in test_partial_rollout_sumo_rng_optimizer_resume
+    a=self.runner(background=True);a.collect(4);a.update();a.collect(2)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_training.py", line 204, in update
+    result=self.agent.update(a,r);self.agent.buffer.clear()
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_training.py", line 86, in update
+    return super().update(advantages,returns)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/ppo.py", line 302, in update
+    log_prob, entropy, value = self.policy.evaluate_actions(
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_policy.py", line 62, in evaluate_actions
+    nd,cd,value=self.distributions(obs,lane_mask)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/algorithms/kcity_policy.py", line 39, in distributions
+    if lane_mask is not None and not torch.isin(torch.as_tensor(lane_mask),torch.tensor([0,1],device=torch.as_tensor(lane_mask).device)).all():
+RuntimeError: Unsupported input type encountered for isin(): Bool
+
+----------------------------------------------------------------------
+Ran 17 tests in 10.458s
+
+FAILED (errors=6)
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds

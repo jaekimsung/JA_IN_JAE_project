@@ -1,0 +1,54 @@
+{
+  "checked_at": "2026-11-14T21:13:30.405028+09:00",
+  "implementation_id": "KC-ENV-v1-kc02-candidate",
+  "branch": "codex/kcity-kc01-20261114",
+  "head": "5e7a46cabab1ee7adb6baa06279ff59351f4b802",
+  "protected_files_checked": 684,
+  "protected_mismatches": [],
+  "source_SHA256": {
+    "env/kcity_env.py": "2c4a66cc3f0d094759e77c489f5e5cf8edaee42e1fe137597cffd0b2447110ef",
+    "env/kcity_route.py": "558eb0085c5ce12c48bdd71e9d3792e2237318a9fc5135eace6d3cecfcf507c7",
+    "env/kcity_observation.py": "2898d287f42a46cc8676eeb2a0c1cbeb1261448fdf829e62a807ce7526c57d79",
+    "scripts/kcity/check_env.py": "ce3647d6a3091710eeccb7ba62f4d5167b3ef33b6c8526f9cb61aab37ea81df7",
+    "tests/test_kcity_env.py": "4b3186996856332d994fd6577899291fd7dc66c0ab96264657d937fa664e878c"
+  },
+  "final_integration_source_mismatches": [],
+  "ast_parse_passed": true,
+  "tests": {
+    "passed": true,
+    "count": 32,
+    "log": "TESTS.final.log"
+  },
+  "gym_check": {
+    "passed": true,
+    "reference": "GYM_API_CHECK.json",
+    "render_checked": false
+  },
+  "final_integration": {
+    "passed": true,
+    "cases": 6,
+    "engineering_transitions": 623,
+    "reference": "integration_final/SUMMARY.json"
+  },
+  "learning_updates": 0,
+  "expert_dataset_transitions": 0,
+  "training_ready": false,
+  "research_settings_frozen": false,
+  "commit_or_push_performed": false,
+  "external_uploads": 0,
+  "next_stage": "KC-03",
+  "limitations": [
+    "unjustified_wait reward inactive",
+    "B seed42 initial HV5 below candidate10",
+    "HV emergency braking warning in A",
+    "GAE/BC/expert/writer/pilot not completed",
+    "limited seed/platform coverage"
+  ],
+  "markdown_links_checked": 170,
+  "broken_local_links": [],
+  "git_diff_check": {
+    "passed": true,
+    "output": ""
+  },
+  "passed": true
+}

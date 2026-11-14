@@ -1,0 +1,79 @@
+{
+  "scenario_id": "C",
+  "background": true,
+  "seed": 42,
+  "steps": 224,
+  "end_reason": "arrival",
+  "sim_elapsed_s": 111.9,
+  "initial_state_sha256": "d5d6e5cc71bac3d947090a15ec7d4a4f1f8ff7e84bcef7fab17481393edd9050",
+  "initial_running_hv": 13,
+  "max_running_hv": 29,
+  "finite_observation_shape": [
+    73
+  ],
+  "progress_nondecreasing": true,
+  "observation_contract_valid": true,
+  "substep_contract_valid": true,
+  "unknown_signal_crossings": 0,
+  "events": [
+    {
+      "type": "lane_change",
+      "sim_tick": 602,
+      "from_lane": "-3#4_0",
+      "to_lane": "-3#4_1"
+    },
+    {
+      "type": "tls_crossing",
+      "sim_tick": 923,
+      "route_occurrence": 6,
+      "tls_id": "647",
+      "link_index": 2,
+      "signal_before": "G",
+      "classification_valid": true,
+      "red_entry": false,
+      "mapping_basis": "route occurrence and before/after Lane"
+    },
+    {
+      "type": "tls_crossing",
+      "sim_tick": 1100,
+      "route_occurrence": 7,
+      "tls_id": "268",
+      "link_index": 8,
+      "signal_before": "G",
+      "classification_valid": true,
+      "red_entry": false,
+      "mapping_basis": "route occurrence and before/after Lane"
+    },
+    {
+      "type": "tls_crossing",
+      "sim_tick": 1211,
+      "route_occurrence": 8,
+      "tls_id": "764",
+      "link_index": 4,
+      "signal_before": "G",
+      "classification_valid": true,
+      "red_entry": false,
+      "mapping_basis": "route occurrence and before/after Lane"
+    },
+    {
+      "type": "tls_crossing",
+      "sim_tick": 1331,
+      "route_occurrence": 9,
+      "tls_id": "169",
+      "link_index": 1,
+      "signal_before": "G",
+      "classification_valid": true,
+      "red_entry": false,
+      "mapping_basis": "route occurrence and before/after Lane"
+    },
+    {
+      "type": "arrival",
+      "sim_tick": 1720,
+      "correct_goal": true
+    }
+  ],
+  "wall_seconds": 6.860211123996123,
+  "training_ready": false,
+  "learning_updates": 0,
+  "limitation": "scripted acceleration/route Lane request, common SUMO safety; not research B0/learned policy"
+}

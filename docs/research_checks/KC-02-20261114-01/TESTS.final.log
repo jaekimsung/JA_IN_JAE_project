@@ -1,0 +1,53 @@
+test_corridor_crosses_internal_and_short_edges (test_kcity_env.GeometryTests) ... ok
+test_goal_progress_and_wrong_route (test_kcity_env.GeometryTests) ... ok
+test_neighbor_uses_route_distance_across_edge_boundary (test_kcity_env.GeometryTests) ... ok
+test_progress_is_continuous_through_short_and_internal_lanes (test_kcity_env.GeometryTests) ... ok
+test_actual_collision_fixture_terminates (test_kcity_env.GymIntegrationTests) ... Warning: Vehicle 'kcity_ego'; collision with vehicle 'fixture_blocker', lane='-68_0', gap=-4.97, time=0.20, stage=move.
+ok
+test_actual_off_route_fixture_terminates (test_kcity_env.GymIntegrationTests) ... ok
+test_actual_red_entry_fixture_terminates (test_kcity_env.GymIntegrationTests) ... ok
+test_boundary_fixture_tracks_red_and_skipped_occurrences (test_kcity_env.GymIntegrationTests) ... ok
+test_connections_are_isolated_and_close_is_idempotent (test_kcity_env.GymIntegrationTests) ... ok
+test_external_limit_truncates_with_valid_terminal_observation (test_kcity_env.GymIntegrationTests) ... ok
+test_finite_deadline_is_termination_and_exact_tick (test_kcity_env.GymIntegrationTests) ... ok
+test_inside_junction_mask_keeps_only_stay (test_kcity_env.GymIntegrationTests) ... ok
+test_lane_mask_missing_lane_and_cooldown (test_kcity_env.GymIntegrationTests) ... ok
+test_real_step_raw_clipped_state_and_substeps (test_kcity_env.GymIntegrationTests) ... ok
+test_removed_vehicle_has_terminal_absorbing_observation (test_kcity_env.GymIntegrationTests) ... ok
+test_reset_seed_reproduces_actual_traffic_not_only_requests (test_kcity_env.GymIntegrationTests) ... ok
+test_all_scenarios_and_background_connections (test_kcity_scenarios.KCityContractTests) ... ok
+test_asset_drift_is_rejected (test_kcity_scenarios.KCityContractTests) ... ok
+test_demand_scales_arrivals_without_changing_od_stream (test_kcity_scenarios.KCityContractTests) ... ok
+test_disconnected_route_is_rejected (test_kcity_scenarios.KCityContractTests) ... ok
+test_external_asset_and_unsafe_numeric_input_rejected (test_kcity_scenarios.KCityContractTests) ... ok
+test_goal_outside_lane_is_rejected (test_kcity_scenarios.KCityContractTests) ... ok
+test_missing_tls_is_rejected (test_kcity_scenarios.KCityContractTests) ... ok
+test_request_reproducibility_independent_of_global_rng (test_kcity_scenarios.KCityContractTests) ... ok
+test_required_lane_change_is_real (test_kcity_scenarios.KCityContractTests) ... ok
+test_required_lane_task_cannot_be_silently_removed (test_kcity_scenarios.KCityContractTests) ... ok
+test_separate_process_seed_equality (test_kcity_scenarios.KCityContractTests) ... ok
+test_short_and_internal_lanes_are_retained (test_kcity_scenarios.KCityContractTests) ... ok
+test_signal_and_link_indices_are_grounded (test_kcity_scenarios.KCityContractTests) ... ok
+test_split_case_and_component_seed_separation (test_kcity_scenarios.KCityContractTests) ... ok
+test_start_in_correct_lane_does_not_fake_required_change (test_kcity_scenarios.KCityContractTests) ... ok
+test_timing_and_training_authorization_cannot_drift (test_kcity_scenarios.KCityContractTests) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 16.626s
+
+OK
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds

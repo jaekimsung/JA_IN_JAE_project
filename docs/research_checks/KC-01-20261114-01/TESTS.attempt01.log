@@ -1,0 +1,20 @@
+test_kcity_scenarios (unittest.loader._FailedTest) ... ERROR
+
+======================================================================
+ERROR: test_kcity_scenarios (unittest.loader._FailedTest)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_kcity_scenarios
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/unittest/loader.py", line 436, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.10/unittest/loader.py", line 377, in _get_module_from_name
+    __import__(name)
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/tests/test_kcity_scenarios.py", line 16, in <module>
+    from scripts.kcity.scenarios import validate_contract
+ModuleNotFoundError: No module named 'scripts.kcity'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

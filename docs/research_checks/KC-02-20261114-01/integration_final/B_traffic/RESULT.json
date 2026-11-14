@@ -1,0 +1,35 @@
+{
+  "scenario_id": "B",
+  "background": true,
+  "seed": 42,
+  "steps": 49,
+  "end_reason": "arrival",
+  "sim_elapsed_s": 24.400000000000002,
+  "initial_state_sha256": "5ce237102ea22379d335657b821c7288dfa2db2633abab3952dcda6344ce8cb3",
+  "initial_running_hv": 5,
+  "max_running_hv": 9,
+  "finite_observation_shape": [
+    73
+  ],
+  "progress_nondecreasing": true,
+  "observation_contract_valid": true,
+  "substep_contract_valid": true,
+  "unknown_signal_crossings": 0,
+  "events": [
+    {
+      "type": "lane_change",
+      "sim_tick": 602,
+      "from_lane": "-3#4_0",
+      "to_lane": "-3#4_1"
+    },
+    {
+      "type": "arrival",
+      "sim_tick": 845,
+      "correct_goal": true
+    }
+  ],
+  "wall_seconds": 1.7443576529985876,
+  "training_ready": false,
+  "learning_updates": 0,
+  "limitation": "scripted acceleration/route Lane request, common SUMO safety; not research B0/learned policy"
+}

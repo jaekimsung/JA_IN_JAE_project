@@ -1,0 +1,52 @@
+{
+  "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+  "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+  "namespace": "contract_check",
+  "case_index": 0,
+  "scenario_id": "A",
+  "scenario": {
+    "id": "A",
+    "name": "A_signal",
+    "route_edges": [
+      "-68",
+      "-13",
+      "-71"
+    ],
+    "vehicle_class": "passenger",
+    "start": {
+      "edge": "-68",
+      "lane_index": 0,
+      "position_m": 5.0,
+      "speed_mps": 2.0
+    },
+    "goal": {
+      "edge": "-71",
+      "lane_index": 0,
+      "arrival_position_m": 28.55
+    },
+    "required_tls_ids": [
+      "647"
+    ],
+    "required_lane_change": null,
+    "episode_limit_s": 300.0,
+    "task": "signal_stop_restart",
+    "feasibility_status": "not_yet_checked_with_research_controller"
+  },
+  "seeds": {
+    "sumo": 1315815198,
+    "arrivals": 909348121,
+    "od": 1402728633,
+    "vehicle_type": 1946929129,
+    "initialization": 2088159645
+  },
+  "requested_lambda_vph": 600.0,
+  "demand_multiplier": 1.0,
+  "case_uid": "436899f0bf50b011a272d418e502a6ad1b5602faf95668a3069ee3866134ea33",
+  "runtime_variant": {
+    "implementation": "KC-ENV-v2-kc03-candidate",
+    "background": true,
+    "warmup_s": 60.0,
+    "horizon_s": 300.0,
+    "debug_override": false
+  }
+}

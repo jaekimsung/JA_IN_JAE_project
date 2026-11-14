@@ -1,0 +1,63 @@
+{
+  "time": "2026-11-14T20:32:40.119514+09:00",
+  "local_links_checked": 132,
+  "anchors_checked": 8,
+  "errors": [],
+  "required_transition_column_count": 19,
+  "missing_required_transition_columns": [],
+  "required_NPZ_keys": [
+    "observation",
+    "action_raw",
+    "lane_change",
+    "reward",
+    "next_observation",
+    "terminated",
+    "truncated",
+    "episode",
+    "t",
+    "detected_xy",
+    "detected_offsets"
+  ],
+  "missing_required_NPZ_keys": [],
+  "observation_block_dimensions": [
+    31,
+    10,
+    5,
+    8,
+    9,
+    10
+  ],
+  "observation_dimensions_total": 73,
+  "collection_plan": {
+    "expert_pool": 1000000,
+    "PPO_runs": 6,
+    "PPO_per_run": 1000000,
+    "archive_policies": 6,
+    "archive_per_policy": 500000,
+    "base_unique_target": 10000000,
+    "evaluation_and_pilot_excluded": true
+  },
+  "final_episode_plan": {
+    "learned": 2700,
+    "B0": 300,
+    "total": 3000
+  },
+  "protected_source_changes": [],
+  "changed_files_outside_documentation": [],
+  "git_diff_check_exit": 0,
+  "document_SHA256": {
+    "README.md": "df26f0f025865c04deb42ea2c4b5f988142eab80681943cb758e657eb697bad6",
+    "docs/DATA_COLLECTION_SPEC.md": "91cf8d817ce60cc9903061512229fe2dc7f320e1ca9f6ef2bcd227615c98b12e",
+    "docs/EXECUTION_PROTOCOL.md": "61821f9cf3bc59dbf966c83f56b8631d87c7cd10cc7aa788e4fcdcc4d2c60684",
+    "docs/EXPERIMENTS.md": "a0cf97b0b944a4880718447c5fbb72c70d9a8af373fb0b3602aab3e15414396a",
+    "docs/RESEARCH_PLAN.md": "ec82bcaff763708061f302739858c36f0dec99c378a9eb2071cfe9310f9eb3e8",
+    "docs/RESEARCH_STATUS.md": "17eff1dfeb929f61016ae21e3477fe54459cb92965732d96b1e6217f47ba89db",
+    "docs/RESULTS_AND_CONSULTING.md": "a7370c70eaf34537b41ea69f65c9a117cfdc6650cd9eb4fec50306ccc54dc538"
+  },
+  "new_simulator_runs": 0,
+  "new_learning_updates": 0,
+  "new_collection_transitions": 0,
+  "runtime_launch_ready": false,
+  "runtime_reason": "G1-G5 not passed; KCity runtime and CLI entrypoints absent",
+  "all_document_checks_passed": true
+}

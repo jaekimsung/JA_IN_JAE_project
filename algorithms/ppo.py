@@ -27,8 +27,8 @@ policy gradient의 기본:
     (L^VF = (V(s) - R_target)², H = 정책 엔트로피)
 
 advantage는 GAE(λ)로 추정:
-    δ_t = r_t + γ·V(s_{t+1})·(1-done) - V(s_t)
-    A_t = δ_t + (γλ)·(1-done)·A_{t+1}          ← 뒤에서 앞으로 재귀
+    δ_t = r_t + γ·V(s_{t+1})·bootstrap_mask - V(s_t)
+    A_t = δ_t + (γλ)·trace_mask·A_{t+1}          ← 뒤에서 앞으로 재귀
     R_t = A_t + V(s_t)                          ← critic의 회귀 타깃
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -41,6 +41,7 @@ advantage는 GAE(λ)로 추정:
     }
 """
 from collections import deque
+import random
 
 import numpy as np
 import torch
@@ -92,11 +93,13 @@ class PPO:
         # ---- 기타 ----
         seed: int = 0,
         device: str = "auto",
+        policy=None,                    # Optional compatible policy (K-CITY masked hybrid).
         buffer: RolloutBuffer = None,   # 경험 버퍼 (메인에서 주입).
                                         # None이면 내부에서 기본 생성.
     ):
-        torch.manual_seed(seed)
-        np.random.seed(seed)
+        if policy is None:
+            torch.manual_seed(seed)
+            np.random.seed(seed)
 
         if device == "auto":
             device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -106,7 +109,9 @@ class PPO:
         # hybrid: 가감속(Normal) + 차선변경(Categorical 3-way).
         #   양자화 dead zone이 없어 deterministic 평가에서도 변경이 나온다.
         # gaussian: 모든 축 연속 — 비교 실험용으로 남겨둠.
-        if policy_type == "hybrid":
+        if policy is not None:
+            self.policy = policy.to(self.device)
+        elif policy_type == "hybrid":
             assert act_dim == 2, "hybrid 정책은 [가감속, 차선] 2차원 행동 전용"
             self.policy = HybridActorCritic(
                 obs_dim,
@@ -125,6 +130,8 @@ class PPO:
         self.policy_type = policy_type
         self.optimizer = torch.optim.Adam(self.policy.parameters(), lr=lr)
 
+        if isinstance(n_steps, bool) or not isinstance(n_steps, int) or n_steps < 1:
+            raise ValueError("n_steps must be a positive integer")
         self.n_steps = n_steps
         self.n_epochs = n_epochs
         self.minibatch_size = minibatch_size
@@ -143,6 +150,8 @@ class PPO:
         # 이 파일을 수정할 필요가 없다.
         self.buffer = buffer if buffer is not None else RolloutBuffer()
         self.num_timesteps = 0
+        self.num_updates = 0
+        self.num_optimizer_steps = 0
 
     # ==================================================================
     # 행동 선택
@@ -197,7 +206,7 @@ class PPO:
     # ==================================================================
     # 1단계) rollout 수집
     # ==================================================================
-    def collect_rollout(self, env, state, logger=None, ep_stats=None):
+    def collect_rollout(self, env, state, logger=None, ep_stats=None, *, max_steps=None):
         """현재 정책으로 n_steps만큼 경험을 모은다.
 
         Args:
@@ -206,28 +215,41 @@ class PPO:
         Returns:
             (last_obs, last_value, finished_returns)
         """
+        limit = self.n_steps if max_steps is None else min(self.n_steps, max_steps)
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit < 1:
+            raise ValueError("Rollout limit must be a positive integer")
+        if ep_stats is None:
+            ep_stats = [0.0, 0]
         obs = state
         finished_returns = []
         self.buffer.clear()
 
-        for _ in range(self.n_steps):
+        for _ in range(limit):
             action, log_prob, value = self.act(obs)
-            next_obs, reward, terminated, truncated, _ = env.step(action)
+            action_mask = (self.policy.mask_from_obs(obs).cpu().tolist()
+                           if hasattr(self.policy, "mask_from_obs") else None)
+            next_obs, reward, terminated, truncated, info = env.step(action)
 
             self.num_timesteps += 1
             ep_stats[0] += reward
             ep_stats[1] += 1
 
-            # ★ truncation(시간 초과) 보정:
-            #   MDP가 끝난 게 아니라 시간 제한으로 잘린 것이므로,
-            #   이어졌다면 받았을 미래 가치를 V(s')로 근사해 보상에 더한다.
-            #   생략하면 "시간초과 = 이후 가치 0"으로 잘못 학습된다.
-            stored_reward = reward
-            if truncated and not terminated:
-                stored_reward += self.gamma * self.get_value(next_obs)
-
-            self.buffer.add(obs, action, log_prob, stored_reward, value,
-                            terminated)
+            # Use the actual terminal observation, never an autoreset state.
+            terminal_obs = next_obs
+            autoreset = False
+            if terminated or truncated:
+                for key in ("final_observation", "terminal_observation", "final_obs"):
+                    if key in info:
+                        terminal_obs = info[key]
+                        autoreset = True
+                        break
+            if truncated and not terminated and (terminal_obs is None or
+                    info.get("next_observation_valid") is False):
+                raise ValueError("Cannot bootstrap an invalid terminal observation")
+            next_value = 0.0 if terminated else self.get_value(terminal_obs)
+            self.buffer.add(obs, action, log_prob, reward, value,
+                            terminated=terminated, truncated=truncated,
+                            next_value=next_value, action_mask=action_mask)
 
             if terminated or truncated:
                 finished_returns.append(ep_stats[0])
@@ -235,7 +257,10 @@ class PPO:
                     logger.log_episode(self.num_timesteps, ep_stats[0],
                                        int(ep_stats[1]))
                 ep_stats[0], ep_stats[1] = 0.0, 0
-                obs, _ = env.reset()
+                if autoreset:
+                    obs = next_obs
+                else:
+                    obs, _ = env.reset()
             else:
                 obs = next_obs
 
@@ -247,12 +272,17 @@ class PPO:
     # ==================================================================
     def update(self, advantages, returns) -> dict:
         obs_t, act_t, old_log_prob_t = self.buffer.to_tensors(self.device)
+        lane_masks = None
+        if hasattr(self.policy, "mask_from_obs"):
+            if any(m is None for m in self.buffer.action_masks):
+                raise ValueError("Masked PPO requires sampling-time lane masks")
+            lane_masks = torch.as_tensor(self.buffer.action_masks, dtype=torch.bool, device=self.device)
         adv_t = torch.as_tensor(advantages, device=self.device)
         ret_t = torch.as_tensor(returns, device=self.device)
 
         # advantage 정규화: 스케일을 평균0/표준편차1로 → 학습률 민감도 감소
         if self.normalize_advantage:
-            adv_t = (adv_t - adv_t.mean()) / (adv_t.std() + 1e-8)
+            adv_t = (adv_t - adv_t.mean()) / (adv_t.std(unbiased=False) + 1e-8)
 
         T = len(self.buffer)
         indices = np.arange(T)
@@ -266,8 +296,11 @@ class PPO:
                 mb = indices[start:start + self.minibatch_size]
 
                 # 현재 정책으로 "그때 그 행동"을 다시 평가
-                log_prob, entropy, value = self.policy.evaluate_actions(
-                    obs_t[mb], act_t[mb])
+                if lane_masks is None:
+                    log_prob, entropy, value = self.policy.evaluate_actions(obs_t[mb], act_t[mb])
+                else:
+                    log_prob, entropy, value = self.policy.evaluate_actions(
+                        obs_t[mb], act_t[mb], lane_mask=lane_masks[mb])
 
                 # 확률비 r(θ) = exp(log π_new - log π_old)
                 ratio = torch.exp(log_prob - old_log_prob_t[mb])
@@ -298,6 +331,7 @@ class PPO:
                 nn.utils.clip_grad_norm_(self.policy.parameters(),
                                          self.max_grad_norm)
                 self.optimizer.step()
+                self.num_optimizer_steps += 1
 
                 # 진단 지표
                 with torch.no_grad():
@@ -322,6 +356,7 @@ class PPO:
             with torch.no_grad():
                 out["p_lane_change"] = float(
                     self.policy.lane_change_prob(obs_t).mean().item())
+        self.num_updates += 1
         return out
 
     # ==================================================================
@@ -329,13 +364,23 @@ class PPO:
     # ==================================================================
     def learn(self, env, total_timesteps: int, logger=None,
               log_interval: int = 1, eval_interval: int = 0,
-              eval_episodes: int = 5):
+              eval_episodes: int = 5, *, eval_env=None, eval_fn=None):
         """학습 실행.
 
         Args:
             logger: utils.logger.RunLogger (없으면 콘솔 출력만)
             eval_interval: 몇 번의 업데이트마다 평가할지 (0이면 평가 안 함)
+            eval_env: 독립 연결/seed의 평가 환경. 평가가 켜지면 필수.
+            eval_fn: 독립 평가 callback. K-CITY는 별도 case-panel 평가기 사용.
+            total_timesteps: 절대 전이 목표. 마지막 rollout을 잘라 초과하지 않음.
         """
+        if isinstance(total_timesteps, bool) or not isinstance(total_timesteps, int) or total_timesteps < self.num_timesteps:
+            raise ValueError("total_timesteps is an absolute nondecreasing integer target")
+        if eval_interval > 0:
+            if eval_env is None or getattr(eval_env, "unwrapped", eval_env) is getattr(env, "unwrapped", env):
+                raise ValueError("Periodic evaluation requires an independent eval_env")
+        if total_timesteps == self.num_timesteps:
+            return
         obs, _ = env.reset()
         ep_stats = [0.0, 0]                    # [현재 에피소드 보상, 길이]
         recent_returns = deque(maxlen=20)
@@ -344,7 +389,8 @@ class PPO:
         while self.num_timesteps < total_timesteps:
             # 1) rollout
             obs, last_value, finished = self.collect_rollout(
-                env, obs, logger=logger, ep_stats=ep_stats)
+                env, obs, logger=logger, ep_stats=ep_stats,
+                max_steps=total_timesteps-self.num_timesteps)
             recent_returns.extend(finished)
 
             # 2) advantage
@@ -369,14 +415,20 @@ class PPO:
 
             # 4) 주기적 평가 (utils/evaluator.py 사용)
             if eval_interval > 0 and n_updates % eval_interval == 0:
-                m = evaluate_policy(self, env, n_episodes=eval_episodes)
+                evaluator = evaluate_policy if eval_fn is None else eval_fn
+                # Preserve policy sampling RNG: evaluation must not alter the
+                # training stream. Environment reset RNG is owned by eval_env.
+                np_state = np.random.get_state()
+                py_state = random.getstate()
+                try:
+                    with torch.random.fork_rng():
+                        m = evaluator(self, eval_env, n_episodes=eval_episodes)
+                finally:
+                    np.random.set_state(np_state)
+                    random.setstate(py_state)
                 if logger is not None:
                     logger.log_eval(self.num_timesteps, m.as_dict(),
                                     m.summary(), eval_episodes)
-                # 평가가 학습 중이던 에피소드를 끊었으므로 리셋.
-                # (끊긴 경험은 이미 버퍼에 반영됐고 GAE가 부트스트랩하므로 무해)
-                obs, _ = env.reset()
-                ep_stats[0], ep_stats[1] = 0.0, 0
 
     # ==================================================================
     def save(self, path: str):

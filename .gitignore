@@ -1,0 +1,10 @@
+# Local editor/cache state
+.vscode/
+__pycache__/
+*.py[cod]
+
+# Local research rollout/checkpoint outputs
+/docs/research_checks/**/integration_v*/
+/docs/research_checks/**/early_probe/
+/docs/research_checks/**/resume_probe*/
+/docs/research_checks/**/transitions.jsonl

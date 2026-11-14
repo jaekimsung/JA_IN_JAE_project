@@ -1,0 +1,18 @@
+ Retrying in 1 seconds
+{
+  "collection": {
+    "committed_transitions": 7,
+    "completed_plan": false,
+    "planned_episodes": 6,
+    "episode_index": 0,
+    "source_stage": "debug",
+    "expert_pool_transitions_for_10M": 0,
+    "research_training_started": false,
+    "training_ready": false
+  },
+  "quality_passed": true,
+  "data_id": "5391a11dec904a4b29be1119de9188660a380c6f1762780ec4b9be98afdbdb45",
+  "committed_shards": 2,
+  "wall_s": 1.2831074220011942,
+  "training_ready": false
+}

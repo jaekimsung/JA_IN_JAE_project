@@ -1,0 +1,325 @@
+{
+  "started_at": "2026-11-14T21:08:32.682728+09:00",
+  "ended_at": "2026-11-14T21:08:48.220685+09:00",
+  "implementation_id": "KC-ENV-v1-kc02-candidate",
+  "runs": [
+    {
+      "scenario_id": "A",
+      "background": false,
+      "seed": 42,
+      "steps": 68,
+      "end_reason": "arrival",
+      "sim_elapsed_s": 33.800000000000004,
+      "initial_state_sha256": "459993da5c7709882d8c894da2172ff4cb7e73b65e4fb97b84932d93e2e42449",
+      "initial_running_hv": 0,
+      "max_running_hv": 0,
+      "finite_observation_shape": [
+        73
+      ],
+      "progress_nondecreasing": true,
+      "observation_contract_valid": true,
+      "substep_contract_valid": true,
+      "unknown_signal_crossings": 0,
+      "events": [
+        {
+          "type": "tls_crossing",
+          "sim_tick": 270,
+          "route_occurrence": 1,
+          "tls_id": "647",
+          "link_index": 2,
+          "signal_before": "G",
+          "classification_valid": true,
+          "red_entry": false,
+          "mapping_basis": "route occurrence and before/after Lane"
+        },
+        {
+          "type": "arrival",
+          "sim_tick": 339,
+          "correct_goal": true
+        }
+      ],
+      "wall_seconds": 1.3798371230004705,
+      "training_ready": false,
+      "learning_updates": 0,
+      "limitation": "scripted acceleration/route Lane request, common SUMO safety; not research B0/learned policy"
+    },
+    {
+      "scenario_id": "B",
+      "background": false,
+      "seed": 42,
+      "steps": 49,
+      "end_reason": "arrival",
+      "sim_elapsed_s": 24.400000000000002,
+      "initial_state_sha256": "705a4a9dac45b3e5bd4d68daf3c0bfdda95e39fac935a451b170f8ccded9f400",
+      "initial_running_hv": 0,
+      "max_running_hv": 0,
+      "finite_observation_shape": [
+        73
+      ],
+      "progress_nondecreasing": true,
+      "observation_contract_valid": true,
+      "substep_contract_valid": true,
+      "unknown_signal_crossings": 0,
+      "events": [
+        {
+          "type": "lane_change",
+          "sim_tick": 2,
+          "from_lane": "-3#4_0",
+          "to_lane": "-3#4_1"
+        },
+        {
+          "type": "arrival",
+          "sim_tick": 245,
+          "correct_goal": true
+        }
+      ],
+      "wall_seconds": 1.269124730002659,
+      "training_ready": false,
+      "learning_updates": 0,
+      "limitation": "scripted acceleration/route Lane request, common SUMO safety; not research B0/learned policy"
+    },
+    {
+      "scenario_id": "C",
+      "background": false,
+      "seed": 42,
+      "steps": 181,
+      "end_reason": "arrival",
+      "sim_elapsed_s": 90.2,
+      "initial_state_sha256": "98c1a4bd8a376dde41436e169cf33a20c6d3723e5ae92dc9d65ed28fc49803ac",
+      "initial_running_hv": 0,
+      "max_running_hv": 0,
+      "finite_observation_shape": [
+        73
+      ],
+      "progress_nondecreasing": true,
+      "observation_contract_valid": true,
+      "substep_contract_valid": true,
+      "unknown_signal_crossings": 0,
+      "events": [
+        {
+          "type": "lane_change",
+          "sim_tick": 2,
+          "from_lane": "-3#4_0",
+          "to_lane": "-3#4_1"
+        },
+        {
+          "type": "tls_crossing",
+          "sim_tick": 304,
+          "route_occurrence": 6,
+          "tls_id": "647",
+          "link_index": 2,
+          "signal_before": "G",
+          "classification_valid": true,
+          "red_entry": false,
+          "mapping_basis": "route occurrence and before/after Lane"
+        },
+        {
+          "type": "tls_crossing",
+          "sim_tick": 377,
+          "route_occurrence": 7,
+          "tls_id": "268",
+          "link_index": 8,
+          "signal_before": "G",
+          "classification_valid": true,
+          "red_entry": false,
+          "mapping_basis": "route occurrence and before/after Lane"
+        },
+        {
+          "type": "tls_crossing",
+          "sim_tick": 491,
+          "route_occurrence": 8,
+          "tls_id": "764",
+          "link_index": 4,
+          "signal_before": "G",
+          "classification_valid": true,
+          "red_entry": false,
+          "mapping_basis": "route occurrence and before/after Lane"
+        },
+        {
+          "type": "tls_crossing",
+          "sim_tick": 611,
+          "route_occurrence": 9,
+          "tls_id": "169",
+          "link_index": 1,
+          "signal_before": "G",
+          "classification_valid": true,
+          "red_entry": false,
+          "mapping_basis": "route occurrence and before/after Lane"
+        },
+        {
+          "type": "arrival",
+          "sim_tick": 903,
+          "correct_goal": true
+        }
+      ],
+      "wall_seconds": 1.8941875559976324,
+      "training_ready": false,
+      "learning_updates": 0,
+      "limitation": "scripted acceleration/route Lane request, common SUMO safety; not research B0/learned policy"
+    },
+    {
+      "scenario_id": "A",
+      "background": true,
+      "seed": 42,
+      "steps": 52,
+      "end_reason": "arrival",
+      "sim_elapsed_s": 25.700000000000003,
+      "initial_state_sha256": "847aea4fb240703637420e78641699b1fd92a3e59ce05f4fa880c485389838c1",
+      "initial_running_hv": 13,
+      "max_running_hv": 14,
+      "finite_observation_shape": [
+        73
+      ],
+      "progress_nondecreasing": true,
+      "observation_contract_valid": true,
+      "substep_contract_valid": true,
+      "unknown_signal_crossings": 0,
+      "events": [
+        {
+          "type": "tls_crossing",
+          "sim_tick": 791,
+          "route_occurrence": 1,
+          "tls_id": "647",
+          "link_index": 2,
+          "signal_before": "G",
+          "classification_valid": true,
+          "red_entry": false,
+          "mapping_basis": "route occurrence and before/after Lane"
+        },
+        {
+          "type": "arrival",
+          "sim_tick": 858,
+          "correct_goal": true
+        }
+      ],
+      "wall_seconds": 1.999044470001536,
+      "training_ready": false,
+      "learning_updates": 0,
+      "limitation": "scripted acceleration/route Lane request, common SUMO safety; not research B0/learned policy"
+    },
+    {
+      "scenario_id": "B",
+      "background": true,
+      "seed": 42,
+      "steps": 49,
+      "end_reason": "arrival",
+      "sim_elapsed_s": 24.400000000000002,
+      "initial_state_sha256": "5ce237102ea22379d335657b821c7288dfa2db2633abab3952dcda6344ce8cb3",
+      "initial_running_hv": 5,
+      "max_running_hv": 9,
+      "finite_observation_shape": [
+        73
+      ],
+      "progress_nondecreasing": true,
+      "observation_contract_valid": true,
+      "substep_contract_valid": true,
+      "unknown_signal_crossings": 0,
+      "events": [
+        {
+          "type": "lane_change",
+          "sim_tick": 602,
+          "from_lane": "-3#4_0",
+          "to_lane": "-3#4_1"
+        },
+        {
+          "type": "arrival",
+          "sim_tick": 845,
+          "correct_goal": true
+        }
+      ],
+      "wall_seconds": 1.7443576529985876,
+      "training_ready": false,
+      "learning_updates": 0,
+      "limitation": "scripted acceleration/route Lane request, common SUMO safety; not research B0/learned policy"
+    },
+    {
+      "scenario_id": "C",
+      "background": true,
+      "seed": 42,
+      "steps": 224,
+      "end_reason": "arrival",
+      "sim_elapsed_s": 111.9,
+      "initial_state_sha256": "d5d6e5cc71bac3d947090a15ec7d4a4f1f8ff7e84bcef7fab17481393edd9050",
+      "initial_running_hv": 13,
+      "max_running_hv": 29,
+      "finite_observation_shape": [
+        73
+      ],
+      "progress_nondecreasing": true,
+      "observation_contract_valid": true,
+      "substep_contract_valid": true,
+      "unknown_signal_crossings": 0,
+      "events": [
+        {
+          "type": "lane_change",
+          "sim_tick": 602,
+          "from_lane": "-3#4_0",
+          "to_lane": "-3#4_1"
+        },
+        {
+          "type": "tls_crossing",
+          "sim_tick": 923,
+          "route_occurrence": 6,
+          "tls_id": "647",
+          "link_index": 2,
+          "signal_before": "G",
+          "classification_valid": true,
+          "red_entry": false,
+          "mapping_basis": "route occurrence and before/after Lane"
+        },
+        {
+          "type": "tls_crossing",
+          "sim_tick": 1100,
+          "route_occurrence": 7,
+          "tls_id": "268",
+          "link_index": 8,
+          "signal_before": "G",
+          "classification_valid": true,
+          "red_entry": false,
+          "mapping_basis": "route occurrence and before/after Lane"
+        },
+        {
+          "type": "tls_crossing",
+          "sim_tick": 1211,
+          "route_occurrence": 8,
+          "tls_id": "764",
+          "link_index": 4,
+          "signal_before": "G",
+          "classification_valid": true,
+          "red_entry": false,
+          "mapping_basis": "route occurrence and before/after Lane"
+        },
+        {
+          "type": "tls_crossing",
+          "sim_tick": 1331,
+          "route_occurrence": 9,
+          "tls_id": "169",
+          "link_index": 1,
+          "signal_before": "G",
+          "classification_valid": true,
+          "red_entry": false,
+          "mapping_basis": "route occurrence and before/after Lane"
+        },
+        {
+          "type": "arrival",
+          "sim_tick": 1720,
+          "correct_goal": true
+        }
+      ],
+      "wall_seconds": 6.860211123996123,
+      "training_ready": false,
+      "learning_updates": 0,
+      "limitation": "scripted acceleration/route Lane request, common SUMO safety; not research B0/learned policy"
+    }
+  ],
+  "learning_updates": 0,
+  "expert_dataset_transitions": 0,
+  "source_SHA256": {
+    "env/kcity_env.py": "2c4a66cc3f0d094759e77c489f5e5cf8edaee42e1fe137597cffd0b2447110ef",
+    "env/kcity_route.py": "558eb0085c5ce12c48bdd71e9d3792e2237318a9fc5135eace6d3cecfcf507c7",
+    "env/kcity_observation.py": "2898d287f42a46cc8676eeb2a0c1cbeb1261448fdf829e62a807ce7526c57d79",
+    "scripts/kcity/check_env.py": "ce3647d6a3091710eeccb7ba62f4d5167b3ef33b6c8526f9cb61aab37ea81df7"
+  },
+  "passed": true,
+  "training_ready": false
+}

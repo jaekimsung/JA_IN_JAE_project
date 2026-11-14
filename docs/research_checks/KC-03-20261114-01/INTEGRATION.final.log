@@ -1,0 +1,48 @@
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+{
+  "started_at": "2026-11-14T21:40:23.328177+09:00",
+  "ended_at": "2026-11-14T21:40:37.605723+09:00",
+  "metric_version": "KC-METRICS-v1-candidate",
+  "gae_fixture": {
+    "before": 101.95999908447266,
+    "after": 2.9600000381469727,
+    "expected": 2.96,
+    "raw_reward_preserved": true
+  },
+  "panels_generated_not_executed": {
+    "dev": {
+      "case_count": 100,
+      "sha256": "260195c6e075df043d1bbf9ee05567df77d1c9b139e0c8629310f946bb6d46ef"
+    },
+    "final": {
+      "case_count": 100,
+      "sha256": "669000445a7f20537cbd7fa8615d7b729d337ca5d61167a4628ef7e19fb4e589"
+    },
+    "final_x1.5": {
+      "case_count": 100,
+      "sha256": "f393d4997c3a13b83a4fdd5e991a515e596afca2a10e31dcbbbbcdb54398c5bc"
+    },
+    "final_x2.0": {
+      "case_count": 100,
+      "sha256": "32b913e978d3b85f4b9b675481c07532958456def8a66dedab3ebc53b1a589d9"
+    }
+  },
+  "actual_execution_namespace": "contract_check",
+  "policy": "privileged scripted probe; not B0/BC/PPO",
+  "learning_updates": 0,
+  "optimizer_steps": 0,
+  "expert_dataset_transitions": 0,
+  "training_ready": false,
+  "passed": true
+}
+False A arrival 68 True
+False B arrival 49 True
+False C arrival 181 True
+True A arrival 52 True
+True B arrival 49 True
+True C arrival 228 True

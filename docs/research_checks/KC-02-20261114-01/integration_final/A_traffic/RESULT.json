@@ -1,0 +1,40 @@
+{
+  "scenario_id": "A",
+  "background": true,
+  "seed": 42,
+  "steps": 52,
+  "end_reason": "arrival",
+  "sim_elapsed_s": 25.700000000000003,
+  "initial_state_sha256": "847aea4fb240703637420e78641699b1fd92a3e59ce05f4fa880c485389838c1",
+  "initial_running_hv": 13,
+  "max_running_hv": 14,
+  "finite_observation_shape": [
+    73
+  ],
+  "progress_nondecreasing": true,
+  "observation_contract_valid": true,
+  "substep_contract_valid": true,
+  "unknown_signal_crossings": 0,
+  "events": [
+    {
+      "type": "tls_crossing",
+      "sim_tick": 791,
+      "route_occurrence": 1,
+      "tls_id": "647",
+      "link_index": 2,
+      "signal_before": "G",
+      "classification_valid": true,
+      "red_entry": false,
+      "mapping_basis": "route occurrence and before/after Lane"
+    },
+    {
+      "type": "arrival",
+      "sim_tick": 858,
+      "correct_goal": true
+    }
+  ],
+  "wall_seconds": 1.999044470001536,
+  "training_ready": false,
+  "learning_updates": 0,
+  "limitation": "scripted acceleration/route Lane request, common SUMO safety; not research B0/learned policy"
+}

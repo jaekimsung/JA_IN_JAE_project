@@ -1,0 +1,21 @@
+test_all_scenarios_and_background_connections (test_kcity_scenarios.KCityContractTests) ... ok
+test_asset_drift_is_rejected (test_kcity_scenarios.KCityContractTests) ... ok
+test_demand_scales_arrivals_without_changing_od_stream (test_kcity_scenarios.KCityContractTests) ... ok
+test_disconnected_route_is_rejected (test_kcity_scenarios.KCityContractTests) ... ok
+test_external_asset_and_unsafe_numeric_input_rejected (test_kcity_scenarios.KCityContractTests) ... ok
+test_goal_outside_lane_is_rejected (test_kcity_scenarios.KCityContractTests) ... ok
+test_missing_tls_is_rejected (test_kcity_scenarios.KCityContractTests) ... ok
+test_request_reproducibility_independent_of_global_rng (test_kcity_scenarios.KCityContractTests) ... ok
+test_required_lane_change_is_real (test_kcity_scenarios.KCityContractTests) ... ok
+test_required_lane_task_cannot_be_silently_removed (test_kcity_scenarios.KCityContractTests) ... ok
+test_separate_process_seed_equality (test_kcity_scenarios.KCityContractTests) ... ok
+test_short_and_internal_lanes_are_retained (test_kcity_scenarios.KCityContractTests) ... ok
+test_signal_and_link_indices_are_grounded (test_kcity_scenarios.KCityContractTests) ... ok
+test_split_case_and_component_seed_separation (test_kcity_scenarios.KCityContractTests) ... ok
+test_start_in_correct_lane_does_not_fake_required_change (test_kcity_scenarios.KCityContractTests) ... ok
+test_timing_and_training_authorization_cannot_drift (test_kcity_scenarios.KCityContractTests) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.287s
+
+OK

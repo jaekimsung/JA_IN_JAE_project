@@ -1,0 +1,40 @@
+test_actor_transfer_matches_b1_and_preserves_b2_critic_std (test_kcity_policy.PolicyTests) ... ok
+test_bc_checkpoint_resume_next_batch_and_update_exact (test_kcity_policy.PolicyTests) ... ok
+test_bc_invalid_label_and_mask_rejected (test_kcity_policy.PolicyTests) ... ok
+test_bc_updates_actor_not_value_head_or_std (test_kcity_policy.PolicyTests) ... ok
+test_checkpoint_immutable_hash_and_config_checked (test_kcity_policy.PolicyTests) ... ok
+test_default_parameter_count (test_kcity_policy.PolicyTests) ... ok
+test_deterministic_action_cannot_choose_masked_lane (test_kcity_policy.PolicyTests) ... ok
+test_invalid_observation_rejected (test_kcity_policy.PolicyTests) ... ok
+test_masked_keep_only_has_zero_lane_entropy (test_kcity_policy.PolicyTests) ... ok
+test_owned_rng_ignores_global_rng (test_kcity_policy.PolicyTests) ... ok
+test_sample_and_recomputed_logprob_match_with_masks (test_kcity_policy.PolicyTests) ... ok
+test_transfer_rejects_legacy_config_mismatch_and_nonfresh_target (test_kcity_policy.PolicyTests) ... ok
+test_wrong_mask_or_category_rejected (test_kcity_policy.PolicyTests) ... ok
+test_active_lane_request_mode_and_cooldown_restored (test_kcity_policy.ResumeTests) ... ok
+test_partial_rollout_sumo_rng_optimizer_resume (test_kcity_policy.ResumeTests) ... FAIL
+test_resume_across_case_boundary (test_kcity_policy.ResumeTests) ... ok
+test_resume_rejects_wrong_run_before_starting_sumo (test_kcity_policy.ResumeTests) ... ok
+
+======================================================================
+FAIL: test_partial_rollout_sumo_rng_optimizer_resume (test_kcity_policy.ResumeTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/tests/test_kcity_policy.py", line 143, in test_partial_rollout_sumo_rng_optimizer_resume
+    self.assertTrue(resume_snapshot_equal(x[5]['next_state'],y[5]['next_state']))
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 17 tests in 12.055s
+
+FAILED (failures=1)
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds

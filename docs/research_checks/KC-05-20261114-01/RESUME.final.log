@@ -1,0 +1,49 @@
+ Retrying in 1 seconds
+{
+  "collection": {
+    "committed_transitions": 20,
+    "completed_plan": false,
+    "planned_episodes": 6,
+    "episode_index": 0,
+    "source_stage": "debug",
+    "expert_pool_transitions_for_10M": 0,
+    "research_training_started": false,
+    "training_ready": false
+  },
+  "quality_passed": true,
+  "data_id": "e27353645d24ba0fb60aaf5686b2266ec71101c8b7346088cb76c8e0bc099f6c",
+  "committed_shards": 3,
+  "wall_s": 1.6363532140021562,
+  "training_ready": false
+}
+ Retrying in 1 seconds
+{
+  "collection": {
+    "committed_transitions": 50,
+    "completed_plan": false,
+    "planned_episodes": 6,
+    "episode_index": 0,
+    "source_stage": "debug",
+    "expert_pool_transitions_for_10M": 0,
+    "research_training_started": false,
+    "training_ready": false
+  },
+  "quality_passed": true,
+  "data_id": "3e7bb0beb5337c175e3fa7ac152ee7f449d3bc03ea8a4f3ba4ff72060c400b2a",
+  "committed_shards": 7,
+  "wall_s": 2.374417760001961,
+  "training_ready": false
+}
+{
+  "checked_at": "2026-11-14T23:22:14.926741+09:00",
+  "dataset": "/home/heven/kcity_research_runs/KC-05-20261114-01/resume_v2",
+  "committed_progress": [
+    20,
+    50
+  ],
+  "unique_transitions": 50,
+  "physical_trace_equal_to_uninterrupted": true,
+  "attempt_count": 2,
+  "policy_training_performed": false,
+  "passed": true
+}

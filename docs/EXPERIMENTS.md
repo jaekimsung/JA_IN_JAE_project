@@ -8,6 +8,12 @@
 
 | 실험 ID | 연결된 RQ·가설 | 정책·비교 조건 | 상태 | 주요 결과 | 설정·로그·결과 링크 | 해석·제한 |
 |---|---|---|---|---|---|---|
+| KC-05-20261114-01 | RQ1 expert/data 기반 | 73-D-only B0·소량 수집·shard/loader/품질/복구 | 완료 | 100 tests·602전이·6도착·20→50resume일치 | [결과](research_checks/KC-05-20261114-01/README.md)·[summary](research_checks/KC-05-20261114-01/validation_v1/SUMMARY.json) | debug 자료,BCforward만,연구학습/10M분자0 |
+| KC-04-20261114-01 | RQ1 초기화·재개 기반 | 공통 masked actor·BC 이식·전체 resume fixtures | 완료 | 80 tests·Gym·행동/logprob차이0·전체 재개 일치 | [결과](research_checks/KC-04-20261114-01/README.md)·[summary](research_checks/KC-04-20261114-01/validation_v1/SUMMARY.json) | [16,16] 검증용 optimizer 작업만,연구 학습/전문가0 |
+| KC-03-20261114-01 | RQ1/2 평가 기반 | GAE·종료·예산·독립평가·사건 지표 fixture | 완료 | 61 tests·Gym·GAE101.96→2.96·6회도착 | [결과](research_checks/KC-03-20261114-01/README.md)·[summary](research_checks/KC-03-20261114-01/integration_final/SUMMARY.json) | optimizer0; 지정 행동 검사,final미실행 |
+| KC-02-20261114-01 | RQ1/2 실행 기반 | 독립 K-CITY Gym·73-D·제어/종료·작은 검사 | 완료 | 32 tests·Gym 통과,6 scripted cases 도착 | [결과](research_checks/KC-02-20261114-01/README.md)·[summary](research_checks/KC-02-20261114-01/integration_final/SUMMARY.json) | B0/학습 아님; updates0,보상/수요 후보 |
+| KC-01-20261114-01 | RQ1/2 실행 기반 | A/B/C·seed·제어 계약·route 연결/위치·짧은 SUMO route smoke | 완료 | 16개 회귀 검사·A/B/C 도착/위치·B/C LC 확인 | [실행 기록](research_checks/KC-01-20261114-01/README.md)·[summary](research_checks/KC-01-20261114-01/validation_v2/SUMMARY.json) | 배경차 없음·IDM+지정 Lane 명령; 학습/B0/Gym 아님, learning updates0 |
+| KC-DESIGN-20261114-01 | RQ1~3의 실행 설계 | 수업 평가·컨설팅 요구 대조,필수 컬럼·10M 장부·gate·결과 명세 | 완료 | 시행 전 설계·읽기 전용 검사. 새 수집/학습/시뮬레이션0 | [데이터 명세](DATA_COLLECTION_SPEC.md), [프로토콜](EXECUTION_PROTOCOL.md), [결과·컨설팅](RESULTS_AND_CONSULTING.md), [검사](research_checks/KC-DESIGN-20261114-01/READ_ONLY_CHECK.json) | 코드/실험 준비 완료를 의미하지 않음. G1~G5 미통과 |
 | KC-AUDIT-20261110-01 | RQ1~3의 구현 기반 | 구조·과거 hash·새 seed43 finite/live·고속도로·정책/GAE fixture | 완료 | 177/177 도착, live 소실0; BC 이식 불가·seed 불일치·GAE 누출 확인 | [summary](research_checks/KC-AUDIT-20261110-01/evidence/summary.json), [provenance](research_checks/KC-AUDIT-20261110-01/evidence/provenance.json), 아래 상세 | audit 완료이며 학습 기반에 결함이 없다는 뜻은 아님 |
 | KC-HIST-SIGNALS-20261101 | 환경 기반(학습 가설 검증 아님) | before/after × finite 수요1/2/3/random_OD ×seed0/1/2 | 완료 | after12회 2,124/2,124 도착·충돌기록0; before12회 중4회 판정 실패·충돌기록5 | [저장 summary](../maps/kcity/reports/signals_validation/summary.json), [설계 보고](../maps/kcity/reports/SIGNAL_DESIGN.md) | 이번에 다시 실행한 결과 아님. 전체24회를 무충돌이라고 쓰지 않음 |
 | KC-HIST-LIVE60 | 환경 기반 | IDM 순환,3 s 요청·60대 상한,seed0/1/2 각3,600 s | 완료 | 저장된 3 runs 충돌/텔레포트0·빨간 차량 소실0 | [저장 결과](../maps/kcity/reports/live_demo_validation.json)의 `runs` | vehicle-step collision counter, 유한 시간 데모 |
@@ -19,6 +25,16 @@
 | KC-RQ3-v1 | RQ3/H3, 추가 실험 C | 같은 λ0 풀·N·BC/PPO 예산,자연/균형 구성 | 계획 | **미실행·주실험 뒤 검토** | [구성 실험](RESEARCH_PLAN.md#74-선택-실험-c) | 전문가 실력·고수요 노출 효과와 분리 |
 
 `-v1`은 연구 설계의 계획 ID다. 실제 실행은 예를 들어 `KC-RQ1-v1-B3-seed11-<시각>`처럼 독립 ID를 만들고 config/시작 시각을 먼저 등록한다. 계획 표에 기대 성능을 채우지 않는다.
+
+### KC-DESIGN-20261114-01: 시행 전 상세 설계 기록
+
+- 목적/기준: 6·7번 수업 자료의 필수 컬럼·절대 State·10M·평가·영상·제출·컨설팅 요구가 데이터 계약과 실행 순서에 빠짐없이 연결되는지 확인한다.
+- 코드 식별: HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`, 시작 시 clean tree, 이후 Markdown/읽기 전용 검사 파일만 추가·갱신. 기존 runtime·학습·맵 코드는 수정하지 않는다.
+- 시작 근거: [READ_ONLY_CHECK](research_checks/KC-DESIGN-20261114-01/READ_ONLY_CHECK.json)의 `time`, source SHA·SUMO1.28·disk/entrypoints. 이 시각은 실제 code 변경 없이 점검한 시각이며 11/10 audit를 재실행한 시각이 아니다.
+- 실행: 수업/연구 문서 읽기, 필수 key 대조·index/수량 계산·로컬 문서 링크·source hash 검증만 수행. 새 SUMO runs=0, 전문가 생성=0, PPO 전이/업데이트=0, BC 업데이트=0. seed·policy·평가 Episode 수는 해당 없음.
+- 결과: 데이터 컬럼·73-D 순서·10M 장부·S0~S7·G0~G6·결과/컨설팅/제출 명세. 실제 모델·raw driving dataset·영상은 생성하지 않았다.
+- 한계/해석: K-CITY 환경·전용 실행기·preflight는 아직 없다. 설계 검사를 통과해도 실행 readiness gate 통과는 아니다. H1/H2/H3 지지 여부는 미판단이다.
+- 문서/코드 무변경 최종 검증: [DESIGN_CHECKS.json](research_checks/KC-DESIGN-20261114-01/DESIGN_CHECKS.json)에 종료 시각과 결과를 남긴다. 데이터 크기/학습시간은 pilot 측정 전이며 root free만으로 시행 가능하다고 쓰지 않는다.
 
 ## 2. KC-AUDIT-20261110-01 상세
 
@@ -114,6 +130,8 @@ after는 12회 모두 passed, 총2,124대 도착·충돌기록0·teleport0·급�
 2026-11-10T23:25:48.249679+09:00에 별도 CPU 가중치 검사도 수행했다. `torch.load(weights_only=True, map_location='cpu')`로 tensor shape를 확인하고 현재 31-D [256,256] hybrid에 `load_state_dict`를 적용해 성공했다. 이는 위 BC→PPO 호환성 실패와 별개의 확인이며, K-CITY 73-D 후보에 바로 연결할 수 있다는 뜻은 아니다. [가중치 SHA·shape·검사 결과](research_checks/KC-AUDIT-20261110-01/evidence/legacy_checkpoint_inspection.json)를 보존한다. 이 보충 검사는 SUMO/PPO 실행 없이 끝났고, 앞서 기록한 main audit의 시작·종료 시각은 변경하지 않는다.
 
 ## 4. 앞으로 실행할 실험의 등록 계약
+
+2026-11-14 상세 계약은 [실행 프로토콜](EXECUTION_PROTOCOL.md)에 있다. 학습/수집/최종평가 실행기는 아직 미구현이며 문서의 예시 argv는 실행할 수 있는 완성 명령이 아니다. KC-01/02 검사 명령만 각 사용 안내에서 실행할 수 있다. 각 단계가 G1~G5를 통과하면 신규 실행 ID로 등록한다. `KC-DESIGN-20261114-01`은 시행 전 명세 검사 ID로서 실험 성능 자료에 합산하지 않는다.
 
 계획된 KC-PILOT/RQ1/RQ2/RQ3의 공통 설계는 [RESEARCH_PLAN.md](RESEARCH_PLAN.md)에 있다. 아래 항목을 **실제 실행 ID별로 먼저 채운 뒤** `실행 중`으로 바꾸고, 종료 후 `완료/실패/중단/무효`와 실제 결과를 남긴다.
 

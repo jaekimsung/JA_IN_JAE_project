@@ -2,6 +2,10 @@
 
 [현재 현황](RESEARCH_STATUS.md) · [실험 인덱스](EXPERIMENTS.md) · [작업 요청](../prompts/KCity_Codex_Research_Prompt.md)
 
+2026-11-14 실행 전 상세화: [데이터 컬럼·저장 계약](DATA_COLLECTION_SPEC.md), [수집·학습·평가 프로토콜](EXECUTION_PROTOCOL.md), [결과·컨설팅·제출](RESULTS_AND_CONSULTING.md)을 함께 읽는다. 아래 안정적인 RQ·가설·통제 설계를 유지하고, 필드/명령/예산 장부의 상세 정의는 이 세 문서로 연결한다. 실제 구현·동결 전까지 수치 후보를 실행 완료로 표시하지 않는다.
+
+단계별 실행 승인 후 **KC-01/02 후보 구현·검증을 완료**했다. [설정](../configs/kcity/v1/README.md)·[KC-01](research_checks/KC-01-20261114-01/README.md)·[KC-02 실제 결과](research_checks/KC-02-20261114-01/README.md)·[Gym 사용 안내](KCITY_ENV.md)를 따른다. 73-D·제어·종료는 작은 실행에서 동작했지만 전문가·학습 준비 완료는 아니다. 이어 [KC-03](research_checks/KC-03-20261114-01/README.md)의 GAE·종료·예산·평가 후보 검사를 완료했다. 이어 [KC-04](research_checks/KC-04-20261114-01/README.md)에서 공통 masked actor·초기화·부분 rollout/환경 replay 재개 후보 검사를 완료했다. 이어 [KC-05](research_checks/KC-05-20261114-01/README.md)에서 B0/수집기/loader와602개debug전이·복구를검증했다. 다음은 KC-06의각50k시험학습이며 연구 설정은pilot뒤동결한다.
+
 이 문서는 안정적인 연구 설계다. 실제 진행과 설계 변경 이유는 현황 문서, 실행별 설정과 결과는 실험 인덱스에 남긴다. **아래 환경·학습 수치는 추천 후보이며 아직 구현·최적화·확정된 조건이 아니다.** 현재 확인된 구현과 수치는 현황 문서에서 구분한다.
 
 ## 1. 목적과 기여
@@ -11,6 +15,8 @@
 BC 초기화 PPO와 PPO-only를 통제된 조건에서 비교한다. BC와 강화학습의 결합 자체를 새 알고리즘 기여로 주장하지 않는다. 초기 이점만 있거나, 일부 조건에서 불리하거나, 차이를 확인하지 못한 결과도 유효한 답이다. 일반화 주장은 **같은 K-CITY 도로망에서 교통 수요가 변할 때**로 한정한다. 새 도시·실차·정밀 센서 인지 성능으로 확대하지 않는다.
 
 이번 작업은 조사·짧은 검증·설계·Markdown 기록까지다. 본격적인 환경 변경, BC/PPO 학습, 1,000만 전이 수집은 후속 요청에서 시작한다.
+
+2026-11-14 추가 요청은 평가·컨설팅 자료를 반영한 시행 전 상세 설계다. 절대 State를 포함한 수업 필수 필드를 유지하고, 정책 원본 `action_raw`와 환경 bounded 입력을 분리하며, JSONL에는 모든 행의 next를 명시한다. 10M 장부는 전문가 pool1M+PPO6M+고정 정책 archive3M으로 구체화했다. 이 변경은 데이터 기록 계약이며 학습 예산을 늘리는 결정이 아니다. 이번에는 새 시뮬레이션·수집·학습을 하지 않았다.
 
 ## 2. 질문, 가설, 실험 연결
 
@@ -42,7 +48,7 @@ RQ1·RQ2가 필수다. RQ3는 기반과 주실험이 완료된 뒤 진행하며 
 
 ## 4. 필수 과제와 실제 경로 후보
 
-다음은 현재 passenger 연결을 검사한 **개발용 경로 후보**다. 생성된 [경로와 차선 연결 목록](research_checks/KC-AUDIT-20261110-01/evidence/scenario_candidates.json)에 전체 Edge ID가 있다. AV 출발·도착 및 전문가 수행 가능성은 아직 검증하지 않았다.
+다음은 현재 passenger 연결을 검사한 **개발용 경로 후보**다. 생성된 [경로와 차선 연결 목록](research_checks/KC-AUDIT-20261110-01/evidence/scenario_candidates.json)에 전체 Edge ID가 있다. 후속 KC-01/02에서 지정 위치 출발·도착과 scripted 주행을 확인했다. 전문가 수행 가능성과 본 수요 검증은 아직 남아 있다.
 
 | 과제 | 구체적 후보와 목적 | 완료 판정의 핵심 |
 |---|---|---|
@@ -68,7 +74,7 @@ RQ1·RQ2가 필수다. RQ3는 기반과 주실험이 완료된 뒤 진행하며 
 
 ### 5.2 Observation: 단일 시점 73-D 후보
 
-기존 31-D의 국소 교통 표현을 확장하는 추천안이다. 아직 해당 관측 클래스나 학습 데이터는 없다.
+기존 31-D의 국소 교통 표현을 확장한 후보이며 KC-02에서 해당 관측을 구현·실행 검사했다. [구현 안내](KCITY_ENV.md)를 따른다. 학습 데이터와 최종 동결 schema는 아직 없다.
 
 | 블록 | 차원 | 내용·처리 |
 |---|---:|---|
@@ -81,6 +87,8 @@ RQ1·RQ2가 필수다. RQ3는 기반과 주실험이 완료된 뒤 진행하며 
 | 합계 | **73** | 순서·단위·결측 규칙을 schema version으로 동결 |
 
 초기 관측 범위는 경로 전방 100 m·후방 50 m 후보로 둔다. 각 Lane의 가장 가까운 전·후 차량 1대만 정책 입력에 넣는다. 거리는 경로 방향 m, 속도는 m/s이며 상대속도는 `다른 차량 - 자차`, Lane index 증가가 왼쪽이다. 인접 Lane을 스캔할 때 차량 ID로 동률 정렬하고 접속 Lane을 경로 기준으로 이어 본다.
+
+구체적인 0~72 index와 sentinel/mask 규칙은 [데이터 명세 7절](DATA_COLLECTION_SPEC.md#7-정책-관측-73-d-index-계약)을 따른다. 이 73-D에는 crossing 차량 슬롯이 없다. detected/privileged 자료에 crossing 차량을 기록해도 actor가 그 정보를 받는 것은 아니므로, 무신호 교차로 gap 선택을 정책 단독으로 학습했다는 주장은 하지 않는다. 확장 과제로 필요하면 새 관측 버전과 모든 비교 방법의 재학습을 요구한다.
 
 거리/관측 범위, 속도/8.33 m/s, 가속도/해당 가감속 한계로 고정 물리 정규화를 적용하고 제한 범위를 명시한다. 학습된 평균·표준편차를 BC에만 적용하지 않는다. 결측은 0 등 고정값과 마스크를 함께 쓰고 `NaN/Inf`는 거부한다. route/TLS 없음은 독립 마스크로 구분한다.
 
@@ -114,7 +122,7 @@ mode 31에서 신호 위반이 0이라는 것만으로 정책이 신호에 맞�
 | 외부 TimeLimit/실행 중단 | 과제 기한과 별도 `truncated=True`. 유효 terminal observation을 보관하고 필요 시 bootstrap |
 | SUMO 프로세스 장애·소켓 단절 | 인프라 오류로 전체 기록 보존. 아래 재실행 규칙 적용; 도착으로 처리하지 않음 |
 
-기존 PPO는 truncation 뒤 reset 관측의 value가 GAE에 섞이는 문제가 재현됐다. 수정 시 **bootstrap 가능 여부(termination)와 trace 단절(termination 또는 truncation)**을 따로 보관하고 terminal observation으로만 bootstrap해야 한다. [Gymnasium 시간 제한 문서](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)와 맞춰 fixture를 통과하기 전에는 비교 학습을 시작하지 않는다.
+기존 PPO의 truncation 뒤 reset value 혼입은 KC-03에서 수정했고 과거101.96→정답2.96을 확인했다. [실제 계약](KCITY_EVALUATION.md)을 유지하며 이후 실행기에서도 **bootstrap 가능 여부(termination)와 trace 단절(termination 또는 truncation)**을 따로 보관하고 terminal observation으로만 bootstrap해야 한다. [Gymnasium 시간 제한 문서](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)와 맞춰 fixture를 통과하기 전에는 비교 학습을 시작하지 않는다.
 
 ## 6. 전문가·BC·PPO의 통제 설계
 
@@ -122,7 +130,7 @@ mode 31에서 신호 위반이 0이라는 것만으로 정책이 신호에 맞�
 
 | ID | 정책 | 학습·초기화 |
 |---|---|---|
-| B0 | 관측 정렬 규칙 기반 전문가 | 동일 73-D 정보와 주어진 경로로 신호 정지·차간거리·필수 차선 규칙 수행. 아직 미구현 |
+| B0 | 관측 정렬 규칙 기반 전문가 | 동일73-D의신호/차간거리/경로연결로제어. KC-05 후보구현·6case도착 확인;교차gap/양보전체판정은아님 |
 | B1 | BC-only | 공통 hybrid actor를 가감속 MSE + 차선 CE로 학습하고 고정 |
 | B2 | PPO-only | 같은 네트워크·전처리·초기 분산·seed의 무작위 초기화 |
 | B3 | BC 초기화 PPO | B1과 같은 선택 checkpoint의 actor 표현을 복사한 뒤 같은 PPO 예산 |
@@ -201,13 +209,15 @@ BC train/validation은 Episode와 생성 seed를 묶어 분리한다. row를 임
 
 1,000만 **고유하고 유효한** 전이의 수집 목표는 유지한다. 이는 방법별 PPO 학습 예산이 아니다. 전문가/학습 rollout/개발 평가/final 평가/추가 기록을 목적별로 나누고 동일 전이의 중복 파일은 한 번만 센다. 위 초기 후보는 전문가 1M + B2/B3 6 runs ×1M =7M이며 평가 전이 수는 실제 Episode 길이로 결정된다. 부족분은 별도 수집 계획으로 결정하고 주실험 학습 예산을 조용히 늘리지 않는다.
 
+2026-11-14 상세 결정: 부족한 기본3M은 6개 budget-end B2/B3 정책을 각각500k씩 고정 추론하는 별도 archive split으로 수집한다. 평가·pilot 자료는 기본10M 집계에서 제외하고 raw UID union과 필수 shard 세트로 최종 수량을 확인한다. 성공한 자료만 제출 수량으로 세는 것과, BC 학습 자료를 정상 전문가 Episode로 제한하는 것은 구분한다. 구체적인 필터·초과/부족 처리·split 계약은 [실행 프로토콜](EXECUTION_PROTOCOL.md)에 있다.
+
 필수 schema는 `observation, policy_action_raw, action_mask, requested_acceleration, requested_lane, issued_command, observed_speed/acceleration/lane_change, known_rejection_reason, reward/components, next_observation, terminated, truncated, end_reason, episode/case/attempt/step/sim_time, route/scenario/seed_tree, policy/env/config/data_version, collision/arrival/violation/teleport/removal`이다. 정책 밖의 전체 상태는 `privileged_*`로 분리하며 BC 입력으로 혼입하지 않는다.
 
 기본 저장 단위는 25k 전이 shard 후보다. 쓰기 중 `.partial`, 완료 후 SHA256·행 수·Episode 범위를 manifest에 확정한다. Episode 끝의 terminal observation과 다음 Episode 첫 관측을 섞지 않는다. 자료량·직렬화 시간은 새 73-D pilot에서 측정한다. 현재 고속도로 NPZ 4,941개는 새 데이터 용량 추정의 확정 근거가 아니다.
 
 정지 상태 비율, 상황별 수량, 중복 `(case,attempt,step)`, 시간 간격, 누락값, 충돌/종료 관측, 행동 label과 실제 Lane 이동의 시차를 검증한다. 표준 PPO는 현 정책의 on-policy rollout으로 업데이트하며 저장한 1,000만 전이를 임의 replay로 다시 PPO 학습하지 않는다.
 
-실험마다 code commit + dirty diff, SUMO/TraCI/Python/Torch/Gym 버전, 맵·신호·scenario·전처리 해시, 요청/적용 수요와 제어 설정을 보관한다. 재개 checkpoint에는 정책·가치·optimizer·난수·카운터·정규화·필요한 rollout/환경 상태가 있어야 한다. 가중치만 저장하는 기존 `PPO.save()`는 정확한 재개 checkpoint가 아니다. 모델·원시 데이터는 별도 결과 디렉터리와 검증된 백업에 두고 Markdown에는 링크와 집계만 남긴다.
+실험마다 code commit + dirty diff, SUMO/TraCI/Python/Torch/Gym 버전, 맵·신호·scenario·전처리 해시, 요청/적용 수요와 제어 설정을 보관한다. 재개 checkpoint에는 정책·가치·optimizer·난수·카운터·정규화·필요한 rollout/환경 상태가 있어야 한다. 가중치만 저장하는 기존 `PPO.save()`는 정확한 재개 checkpoint가 아니다. 모델·원시 데이터는 별도 결과 디렉터리와 검증된 백업에 두고 Markdown에는 링크와 집계만 남긴다. KC-04의 새 KCityRunner는 이 전체 상태와 현재 Episode replay를 저장·검사한다([실제 계약](KCITY_POLICY_AND_RESUME.md)). 작은 CPU 검증이며 기존 save/load의 의미를 바꾼 것은 아니다.
 
 ## 10. 단계별 구현 계획과 완료 기준
 
@@ -219,8 +229,8 @@ BC train/validation은 Episode와 생성 seed를 묶어 분리한다. row를 임
 | KC-01 | A/B/C와 seed·제어 명세 고정 | 조사 완료 | 새 `env/kcity_config.py`, `scripts/kcity/scenarios.py`, `tests/test_kcity_scenarios.py` | 연결·신호·필수 차선·출발/도착·해시·시드 fixture | 아래 첫 구현 완료 기준 모두 통과 | versioned scenario/protocol manifest | P0 | 소~중: 설정·검사 3파일 |
 | KC-02 | K-CITY Gym 최소 환경 | KC-01 | 새 `env/kcity_env.py::{reset,step,_get_obs,close}`; 기존 `_neighbor/_lane_density` 아이디어 | 73-D bounds, multi-Edge·내부 Lane 진행, A/B/C 유한 Episode, 인스턴스 격리 | seed 재현·목적지/충돌/제거/기한 처리 증거 | 환경·짧은 trace | P0 | 대: lifecycle·관측·행동 통합 |
 | KC-03 | 종료·GAE·평가 신뢰성 | KC-02, buffer fixture | `utils/buffer.py::{add,compute_gae}`, `algorithms/ppo.py::{collect_rollout,learn}`, `utils/evaluator.py`; 새 평가 config | termination/truncation/rollout 경계, 적색 통과·충돌 fixture | cross-Episode 누출 0, 분모·독립 seed panel·정확한 예산 | 회귀 검사·지표 schema | P0 | 중~대: buffer·평가 3파트 |
-| KC-04 | 공통 actor의 BC→PPO | KC-02/03 | `utils/networks.py::HybridActorCritic`, `train_bc.py::run_epoch`, `algorithms/ppo.py::{save,load}`; 새 K-CITY 학습 실행기 | BC 전후 deterministic action, logprob/mask, optimizer/RNG 재개 검사 | 입력/분포/전처리 호환, B2/B3 조건 diff는 초기화뿐 | 공통 정책·초기화·재개 검사 | P0 | 중: 네트워크·학습 연결 |
-| KC-05 | 전문가와 데이터 품질 | KC-02/03 | 새 `experts/kcity_rule_expert.py`; `collect_pomdp_data.py`의 공통 수집기 분리 | B0 A/B/C, seed/Episode 분리, shard/시간/중복/label 검사 | 관측만으로 모방 가능·실력/한계·비용 기록 | 전문가·고정 λ0 풀·manifest | P0 | 대: teacher·기록·검사 |
+| KC-04 | 공통 actor의 BC→PPO | KC-02/03 | 실제 구현: `algorithms/kcity_policy.py`, `algorithms/kcity_training.py`, shared PPO/buffer; 기존 BC/network 보존 | BC 전후 deterministic action, logprob/mask, optimizer/RNG 재개 검사 | 입력/분포/전처리 호환, B2/B3 조건 diff는 초기화뿐 | 공통 정책·초기화·재개 검사 | P0 | 중: 네트워크·학습 연결 |
+| KC-05 | 전문가와 데이터 품질 | KC-02/03 | 실제 구현: `experts/kcity_rule_expert.py`, `utils/kcity_data.py/kcity_collector.py`, 별도 collect/validate CLI | B0 A/B/C, seed/Episode 분리, shard/시간/중복/label 검사 | 관측만으로 모방 가능·실력/한계·비용 기록 | 전문가·고정 λ0 풀·manifest | P0 | 대: teacher·기록·검사 |
 | KC-06 | 규모·수요·보상 보정과 동결 | KC-04/05 | 새 `experiments/kcity/pilot` 설정·보고 | B0 경로별 10 Episode, 50k PPO pilot, I/O benchmark | λ0·배수·목표·예산·자원 측정 후 고정 | pilot 결과·동결 manifest | P0 | 중: 제한된 pilot 실행 |
 | KC-07 | RQ1 통제 비교 | KC-06 | K-CITY BC/PPO 실행 config·`utils/logger.py` | 3 seed·동일 예산·학습곡선·비용 | B0/B1/B2/B3 결과·미달성·seed별 변동 보존 | KC-RQ1 runs | P1 | 대: BC 및 6개 PPO 본학습 |
 | KC-08 | RQ2 고정 정책 수요 이동 | KC-07 | 새 평가 manifest·`utils/evaluator.py` | 3수요·짝지은 cases·정책 가중치 해시 불변 | 3,000 Episode 후보의 실제 분모·실패·시간 보고 | KC-RQ2 runs | P1 | 대: 평가·대표 실패 trace |
