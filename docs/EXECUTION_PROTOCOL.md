@@ -1,5 +1,9 @@
 # K-CITY 수집·학습·실험 시행 전 프로토콜
 
+<!-- KC-SETTINGS-20261115-01 -->
+
+2026-11-15 이후 최신 완료 기록: **추가3seed pilot 집계 및 본 실험 과학 설정 확정 완료**. [확정 설정·실제 결과](research_checks/KC-SETTINGS-20261115-01/README.md). 아래 과거 미실행·후속동결 문구는 당시 단계의 이력이다. **본 데이터 수집/본 BC·PPO 미시작, launch_ready=false**. 본 실행기·GPU 장기재개·저장/원격백업 검증은 다음 운영 단계로 남긴다.
+
 ID `KC-PROTOCOL-v1-draft-20261114` · **설계 준비 완료를 목표로 한 runbook; 현재 실행 가능 승인은 아님**.
 
 [데이터 계약](DATA_COLLECTION_SPEC.md) · [결과·컨설팅](RESULTS_AND_CONSULTING.md) · [연구 계획](RESEARCH_PLAN.md) · [실험 인덱스](EXPERIMENTS.md)

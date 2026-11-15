@@ -1,5 +1,9 @@
 # K-CITY 실험 인덱스
 
+<!-- KC-SETTINGS-20261115-01 -->
+
+2026-11-15 이후 최신 완료 기록: **추가3seed pilot 집계 및 본 실험 과학 설정 확정 완료**. [확정 설정·실제 결과](research_checks/KC-SETTINGS-20261115-01/README.md). 아래 과거 미실행·후속동결 문구는 당시 단계의 이력이다. **본 데이터 수집/본 BC·PPO 미시작, launch_ready=false**. 본 실행기·GPU 장기재개·저장/원격백업 검증은 다음 운영 단계로 남긴다.
+
 [연구 계획](RESEARCH_PLAN.md) · [현재 현황](RESEARCH_STATUS.md)
 
 계획은 결과가 아니다. 일반차량 교통 검증, 고속도로 예제, K-CITY 학습 AV를 분리한다. 실행 상태는 `계획 / 실행 중 / 완료 / 실패 / 중단 / 무효`를 사용한다. 실패·중단·무효 실행도 삭제하지 않는다. 같은 설계라도 조건을 바꿔 다시 실행하면 새 ID를 붙이고 이전 ID와 연결한다.
@@ -8,6 +12,7 @@
 
 | 실험 ID | 연결된 RQ·가설 | 정책·비교 조건 | 상태 | 주요 결과 | 설정·로그·결과 링크 | 해석·제한 |
 |---|---|---|---|---|---|---|
+| KC-06-SEEDS-20261115-01 | RQ1 pilot 반복 | seed22/33 BCfresh1000·B2/B3각50k·dev100 | 실행 중 | 104tests/사전점검통과,seed22부터실행 | [진도/명령](research_checks/KC-06-SEEDS-20261115-01/README.md) | 판단2Hz/물리0.1s,sharedpilotdata,final미사용 |
 | KC-06-DIAG-20261115-01 | RQ1 pilot 후속 | 실패재현4/개입4·BC/B2/B3 dev100 | 완료 | 3정책각100/100완주,초기LC미선택실패확인 | [결과](research_checks/KC-06-DIAG-20261115-01/README.md) | optimizer0,seed1,개입제외,final미사용 |
 | KC-06-20261115-01 | RQ1/2 pilot | fresh expert10k·BC1000·B2/B3 각50k·B0 90case | 실행 중 | GPU smoke·100tests 통과,실제 진도는STATUS.json | [실행 안내](KCITY_PILOT.md)·[시작 기록](research_checks/KC-06-20261115-01/LAUNCH.json) | pilot 자료/가중치 재사용 금지,final 미실행 |
 | KC-05-20261114-01 | RQ1 expert/data 기반 | 73-D-only B0·소량 수집·shard/loader/품질/복구 | 완료 | 100 tests·602전이·6도착·20→50resume일치 | [결과](research_checks/KC-05-20261114-01/README.md)·[summary](research_checks/KC-05-20261114-01/validation_v1/SUMMARY.json) | debug 자료,BCforward만,연구학습/10M분자0 |

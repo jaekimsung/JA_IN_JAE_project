@@ -1,0 +1,47 @@
+# K-CITY 본 실험 설정 확정
+
+추가 seed22·33의 학습 및 dev100 평가 완료 후 작성한 기록이다. **과학 설정 확정 완료, 본 수집·본 학습 미시작, 실행 준비 미완료**를 구분한다.
+
+## 실제 pilot 결과
+
+각 seed: fresh BC1,000updates, B2/B3 각각50,000전이. 동일 pilot expert10k를 공유했으며 seed11 가중치를 seed22/33으로 이어받지 않았다. 각 최종 정책은 같은 dev100개에서 평가했다.
+
+| seed | 정책 | 완주/100 | 충돌 | 적색 진입 Episode | 완료 사례 평균(s) | 실패 포함 시간(s) |
+|---|---|---:|---:|---:|---:|---:|
+| 11 | BC | 100 | 0 | 0 | 58.248 | 58.248 |
+| 11 | B2 | 100 | 0 | 0 | 57.53 | 57.530 |
+| 11 | B3 | 100 | 0 | 0 | 57.62 | 57.620 |
+| 22 | BC | 100 | 0 | 0 | 58.278 | 58.278 |
+| 22 | B2 | 100 | 0 | 0 | 57.586 | 57.586 |
+| 22 | B3 | 100 | 0 | 0 | 57.72 | 57.720 |
+| 33 | BC | 100 | 0 | 0 | 58.193 | 58.193 |
+| 33 | B2 | 100 | 0 | 0 | 57.563 | 57.563 |
+| 33 | B3 | 100 | 0 | 0 | 57.625 | 57.625 |
+
+100개 사례는 독립 학습100회가 아니다. 학습 seed는3개이며, seed별 결과와 중간 checkpoint 실패를 함께 보존한다. 최종100/100이나 짧은 완주시간만으로 학습 방식의 우월성을 선언하지 않는다. 초기 이점은 동일 전이 dev곡선과 BC 추가비용을 함께 비교한다.
+
+총 pilot PPO300,000전이·BC3,000updates이며 expert10,000전이는 공유 원본을 한 번만 센다. seed/방법별 실제 rollout·optimizer 횟수와 측정 속도는 SUMMARY.json의 training_counters에 기록한다.
+
+## 확정한 조건
+
+- 정책2Hz·물리0.1초·warmup60초·제한300초, 73-D, 공통[256,256], SUMO 안전31/512.
+- 요청 교통량600vph, 증분 평가900/1200vph, 차량4종 동등 비율. GUI4배 수요/0.02초는 제외.
+- 보상과 mask·PPO/BC 계수는 검증된 pilot 구현을 유지한다. 부당 대기 penalty는0이며 별도 원인 지표는 미지원이다.
+- 초기HV≥10 후보는 모든 case를 보장하지 못했다. 이를 사후 통과로 고쳐 쓰지 않는다. 낮은 노출 case도 포함하고 초기/최소/시간가중HV·선행차 노출을 전수 보고한다. 지금 고정하는 것은 이 운영적 수요 조건이며 실제 고밀도 상호작용 보장은 아니다.
+- 관측만 사용하는 전문가로 새1M pool, BC3seed×10k updates, PPO2방식×3seed×1M. pilot 모델/자료는 본 학습으로 이월하지 않는다.
+- 개발100개·최종수요별100개 패널을 파일과 SHA로 고정한다. 이번 작업은 final을 실행하지 않는다.
+- 목표는 지원하는 충돌/적색 판정 기준의 완주율≥0.80을 연속2회 만족. 50k 간격에서 두 평가 중 첫 시점을 기록하고 두번째에서 확인한다. 미달은 censored.
+- BC는 최저val loss, B1/B3는 동일actor. PPO 주최종은1M budget-end; 최종평가로 모델을 고르지 않는다.
+- 실패 포함 완주/규칙판정·대기·차선실패·seed변동·실제시간/전이 및 BC비용을 같이 비교한다.
+
+## 시행 전 남은 운영 작업
+
+- Implement/connect versioned main collector/BC/PPO CLI and frozen-spec loader; existing pilot CLI remains capped50k and KC01 rejects main-enable flags.
+- Validate GPU long-history interrupted/resumed run and safe STOP against continuous run using matching source/runtime.
+- Summarize writer bytes/transition, memory and shard sizing; confirm disk capacity and checkpoint retention before1M/10M operations.
+- Configure backup destination and verify remote checksum/readback; Git publication is not model/data backup.
+- Produce operational LAUNCH_READY evidence, owner lock and fresh run IDs; then separately proceed to new expert1M, main BC and main PPO.
+
+설정 확정은 아래 frozen JSON을 기준으로 한다. 기존 KC01 설정은 역사적 후보 및 실행 호환 계약으로 그대로 보존한다. 새 JSON은 과학 명세이며 기존 KC01 loader의 실행 입력으로 바로 사용할 수 없다.
+
+[설정 원본](../../../configs/kcity/main_v1/FROZEN_PROTOCOL.json) · [집계·원자료 SHA](SUMMARY.json) · [진도](STATUS.json) · [결정 사전기록](REQUEST.json)

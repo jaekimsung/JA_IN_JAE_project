@@ -1,0 +1,7 @@
+{
+  "started_at": "2026-11-15T16:53:50.766246+09:00",
+  "head": "98269bbbd24fdfd8ca78cd45b536b2814b01b96f",
+  "scope": "additional pilot training seeds22/33; fixed shared pilot expert10k; freshBC1000 and PPO B2/B3 each50k; fixed2Hz; same dev100 as seed11; not main1M experiment",
+  "existing_seed11_preserved": true,
+  "main_training": false
+}

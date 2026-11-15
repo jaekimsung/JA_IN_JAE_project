@@ -1,0 +1,14 @@
+{
+  "phase": "SETTINGS_FROZEN_CHECKED",
+  "updated_at": "2026-11-15T19:50:39.895016+09:00",
+  "scientific_settings_frozen": true,
+  "launch_ready": false,
+  "main_training_started": false,
+  "pilot_completed_seeds": [
+    11,
+    22,
+    33
+  ],
+  "tests_passed": true,
+  "publish_requested": true
+}

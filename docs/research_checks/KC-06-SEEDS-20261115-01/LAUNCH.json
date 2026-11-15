@@ -1,0 +1,17 @@
+{
+  "pid": 1424681,
+  "command": [
+    "/home/heven/.cache/kcity-research-audit-20261110/venv/bin/python",
+    "-B",
+    "scripts/kcity/pilot_seeds.py",
+    "--output",
+    "/home/heven/kcity_research_runs/KC-06-SEEDS-20261115-01/replicates_v1",
+    "--shared-data",
+    "/home/heven/kcity_research_runs/KC-06-20261115-01/pilot_v1/expert",
+    "--device",
+    "cuda"
+  ],
+  "output": "/home/heven/kcity_research_runs/KC-06-SEEDS-20261115-01/replicates_v1",
+  "policy_hz": 2,
+  "physics_tick_s": 0.1
+}

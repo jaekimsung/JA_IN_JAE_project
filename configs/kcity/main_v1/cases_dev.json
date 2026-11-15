@@ -1,0 +1,5707 @@
+{
+  "namespace": "dev",
+  "cases": [
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 0,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 388877871,
+        "arrivals": 2072771125,
+        "od": 1464547484,
+        "vehicle_type": 1033739108,
+        "initialization": 1325603055
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "4eb694db7aabdc17a9fda9367300b803ef520896d499281c0cba5de051f126b3"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 1,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 725449087,
+        "arrivals": 22240885,
+        "od": 685100850,
+        "vehicle_type": 1419449081,
+        "initialization": 207812385
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "ab7aa661ee282949a9964d8857e3102a05ff9013626993df75877da2918aece2"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 2,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 833563614,
+        "arrivals": 1998586732,
+        "od": 291964856,
+        "vehicle_type": 1467168611,
+        "initialization": 579377151
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "2e963baae5530b2f223f2bae1bcd7513a677847bd86b09f8553f8d707a79e1b0"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 3,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1450428259,
+        "arrivals": 1690843624,
+        "od": 2000091390,
+        "vehicle_type": 441243590,
+        "initialization": 792011424
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "dc4c4ecc09693bd9df596c48293a8468001e6c6792d1ee5ca52a5995a89f3b2a"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 4,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 573689209,
+        "arrivals": 426037017,
+        "od": 288282315,
+        "vehicle_type": 716161562,
+        "initialization": 642269657
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "5f549f8a7a0a2fa93d3d6243f7c2eb3426f1243fe798fb07010fa05756ce6b0a"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 5,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1532168676,
+        "arrivals": 190364826,
+        "od": 423820761,
+        "vehicle_type": 825984529,
+        "initialization": 1790668553
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "02169f32fba2f058e4f6f7db5e9a004468f14f4969e1c00c7308948cc1516b52"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 6,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1996955491,
+        "arrivals": 1923380609,
+        "od": 1263014445,
+        "vehicle_type": 1770397895,
+        "initialization": 1623718989
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "01afce38feb79a8aae7d1a7981bc78efb4e4d4564e54544e24c39dd9ac0e769a"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 7,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 174275299,
+        "arrivals": 434336776,
+        "od": 1318845323,
+        "vehicle_type": 2873220,
+        "initialization": 1642668671
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "52ce37a9fd9354a079ded008a00224645265a424d4d5b4bdda255f152efd8ad4"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 8,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1078099372,
+        "arrivals": 1433627768,
+        "od": 1582865250,
+        "vehicle_type": 250277278,
+        "initialization": 498064138
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "2848d4627997b75640f0e97c5ddf98c8c48a260c9fe580797503f8bd49a34cee"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 9,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 632690759,
+        "arrivals": 380091963,
+        "od": 1205595457,
+        "vehicle_type": 1938832301,
+        "initialization": 1448675526
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "b4d41fb4bf54d3e39f9cb98eca9e0caefc049e9065d8cbfa7c9477402bc812cc"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 10,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 651961646,
+        "arrivals": 1001663323,
+        "od": 1099772418,
+        "vehicle_type": 1064502833,
+        "initialization": 1401762295
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "4919e2dccf22786c5cc14836567780b8d7726a87704d222d05390e688273bb06"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 11,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1256465465,
+        "arrivals": 622657245,
+        "od": 2029757226,
+        "vehicle_type": 1712260730,
+        "initialization": 25280225
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "46573dba0166e6e8334a507b4998893c619ccd1289859e81a0325045c12c9fa4"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 12,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 2012306187,
+        "arrivals": 914422242,
+        "od": 696327373,
+        "vehicle_type": 2114256700,
+        "initialization": 668693243
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "434afe8f8563f8de62cf50418d6ced51c749f12bf2ce1dc03ebe292c920054b9"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 13,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 767191316,
+        "arrivals": 1202911003,
+        "od": 1894346393,
+        "vehicle_type": 653215429,
+        "initialization": 334945823
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "cc2f3035291a021d69c7e3ea638f5647526da51e295325708ab4a12cdea10ac1"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 14,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1203404767,
+        "arrivals": 1772404519,
+        "od": 162414507,
+        "vehicle_type": 1927299072,
+        "initialization": 176570853
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "f0b14f26b0e76825161d1b193aaaf81227b06338cb66fd98031b633aed33a0b6"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 15,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 363207960,
+        "arrivals": 1758427964,
+        "od": 1909295035,
+        "vehicle_type": 2075392713,
+        "initialization": 2015998646
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "4345f77c18aa997936176eaea226aa62c21b1e483cd2b744b2b684a42b638028"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 16,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1246446935,
+        "arrivals": 298908674,
+        "od": 2078695024,
+        "vehicle_type": 1333422017,
+        "initialization": 454600065
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "1992246a1830f4d189874f68623daffdc4ed5f889adfeea30c0ad32d7380c6c1"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 17,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1076762214,
+        "arrivals": 22318559,
+        "od": 1025465795,
+        "vehicle_type": 1641969406,
+        "initialization": 1663251082
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "4be5ee16e2c244b1809b8fbc8afde40838906bb2fde22162aaafd01030f9cd06"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 18,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1001372297,
+        "arrivals": 1860188133,
+        "od": 1307864535,
+        "vehicle_type": 2071334176,
+        "initialization": 1504635768
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "f4c8edde56934fb13e43dd704424414ae0abc6df5f57a791ef08814d268f96c3"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 19,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 973778866,
+        "arrivals": 842786742,
+        "od": 1327098456,
+        "vehicle_type": 1624597548,
+        "initialization": 2091606103
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "3a933c86386ffbab531820e4e795d486da702c9e19f06be465051ed1b45bbbf0"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 20,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1610680616,
+        "arrivals": 1255816855,
+        "od": 1543499694,
+        "vehicle_type": 347071434,
+        "initialization": 812471254
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "6b79c8a9bdccc40346917597ee5aabeed55fe355d1dfb16c1048003c19b0d403"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 21,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 489623505,
+        "arrivals": 1883409142,
+        "od": 1227885407,
+        "vehicle_type": 1127667235,
+        "initialization": 721284809
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "0fccf7243ea0c9728ba372ece571ee3f0109dbfeaae21d02fad86050817ce13d"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 22,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 926980454,
+        "arrivals": 952454706,
+        "od": 14877978,
+        "vehicle_type": 329984016,
+        "initialization": 1608723408
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "a6c391d00c2909eff0a285237a6d9cc922954b6a763bf1e913c15c625470baab"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 23,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1269373199,
+        "arrivals": 355301553,
+        "od": 481607458,
+        "vehicle_type": 1849202000,
+        "initialization": 1483128923
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "fc65b37a9410731859dea303031b546ab3c4b62e033dc5b0f158f67f574d2525"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 24,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1137131947,
+        "arrivals": 1424462189,
+        "od": 1248939165,
+        "vehicle_type": 292757130,
+        "initialization": 701292291
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "350b2cd6437962016ca47d83ac47d7d7442e31c02e0b7b8d1f46c73e4977dc87"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 25,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 367568262,
+        "arrivals": 693413570,
+        "od": 1227326449,
+        "vehicle_type": 405840008,
+        "initialization": 2146439391
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "228ec0e3667b88ddb1bd457182c938954b2333996324d269df245fa66298d5c3"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 26,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1598321142,
+        "arrivals": 1218075248,
+        "od": 1972908062,
+        "vehicle_type": 1211426659,
+        "initialization": 283526250
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "ff9467f873405e906f4b56e2b3b68f3b72a81c0a91ab9205d4f42705717da979"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 27,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 46365984,
+        "arrivals": 533591284,
+        "od": 1005617628,
+        "vehicle_type": 1739179542,
+        "initialization": 1815600356
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "6ae70d5e0f1bb6cb641674f5a0bae19dddf38c85372e193bfac8aef56fddb2e2"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 28,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 275948726,
+        "arrivals": 979653620,
+        "od": 967904994,
+        "vehicle_type": 572655293,
+        "initialization": 2003814806
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "0f4ade5517f493a8f32afc16f75ea5022b0eb7d33e80b51fc1b3571d91567c7d"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 29,
+      "scenario_id": "A",
+      "scenario": {
+        "id": "A",
+        "name": "A_signal",
+        "route_edges": [
+          "-68",
+          "-13",
+          "-71"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-68",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-71",
+          "lane_index": 0,
+          "arrival_position_m": 28.55
+        },
+        "required_tls_ids": [
+          "647"
+        ],
+        "required_lane_change": null,
+        "episode_limit_s": 300.0,
+        "task": "signal_stop_restart",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 7273221,
+        "arrivals": 1624077712,
+        "od": 1218007002,
+        "vehicle_type": 571573649,
+        "initialization": 368018505
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "79cea9d769b062edc44c8cf4fa0e603b4eb7d2e5e7ea0ea2a3d563682048149f"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 0,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 954246179,
+        "arrivals": 1187009398,
+        "od": 1222433828,
+        "vehicle_type": 476005788,
+        "initialization": 419959207
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "2098322ee0210384abed8ef5e082c9674c1e3313980907b256123658822155c3"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 1,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1995244307,
+        "arrivals": 1377245542,
+        "od": 1104238446,
+        "vehicle_type": 580550505,
+        "initialization": 1511065024
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "4c07d9801f66eaafbf964209e9d5d4848d5eb887331d3638f048e984951b9d20"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 2,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1786831666,
+        "arrivals": 1721622553,
+        "od": 6479779,
+        "vehicle_type": 878737347,
+        "initialization": 337609582
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "77f3698f4a05d0409fa7fd836e7460fcaf9525255188e6b293a5f031d281ca8d"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 3,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1967387160,
+        "arrivals": 830598256,
+        "od": 818905623,
+        "vehicle_type": 1053119695,
+        "initialization": 1585437407
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "65ef5856a91b546b9cd2f12e65c8a8e1b66a68db177fc696645eb2dec74668e4"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 4,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 320902215,
+        "arrivals": 1230875749,
+        "od": 1267119607,
+        "vehicle_type": 46524365,
+        "initialization": 143734463
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "aac5de11cc7662ac4e9d6dd2e348601cf2e3407a4c0f36a01abeaec8b9319cf6"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 5,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1225226923,
+        "arrivals": 460209976,
+        "od": 309704934,
+        "vehicle_type": 1399242867,
+        "initialization": 1715867717
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "c81ecd96334d76d67bbc985e42927a0bac980e3f0ee309407da2deaaeaf5cd87"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 6,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 935871319,
+        "arrivals": 442849807,
+        "od": 2144656528,
+        "vehicle_type": 1934588890,
+        "initialization": 1079284420
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "993d8115bcf8b81900c3e148dc121ba6bb73d1c398947f37137009ee4c346836"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 7,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 2067246148,
+        "arrivals": 2122317592,
+        "od": 502925235,
+        "vehicle_type": 716672220,
+        "initialization": 183581346
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "87c865a7e4be59a7e89d1efc1ba8f606a3f1b47971134c1deef353562924cb66"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 8,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 455358509,
+        "arrivals": 2076416655,
+        "od": 799347901,
+        "vehicle_type": 1047195130,
+        "initialization": 476352793
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "b6dd043f2b1400cfd8d72e11c92b4704ab6c4fa4601844df9026c5dca81a4dc7"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 9,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1829607564,
+        "arrivals": 37063596,
+        "od": 1762511264,
+        "vehicle_type": 323363027,
+        "initialization": 270931265
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "03023195f03f791213f0cdded53ebfa4f106ec5c2b82951a71bbbad71b1b5628"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 10,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 228315998,
+        "arrivals": 1490520668,
+        "od": 1478331465,
+        "vehicle_type": 1112959707,
+        "initialization": 20632112
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "05debcd8807273a1b412b01ac3ae4b9463069f58b6db987c7642a0f520ccf30a"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 11,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 759447255,
+        "arrivals": 357401946,
+        "od": 624572746,
+        "vehicle_type": 917306056,
+        "initialization": 1999046829
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "b6473b0efdfa7af22d2d7ce5c86ae1b959d77e2faef3fa55b3af0d6141a71636"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 12,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 6071683,
+        "arrivals": 1376315461,
+        "od": 717272611,
+        "vehicle_type": 527817798,
+        "initialization": 582864504
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "f5ba807481a8325bfccad5e61c0a86a56162d9048f345d3cececbee2046f63c4"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 13,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1225948932,
+        "arrivals": 1530949309,
+        "od": 20542164,
+        "vehicle_type": 11964962,
+        "initialization": 1800318720
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "ff805e2fca5793af519d5e49d7b1c4c0df7293e9347dc273702b52fa2b6b8585"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 14,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 892827127,
+        "arrivals": 1766098667,
+        "od": 1799136397,
+        "vehicle_type": 1463592543,
+        "initialization": 1363747460
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "152e4d405940ed67fff1cce1555a5228728fab77dd424e8302caabfd9cc1ea7b"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 15,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1605123012,
+        "arrivals": 47082019,
+        "od": 822323497,
+        "vehicle_type": 2127087315,
+        "initialization": 1462589128
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "4afb67764e80564d48e35f6afdd5257108cfe2fc793e1a592831a505bc284390"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 16,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1216622576,
+        "arrivals": 1658337199,
+        "od": 899479646,
+        "vehicle_type": 1820304946,
+        "initialization": 1574052515
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "d868f5789daa6ff31335f2436de5e87b894293204daa2643fbc8b2af804bb1bf"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 17,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1007144750,
+        "arrivals": 1700305489,
+        "od": 1038209762,
+        "vehicle_type": 547212496,
+        "initialization": 337823380
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "da0709d0274d7d9365f6c66d3081fd86fb71383ba0c49cd7a28e0f68830ca4f2"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 18,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1963763111,
+        "arrivals": 1620307993,
+        "od": 359549808,
+        "vehicle_type": 1353293536,
+        "initialization": 2073181261
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "78e0ca93794268984aa2f9542c1d8c3233d0e9ac30104670136ed2f3bf725fc9"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 19,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 77702718,
+        "arrivals": 949769953,
+        "od": 2146576629,
+        "vehicle_type": 1336259134,
+        "initialization": 434599162
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "55990a184f4e95bfd29b5b83abf5c8f622d33adbc2c215140d4ceee133e9bb91"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 20,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1868564061,
+        "arrivals": 189460044,
+        "od": 550682099,
+        "vehicle_type": 1834695140,
+        "initialization": 1287640086
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "803728f923181ae5d947b557ae7869baed97773ad7c1690b2931498008e195f9"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 21,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1855456218,
+        "arrivals": 389402734,
+        "od": 2125235679,
+        "vehicle_type": 699099842,
+        "initialization": 1733908298
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "6ac54c268d004acb8d1709a540b97a8e7cea793e744df72b0d86d257ea496d63"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 22,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1519618122,
+        "arrivals": 1623841835,
+        "od": 810858630,
+        "vehicle_type": 1552399031,
+        "initialization": 452999078
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "f0dd5b2904c73de1b24c3c058ed8676e4129768c304e1be9b3bc3c092489e794"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 23,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 982464246,
+        "arrivals": 678487897,
+        "od": 2057182935,
+        "vehicle_type": 785728666,
+        "initialization": 1265654514
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "7ae51325135a24ae2a9dd2cfb0b0973bea21b93ff4aff65a808db680fba6dc6e"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 24,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1812815429,
+        "arrivals": 608682599,
+        "od": 1426074735,
+        "vehicle_type": 1816375328,
+        "initialization": 29970254
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "c2c9b74cccf31bfa3da8ef5b93c31bf51e63baedf98fb016aebed61cf29b36d1"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 25,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 592475166,
+        "arrivals": 2077989379,
+        "od": 734463928,
+        "vehicle_type": 1346570479,
+        "initialization": 1091277825
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "46b2530474c5fb0fc33044cb0cf12d58ee28dad544a8a942015f2212353d4f01"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 26,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1233965252,
+        "arrivals": 2059048240,
+        "od": 94102440,
+        "vehicle_type": 473979498,
+        "initialization": 244842426
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "ee91e5708e356737b07e986c080e423e13611ed1ce4f986ade71d3d81722934f"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 27,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1130911861,
+        "arrivals": 453946817,
+        "od": 820769070,
+        "vehicle_type": 1023341631,
+        "initialization": 630293979
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "3cadb525d6e939d7354667b79019651d526d6df6a5437a9ff7c3610b1e77d6cc"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 28,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 627575603,
+        "arrivals": 672084330,
+        "od": 535126473,
+        "vehicle_type": 743230245,
+        "initialization": 1994676620
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "c5524ca0b6bc59f29e042aca845e1779fe619ad2cbe82b113662e75cfcf4ff3b"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 29,
+      "scenario_id": "B",
+      "scenario": {
+        "id": "B",
+        "name": "B_required_lane_change",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "-68",
+          "lane_index": 0,
+          "arrival_position_m": 69.0
+        },
+        "required_tls_ids": [],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "route_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1682798840,
+        "arrivals": 1699947962,
+        "od": 1130413161,
+        "vehicle_type": 165847973,
+        "initialization": 1834628862
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "7b2f5b3b51996c2de4467425b6ae27ea8f78733860ab0327c65b1ab313384c81"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 0,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 604375168,
+        "arrivals": 328659724,
+        "od": 1860347965,
+        "vehicle_type": 471441383,
+        "initialization": 1045153524
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "3a74a141f817824b23b8fface30e52a6fb088ce8ea4b5cde92bbe4c3aa600f5d"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 1,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1082853118,
+        "arrivals": 276283989,
+        "od": 1889614243,
+        "vehicle_type": 970373313,
+        "initialization": 985331788
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "c6c5a56a14320da706456c40a2d2bcb4b6ec290abad2a9b7a783752abd6650cc"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 2,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 640974503,
+        "arrivals": 938739556,
+        "od": 1648528833,
+        "vehicle_type": 530982969,
+        "initialization": 1783307506
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "d15e29bd9f08e41b2e40c0f1e698a99e74a820135d431e26455c814ff56380aa"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 3,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1461320032,
+        "arrivals": 1790984552,
+        "od": 557238927,
+        "vehicle_type": 811757567,
+        "initialization": 1373654103
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "60de95d2dc935aaf094fc1ac734c29fbc5cabe0286675b243d0ce6a70912f97c"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 4,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1630653756,
+        "arrivals": 906578048,
+        "od": 487536869,
+        "vehicle_type": 8836369,
+        "initialization": 66770026
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "e3f7be59ef10d7a1e551d43fb4ff4b7cc69f38f77259ddecf71061ef1268ecde"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 5,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1497288566,
+        "arrivals": 1026780667,
+        "od": 125887863,
+        "vehicle_type": 1071779076,
+        "initialization": 334593724
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "787920c6489e92560f5b851a71743abb5620c9e7f7e5174ef08689befb319333"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 6,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 918277707,
+        "arrivals": 386079081,
+        "od": 139917937,
+        "vehicle_type": 646296607,
+        "initialization": 395987381
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "41901240a352746875bddc3febaf94dd352bb158549774770c62bc9f7fa68999"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 7,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 341681847,
+        "arrivals": 1721082256,
+        "od": 1026136519,
+        "vehicle_type": 1085129591,
+        "initialization": 254551363
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "af03ddef07fd8628e846463061b842ca05ab1e81deb2472af230cca46083efea"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 8,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 490970083,
+        "arrivals": 2044903603,
+        "od": 1382615739,
+        "vehicle_type": 562422096,
+        "initialization": 1592291812
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "e6f9b54a74ad7a5068a42f4ee711502b3b502ece6d7db096e509f26a2786ce75"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 9,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 844823884,
+        "arrivals": 1044048940,
+        "od": 1645815663,
+        "vehicle_type": 993098307,
+        "initialization": 31563555
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "f107e2259887c7785c96d8575abdb45e81c393b33b52fe701f803c664c5d1de6"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 10,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 166041620,
+        "arrivals": 1513250786,
+        "od": 1614317386,
+        "vehicle_type": 1850919168,
+        "initialization": 756003817
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "e413132d7377f52f39c350849610f92ae421cffbdf658743c4adb423aad8e103"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 11,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 68444109,
+        "arrivals": 955028689,
+        "od": 1832200519,
+        "vehicle_type": 1537062249,
+        "initialization": 723419516
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "d19cc42a93bbcc1d1f594be7e540131d21b16c17ab1c1327fdb65904203ca3eb"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 12,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1996379516,
+        "arrivals": 1076117808,
+        "od": 666924335,
+        "vehicle_type": 1494884413,
+        "initialization": 306283330
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "116577d603002a5003a59b0e0a7e5bfe0d348e6aac043a812af9bd05dabf04ae"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 13,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1566907719,
+        "arrivals": 353598799,
+        "od": 981875663,
+        "vehicle_type": 1677505844,
+        "initialization": 618904801
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "79bd7a3a6a211f42043e0d35da00237c311315197143d64818cffd61600a9cd8"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 14,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 544663571,
+        "arrivals": 903580290,
+        "od": 815111254,
+        "vehicle_type": 1960069044,
+        "initialization": 110998153
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "d1a0081c17b8b3ad9a4a3af3d32be95006082b7ea9922c672127be8e256388eb"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 15,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1367407720,
+        "arrivals": 1634380142,
+        "od": 1727448286,
+        "vehicle_type": 1604864961,
+        "initialization": 966437924
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "a20a191b73a29a3aed3e74c7c9da74295093c54f1bec88b7fd6db99486dc8365"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 16,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 8634428,
+        "arrivals": 2099746992,
+        "od": 1153245449,
+        "vehicle_type": 1947277588,
+        "initialization": 983570880
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "0ffa7e8d41b7982aed25e6bf8bf5a30253c678b762f21a295f21fe230d91a571"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 17,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 245332660,
+        "arrivals": 385250998,
+        "od": 2036332788,
+        "vehicle_type": 1821507484,
+        "initialization": 764134721
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "71d934c7333f4caf55e4e701f930d2d12774b3b7a4eafb1ba16b17769bfc5d35"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 18,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 439786555,
+        "arrivals": 263633086,
+        "od": 2138321910,
+        "vehicle_type": 490741989,
+        "initialization": 294214131
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "1e0731cbf198bbc29eb0427abafdd684f0cd5ccfa422bf3e12f861eab8f77fe8"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 19,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1249555949,
+        "arrivals": 717835306,
+        "od": 2044005983,
+        "vehicle_type": 48373611,
+        "initialization": 1002618188
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "82ac10e66b6d229f7a45273cf9ca81c00582e3a48337876b1b662adffc852dec"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 20,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 775046151,
+        "arrivals": 1424615904,
+        "od": 97820265,
+        "vehicle_type": 2090015929,
+        "initialization": 1802830473
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "f8f6afa24bda6f08fed9dac0a2c1c90795b5a6b8a100807ac71d7ffccd33c517"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 21,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1044935755,
+        "arrivals": 350647942,
+        "od": 1363914951,
+        "vehicle_type": 1749638191,
+        "initialization": 1588087113
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "6de97b9a52a3dd1890a994fe6a47a19530f7b10a3738518ae1d8e75bb7e3379c"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 22,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 106579341,
+        "arrivals": 688455387,
+        "od": 325501681,
+        "vehicle_type": 718452229,
+        "initialization": 681221327
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "f6c5bd639c44d089f281f74b8d8af4fbf699881d4ad4f91919d09ef091f760e2"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 23,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 14170278,
+        "arrivals": 245379127,
+        "od": 1435179842,
+        "vehicle_type": 1651735021,
+        "initialization": 423673577
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "d59c4c2fb258040036e5b14035f66a3e0f1b00a1486d76bb625a4ff96b463f6d"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 24,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 54807979,
+        "arrivals": 868419612,
+        "od": 950798493,
+        "vehicle_type": 2044712408,
+        "initialization": 983976993
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "5e1e6bb48c2699840329c93edb9cea8624e4dfc81b2f98933a95ef70f419c867"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 25,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1243988732,
+        "arrivals": 978846838,
+        "od": 2147045563,
+        "vehicle_type": 215558691,
+        "initialization": 1005886162
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "2eb53f8bf7281056f51008e32c02bf23f6bcdee1ba0891b776d0cccb474dcb01"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 26,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 656212327,
+        "arrivals": 1009608116,
+        "od": 249987531,
+        "vehicle_type": 2108636906,
+        "initialization": 1157890188
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "616cd6b4a4dfa804453b196863fa18afdc7a1172b63dd97f4d085922f544ac68"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 27,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 885521821,
+        "arrivals": 1868608119,
+        "od": 1656607781,
+        "vehicle_type": 1442438762,
+        "initialization": 628988431
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "56fe7821e9128a42611e5f23c165c347b4588c69e45bd58acc7001eead8c4300"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 28,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1389219744,
+        "arrivals": 1085173264,
+        "od": 734124002,
+        "vehicle_type": 459467698,
+        "initialization": 2061330869
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "54bd82f4d7fd4d02ff27606f8479f8a0a378d46338028d147feee23d6ba622d1"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 29,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 2126532407,
+        "arrivals": 2123525544,
+        "od": 189332503,
+        "vehicle_type": 408951332,
+        "initialization": 246320870
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "9d3a1560c30c3c8966d91d796876f0996df864db7e92c96fed01ff2543b1c271"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 30,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1402867465,
+        "arrivals": 1407660555,
+        "od": 100398021,
+        "vehicle_type": 38053514,
+        "initialization": 473736333
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "06d11ecae5106577085374a6646517244a55a311a686f8a6dfa1db61933f3073"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 31,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1666019578,
+        "arrivals": 1745593001,
+        "od": 696202947,
+        "vehicle_type": 1192680428,
+        "initialization": 1988574977
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "df476e7bfd605ff3e2173d1b9fa2b73d94a3d03a18864c633146a2639e4d1292"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 32,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1875500134,
+        "arrivals": 1127365928,
+        "od": 167604980,
+        "vehicle_type": 865872640,
+        "initialization": 908504794
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "377629e55a03ac5307a94aa2c27546892ee38519965efe6530cd5a83ca887f7b"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 33,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 377243518,
+        "arrivals": 492301433,
+        "od": 1850846597,
+        "vehicle_type": 1002882550,
+        "initialization": 1348601690
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "13a192facc476a3a35094ef86f56db1f329386475659a85c9768bbf870dc7fc5"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 34,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1200731444,
+        "arrivals": 946004606,
+        "od": 1199203093,
+        "vehicle_type": 385695641,
+        "initialization": 1544983000
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "2da7bef74a4a76b7d2594aa0da497991a4103b490543b8658a958ad90fc2164c"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 35,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1386882402,
+        "arrivals": 1030066130,
+        "od": 2003031725,
+        "vehicle_type": 2091622734,
+        "initialization": 1454585170
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "07220a778244ee77cce7b7c56775d1df45de97edb367607203beb2298b86a8dc"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 36,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 931462511,
+        "arrivals": 945587630,
+        "od": 832070518,
+        "vehicle_type": 170314763,
+        "initialization": 196569958
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "437f767dc39a7d9c2df8fa6dfc08552417861c55e13a662f0ab71698d288058c"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 37,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1114102309,
+        "arrivals": 401335827,
+        "od": 931161450,
+        "vehicle_type": 392070839,
+        "initialization": 399346157
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "e742c0a51a9d2f913662ddcf395edcdce45f97647b8d53f1954ee56802d96b95"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 38,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 1155185131,
+        "arrivals": 813810092,
+        "od": 843717275,
+        "vehicle_type": 262204851,
+        "initialization": 1956369785
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "2b4d2f46e01c617a00d5ccb47706f426c47771109561debb1bd880093d759e20"
+    },
+    {
+      "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
+      "contract_sha256": "e8c72383364daa8f67069ec7b053a85c442fc069d82b6fb514eaea57ed525aa5",
+      "namespace": "dev",
+      "case_index": 39,
+      "scenario_id": "C",
+      "scenario": {
+        "id": "C",
+        "name": "C_combined",
+        "route_edges": [
+          "-3#4",
+          "-3#5",
+          "-3#6",
+          "-3#7",
+          "-3#8",
+          "-68",
+          "-13",
+          "-71",
+          "-31",
+          "-42",
+          "-77",
+          "-54",
+          "3#8",
+          "3#7",
+          "3#6",
+          "3#5",
+          "3#4"
+        ],
+        "vehicle_class": "passenger",
+        "start": {
+          "edge": "-3#4",
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 2.0
+        },
+        "goal": {
+          "edge": "3#4",
+          "lane_index": 0,
+          "arrival_position_m": 63.11
+        },
+        "required_tls_ids": [
+          "169",
+          "268",
+          "647",
+          "764"
+        ],
+        "required_lane_change": {
+          "edge": "-3#4",
+          "next_edge": "-3#5",
+          "depart_lane": 0,
+          "required_exit_lanes": [
+            1
+          ]
+        },
+        "episode_limit_s": 300.0,
+        "task": "combined_signal_and_required_lane_change",
+        "feasibility_status": "not_yet_checked_with_research_controller"
+      },
+      "seeds": {
+        "sumo": 959741870,
+        "arrivals": 1991725664,
+        "od": 1519303125,
+        "vehicle_type": 428286389,
+        "initialization": 2028964894
+      },
+      "requested_lambda_vph": 600.0,
+      "demand_multiplier": 1.0,
+      "case_uid": "0480cbc938ad331acdabc5089f6026446ccad8fd2d5aa07f967591d0ba47d88b"
+    }
+  ],
+  "cases_sha256": "e9bfba888735d013a3cc15ef9bc6b81917335ea9a3200519299b686956bbecf5",
+  "executed": false
+}

@@ -100,7 +100,7 @@ class Pilot:
             env.close()
 
     def bc(self,quality):
-        model=KCityBC(seed=11,device=self.config['device']);folder=self.root/'bc';folder.mkdir(exist_ok=True)
+        model=KCityBC(seed=self.config['seed'],device=self.config['device']);folder=self.root/'bc';folder.mkdir(exist_ok=True)
         if (folder/'BEST.json').exists() and (folder/'COMPLETE').exists():
             model.load_checkpoint(folder/json.loads((folder/'BEST.json').read_text())['path'],expected_data_id=quality['data_id'])
             return model
@@ -142,7 +142,7 @@ class Pilot:
         folder=self.root/method;folder.mkdir(exist_ok=True)
         if (folder/'COMPLETE').exists():return True
         env=SumoKCityEnv(background=True)
-        agent=KCityPPO(seed=11,device=self.config['device'])
+        agent=KCityPPO(seed=self.config['seed'],device=self.config['device'])
         runner=KCityRunner(agent,env,run_id=self.root.name+'-'+method,namespace='train')
         runner.case_cursor=self.config['train_case_start']
         clock=time.monotonic();baseline=0
