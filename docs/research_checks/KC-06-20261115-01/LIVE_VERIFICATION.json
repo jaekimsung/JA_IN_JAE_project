@@ -1,0 +1,50 @@
+{
+  "checked_at": "2026-11-15T11:42:36.734731+09:00",
+  "status": {
+    "phase": "PPO_PILOT_TRAINING",
+    "pid": 1073112,
+    "started_at": "2026-11-15T11:32:42.486618+09:00",
+    "methods": {
+      "B2": {
+        "transitions": 2048,
+        "updates": 1,
+        "optimizer_steps": 320,
+        "session_wall_s": 148.00639087500167,
+        "session_transitions_per_s": 13.837240323829205,
+        "policy_loss": -0.012213353259721772,
+        "value_loss": 1.7410529082641006,
+        "entropy": 1.018504878692329,
+        "approx_kl": 0.008124080668494571,
+        "clip_frac": 0.1751953125,
+        "p_lane_change": 0.06186576187610626,
+        "latest_checkpoint": "/home/heven/kcity_research_runs/KC-06-20261115-01/pilot_v1/B2/checkpoint-002048"
+      }
+    },
+    "purpose": "KC06_PILOT_ONLY",
+    "main_research_training_started": false,
+    "training_ready": false,
+    "updated_at": "2026-11-15T11:41:39.480851+09:00",
+    "peak_rss_kib": 1705952,
+    "pilot_expert_transitions": 10000,
+    "bc_updates": 1000,
+    "bc_validation_loss": 0.007618207950145006,
+    "active_method": "B2"
+  },
+  "checkpoint_sha_verified": true,
+  "checkpoint_counters": {
+    "num_timesteps": 2048,
+    "num_updates": 1,
+    "num_optimizer_steps": 320
+  },
+  "source_mismatches": [],
+  "feasibility_completed": 90,
+  "feasibility_planned": 90,
+  "test_count": 100,
+  "tests_passed": true,
+  "pilot_complete": false,
+  "learner_actually_executed": true,
+  "main_research_training_started": false,
+  "final_cases_executed": 0,
+  "training_ready": false,
+  "remote_backup_performed": false
+}

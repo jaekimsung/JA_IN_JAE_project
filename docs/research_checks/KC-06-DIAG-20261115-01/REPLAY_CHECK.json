@@ -1,0 +1,29 @@
+{
+  "checks": [
+    {
+      "method": "B2",
+      "step": 40000,
+      "scenario": "B",
+      "exact_metric_replay": true
+    },
+    {
+      "method": "B2",
+      "step": 40000,
+      "scenario": "C",
+      "exact_metric_replay": true
+    },
+    {
+      "method": "B3",
+      "step": 30000,
+      "scenario": "B",
+      "exact_metric_replay": true
+    },
+    {
+      "method": "B3",
+      "step": 30000,
+      "scenario": "C",
+      "exact_metric_replay": true
+    }
+  ],
+  "passed": true
+}

@@ -8,6 +8,8 @@
 
 | 실험 ID | 연결된 RQ·가설 | 정책·비교 조건 | 상태 | 주요 결과 | 설정·로그·결과 링크 | 해석·제한 |
 |---|---|---|---|---|---|---|
+| KC-06-DIAG-20261115-01 | RQ1 pilot 후속 | 실패재현4/개입4·BC/B2/B3 dev100 | 완료 | 3정책각100/100완주,초기LC미선택실패확인 | [결과](research_checks/KC-06-DIAG-20261115-01/README.md) | optimizer0,seed1,개입제외,final미사용 |
+| KC-06-20261115-01 | RQ1/2 pilot | fresh expert10k·BC1000·B2/B3 각50k·B0 90case | 실행 중 | GPU smoke·100tests 통과,실제 진도는STATUS.json | [실행 안내](KCITY_PILOT.md)·[시작 기록](research_checks/KC-06-20261115-01/LAUNCH.json) | pilot 자료/가중치 재사용 금지,final 미실행 |
 | KC-05-20261114-01 | RQ1 expert/data 기반 | 73-D-only B0·소량 수집·shard/loader/품질/복구 | 완료 | 100 tests·602전이·6도착·20→50resume일치 | [결과](research_checks/KC-05-20261114-01/README.md)·[summary](research_checks/KC-05-20261114-01/validation_v1/SUMMARY.json) | debug 자료,BCforward만,연구학습/10M분자0 |
 | KC-04-20261114-01 | RQ1 초기화·재개 기반 | 공통 masked actor·BC 이식·전체 resume fixtures | 완료 | 80 tests·Gym·행동/logprob차이0·전체 재개 일치 | [결과](research_checks/KC-04-20261114-01/README.md)·[summary](research_checks/KC-04-20261114-01/validation_v1/SUMMARY.json) | [16,16] 검증용 optimizer 작업만,연구 학습/전문가0 |
 | KC-03-20261114-01 | RQ1/2 평가 기반 | GAE·종료·예산·독립평가·사건 지표 fixture | 완료 | 61 tests·Gym·GAE101.96→2.96·6회도착 | [결과](research_checks/KC-03-20261114-01/README.md)·[summary](research_checks/KC-03-20261114-01/integration_final/SUMMARY.json) | optimizer0; 지정 행동 검사,final미실행 |

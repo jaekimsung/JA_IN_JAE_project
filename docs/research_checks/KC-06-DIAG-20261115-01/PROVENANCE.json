@@ -1,0 +1,13 @@
+{
+  "started_at": "2026-11-15T14:19:25.697625+09:00",
+  "head": "a10e74698aafc0a2f17cb999a22c83170d1cdbec",
+  "scope": "Replay failed checkpoints; independent dev100 validation, no learning or tuning; causal lane intervention separately labelled",
+  "checkpoints": [
+    "B2/40000",
+    "B3/30000",
+    "B2/50000",
+    "B3/50000",
+    "BC/1000"
+  ],
+  "final_cases_executed": 0
+}

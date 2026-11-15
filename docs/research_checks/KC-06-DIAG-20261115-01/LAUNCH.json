@@ -1,0 +1,15 @@
+{
+  "pid": 1253964,
+  "output": "/home/heven/kcity_research_runs/KC-06-20261115-01/diagnosis_v1",
+  "command": [
+    "/home/heven/.cache/kcity-research-audit-20261110/venv/bin/python",
+    "-B",
+    "scripts/kcity/diagnose_pilot.py",
+    "--pilot",
+    "/home/heven/kcity_research_runs/KC-06-20261115-01/pilot_v1",
+    "--output",
+    "/home/heven/kcity_research_runs/KC-06-20261115-01/diagnosis_v1",
+    "--device",
+    "cuda"
+  ]
+}

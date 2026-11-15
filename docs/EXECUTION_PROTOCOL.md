@@ -6,6 +6,8 @@ ID `KC-PROTOCOL-v1-draft-20261114` · **설계 준비 완료를 목표로 한 ru
 
 실행 현황 갱신(2026-11-14): KC-01/02 후보 구현·작은 검사를 완료했다. [설정](../configs/kcity/v1/README.md)·[Gym 안내](KCITY_ENV.md)·[KC-02 결과](research_checks/KC-02-20261114-01/README.md)를 따른다. G1의 작은 환경 검사는 통과했지만 통합 preflight는 아직 없으며, 최종 신호/규칙 지표·보상·수요 충분성은 KC-03/06에서 추가 검증한다. KC-03의 GAE/예산/독립평가·사건 지표 후보 검사도 완료했다. [실제 계약](KCITY_EVALUATION.md)을 따른다. KC-04의 공통 actor·BC 이식·전체 resume 후보 검사도 완료했다([계약](KCITY_POLICY_AND_RESUME.md)). KC-05의 B0·수집/검사 CLI·shard/loader·복구도작은실제자료로확인했다([계약](KCITY_DATA_PIPELINE.md)). 연구학습/최종평가 CLI와G2~G5 전체는미완료다.
 
+2026-11-15 범위 결정: 정책 판단은 **2Hz로 공통 고정**, 학습/평가 물리 tick은 **0.1초**를 유지한다. 판단 주기 비교는 보류하며, 최적 주기라는 주장은 하지 않는다. 보상·관측·mask·안전 설정·case 분리·예산·모델 선택을 세 방식에 일관되게 적용한다. BC 비용(전문가 생성/사전학습)과 PPO 전이 비용을 구분해 초기 이점과 총비용 효율을 별도로 보고한다. 최종 완주율이 포화되므로 같은 예산의 학습곡선·목표 도달 전이·대기/차선 실패·수요 변화·seed별 변동을 함께 비교한다. 이 결정은 시간 조건만 확정하는 것으로, 전체 `research_settings_frozen`/본학습 readiness를 true로 바꾸지 않는다.
+
 ## 1. 현재 준비 수준과 이번 작업의 끝
 
 현재 저장소 HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`, SUMO1.28.0을 읽기 전용으로 확인했다. 상세 [READ_ONLY_CHECK.json](research_checks/KC-DESIGN-20261114-01/READ_ONLY_CHECK.json)에 코드/수업자료/맵 해시·공간·실행기 존재 여부가 있다. 새 시뮬레이션·수집·BC/PPO 업데이트는 **0**이다.

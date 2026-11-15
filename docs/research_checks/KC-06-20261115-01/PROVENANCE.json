@@ -1,0 +1,7 @@
+{
+  "started_at": "2026-11-15T11:30:10.765206+09:00",
+  "head": "a10e74698aafc0a2f17cb999a22c83170d1cdbec",
+  "scope": "KC06 bounded pilot: fresh expert10k,BC1000 updates,B2/B3 each50k,independent dev checks; not main RQ training",
+  "gpu": "RTX3070",
+  "training_ready": false
+}

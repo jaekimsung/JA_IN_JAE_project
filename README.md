@@ -25,6 +25,8 @@ KC-04에서는 **공통 masked BC/PPO 정책·BC actor 이식·부분 rollout과
 
 KC-05에서는 **관측만 사용하는 전문가·실제 소량 수집·파일/분할/복구·BC loader**를 구현했습니다. 100개 검사가 통과했고6개Episode에서602전이를저장했습니다. [수집사용안내](docs/KCITY_DATA_PIPELINE.md)·[KC-05 결과](docs/research_checks/KC-05-20261114-01/README.md)를참고합니다. 이번자료는debug검증용이며다음KC-06에서각50k시험학습을진행합니다.
 
+KC-06 시험 학습을 시작했습니다. 새 pilot 전문가 자료를 수집한 뒤 BC 사전학습과 PPO-only/BC→PPO 각50k를 순서대로 실행합니다. 현재 진도·저장 경로·STOP/재개 방법은 [pilot 안내](docs/KCITY_PILOT.md)를 따릅니다. 완료 전에는 시험 학습을 완료 결과로 표시하지 않습니다.
+
 ## 프로젝트 목표
 
 K-CITY의 교차로·다차선 도로·회전교차로에서 일반 차량(HV)과 상호작용하며, 신호와 도로 연결을 따르고 목적지까지 주행하는 AV 의사결정 환경을 만드는 것이 목표입니다.

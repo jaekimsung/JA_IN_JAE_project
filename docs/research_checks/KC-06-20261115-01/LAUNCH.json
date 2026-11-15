@@ -1,0 +1,7 @@
+{
+  "pid": 1073112,
+  "output": "/home/heven/kcity_research_runs/KC-06-20261115-01/pilot_v1",
+  "log": "/home/heven/kcity_research_runs/KC-06-20261115-01/pilot_v1.console.log",
+  "purpose": "pilot",
+  "target_per_method": 50000
+}
