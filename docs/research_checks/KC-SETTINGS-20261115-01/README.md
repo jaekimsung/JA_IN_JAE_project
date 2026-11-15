@@ -1,5 +1,6 @@
 # K-CITY 본 실험 설정 확정
 
+갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
 추가 seed22·33의 학습 및 dev100 평가 완료 후 작성한 기록이다. **과학 설정 확정 완료, 본 수집·본 학습 미시작, 실행 준비 미완료**를 구분한다.
 
 ## 실제 pilot 결과
@@ -34,13 +35,9 @@
 - BC는 최저val loss, B1/B3는 동일actor. PPO 주최종은1M budget-end; 최종평가로 모델을 고르지 않는다.
 - 실패 포함 완주/규칙판정·대기·차선실패·seed변동·실제시간/전이 및 BC비용을 같이 비교한다.
 
-## 시행 전 남은 운영 작업
+## 후속 상태
 
-- Implement/connect versioned main collector/BC/PPO CLI and frozen-spec loader; existing pilot CLI remains capped50k and KC01 rejects main-enable flags.
-- Validate GPU long-history interrupted/resumed run and safe STOP against continuous run using matching source/runtime.
-- Summarize writer bytes/transition, memory and shard sizing; confirm disk capacity and checkpoint retention before1M/10M operations.
-- Configure backup destination and verify remote checksum/readback; Git publication is not model/data backup.
-- Produce operational LAUNCH_READY evidence, owner lock and fresh run IDs; then separately proceed to new expert1M, main BC and main PPO.
+당시 남아 있던 본 CLI·GPU 재개/STOP·저장비용·운영 준비 기록은 KC-OPS/STORAGE에서 제한된 검증을 완료했다. Drive 업로드는 후속 사용자 지시로 금지했다. 본 수집/학습은0이며 final/archive/제출은 후속이다. 현재 디스크는 시작 직전 다시 확인한다.
 
 설정 확정은 아래 frozen JSON을 기준으로 한다. 기존 KC01 설정은 역사적 후보 및 실행 호환 계약으로 그대로 보존한다. 새 JSON은 과학 명세이며 기존 KC01 loader의 실행 입력으로 바로 사용할 수 없다.
 

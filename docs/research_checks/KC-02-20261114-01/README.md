@@ -1,12 +1,11 @@
 # KC-02 — 독립 K-CITY Gym 환경 구현·검증
 
-> 2026-11-15 게시 정리: 중간 산출물은 [로컬 압축 보관](../PUBLICATION_CLEANUP.md)으로 옮겼으며, 최종 원시 trace는 `.jsonl.gz`로 압축했습니다. 아래 수치/해시는 검사 당시의 기록입니다.
-
+갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
 상태: **KC-02 후보 구현과 작은 검사 완료**. 다음은 KC-03이다. `training_ready=false`, 학습 업데이트0, 전문가 dataset 전이0을 유지한다.
 
 ## 식별과 변경 범위
 
-- 사전 등록: [PROVENANCE.json](PROVENANCE.json). 시작 `2026-11-14T20:56:03.554322+09:00`, HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`, local branch `codex/kcity-kc01-20261114`. 시작부터 기존 미완료 변경이 있었으며 이를 보존했다. 이번 commit/push·외부 업로드는 없다.
+- 사전 등록: PROVENANCE.json. 시작 `2026-11-14T20:56:03.554322+09:00`, HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`, local branch `codex/kcity-kc01-20261114`. 시작부터 기존 미완료 변경이 있었으며 이를 보존했다. 이번 commit/push·외부 업로드는 없다.
 - 구현 ID `KC-ENV-v1-kc02-candidate`. [환경](../../../env/kcity_env.py)·[경로 기하](../../../env/kcity_route.py)·[관측](../../../env/kcity_observation.py)·[검사 실행기](../../../scripts/kcity/check_env.py)·[회귀 검사](../../../tests/test_kcity_env.py)를 새로 추가했다.
 - Python3.10.12, Gymnasium1.2.3, NumPy1.24.4, SUMO1.28.0. 기존 격리 venv를 사용했고 기존 고속도로·PPO/BC·맵·신호·모델·데이터와 KC-01 실행 source/config는 수정하지 않았다.
 - 현재 사용법과 상세 계약: [KCITY_ENV.md](../../KCITY_ENV.md). source hash는 [최종 통합 summary](integration_final/SUMMARY.json), 보호 파일 검증·종료 시각은 [FINAL_CHECKS.json](FINAL_CHECKS.json).
@@ -23,19 +22,19 @@
 
 | 검사 | 결과·근거 | 범위 |
 |---|---|---|
-| KC-01+KC-02 회귀 | **32개 통과**, 16.626초. [최종 로그](TESTS.final.log) | KC-01 16개 + KC-02 16개 |
-| 표준 Gym API | **통과**, [JSON](GYM_API_CHECK.json)·[stdout](GYM_CHECK_V2.stdout.log)·[stderr](GYM_CHECK_V2.stderr.log) | A,배경차 없음,warmup0,render 검사 제외 |
+| KC-01+KC-02 회귀 | **32개 통과**, 16.626초. 당시 검사 요약(원시 로그 삭제) | KC-01 16개 + KC-02 16개 |
+| 표준 Gym API | **통과**, JSON·stdout·stderr | A,배경차 없음,warmup0,render 검사 제외 |
 | 실제 reset 재현 | seed42 반복 초기 State SHA/관측 일치,43은 상이 | 배경 교통·60초 warmup·한 PC의 제한 seed 검사 |
 | 연결 격리 | 두 환경 중 한쪽 step/close가 다른 쪽 시간을 바꾸지 않음 | 독립 connection·반복 close |
 | 관측/제어 | 73-D·bounds·finite,raw/clip 구분,5 ticks,mask/cooldown | 일부 semantic 값 및 경로 경계 fixture 포함; 모든 상황 완전 검증 아님 |
 | 고장 주입 | 강제 적색 진입·충돌·차량 제거·경로 이탈 검출 | 검사 안에서만 moveTo/신호/안전 mode를 바꿈. 연구 성능·기본 설정 결과에서 제외 |
 | 시간 경계 | 과제0.7초에서 정확히7 ticks 종료, 외부2 decisions에서 truncation | 마지막 partial step·terminal observation 검사. learner GAE는 아직 수정하지 않음 |
 
-초기 검사/개선 이력도 보존했다. `TESTS.attempt01/02/03.log`는 각각 당시11/14/32개 검사 결과다. 최초 표준 Gym 검사에서는 설정을 `self.spec`에 저장해 Gym의 예약 EnvSpec과 충돌했다. [실패 stderr](GYM_CHECK.stderr.log)를 보존하고 `self.contract`로 수정한 후 최종32개 검사·Gym·통합 실행을 다시 통과했다. 최종 회귀 검사에 예약 속성 보존도 포함했다.
+초기 검사/개선 이력도 보존했다. `TESTS.attempt01/02/03.log`는 각각 당시11/14/32개 검사 결과다. 최초 표준 Gym 검사에서는 설정을 `self.spec`에 저장해 Gym의 예약 EnvSpec과 충돌했다. 실패 stderr를 보존하고 `self.contract`로 수정한 후 최종32개 검사·Gym·통합 실행을 다시 통과했다. 최종 회귀 검사에 예약 속성 보존도 포함했다.
 
 ## 최종 6회 통합 실행
 
-최종 실행은 `2026-11-14T21:08:32.682728+09:00`~`21:08:48.220685+09:00`이다. [summary](integration_final/SUMMARY.json)·[stdout/경고](INTEGRATION.final.log)를 따른다. 모든 case에서 seed42를 사용했다. 배경 없음은 warmup0 검사 변형이고, 배경 있음은 후보 수요600 vph·warmup60초다.
+최종 실행은 `2026-11-14T21:08:32.682728+09:00`~`21:08:48.220685+09:00`이다. [summary](integration_final/SUMMARY.json)·stdout/경고를 따른다. 모든 case에서 seed42를 사용했다. 배경 없음은 warmup0 검사 변형이고, 배경 있음은 후보 수요600 vph·warmup60초다.
 
 | 과제 | 배경 차량 | AV decisions | 에피소드 실제 경과(s) | 초기 HV / 실행 중 최대 HV | 종료 |
 |---|---|---:|---:|---:|---|
@@ -66,17 +65,4 @@
 
 저장소 루트에서 실행했다. 기존 결과 경로 재사용은 금지한다.
 
-```bash
-KCPY=/home/heven/.cache/kcity-research-audit-20261110/venv/bin/python
-PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 "$KCPY" -B -m unittest discover -s tests -p 'test_kcity*.py' -v
-PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 "$KCPY" -B scripts/kcity/check_env.py --output docs/research_checks/KC-02-20261114-01/integration_final
-PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 "$KCPY" -B - <<'PY'
-from gymnasium.utils.env_checker import check_env
-from env.kcity_env import SumoKCityEnv
-env = SumoKCityEnv(background=False, debug_warmup_s=0)
-try:
-    check_env(env, skip_render_check=True)
-finally:
-    env.close()
-PY
-```
+당시 사용한 검사 실행기는 저장소에 남아 있다. 재검사는 현재 사용 안내의 새 output 명령을 따른다.

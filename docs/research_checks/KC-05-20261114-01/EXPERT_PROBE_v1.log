@@ -1,8 +1,0 @@
- Retrying in 1 seconds
- Retrying in 1 seconds
- Retrying in 1 seconds
-False [('A', 'arrival', 69), ('B', 'arrival', 51), ('C', 'arrival', 183)]
- Retrying in 1 seconds
- Retrying in 1 seconds
- Retrying in 1 seconds
-True [('A', 'arrival', 52), ('B', 'arrival', 51), ('C', 'arrival', 230)]

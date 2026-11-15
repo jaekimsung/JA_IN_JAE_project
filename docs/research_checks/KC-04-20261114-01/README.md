@@ -1,12 +1,11 @@
 # KC-04 — 공통 정책·BC 이식·전체 재개 검증
 
-> 2026-11-15 게시 정리: 중간 산출물은 [로컬 압축 보관](../PUBLICATION_CLEANUP.md)으로 옮겼으며, 최종 원시 trace는 `.jsonl.gz`로 압축했습니다. 아래 수치/해시는 검사 당시의 기록입니다.
-
+갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
 상태: **KC-04 후보 구현과 제한 검증 완료. 다음은 KC-05 전문가·수집기다.** 본 비교 학습,전문가 dataset,final 평가는 실행하지 않았다. 검증용 실제 optimizer 작업은 아래에 별도로 기록한다. `training_ready=false`.
 
 ## 구현 범위와 식별
 
-- 시작: `2026-11-14T22:14:35.693990+09:00`. HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`,local branch `codex/kcity-kc01-20261114`. 기존 미완료 변경을 보존했다. [PROVENANCE](PROVENANCE.json).
+- 시작: `2026-11-14T22:14:35.693990+09:00`. HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`,local branch `codex/kcity-kc01-20261114`. 기존 미완료 변경을 보존했다. PROVENANCE.
 - 신규: [공통 masked policy](../../../algorithms/kcity_policy.py), [BC/PPO·Runner·checkpoint](../../../algorithms/kcity_training.py), [후보 설정](../../../configs/kcity/v1/learning.json), [회귀 검사](../../../tests/test_kcity_policy.py), [검사 CLI](../../../scripts/kcity/check_policy.py).
 - 수정: shared buffer의 sampling mask 저장,shared PPO의 주입 정책·동일 mask 재평가·update 카운터,K-CITY 환경의 현재 Episode 행동 이력과 replay 재개. 변경 전3개 source는 `before/`에 보존했다. 종전 고속도로 BC/network/map/data/model과 KC-01 protocol은 변경하지 않았다.
 - 실제 사용 계약·호환성과 한계: [KCITY_POLICY_AND_RESUME.md](../../KCITY_POLICY_AND_RESUME.md). 최종 source/파일 보존·문서 검사는 [FINAL_CHECKS.json](FINAL_CHECKS.json).
@@ -16,8 +15,8 @@
 
 | 항목 | 실제 결과 | 해석 |
 |---|---|---|
-| 전체 회귀 검사 | **80개 통과**,36.496초 | [최종 로그](TESTS.attempt04.log),기존61+KC-04 신규19 |
-| 표준 Gym 검사 | 통과 | [JSON](GYM_CHECK.json)·[로그](GYM_CHECK.log),A/no background/warmup0/render 제외 |
+| 전체 회귀 검사 | **80개 통과**,36.496초 | 당시 검사 요약(원시 로그 삭제),기존61+KC-04 신규19 |
+| 표준 Gym 검사 | 통과 | JSON·로그,A/no background/warmup0/render 제외 |
 | 기본 후보 모델 | **73→256→256**,ReLU,총**86,022 parameters** | 실제 module 집계,이 크기로 본학습한 것은 아님 |
 | BC trainable | **85,764 parameters**,value head257·std1 고정 | 공유 trunk/mean/lane만 업데이트 |
 | BC→PPO 행동 | 최대 결정적 행동 차이**0.0** | 같은 mask·고정 전처리·actor 전체 key 복사 |
@@ -30,7 +29,7 @@
 
 ## 전체 재개 통합 비교
 
-실행: `2026-11-14T22:30:03.819947+09:00`~`22:30:07.164462+09:00`. [SUMMARY](validation_v1/SUMMARY.json)·[실행 로그](VALIDATION.attempt01.log).
+실행: `2026-11-14T22:30:03.819947+09:00`~`22:30:07.164462+09:00`. [SUMMARY](validation_v1/SUMMARY.json)·실행 로그.
 
 별도 통합 검사는 **[16,16] 작은 모델**과 합성 BC label을 사용했다. BC를2회 update한 뒤 checkpoint를 저장하고,연속/복원 양쪽에서 다음1회를 실행했다. sampler 선택·loss·모델·Adam 상태가 같았다. source가 된3-update fixture도 별도 checkpoint로 식별했다. 이4회의 실제 BC optimizer 작업은 학습 성능 결과가 아니다.
 
@@ -47,7 +46,7 @@ PPO는 BC actor로 초기화한 작은 B3 fixture를 사용했다. namespace는c
 
 ## SUMO 저장 방식에서 발견한 한계와 수정
 
-- 최초 직접 saveState/loadState probe에서 ego laneChangeMode가512→1621로 돌아갔다. [PROBE.json](PROBE.json).
+- 최초 직접 saveState/loadState probe에서 ego laneChangeMode가512→1621로 돌아갔다. PROBE.json.
 - 제어 mode 보완 후에도 angle round-trip의 작은 차이와 일부 HV의 미래 속도/가속도 차이가 남았다. [초기 snapshot 차이](RESUME_PROBE_DIFF.json)·[미래 상태 차이](RESUME_FUTURE_DIFF.json).
 - [공식 SUMO 문서](https://sumo.dlr.de/docs/Simulation/SaveAndLoad.html)에도 내부 거동 상태의 저장 제약이 있다. 실측 차이의 모든 원인을 특정 driver 변수 하나로 단정하지 않았다. 혼합 HV 모델을 제거하거나 물리를 바꾸지 않았다.
 - 최종 구현은 XML loadState 대신 **동일 case/seed reset + 현재 Episode의 저장 행동 재실행**을 사용한다. raw snapshot·obs·mask·카운터·mode가 정확히 일치하지 않으면 재개를 거부한다. 최종 검사는 허용 오차를 늘려 통과시킨 것이 아니다.

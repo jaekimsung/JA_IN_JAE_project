@@ -1,0 +1,313 @@
+{
+  "phase": "READY_LOCAL_ONLY",
+  "launch_ready": true,
+  "checked_at": "2026-11-16T00:02:35.424706+09:00",
+  "scientific_sha256": "7a3d5e5e424e369042255500d55ab999923f1584813cec9527709938074d4ec4",
+  "operational_sources": {
+    "utils/kcity_main.py": "17b93dc8114b18d704cc5ee10fd1b0387d6cf543f93a99ebd4aa13900d542466",
+    "scripts/kcity/main_experiment.py": "90f08426cd9f3887cdbada9d2ff4d92ffe19abb8d647cbfb0765ea679640037a",
+    "utils/kcity_data.py": "826cba13c806ea430fc65a489695770e4fd972eae7416cce179864c6713c260c",
+    "utils/kcity_storage.py": "97a56f69bbc08d88cc3fbd9ca6b70ac28189fdd2eafeffb7ba4d90ee7f001b51",
+    "configs/kcity/main_v1/OPERATIONAL_COMPATIBILITY.json": "fb51136c029f89829e800e04128634ad1c80732e5e8e7a0dc8393a9564d10a3f"
+  },
+  "preflight_script_sha256": "22a9a42d758d731aef3310de963c43c33d0ac42ab49878bcf883e7bb9903266f",
+  "ready_stages": [
+    "expert_pool",
+    "bc",
+    "ppo"
+  ],
+  "scientific_settings_frozen": true,
+  "main_training_started": false,
+  "new_main_expert_transitions": 0,
+  "new_main_ppo_transitions": 0,
+  "tests_passed": 126,
+  "tests_log_sha256": "7dd473e7e96055a5bd5474e706058ea594f8015f3ece5ddce979a8d393c85ed2",
+  "gpu_checks": {
+    "started_at": "2026-11-15T23:54:35.259430+09:00",
+    "purpose": "OPERATIONAL_VALIDATION_NOT_MAIN",
+    "remote_uploads_enabled": false,
+    "scientific_sha256": "7a3d5e5e424e369042255500d55ab999923f1584813cec9527709938074d4ec4",
+    "operational_sources": {
+      "utils/kcity_main.py": "689c4f39323a1034728f28e79bef883bebb4626db314db95ccb27030de9056f0",
+      "scripts/kcity/main_experiment.py": "90f08426cd9f3887cdbada9d2ff4d92ffe19abb8d647cbfb0765ea679640037a",
+      "utils/kcity_data.py": "826cba13c806ea430fc65a489695770e4fd972eae7416cce179864c6713c260c",
+      "utils/kcity_storage.py": "97a56f69bbc08d88cc3fbd9ca6b70ac28189fdd2eafeffb7ba4d90ee7f001b51",
+      "configs/kcity/main_v1/OPERATIONAL_COMPATIBILITY.json": "67a812aa4a9525b888a9b7bf61374bd5aab2fda624dfdd9d60ce56de40d68a84"
+    },
+    "main_training_started": false,
+    "main_expert_transitions": 0,
+    "main_ppo_transitions": 0,
+    "bc_gpu": {
+      "passed": true,
+      "synthetic_labels": true,
+      "main_bc_updates": 0,
+      "validation_optimizer_steps_across_branches": 9,
+      "hidden_sizes": [
+        256,
+        256
+      ]
+    },
+    "gpu_resume": {
+      "passed": true,
+      "boundary": {
+        "transitions": 50007,
+        "updates": 25,
+        "optimizer_steps": 7850,
+        "partial_buffer": 7,
+        "current_episode_history": 407,
+        "pilot_source": "/home/heven/kcity_research_runs/KC-06-SEEDS-20261115-01/replicates_v1/seed22/B2/checkpoint-050000",
+        "pilot_source_manifest_sha256": "f6cfdfd6d3310158daf8a1b0aa0b8738a74bf2c409a0392ec1e992471e44dfb8",
+        "scripted_prefix_steps": 400,
+        "scripted_prefix_counted_as_learning": false
+      },
+      "exact_comparisons": {
+        "initial": true,
+        "trace_sha": true,
+        "final": true,
+        "stats": true,
+        "observation": true,
+        "transitions": true,
+        "updates": true,
+        "optimizer_steps": true
+      },
+      "continuation_transitions_per_branch": 64,
+      "final_transitions_per_branch": 50071,
+      "final_updates_per_branch": 26,
+      "final_optimizer_steps_per_branch": 7870,
+      "resumed_in_fresh_process": true,
+      "replayed_steps": 407,
+      "replay_counted_as_learning": false,
+      "device": "NVIDIA GeForce RTX 3070",
+      "hidden_sizes": [
+        256,
+        256
+      ]
+    },
+    "expert_writer": {
+      "passed": true,
+      "paused_at": 17,
+      "replayed_steps": 17,
+      "collection": {
+        "phase": "COMPLETE",
+        "transitions": 2137,
+        "target": 2048,
+        "completed_episodes": 19,
+        "finish_episode": true
+      },
+      "wall_s": 82.65614986498258,
+      "data_id": "85a96701c9e2ae06f37577e9cfd0e69568ced9ca21e0bf3dd0502249617fd072",
+      "quality_passed": true,
+      "split_counts": {
+        "expert_train": 1821,
+        "expert_val": 316
+      },
+      "shard_rows": 512,
+      "main_expert_transitions": 0
+    },
+    "recorded_gpu": {
+      "passed": true,
+      "boundary": {
+        "transitions": 2055,
+        "updates": 1,
+        "partial_buffer": 7
+      },
+      "transitions": 2119,
+      "rollout_updates": 2,
+      "optimizer_steps": 340,
+      "data_unique_transitions": 2119,
+      "quality_passed": true,
+      "completed_episodes": 5,
+      "atomic_checkpoint_within_shard": false,
+      "atomic_checkpoint_reference": true,
+      "retained_checkpoint_count": 2,
+      "storage_codec": "KC-NEXT-REF-v1",
+      "checkpoint_mode": "external_retained_v1",
+      "partial_buffer_preserved": true,
+      "main_ppo_transitions": 0
+    },
+    "passed": true,
+    "ended_at": "2026-11-15T23:58:13.295419+09:00",
+    "runtime": {
+      "python": "3.10.12",
+      "numpy": "1.24.4",
+      "torch": "2.10.0+cu128",
+      "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.35",
+      "machine": "x86_64",
+      "torch_threads": 1,
+      "source_sha256": {
+        "algorithms/kcity_policy.py": "faabadfdf23bb45eaea59c026e747a78ba8f5f596614dc836122b30e32fd558c",
+        "algorithms/kcity_training.py": "1ae8fe264a43531f67f0ed67390da8a93bc497d5d9d1f5b703b02af3c5009e00",
+        "algorithms/ppo.py": "df9fbe04e645d5e733beffa022ffec5dd3a2079643c5ba313cd3320cde09ee3c",
+        "utils/networks.py": "98d675ebc30b27ec9b7a86dca4ce2cc979e92de62bd0a75c5053d2823255377b",
+        "utils/buffer.py": "db1241638ad9c55d1213d8feaecc5159e25760338961e1135795164cbd5c272a",
+        "env/kcity_env.py": "98e6700fb051e004ddb2e71202aa8ce4021f3a5a35051cbcd50d8c478b7fa302",
+        "env/kcity_config.py": "c6ea10544d5ad699b40743de09a5f86358488898e64d5bb0b388ae15cd350f52",
+        "env/kcity_observation.py": "2898d287f42a46cc8676eeb2a0c1cbeb1261448fdf829e62a807ce7526c57d79",
+        "env/kcity_route.py": "558eb0085c5ce12c48bdd71e9d3792e2237318a9fc5135eace6d3cecfcf507c7",
+        "scripts/kcity/scenarios.py": "9bf1c117e5748dad8f381d50fdff038c07b33f7c8059a6d2059e3aefef5a3dce",
+        "configs/kcity/v1/learning.json": "5723c2566dc868252ce9758b5a6a1a149de1bd70e35e086747e18c05b45bf52d"
+      }
+    },
+    "peak_rss_kib": 1948996
+  },
+  "local_archive": {
+    "available": false,
+    "deleted_by_user_request": true,
+    "historical_sha256": "dc430a42abb411e9598661ab759cee67ab893cae2020f7b6f1bbce677574969f",
+    "historical_readback_verified": true,
+    "deleted_at": "2026-11-16T00:15:32.907107+09:00"
+  },
+  "capacity": {
+    "free_bytes": 58389164032,
+    "main7M_required_bytes": 49292110062,
+    "submission10M_projected_required_bytes": 59819162198,
+    "main7M_capacity_pass": true,
+    "submission10M_capacity_pass": false,
+    "expert_measurement": {
+      "transitions": 2137,
+      "committed_bytes": 4301340,
+      "bytes_per_transition": 2012.793635938231,
+      "transition_payload_bytes_per_transition": 1708.6102012166589,
+      "max_joint_checkpoint_and_metadata_bytes": 238890,
+      "checkpoint_mode": "embedded",
+      "retained_checkpoint_count": 0,
+      "retained_checkpoint_bytes": 0,
+      "max_retained_checkpoint_bundle_bytes": 0,
+      "sqlite_bytes_per_transition": 185.92044922788958,
+      "one_time_bytes": 1367548
+    },
+    "ppo_measurement": {
+      "transitions": 2119,
+      "committed_bytes": 4853717,
+      "bytes_per_transition": 2290.5696083058046,
+      "transition_payload_bytes_per_transition": 2046.4761680037755,
+      "max_joint_checkpoint_and_metadata_bytes": 206872,
+      "checkpoint_mode": "external_retained_v1",
+      "retained_checkpoint_count": 2,
+      "retained_checkpoint_bytes": 2174718,
+      "max_retained_checkpoint_bundle_bytes": 1087410,
+      "sqlite_bytes_per_transition": 189.43275129778198,
+      "one_time_bytes": 3307934,
+      "production_bytes_per_transition_estimate": 2149.9121680037756,
+      "joint_commits_per_million_run": 500
+    },
+    "reserve_bytes": 21474836480,
+    "headroom_multiplier": 1.5,
+    "fixed_overhead_bytes": 2147483648,
+    "additional_safe_stop_bundles_reserved": 0,
+    "safe_stop_reserve_bytes": 2482464,
+    "retained_bundles_reserved_per_run": 24,
+    "retained_bundle_total_bytes": 156587040,
+    "data_storage_codec": "KC-NEXT-REF-v1",
+    "method": "Measured lossless row payload and SQLite plus per-shard metadata. External learner bundles: latest2 +50k evaluation points +initial +one staging copy per run. Headroom1.5x and operating reserve20GiB unchanged. No required logical State fields removed."
+  },
+  "remote_uploads_enabled": false,
+  "remote_backup_verified": false,
+  "backup_requirement": "User prohibited Drive uploads and requested deletion of temporary local archives. No archive is currently retained. Compact validation results and model/data settings remain.",
+  "scope": "Main expert1M + BC + PPO6M preparation only; no main collection/training launched. Recheck disk before every stage.",
+  "deferred": [
+    "final evaluation3000episodes",
+    "archive3M implementation and capacity recheck",
+    "submission packaging"
+  ],
+  "fixture_artifacts_retained": false,
+  "raw_test_logs_retained": false,
+  "cleanup": {
+    "completed_at": "2026-11-16T00:15:32.907107+09:00",
+    "user_requested_permanent_deletion": true,
+    "deleted_files": 2014,
+    "deleted_allocated_bytes": 345894912,
+    "backup_created": false,
+    "files_moved": false,
+    "retained_pilot_models": 11,
+    "raw_probe_and_local_archive_retained": false,
+    "retained_result_summaries": true,
+    "active_editor_index_excluded": true
+  },
+  "documentation_only_revalidation": {
+    "revision_id": "KC-DOCS-20261116",
+    "checked_at": "2026-11-16T01:05:32.848587+09:00",
+    "scope": "Documentation/hash-guard revalidation only. No SUMO, learner, collection, GPU rerun, archive or upload.",
+    "guard_tests_passed": 7,
+    "check_only_stages_passed": [
+      "collect",
+      "views",
+      "bc",
+      "ppo"
+    ],
+    "markdown_files_checked": 26,
+    "relative_links_checked": 276,
+    "broken_relative_links": [],
+    "scientific_sha256_unchanged": true,
+    "original_contracts_verified_in_git": true,
+    "operational_ast_changed": [
+      "load_scientific"
+    ],
+    "all_other_operational_functions_classes_unchanged": true,
+    "source_function_ast_before": {
+      "now": "79da9a2f98bda0fc32dc5560336ef4e9215e93599acc50a8820ec3e574b5b438",
+      "read": "165365da25c105273b069e139db74406526caba3b4ae1c2885a35919c4ebf7fe",
+      "require": "016bbd4b549d97444a7c1897f0d617e63bf3be3514d12d6d4cf4821f55ce0359",
+      "stop_handler": "10f1e1240209f50c9de2198e45364b59d95ec05a4e5ced4317cc8617e11f50bd",
+      "install_signals": "364c0e26683f37e99e64c13046ef4723ecb6773ca25f38eb7f0f9c0a6744c5e1",
+      "stopped": "3ea137c11c51ad60783b6af6f27b1135a3784c5fb32fd3a633b16560e1f2bb8a",
+      "load_scientific": "f0c39b68ba93e14667b13cc905c32b0f80a7eeb87884c5293063b0f4b20f2992",
+      "operational_sources": "4be0a1d91daa3ff15133ffd0bbd4120fa556ecf343358ee92069f82bbd3b2cdf",
+      "require_launch": "cf58c1bcdf3c2dc20cd68369a4c0d5b0132fc3f653b9987507be3119bbb3b594",
+      "Owner": "c44f0be3f7510af4020ee3c40ddbfebf9a648a5b582c66679178b1c202f38e07",
+      "resolved_case": "07870ae1109f9c74163a1b69627656732a610ed08dc07adce70d3f7492d4169b",
+      "case_plan": "2570e321fff1fcb620516977e32f89cf3bd8dd82de593ad10e1317443bd2ba98",
+      "dataset_config": "e62bc4c81ccb6fd0d17c594e470f414e17efbc2827900a6ffc1c91f98f16ca61",
+      "MainWriter": "e4fd039c44c0770ce6751cdba823b7288b298a3b0acef27bebd3a81245341cf7",
+      "MainExpertCollector": "2564807d92ba40c0244a53a2c02c9fa16b237200bb99a267af7626f07715f3e3",
+      "RecordingRunner": "75154cdb170b4dd2453951c8077db57b3dd82ade71220d5f78d611792434db63",
+      "OnlineRecorder": "6c0e0418665d9543a612ed0b0babe2d76d24da396a5fbeb9787101cd14603f7e",
+      "training_config": "4338460e9ce6b8af73c653a3c4fd930ce8e5301e22f93939e0db84a8b67fe828",
+      "build_views": "da5491fee719f9160bbe8150ad8a6c9b3ca90365152bcd56ffb28992d115acf2",
+      "read_views": "de0421711732db93f1ab13877bafa41c4e288a4d13ed3efefbb86ea12f550e45",
+      "validation_loss": "8e9e8541d12cb18eff55d8e5b5e8ba1f6f5e37f82c7d63f99eed5829a3201538",
+      "retain_bc": "f62af710a63c4385b7687ff351815ae2204bccfbb67b15dd6fc75ffad73d4102",
+      "run_bc": "b93fe95702aef863e39f0869c6c0cf8c5579306ef078dc15e1ba357b26e75f01",
+      "evaluate_dev": "164f77be0249e718638c369dfda40257dc228a0d7d343ab8da47386f49764037",
+      "run_ppo": "9efcdf0015f0f499e6a06c483905c5a1491e642306cc156946d2548df28c188c"
+    },
+    "source_function_ast_after": {
+      "now": "79da9a2f98bda0fc32dc5560336ef4e9215e93599acc50a8820ec3e574b5b438",
+      "read": "165365da25c105273b069e139db74406526caba3b4ae1c2885a35919c4ebf7fe",
+      "require": "016bbd4b549d97444a7c1897f0d617e63bf3be3514d12d6d4cf4821f55ce0359",
+      "stop_handler": "10f1e1240209f50c9de2198e45364b59d95ec05a4e5ced4317cc8617e11f50bd",
+      "install_signals": "364c0e26683f37e99e64c13046ef4723ecb6773ca25f38eb7f0f9c0a6744c5e1",
+      "stopped": "3ea137c11c51ad60783b6af6f27b1135a3784c5fb32fd3a633b16560e1f2bb8a",
+      "load_scientific": "e0fa81180b109efa6bbaefe2c38841cb7802fbc3ce3eb3ceb0981751a611db80",
+      "operational_sources": "4be0a1d91daa3ff15133ffd0bbd4120fa556ecf343358ee92069f82bbd3b2cdf",
+      "require_launch": "cf58c1bcdf3c2dc20cd68369a4c0d5b0132fc3f653b9987507be3119bbb3b594",
+      "Owner": "c44f0be3f7510af4020ee3c40ddbfebf9a648a5b582c66679178b1c202f38e07",
+      "resolved_case": "07870ae1109f9c74163a1b69627656732a610ed08dc07adce70d3f7492d4169b",
+      "case_plan": "2570e321fff1fcb620516977e32f89cf3bd8dd82de593ad10e1317443bd2ba98",
+      "dataset_config": "e62bc4c81ccb6fd0d17c594e470f414e17efbc2827900a6ffc1c91f98f16ca61",
+      "MainWriter": "e4fd039c44c0770ce6751cdba823b7288b298a3b0acef27bebd3a81245341cf7",
+      "MainExpertCollector": "2564807d92ba40c0244a53a2c02c9fa16b237200bb99a267af7626f07715f3e3",
+      "RecordingRunner": "75154cdb170b4dd2453951c8077db57b3dd82ade71220d5f78d611792434db63",
+      "OnlineRecorder": "6c0e0418665d9543a612ed0b0babe2d76d24da396a5fbeb9787101cd14603f7e",
+      "training_config": "4338460e9ce6b8af73c653a3c4fd930ce8e5301e22f93939e0db84a8b67fe828",
+      "build_views": "da5491fee719f9160bbe8150ad8a6c9b3ca90365152bcd56ffb28992d115acf2",
+      "read_views": "de0421711732db93f1ab13877bafa41c4e288a4d13ed3efefbb86ea12f550e45",
+      "validation_loss": "8e9e8541d12cb18eff55d8e5b5e8ba1f6f5e37f82c7d63f99eed5829a3201538",
+      "retain_bc": "f62af710a63c4385b7687ff351815ae2204bccfbb67b15dd6fc75ffad73d4102",
+      "run_bc": "b93fe95702aef863e39f0869c6c0cf8c5579306ef078dc15e1ba357b26e75f01",
+      "evaluate_dev": "164f77be0249e718638c369dfda40257dc228a0d7d343ab8da47386f49764037",
+      "run_ppo": "9efcdf0015f0f499e6a06c483905c5a1491e642306cc156946d2548df28c188c"
+    },
+    "main_expert_transitions": 0,
+    "main_bc_updates": 0,
+    "main_ppo_transitions": 0,
+    "free_bytes_snapshot": 60103995392,
+    "previous_operational_sources": {
+      "utils/kcity_main.py": "689c4f39323a1034728f28e79bef883bebb4626db314db95ccb27030de9056f0",
+      "scripts/kcity/main_experiment.py": "90f08426cd9f3887cdbada9d2ff4d92ffe19abb8d647cbfb0765ea679640037a",
+      "utils/kcity_data.py": "826cba13c806ea430fc65a489695770e4fd972eae7416cce179864c6713c260c",
+      "utils/kcity_storage.py": "97a56f69bbc08d88cc3fbd9ca6b70ac28189fdd2eafeffb7ba4d90ee7f001b51",
+      "configs/kcity/main_v1/OPERATIONAL_COMPATIBILITY.json": "67a812aa4a9525b888a9b7bf61374bd5aab2fda624dfdd9d60ce56de40d68a84"
+    }
+  }
+}

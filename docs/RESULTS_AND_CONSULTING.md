@@ -1,8 +1,6 @@
 # K-CITY 결과 분석·컨설팅·최종 제출 계획
 
-설계 ID `KC-REPORT-v1-draft-20261114` · 실제 K-CITY 학습 결과는 **측정 전**.
-
-구현 갱신: KC-03에서 사건 기반 Episode JSON/CSV·분모/시간가중 집계 후보를 추가했다([계약](KCITY_EVALUATION.md)·[결과](research_checks/KC-03-20261114-01/README.md)). 아래 전체 제출 schema·최종 분석/영상·CI는 후속이며, 작은 검사 표를 연구 성능 표로 대체하지 않는다.
+갱신: 2026-11-16. **3seed pilot 완료, 본1M 비교·final·제출10M는 미실행**이다. 본 결과표와 실제 pilot을 구분한다.
 
 [데이터 명세](DATA_COLLECTION_SPEC.md) · [실행 프로토콜](EXECUTION_PROTOCOL.md) · [연구 현황](RESEARCH_STATUS.md) · [실험 인덱스](EXPERIMENTS.md)
 
@@ -51,13 +49,15 @@
 
 모든 유효 Episode의 실제 관측시간 평균과 **완주자만의** 시간 평균을 함께 표시한다. 충돌로1초 만에 끝난 정책이 빠르다고 보이지 않도록 `penalized_time_all=완주자는실제시간,실패자는과제기한300s`의 평균도 보조 지표로 제시한다. 이는 팀이 정의한 실패 비용이지 실제 주행 시간이나 관측된 생존시간 평균이 아니다. 가정 변경은 새 지표 버전으로 기록한다.
 
+현재 평가기의 구현 출력과 후속 분석용 열의 차이는 manifest에서 명시한다. 위 snake_case CSV는 최종 분석기의 목표 계약이며 현재 EPISODES/SUMMARY JSON에 모두 그대로 구현된 열이라는 뜻은 아니다.
+
 신호 준수율은 `1-red_crossings/valid_tls_crossings`, 교차 통과가0이면 **NA**다. unknown crossing은 조용히 분모에서 빼고100%로 쓰지 않으며 `n_unknown`과 지표 신뢰성 gate를 표시한다. signal fidelity가 확인되지 않으면 결합 성공률 역시 잠정치로 표시하고 final 산출을 차단한다.
 
 ### 2.3 learning_curve.csv와 cost_ledger.csv
 
 - learning curve: method,seed,checkpoint_id,actual_PPO_transitions,optimizer_steps,rollout_updates,BC_updates,dev_case_manifest,scenario별 성능·위험·완주와 goal_reached status. x축은 epoch/파일 번호가 아니라 **실제 환경 전이**다.
 - 비용 장부: stage/expert_generation/BC/PPO/dev/final/serialization/backup별 요청·유효 전이,optimizer steps,wall_s,CPU_s,GPU_s 또는 지원되는 계측값,peakRAM/GPU/bytes. GPU 시간 미계측을0으로 채우지 않는다.
-- 목표 도달: validation 결합성공≥.80을 두 번 연속 만족한 첫 checkpoint. `reached_at_T / not_reached_within_budget`와 평가 간격50k를 기록한다. 초기 성능과 예산 종료 성능을 별도 비교한다.
+- 목표 도달: validation 결합성공≥.80을 두 번 연속 만족한 두 checkpoint 중 첫 시점(두 번째는 확인점). `reached_at_T / not_reached_within_budget`와 평가 간격50k를 기록한다. 초기 성능과 예산 종료 성능을 별도 비교한다.
 - 전문가 pool이3 seeds에 공유되면 총 생성 비용을 한 번 집계하고 모델별 배분 비용은 별도 열로 둔다. BC/PPO 비교의 효율 표에 전문가·BC 비용을 숨기지 않는다.
 
 ## 3. RQ별 표와 그림을 먼저 고정
@@ -74,7 +74,7 @@ seed 3개를 3개의 독립 학습 반복으로 보고 원자료·평균·min/ma
 
 100 Episode에서 0충돌이 관찰돼도 ‘실제 충돌확률 0’이라고 쓰지 않는다. `관찰0/100`과 신뢰구간·동일 case 범위를 명시한다. 4/100은 관찰상 <5%이지만 그 분포의 충돌확률 <5%가 통계적으로 입증된 것과는 다르다.
 
-결과 표 틀(현재 전부 미측정):
+본 실험 결과 표 틀(본 모델·final은 전부 미측정, pilot과 구분):
 
 | 방법 | seed | PPO T | dev목표 도달 T | final수요 | 안전·규칙완주 n/N | 충돌 n/N | 일반완주 n/N | 신호 위반/통과 | 전체/완주자시간 | 전체 비용 |
 |---|---|---:|---|---|---|---|---|---|---|---|
@@ -100,34 +100,35 @@ seed 3개를 3개의 독립 학습 반복으로 보고 원자료·평균·min/ma
 | 설명 시간 | 보여줄 것 | 현재 증거·정직한 표현 |
 |---|---|---|
 | 0:00~0:40 | K-CITY 지도·신호/필수 LC/연속 경로의 의미 | 실제 Edge 후보와 합성 신호/현장 자료의 한계 |
-| 0:40~1:30 | 일반차량/AV 역할·A/B/C route | 기존 빨간차는 IDM, 학습 AV 미연결. 177대 검증은 교통 기반 결과 |
+| 0:40~1:30 | 일반차량/AV 역할·A/B/C route | 기본 demo_ego는 IDM. 별도 학습정책 GUI는 pilot모델이며 본 결과와 구분. 177대는 교통 기반 결과 |
 | 1:30~2:30 | 데이터 컬럼·절대 State·한 전이·10M 장부 | [데이터 명세](DATA_COLLECTION_SPEC.md) 4~8절의 축약표 |
-| 2:30~3:40 | B0/B1/B2/B3·통제 변수·수요 평가 | 초기화 외 조건 동일, 본실험 미시행. seed/GAE/BC 호환성 해결 필요 |
+| 2:30~3:40 | B0/B1/B2/B3·통제 변수·수요 평가 | 초기화 외 조건 동일,3seed pilot완료·본실험0. seed/GAE/BC/재개는 제한된검증 완료 |
 | 3:40~5:00 | 막힌 지점·확인 질문 우선순위 | 전체 설명을 반복하지 말고 아래 1~3 질문부터 |
 
-컨설팅에 가져갈 자료 묶음: 기존 중간발표 자료, 아래 역할표 1페이지, 현재 맵/교통 화면과 출처, 절대 State 포함 컬럼표 1페이지, 실험 matrix 1페이지, [과거 audit 결과](research_checks/KC-AUDIT-20261110-01/evidence/summary.json)와 GAE 재현값, 미구현 파일/시행 gate 목록. 새 학습 결과가 없으면 있는 것처럼 발표하지 않는다.
+컨설팅에 가져갈 자료 묶음: 기존 중간발표 자료, 아래 역할표 1페이지, 현재 맵/교통 화면과 출처, 절대 State 포함 컬럼표 1페이지, 실험 matrix 1페이지, [과거 audit 결과](research_checks/KC-AUDIT-20261110-01/evidence/summary.json)와 GAE 재현값, 현재 미완료 final/archive/제출 gate 목록. 새 학습 결과가 없으면 있는 것처럼 발표하지 않는다.
 
 | 우선 | 질문 | 팀 추천 답/왜 확인이 필요한가 | 답변에 따른 변경 |
 |---|---|---|---|
-| 1 | 관측 차원19 표기와 달리 현재31-D이고 K-CITY73-D 예정인데, 기본 필드 유지+확장을 이 형태로 제출해도 되는가? 추가 컬럼 scope 제한이 확정됐는가? | 절대 State/기본 key 전부 유지, JSONL+NPZ. 문서상 확장 허용이지만 중간발표 후 scope 제한 예정 | schema 동결·actor 입력·수집기·테스트 범위 |
-| 2 | 10^7의 단위는 AV 유효 transition으로 세고 expert/학습 log/fixed 정책 archive를 출처 분리해 합산해도 되는가? compression/shard/next 명시 형식을 인정하는가? | 1M+6M+3M 추천, 복제/HV/substep 미합산. 10M를 학습 예산으로 오해하지 않음 | 수집 장부·목표·HF 구조 |
+| 1 | 관측 차원19 표기와 달리 기본코드는31-D이고 K-CITY는73-D로 구현·동결했는데, 기본 필드 유지+확장을 이 형태로 제출해도 되는가? 추가 컬럼 scope 제한이 확정됐는가? | 절대 State/기본 key 전부 유지, JSONL+NPZ. 문서상 확장 허용이지만 중간발표 후 scope 제한 예정 | 수업 인정 범위 확인. 변경 요구가 있으면 새 schema·전 방법 재학습 영향 검토 |
+| 2 | 10^7의 단위는 AV 유효 transition으로 세고 expert/학습 log/fixed 정책 archive를 출처 분리해 합산해도 되는가? compression/shard/손실없는 next참조+loader 복원 형식을 인정하는가? | 1M+6M+3M 추천, 복제/HV/substep 미합산. 10M를 학습 예산으로 오해하지 않음 | 수집 장부·목표·HF 구조 |
 | 3 | ‘충분한 HV/interaction’ 판정에 요구되는 최소 수/밀도나 대표 상황이 있는가? | 팀 내 HV≥10·노출 비율은 pilot 후보이며 교수 기준 아님 | traffic/case feasibility·영상/지표 |
 | 4 | 합성 감응식 신호·SUMO 기본 안전 설정을 공통으로 쓴 시스템 비교 범위가 적절한가? | 실측 현시 복원/정책 단독 안전 주장 안함. 필수 LC와 경로/신호 행동을 trace로 설명 | 주장 범위·추가 진단·수업 기대 정렬 |
 | 5 | 최종 iCampus 정확한 마감/업로드 제한·모델/원시 데이터 포함 범위와 팀 발표/컨설팅 배정은? | 발표11/28과 제출 마감은 다름. 문서에는 실제 마감/배정 없음 | 동결 일정·업로드/제출 형식 |
 
 팀 역할 1페이지 템플릿: `팀이름(확인 전) / 팀원실명(미배정) / 환경·교통 / 데이터·B0 / BC·PPO / 평가·영상·페이지 / 각 인계물·검토자`. 임의 이름을 작성하지 않으며 실제 담당자 확정 후 갱신한다.
 
-## 6. 11/14 이후 권장 진행과 축소 원칙
+## 6. 현재 결과와 다음 준비
 
-| 구간 | 내부 목표 | 통과하지 못했을 때 |
+3seed pilot의 실제 성과는 [설정 확정 집계](research_checks/KC-SETTINGS-20261115-01/SUMMARY.json)와 [현황](RESEARCH_STATUS.md)을 따른다. BC/B2/B3 끝정책9개는 각각 dev100에서100/100완주·AV충돌/적색0이었다. BC초기우위와 중간필수LC실패가 함께 관찰됐다. 평균완주시간은 BC58.240초·B2 57.560초·B3 57.655초다. 이 작은 차이로 방법의 일반적 우월성을 주장하지 않는다.
+
+| 다음 작업 | 필요한 증거 | 현재 |
 |---|---|---|
-| 다음 구현 작업 | G1~G3 환경·seed/GAE/BC 호환·필드/State 완성 | 본 수집/학습 차단, 작은 fixture와 trace부터 해결 |
-| 배정 컨설팅 전 | 컬럼/10M/과제/기준/미구현 문제의 검토 자료 준비 | 있는 증거와 막힌 부분으로 질문. 결과가 없으면 미실행 표시 |
-| 컨설팅 후 첫 pilot | λ0·보상·exposure·schema·비용 측정, 답변 반영해 v1 동결 | 변경 이유/영향 기록; dataset 수량/비용 산정 재검토 |
-| G5 통과 후 | 전문가→BC→paired PPO→고정 평가·archive | 실제 throughput로 남은 wall/storage 산정. 통과 전 대량학습 예약 안함 |
-| 최종 제출 전 | 최소1회 분리 환경 재현·업로드 readback·영상/링크/제출 파일 점검 | 미완료/부족 수량을 그대로 보고; 기한 후 자료 교체로 메우지 않음 |
+| 컨설팅 | 연구질문·73D/기본필드·10M장부·pilot곡선/실패·교통노출·남은gate | 질문정리됨,실제팀배정/답변미확인 |
+| 새expert→BC→PPO | 신규pool/views/3seedBC/6run1M,실제T/update·비용·재개 | 운영준비완료·본0 |
+| 고정final/archive | 3수요3000Episode·6정책고정기록3M·weights/분모/UID | 미실행·통합CLI후속 |
+| 최종제출 | ≥10M·전역병합·HF복원·모델/영상/PDF/페이지·링크/제출SHA | 미완료 |
 
-시간이 부족하면 RQ3·회전교차로·긴급차량 확장을 먼저 보류한다. 10M/필수 State/정상 목적지/충돌 분모를 몰래 줄이거나 평가 seed를 골라 충돌률을 맞추지 않는다. 핵심 3 seed/평가 수량도 바꿔야 하면 사전 설계 변경으로 남기고 비교 규모 축소와 불확실성을 보고한다. 구체적인 완료일/학습시간은 pilot 실측 전 약속하지 않는다.
+시간/공간 부족 시 RQ3·회전교차로·긴급차량 확장을 먼저 보류한다. 필수State/10M/실패분모를 줄이거나 좋은seed만 고르지 않는다. 핵심예산·평가규모도 바꿔야 하면 사전설계변경과 불확실성을 기록한다. Drive 업로드는 하지 않는다.
 
 ## 7. 최종 결과 보고서와 발표 구성
 
@@ -150,11 +151,11 @@ seed 3개를 3개의 독립 학습 반복으로 보고 원자료·평균·min/ma
 | GitHub | 환경/학습/평가/수집코드,고정config·설치/재현법,작은집계·문서 | clean/frozen revision·필요하면 dirty patch·민감정보 제외·외부접근 |
 | 모델보관/제출 | B1/B2/B3모델과policy/config/version·SHA·재개자료별도 | 모델load·짧은검사,weights-only와fullresume구분 |
 | HuggingFace | ≥10M 유효고유transition,JSONL/NPZ/shardmanifest/schema/DatasetCard | 전체목록/SHA·원격coverage·실제loader/다운로드복원 |
-| Drive등 | 최종발표PDF와영상/보고 | PDF열림·영상재생·공유범위·내용과release버전일치 |
+| 발표자료 보관 위치(미정) | 최종발표PDF·영상/보고. 현재 Drive 업로드 금지 | 향후 허용된 제출 경로에서 PDF열림·영상재생·접근권한·release일치 확인 |
 | 프로젝트페이지 | 무엇/도로/interaction/실행/결과/한계와위링크 | 다른브라우저/세션에서접근성·brokenlink확인 |
 | iCampus | 공지된형식의코드·모델·데이터·발표자료와링크/manifest | 마감전업로드·다운로드재확인·제출 파일SHA·제출시각증거 |
 
-Hub는 [공식 업로드 절차](https://huggingface.co/docs/datasets/upload_dataset)에 따라 dataset repo와 card를 준비한다. 실제 계정/저장소/라이선스/공개 범위는 정해지지 않았으며 이번 작업에서 repo를 만들거나 업로드하지 않았다. Drive 백업 완료는 Hugging Face 제출 완료와 다르다. 수업 문서의 동료 평가/예시 페이지는 보조 링크이며 이번 작업에서 그 내용을 검토한 것으로 주장하지 않는다.
+Hub는 [공식 업로드 절차](https://huggingface.co/docs/datasets/upload_dataset)에 따라 dataset repo와 card를 준비한다. 실제 계정/저장소/라이선스/공개 범위는 정해지지 않았으며 이번 작업에서 repo를 만들거나 업로드하지 않았다. 현재 Drive 백업은 금지돼 수행하지 않았다. 최종 Hugging Face 제출은 별도 작업이다. 수업 문서의 동료 평가/예시 페이지는 보조 링크이며 이번 작업에서 그 내용을 검토한 것으로 주장하지 않는다.
 
 최종 release는 `code_commit,protocol_hash,data_manifest_hash,model_manifest_hash,presentation_sha256,video_sha256,links_verified_at,submitted_at`를 고정한다. iCampus 제출 후 새 commit이 생겨도 어떤 파일이 평가 대상인지 명시한다.
 

@@ -1,6 +1,7 @@
 # KC-06 추가 학습 seed22/33 pilot
 
-상태: **실행 중**. 기존 seed11의결과는보존하고,정책 초기값/학습 난수만바꾸는두개의추가pilot을시작했다. 본1M비교나final평가가아니다.
+갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
+상태: **완료**(pilot 학습·dev평가). 당시 착수 내용: 기존 seed11의결과는보존하고,정책 초기값/학습 난수만바꾸는두개의추가pilot을시작했다. 본1M비교나final평가가아니다.
 
 ## 고정 조건
 
@@ -14,7 +15,7 @@
 
 실행기: [pilot_seeds.py](../../../scripts/kcity/pilot_seeds.py). 기존 [pilot.py](../../../scripts/kcity/pilot.py)의BC/PPO 생성부만config의seed를읽도록일반화했다. seed11을줄경우설정/학습로직은기존과같다. 기존script원본은 `pilot.before.py`에보존했다.
 
-104개회귀검사가통과했다(44.538초). source계약·shareddata전수검사·두config의차이가seed뿐임을확인했다. [사전점검](PREFLIGHT.json)·[실행PID/명령](LAUNCH.json).
+104개회귀검사가통과했다(44.538초). source계약·shareddata전수검사·두config의차이가seed뿐임을확인했다. 사전점검·실행PID/명령.
 
 실행root: `/home/heven/kcity_research_runs/KC-06-SEEDS-20261115-01/replicates_v1/`
 
@@ -24,16 +25,11 @@
 - 재개는STOP을치운후동일명령에--resume을추가한다. 파일/source/config검사를통과해야한다. 살아있는OWNER PID가있으면중복실행을거부한다.
 - dev100평가도완료한case부터이어간다. 평가도중optimizer업데이트는없다.
 
-```bash
-KCPY=/home/heven/.cache/kcity-research-audit-20261110/venv/bin/python
-PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 "$KCPY" -B scripts/kcity/pilot_seeds.py \
- --output /home/heven/kcity_research_runs/KC-06-SEEDS-20261115-01/replicates_v1 \
- --shared-data /home/heven/kcity_research_runs/KC-06-20261115-01/pilot_v1/expert --device cuda
-```
+과거 shared-data pool은 삭제했다. 현재 이 출력에 재실행/--resume하지 않는다. 새 pilot 재현은 새 pool·새 output이 필요하다.
 
 최종3seed결과가나오기전PPO-only/BC→PPO우열이나재현성확보완료를주장하지않는다. 현재수요·관측·SUMO안전의범위안에서해석하고원격백업/최종과학설정동결은별도미완료로유지한다.
 
 
 ## 후속 완료 기록
 
-seed22/33의 학습·평가 완료. [3seed 집계와 설정 확정](../KC-SETTINGS-20261115-01/README.md)을 따른다. 위 실행 중 문구는 착수 당시 기록이다.
+seed22/33의 학습·평가 완료. [3seed 집계와 설정 확정](../KC-SETTINGS-20261115-01/README.md)을 따른다. 위 착수 내용은 당시 기록이다.

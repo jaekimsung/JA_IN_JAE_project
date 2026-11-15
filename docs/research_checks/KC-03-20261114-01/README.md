@@ -1,12 +1,11 @@
 # KC-03 — 종료·GAE·평가 신뢰성 후보 구현 결과
 
-> 2026-11-15 게시 정리: 중간 산출물은 [로컬 압축 보관](../PUBLICATION_CLEANUP.md)으로 옮겼으며, 최종 원시 trace는 `.jsonl.gz`로 압축했습니다. 아래 수치/해시는 검사 당시의 기록입니다.
-
+갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
 **KC-03의 제한된 완료 기준을 통과했다. 다음은 KC-04 공통 actor·BC→PPO 초기화/재개다.** 본 학습·전문가 수집·final 평가는 실행하지 않았다. optimizer steps0, `training_ready=false`다.
 
 ## 코드와 실행 식별
 
-- [사전 기록](PROVENANCE.json): HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`, branch `codex/kcity-kc01-20261114`, 시작부터 있던 미완료 변경을 보존했다. 이번 commit/push/외부 업로드는 없다.
+- 사전 기록: HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`, branch `codex/kcity-kc01-20261114`, 시작부터 있던 미완료 변경을 보존했다. 이번 commit/push/외부 업로드는 없다.
 - 변경: [buffer](../../../utils/buffer.py)·[PPO](../../../algorithms/ppo.py)의 경계/예산/평가 처리, [K-CITY 환경](../../../env/kcity_env.py)의 substep 측정·동시 사건 보존, [기존 highway launcher](../../../train.py)의 공유 연결 평가 사전 차단. 변경 전4개 source는 `before/`에 보존했다.
 - 신규: [case/metric evaluator](../../../utils/kcity_evaluator.py)·[검사 실행기](../../../scripts/kcity/check_learning.py)·[회귀 검사](../../../tests/test_kcity_learning.py)·[사용 계약](../../KCITY_EVALUATION.md).
 - 환경 ID는 `KC-ENV-v2-kc03-candidate`, 지표 ID는 `KC-METRICS-v1-candidate`다. KC-01 protocol/map/TLS pin은 변경하지 않았다. KC-02 결과는 이전 source의 이력으로 그대로 보존했다.
@@ -16,8 +15,8 @@
 
 | 항목 | 실제 결과 | 근거/제한 |
 |---|---|---|
-| 회귀 검사 | **61개 통과**,23.893초 | [최종 로그](TESTS.final.log); 기존32+KC-03 신규29 |
-| 표준 Gym 검사 | 통과 | [JSON](GYM_CHECK.json)·[로그](GYM_CHECK.log); A,no background,warmup0,render 제외 |
+| 회귀 검사 | **61개 통과**,23.893초 | 당시 검사 요약(원시 로그 삭제); 기존32+KC-03 신규29 |
+| 표준 Gym 검사 | 통과 | JSON·로그; A,no background,warmup0,render 제외 |
 | 기존 GAE 재현→수정 | 101.959999→**2.960000** | `before/utils/buffer.py`를 별도 import해 과거 수식 재현; 정답2.96 |
 | 종료/절단 | termination bootstrap0, truncation terminal V만 사용·trace0 | 동시 flags·autoreset·잘못된 terminal obs·rollout cut 검사 |
 | 정확한 예산 | n_steps4,목표7에서4+3,목표 재호출은no-op | update를 mock한 제어 흐름 검사. 실제 학습 성능이 아님 |
@@ -33,7 +32,7 @@
 
 ## 실제 SUMO 통합 평가
 
-최종 실행: `2026-11-14T21:40:23.328177+09:00`~`21:40:37.605723+09:00`. Python3.10.12·Gymnasium1.2.3·SUMO1.28.0,기존 격리 venv를 사용했다. [실행 로그](INTEGRATION.final.log)·[empty Episode JSON](integration_final/empty/EPISODES.json)·[traffic Episode JSON](integration_final/traffic/EPISODES.json), 같은 폴더의CSV/AGGREGATE/trace가 원시 근거다.
+최종 실행: `2026-11-14T21:40:23.328177+09:00`~`21:40:37.605723+09:00`. Python3.10.12·Gymnasium1.2.3·SUMO1.28.0,기존 격리 venv를 사용했다. 실행 로그·empty Episode JSON·traffic Episode JSON, 같은 폴더의CSV/AGGREGATE/trace가 원시 근거다.
 
 | 과제 | 배경 교통 | decisions | 실제 시간(s) | 초기HV | 시간가중평균HV | 실제LC | TLS통과 |
 |---|---|---:|---:|---:|---:|---:|---:|
@@ -50,7 +49,7 @@
 
 ## 평가 패널과 남은 작업
 
-- [생성한 패널](integration_final/PANELS_NOT_EXECUTED.json): dev100,final100×수요1/1.5/2배. namespace/seed 분리·재생성 일치·수요별 기본 seed pairing을 검사했다. 이400개 case는 생성만 했고 **실행하지 않았다**. 원래 고정 namespace 계약은 유지했다.
+- 생성한 패널: dev100,final100×수요1/1.5/2배. namespace/seed 분리·재생성 일치·수요별 기본 seed pairing을 검사했다. 이400개 case는 생성만 했고 **실행하지 않았다**. 원래 고정 namespace 계약은 유지했다.
 - 모든 유효 실패는 분모에 남는다. 인프라 무효/미확보를 별도 표시하고 자동 재시도는 하지 않는다. 재시도 장부·분석용Wilson interval/seed paired 분석·최종 제출 집계·통합 preflight는 후속이다.
 - 현재 결합 지표는 충돌/적색/경로/goal/기한에 한정한다. 정지·양보 규칙 전체,비신호 crossing 정보의 충분성,모호한 multi-link 진입,경고/정체 원인분석은 더 검증해야 한다. unknown은100%준수로 바꾸지 않는다.
 - 부당대기 보상0·시간null,수요/보상/목표/최종 schema 미동결. C초기HV4대와 KC-02의B초기HV5대 사례를 함께 보존했다.
@@ -64,7 +63,7 @@
 ```bash
 KCPY=/home/heven/.cache/kcity-research-audit-20261110/venv/bin/python
 PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 "$KCPY" -B -m unittest discover -s tests -p 'test_kcity*.py' -v
-PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 "$KCPY" -B scripts/kcity/check_learning.py --output /tmp/kcity-kc03-new-check --old-buffer docs/research_checks/KC-03-20261114-01/before/utils/buffer.py
+PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 "$KCPY" -B scripts/kcity/check_learning.py --output /tmp/kcity-kc03-new-check
 ```
 
-`--old-buffer`는이력재현용선택옵션이다. 현재 정상 구현의 검사/학습에 옛buffer를 주입하는 옵션이 아니다.
+삭제된 old-buffer 사본을 재현 입력으로 사용하지 않는다.

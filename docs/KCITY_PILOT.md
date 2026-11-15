@@ -1,38 +1,26 @@
-# KC-06 시험 학습 실행
+# KC-06 pilot 완료 결과
 
-현재 단계는 **pilot 실행 중**이다. 본 RQ1의 각1M×3seed 학습과 구분하며, pilot 가중치/자료를 본실험 초기값이나 pool에 재사용하지 않는다.
+갱신: 2026-11-16 · **pilot완료,본학습미시작**. [3seed집계](research_checks/KC-SETTINGS-20261115-01/README.md) · [실패진단](research_checks/KC-06-DIAG-20261115-01/README.md) · [현황](RESEARCH_STATUS.md)
 
-## 실행 계약
+## 실제수행
 
-- 실행기: `scripts/kcity/pilot.py`. 73-D, [256,256] ReLU, 총86,022 parameters, seed11, 후보PPO 설정 유지.
-- 새 expert10,000전이: 과거602전이 재사용 없음. expert_train/val namespace의case index1,000,000 이상, 약80:20의case 분리. source_stage=pilot. 실제 수량·완주 필터 통과수는QUALITY.json에서 확인.
-- BC: 성공한 전체Episode의train만 사용해최대1,000업데이트, 매100업데이트val loss로best 선택. val은gradient에사용하지 않음. checkpoint·sampler/Adam 저장.
-- B2/B3: 새PPO/새Adam에서각50,000전이. B3는같은BC best actor만복사하며B2/B3 value head 초기seed/std는같다. 기본PPO2048rollout·10epochs·64minibatch,매10k 경계에서정확히잘라같은전이수로비교.
-- 학습 case는train namespace의1,000,000번부터시작. 동일3/3/4순서. pilot용dev는시나리오별1개씩총3개(별도고번index)이며0/10k/20k/30k/40k/50k에서결정적평가. 이는본dev100개/final100개성능을대신하지않는다. final은사용하지않음.
-- 각rollout update 후모델/Adam/소유RNG/카운터/환경replay를immutablecheckpoint로저장. LATEST.json은최근확정지점을가리킴.
-- `STATUS.json`은phase/방법별실제전이/update/optimizerstep/최근checkpoint/세션속도/peakRSS를기록. `curve.jsonl`은학습곡선원자료. `eval-*.json`은고정전이수의episode/분모기반평가.
-- 후보KC01 protocol의본학습enabled=false와미동결flag는변경하지않음. 별도purpose=KC06_PILOT_ONLY로50k이하의pilot을실행한다. 본학습승인이나최종과학설정동결이아님.
+- seed11/22/33각freshBC1,000updates,B2/B3각50k전이. 총BC3,000updates·PPO300k.
+- 동일새pilotexpert10k공유,기존602debug재사용없음. traincase1,000,000번대·별도dev진단2,000,000번대.
+- 73D·[256,256]·86,022parameters·판단2Hz/물리0.1초·안전31/512. BC는100updates마다valbest,PPO는10k마다dev3개평가.
+- 끝모델9개를동일dev100(A30/B30/C40)에서결정적평가,모두100/100완주·AV충돌/적색0. final미사용.
+- BC초기이점과중간필수LC실패를함께관찰했다. 최종작은시간차로일반적우열을판단하지않았다. [곡선/실험인덱스](EXPERIMENTS.md)
 
-## 현재 경로와 명령
+pilot자료/모델은본pool·초기값·제출10M에이월하지않는다. 본설정동결과운영검증은후속완료했다.
 
-실행root: `/home/heven/kcity_research_runs/KC-06-20261115-01/pilot_v1/`
+## 현재보관
 
-```bash
-KCPY=/home/heven/.cache/kcity-research-audit-20261110/venv/bin/python
-PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 "$KCPY" -B scripts/kcity/pilot.py \
-  --output /home/heven/kcity_research_runs/KC-06-20261115-01/pilot_v1 --device cuda
-```
+seed11: `/home/heven/kcity_research_runs/KC-06-20261115-01/pilot_v1/`
+추가seed: `/home/heven/kcity_research_runs/KC-06-SEEDS-20261115-01/replicates_v1/seed22/` 및 `seed33/`
 
-이미동일프로세스가실행중이면재실행하지않는다. OWNER.json의PID와실제process를대조한다.
+BCbest3개·PPO끝6개·seed11실패진단2개,총11모델을남겼다. seed22BCbest는update900,seed11/33은1000이다. 곡선·devEpisode결과·요약은보존했다. rawexpertpool·console로그·불필요중간모델·fixture/archive는사용자요청으로삭제했다. **기존출력을덮어쓰거나완전재개가능하다고간주하지않는다.**
 
-중단하려면root아래`STOP`파일을만든다. 완료된제어경계에서현재rollout을update/저장하고STOPPED로끝난다. 수집중이면현재1024전이block의commit후멈춘다. 재개는STOP파일을치우고동일명령에`--resume`을추가한다. source/config/환경이바뀌면같은run재개를거부한다. checkpoint를바꾼코드로조용히복원하지않는다. 재개시마지막commit이후의학습작업은다시계산될수있고,이는새데이터로중복합산하지않는다.
+## 실행범위
 
-SIGTERM/SIGINT도같은중단요청으로처리한다. BC는100update저장경계에서재개한다. 프로세스강제kill/정전검증은아직미실행이다.
+[기본pilot](../scripts/kcity/pilot.py)·[추가seed](../scripts/kcity/pilot_seeds.py)는pilot전용이다. 본실행은[main안내](KCITY_MAIN_EXECUTION.md)를따른다. pilot재현은새output/ID에서새10k수집부터해야한다. 추가seedCLI는유효shared-data가필요하므로삭제된과거pool을입력으로안내하지않는다.
 
-## 병행 feasibility와남은범위
-
-별도관측정렬B0로A/B/C×각10case×수요1/1.5/2배=90Episode를실행한다. contract_check namespace의2,000,000번대시드를사용한다. 실행기와결과는 `/home/heven/kcity_research_runs/KC-06-20261115-01/`의 `feasibility.py`, `FEASIBILITY_STATUS.json`, `feasibility-*.json`에있다. 학습속도측정과병행되어단독CPU성능벤치마크가아니다.
-
-GPUsmoke는RTX3070에서4전이/1optimizerstep·finite loss·checkpoint복원을통과했다. 100개회귀검사도통과했다. CPU단일런의재현성검증을GPU전체장기재현성검증으로확대하지않는다.
-
-완료후에만각50k결과·동일전이수의성공/충돌/위반/시간·BC초기이점과끝성능·벽시간/저장크기/peakRAM/GPU를정리한다. 교통충분성·기본보상의부당대기0·정지/양보관측한계·shard25k규모·원격백업/장기복구등미해결항목도확인한뒤본학습조건을동결한다. 이번에GitHub/Drive업로드는하지않았고모델은로컬runroot에있다.
+당시STATUS/curve는당시실적이다. STOP/--resume도동일source/config/runtime·모든필수입력이남아있는run에한정된다. 완료pilot을실행중으로표시하지않는다. 이번개정에서는재학습/시뮬레이션/업로드를하지않았다.

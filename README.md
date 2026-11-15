@@ -9,23 +9,13 @@
 1. [연구 현황](docs/RESEARCH_STATUS.md): 지금 구현·검증된 범위, 문제, 다음 작업.
 2. [연구 계획](docs/RESEARCH_PLAN.md): BC 초기화 PPO와 PPO-only의 학습 효율·교통 수요 변화 비교 설계.
 3. [실험 인덱스](docs/EXPERIMENTS.md): 기존 일반차량 검증, 새 검사 결과와 미실행 연구 계획의 구분.
-4. [데이터 명세](docs/DATA_COLLECTION_SPEC.md): 수업 필수 컬럼·절대 State·73-D 관측 후보·JSONL/NPZ·품질 검사.
+4. [데이터 명세](docs/DATA_COLLECTION_SPEC.md): 수업 필수 컬럼·절대 State·73-D 관측·JSONL/NPZ·품질 검사.
 5. [실행 프로토콜](docs/EXECUTION_PROTOCOL.md): 10M 수집 장부, BC/PPO 비교·평가 순서, 구현·pilot·착수 gate와 CLI 계약.
 6. [결과·컨설팅·제출](docs/RESULTS_AND_CONSULTING.md): 지표·표/그림·영상·컨설팅 질문·Hugging Face/최종 제출 준비.
 
-현재는 연구 설계와 KC-01/02의 시나리오·독립 Gym 환경을 작은 실행에서 검증했습니다. BC·PPO 비교 학습은 아직 시작하지 않았습니다. 이후 작업은 위 문서의 작업 ID·실험 ID와 연결해 진행 상황과 근거를 갱신합니다.
+2026-11-16 현재 **3seed pilot과 본 실험 설정·운영 준비 검증을 완료**했습니다. 본 전문가 pool·본 BC·본 PPO는 아직0입니다. 기존73차원 관측을 유지하며 판단2Hz·물리0.1초로 통제합니다. 다음은 새 전문가pool 수집입니다. [최신현황](docs/RESEARCH_STATUS.md) · [날짜별이력](docs/RESEARCH_HISTORY.md) · [본실행방법](docs/KCITY_MAIN_EXECUTION.md)
 
-2026-11-14에는 평가·컨설팅 자료를 바탕으로 시행 전 상세 명세를 보완했습니다. 새 수집·학습은 실행하지 않았으며, 전용 환경·실행기 구현과 사전 점검을 통과해야 실제 착수가 가능합니다.
-
-이후 단계별 진행 요청으로 **KC-01 시나리오·시드 계약과 경로 검증**을 완료했습니다. [설정·검사 명령](configs/kcity/v1/README.md)과 [첫 단계 결과](docs/research_checks/KC-01-20261114-01/README.md)를 확인할 수 있습니다. 이어 **KC-02 K-CITY Gym 환경**을 구현하고 32개 검사·표준 Gym 검사·6회 지정 행동 주행을 확인했습니다. [환경 안내](docs/KCITY_ENV.md)·[결과](docs/research_checks/KC-02-20261114-01/README.md)를 참고합니다. 다음은 KC-03 종료·GAE·평가 신뢰성 검증이며 본 수집·학습은 아직 시작하지 않았습니다.
-
-KC-03에서는 **GAE 종료 경계·정확한 전이 예산·독립 평가·사건 기반 지표**를 구현하고 61개 검사·표준 Gym 검사·6회 지정 행동 주행을 확인했습니다. [평가/호환성 안내](docs/KCITY_EVALUATION.md)·[KC-03 결과](docs/research_checks/KC-03-20261114-01/README.md)를 참고합니다. 다음은 공통 actor와 BC→PPO 초기화/재개(KC-04)이며, 학습 결과는 아직 없습니다.
-
-KC-04에서는 **공통 masked BC/PPO 정책·BC actor 이식·부분 rollout과 환경까지의 재개**를 구현하고 80개 검사와 표준 Gym 검사를 통과했습니다. 기본 [256,256] 모델은86,022 parameters이며,실제 업데이트 검증에는 [16,16] 작은 fixture를 사용했습니다. [정책/재개 계약](docs/KCITY_POLICY_AND_RESUME.md)·[KC-04 결과](docs/research_checks/KC-04-20261114-01/README.md)를 참고합니다. 다음은 KC-05 전문가·수집기이며 본 비교 학습은 아직 시작하지 않았습니다.
-
-KC-05에서는 **관측만 사용하는 전문가·실제 소량 수집·파일/분할/복구·BC loader**를 구현했습니다. 100개 검사가 통과했고6개Episode에서602전이를저장했습니다. [수집사용안내](docs/KCITY_DATA_PIPELINE.md)·[KC-05 결과](docs/research_checks/KC-05-20261114-01/README.md)를참고합니다. 이번자료는debug검증용이며다음KC-06에서각50k시험학습을진행합니다.
-
-KC-06 시험 학습을 시작했습니다. 새 pilot 전문가 자료를 수집한 뒤 BC 사전학습과 PPO-only/BC→PPO 각50k를 순서대로 실행합니다. 현재 진도·저장 경로·STOP/재개 방법은 [pilot 안내](docs/KCITY_PILOT.md)를 따릅니다. 완료 전에는 시험 학습을 완료 결과로 표시하지 않습니다.
+Drive 업로드는 하지 않습니다. 사용자 요청에 따라 불필요 raw로그·debug자료·로컬압축본을 삭제했고 필요한 모델·곡선·평가·요약만 남겼습니다. 삭제된 과거 파일이 현재 보관돼 있다고 간주하지 않습니다.
 
 ## 프로젝트 목표
 
@@ -49,13 +39,13 @@ K-CITY 도로 구축 → 교통 흐름 검증 → AV 환경 설계 → BC·PPO �
 | 일반 차량 교통 | 구현 | 녹화용 지속 투입(3초 간격, 대기 포함 최대 60대) 및 기존 177대 검증 시나리오 |
 | 교차로 운영 | 구현 | 수요 감응식 신호 14곳, 전방향 정지 규칙 2곳 |
 | 주변 시각화 | 구현 | 가상 건물 30동, 나무 808그루, 녹지 10곳 및 선택형 항공사진 배경 |
-| K-CITY용 AV 환경 | 후보 구현 | 독립 Gym·73-D·다중 Edge·제어/종료 검사 완료; 보상·수요·학습 연결은 후속 |
-| K-CITY BC·PPO 학습 | 예정 | 기존 고속도로 예제를 K-CITY 환경에 연결하고 학습·비교 |
-| AV 평가·데이터셋 | 예정 | 학습 정책의 완주·충돌·규칙 준수 평가 및 주행 데이터 수집 |
+| K-CITY용 AV 환경 | 구현 | 독립Gym·73D·다중Edge·학습/기록·평가 연결 완료 |
+| K-CITY BC·PPO 학습 | pilot 완료 | 3seed BC각1k·B2/B3각50k, 본1M비교는 미시작 |
+| AV 평가·데이터셋 | 부분 완료 | pilot9정책 dev100·writer 검증, final/≥10M제출 미완료 |
 
 현재 도로망은 **일반 Edge 176개, 일반 차선 198개, 교차로 내부 차선 346개**입니다. 차선 제거는 시뮬레이션 통행 기록을 기준으로 했으며, 실제 K-CITY에서 사용하지 않는 차선을 판정한 결과는 아닙니다.
 
-**빨간색 `demo_ego`는 SUMO IDM 차량입니다.** 아직 학습한 AV 정책을 연결하지 않았습니다. `train.py`, `test.py`, `collect_pomdp_data.py`는 기존 고속도로 환경을 사용하며, `data/`와 `results/`의 기존 예제 산출물도 K-CITY 학습 성과가 아닙니다.
+**빨간색 `demo_ego`는 SUMO IDM 차량입니다.** 이는 기본 맵 데모이며, 별도 학습정책 시연 및 pilot 결과와 구분합니다. `train.py`, `test.py`, `collect_pomdp_data.py`는 기존 고속도로 환경을 사용하며, `data/`와 `results/`의 기존 예제 산출물도 K-CITY 학습 성과가 아닙니다.
 
 ## 바로 실행하기
 

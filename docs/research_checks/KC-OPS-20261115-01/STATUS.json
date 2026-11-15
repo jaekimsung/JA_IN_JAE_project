@@ -1,0 +1,22 @@
+{
+  "phase": "READY_LOCAL_ONLY",
+  "completed_at": "2026-11-15T23:26:20.446273+09:00",
+  "launch_ready": true,
+  "ready_stages": [
+    "expert_pool",
+    "bc",
+    "ppo"
+  ],
+  "scientific_settings_frozen": true,
+  "main_training_started": false,
+  "main_expert_transitions": 0,
+  "main_bc_updates": 0,
+  "main_ppo_transitions": 0,
+  "validation_learner_executed": true,
+  "remote_uploads_enabled": false,
+  "remote_backup_verified": false,
+  "local_archive_verified": true,
+  "tests_passed": 118,
+  "next_step": "Separately start new main expert1M collection; not executed in this step.",
+  "remaining_submission_storage_shortfall_GiB": 13.29
+}

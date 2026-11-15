@@ -1,12 +1,10 @@
 # KC-04: 공통 BC/PPO 정책·초기화·재개 계약
 
-2026-11-14 후보 구현. [검사 결과](research_checks/KC-04-20261114-01/README.md) · [연구 현황](RESEARCH_STATUS.md).
-
-**공통 정책과 전체 재개의 작은 검사를 완료했다. 본 비교 학습·전문가 데이터 수집은 아직 시작하지 않았다.** 검증용 모델·입력·optimizer 실행은 본 실험과 구분한다. `training_ready=false`, 연구 설정은 pilot 뒤 동결한다.
+갱신: 2026-11-16. 공통 정책·BC 이식·전체 재개는 CPU 검사에 이어 GPU 운영 probe까지 검증했다. 3seed pilot·과학 설정 동결을 마쳤지만 **본 수집/본 BC·PPO는0**이다. [현황](RESEARCH_STATUS.md) · [초기 검사](research_checks/KC-04-20261114-01/README.md) · [GPU/저장 검사](research_checks/KC-STORAGE-20261115-01/README.md)
 
 ## 1. 공통 정책과 실제 파라미터 수
 
-[KCityPolicy](../algorithms/kcity_policy.py)는 기존 HybridActorCritic을 바탕으로 만든 별도 K-CITY 정책이다. 종전 고속도로 신경망과 BCPolicy는 보존했다. 후보 설정은 [learning.json](../configs/kcity/v1/learning.json)과 코드 기본값이 일치하는지 검사한다. 이 파일은 KC-01의 pinned protocol을 수정하는 파일이 아니다.
+[KCityPolicy](../algorithms/kcity_policy.py)는 기존 HybridActorCritic을 바탕으로 만든 별도 K-CITY 정책이다. 종전 고속도로 신경망과 BCPolicy는 보존했다. 정책 설정은 [learning.json](../configs/kcity/v1/learning.json)과 코드 기본값이 일치하는지 검사한다. 이 파일은 KC-01의 pinned protocol을 수정하는 파일이 아니다.
 
 ```text
 환경의 고정 스케일 73-D 관측 → 공유 trunk [256,256] ReLU
@@ -41,13 +39,13 @@
 
 [KCityBC / KCityPPO](../algorithms/kcity_training.py)가 같은 KCityPolicy를 사용한다.
 
-BC loss는 `가감속 MSE + 차선 CE`이며 가중치는1:1 후보다. BC optimizer는 trunk/mean/lane만 포함하고 value head·log_std는 고정한다. 현재 검증에는 **합성 입력·합성 label과 [16,16] 모델**을 사용했다. 이를 전문가 데이터나 학습된 연구 B1로 부르지 않는다.
+BC loss는 `가감속 MSE + 차선 CE`이며 가중치는1:1이다. BC optimizer는 trunk/mean/lane만 포함하고 value head·log_std는 고정한다. KC-04 초기 검증은 합성 입력/label·[16,16] 모델이었다. 이후 실제 전문가 자료와[256,256]로3seed pilot BC를 학습했다. 합성 fixture와 실제 pilot 성과는 구분한다.
 
 B3는 fresh PPO를 만든 뒤 BC의 trunk/mean/lane 전체 key만 엄격하게 복사한다. source/target의 policy config·shape·finite·고정 std를 검사한다. 기존 BCPolicy와 config가 다른 모델은 거부하며 `strict=False`를 사용하지 않는다.
 
 B2/B3는 같은 PPO seed의 초기 value head 파라미터·log_std와 새 Adam 상태를 유지한다. BC optimizer를 B3로 넘기지 않는다. **공유 trunk가 바뀌므로 critic 출력까지 같아야 하는 것은 아니다.** 이 차이는 계획에서 정한 공유 표현 사전학습 효과에 포함한다. B1/B3의 같은 관측에 대한 결정적 행동은 동일해야 한다.
 
-BC 학습 checkpoint는 optimizer·update 수·sampler RNG·호출자가 제공한 data/split/cursor 식별자를 함께 저장한다. `load_checkpoint(..., expected_data_id=...)`로 dataset identity를 대조할 수 있다. KC-05에서실제소량dataset reader·split/shard/BCforward 검사를연결했다([자료계약](KCITY_DATA_PIPELINE.md)). 검증loss기반best선택과연구학습CLI는후속이다. 이 단계에서 실제 전문가 checkpoint는 생성하지 않았다.
+BC 학습 checkpoint는 optimizer·update 수·sampler RNG·호출자가 제공한 data/split/cursor 식별자를 함께 저장한다. `load_checkpoint(..., expected_data_id=...)`로 dataset identity를 대조할 수 있다. KC-05에서실제소량dataset reader·split/shard/BCforward 검사를연결했다([자료계약](KCITY_DATA_PIPELINE.md)). 검증loss 기반 best선택·BC CLI는 후속 구현했고 실제 pilot checkpoint도 있다. 본 BC는 새 pool/view로 시작한다.
 
 ## 4. 전체 재개 방식
 
@@ -74,7 +72,7 @@ BC 학습 checkpoint는 optimizer·update 수·sampler RNG·호출자가 제공�
 
 새 경로에만 immutable checkpoint를 만든다. 임시 디렉터리에 기록·파일 fsync·SHA 목록 생성 후 rename하며,지원 OS에서는 디렉터리도 fsync한다. 기존 checkpoint를 덮어쓰지 않는다. 파일 추가/누락/변조,다른 run/config/seed/device/source/runtime이면 로드하지 않는다.
 
-CPU·Linux·고정 버전·단일 learner에서 검사했다. GPU update의 재현성·성능,다중 worker checkpoint,강제 전원 장애,수백 초 전체 이력 재실행은 아직 검증 전이다. 외부에서 직접 TraCI로 상태를 바꾼 실행은 복원 범위 밖이다. 연구 작업에서는 Runner의 환경 API로만 제어한다. 동시에 여러 Python thread에서 optimizer update를 실행하는 구성도 검증하지 않았다.
+CPU·Linux·고정 버전·단일 learner 검사와 GPU 후속 검증을 수행했다. RTX3070에서는 pilot50k 이력·Adam7,850steps를 운영 검증용으로만 읽어 T50,007/부분buffer7/현재Episode replay407결정에서 저장·fresh-process 재개 후64전이와update가 연속 분기와 정확히 일치했다. 400결정 scripted prefix는 learner T에 더하지 않았다. fresh GPU 기록은 T2,055→2,119·rollout2·Adam340·데이터UID2,119 일치를 확인했다. 다중worker·강제전원장애·모든장기상황은 검증하지 않았다. 외부에서 직접 TraCI로 상태를 바꾼 실행은 복원 범위 밖이다. 연구 작업에서는 Runner의 환경 API로만 제어한다. 동시에 여러 Python thread에서 optimizer update를 실행하는 구성도 검증하지 않았다.
 
 ## 5. 현재 실행할 수 있는 검사
 
@@ -90,10 +88,12 @@ PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 "$KCPY" -B scripts/kcity/check_polic
 
 두 번째 명령은 합성 BC 업데이트와 작은 SUMO/PPO 재개 비교를 수행한다. 작은 모델의 실제 optimizer 작업이 있으며 본 연구 학습은 아니다. fixture checkpoint를 BC source나 본학습 초기값으로 재사용하지 않는다.
 
-현재 검증용 checkpoint/trace 위치는 [실행 결과](research_checks/KC-04-20261114-01/README.md)에 있다. Git에는 코드/설정/작은 근거만 정리하며 이번에 Drive/GitHub 업로드는 하지 않았다.
+초기 fixture/trace는 사용자 요청으로 삭제했고 요약만 남겼다. 현재 보관 정책은 [현황](RESEARCH_STATUS.md)을 따른다. Git에는 코드/설정/작은 근거만 정리하며 이번에 Drive/GitHub 업로드는 하지 않았다.
 
-## 6. 이후 연결
+## 6. 본 실행과 보관
 
-KCityRunner는 전이를 수집하고 부분 rollout을 update한 후 저장할 수 있다. `run_until(target)`은 절대 전이 예산을 넘기지 않으며,현재 protocol의 `training.enabled=false`와 미동결 상태에서는 본 연구 실행을 거부한다. `fixture=True`는 contract_check namespace의 최대32전이 검증만 허용한다. 재개 시 이미 모은 전이를 다시 수량에 넣지 않는다.
+기존 KC-01 protocol의 enabled=false는 역사적 계약이다. native Runner의 fixture 범위는 유지하고 별도 [본 운영 계층](../utils/kcity_main.py)이 frozen 과학 설정과 verified launch record를 검사해 실행한다. [본 실행 안내](KCITY_MAIN_EXECUTION.md)
 
-다음 KC-05에서 관측 정렬 전문가·writer/loader·data/split ID를 연결한다. KC-06에서 실제 교통 상호작용·보상·GPU/처리량·저장비용·장기 checkpoint/STOP·정기 dev 평가를 pilot하고 최종 설정을 동결한다. 지금은 연구용 학습 CLI·best 선택·주기 checkpoint/backup·완전한 launch preflight가 준비됐다고 표시하지 않는다.
+본 PPO는 외부 learner bundle을 먼저 SHA 검증·확정한 뒤 데이터 shard에 참조를 저장한다. 최신·직전·50k평가·초기 모델을 보관하며 데이터/UID/SHA는 바꾸지 않는다. BC는 최신·직전·재개에 필요한 best를 보관한다. [물리 저장 계약](KCITY_DATA_PIPELINE.md)
+
+GPU probe의 모델/자료는 본 초기값으로 사용하지 않는다. 이번 개정은 문서·명시적 문서 해시 호환 검증만 수행하며 학습/환경/정책 수식은 바꾸지 않는다. Drive 업로드·새 로컬 압축본은 없다.

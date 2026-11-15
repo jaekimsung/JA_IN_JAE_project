@@ -1,0 +1,24 @@
+{
+  "expert_dataset": {
+    "identical_logical_rows": 2137,
+    "excluded_comparison_fields": [
+      "attempt_uid (per-execution UUID)"
+    ],
+    "old_json_gz_bytes": 3670963,
+    "new_json_gz_bytes": 3323201,
+    "json_gz_reduction_pct": 9.473,
+    "old_shards_bytes": 4648905,
+    "new_shards_plus_retained_models_bytes": 4301340
+  },
+  "recorded_gpu/dataset": {
+    "identical_logical_rows": 2119,
+    "excluded_comparison_fields": [
+      "attempt_uid (per-execution UUID)"
+    ],
+    "old_json_gz_bytes": 4720308,
+    "new_json_gz_bytes": 3988573,
+    "json_gz_reduction_pct": 15.502,
+    "old_shards_bytes": 8841817,
+    "new_shards_plus_retained_models_bytes": 7028435
+  }
+}

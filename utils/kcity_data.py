@@ -19,6 +19,7 @@ import numpy as np
 
 from env.kcity_config import digest,file_sha256,repository_path
 from utils.kcity_evaluator import EpisodeMetrics
+from utils.kcity_storage import NEXT_CODEC,encode_rows,decode_rows,verify_retention,CHECKPOINT_MODE
 
 SCHEMA_ID='KC-DATA-v1'
 OBSERVATION_ID='KC-OBS73-v1'
@@ -67,7 +68,7 @@ def enrich_state(state,interval,history,start_tick,dt=.1):
 
 def make_transition(*,config,case,episode_index,t,attempt_uid,observation,detected,
                     next_observation,next_detected,reward,terminated,truncated,info,
-                    start_tick,previous_interval,departure_history,segment_reason=None):
+                    start_tick,previous_interval,departure_history,segment_reason=None,policy_context=None):
     eid=episode_uid(config['run_uid'],episode_index,case['case_uid'])
     old_history=list(departure_history)
     new_history=old_history+[[info['sim_tick_tp1'],info['traffic_interval']['departed_hv']]]
@@ -104,6 +105,13 @@ def make_transition(*,config,case,episode_index,t,attempt_uid,observation,detect
         segment_end=segment_reason is not None,segment_end_reason=segment_reason,row_valid=True,invalid_reasons=[],
         learning=dict(update_id=None,rollout_id=None,log_prob_raw=None,value=None,next_value=None,
             bootstrap_mask=not terminated,trace_mask=not(terminated or truncated)))
+    if config.get('online_policy'):
+        if policy_context is None:raise ValueError('Online records require acting policy provenance')
+        row.update(policy_id=config['online_policy']['method'],policy_version=config['online_policy']['version'],
+            train_seed=config['online_policy']['seed'],policy_checkpoint_kind='acting_state_dict_sha256',
+            policy_checkpoint_sha256=policy_context['behavior_sha'])
+        row['learning'].update({k:policy_context[k] for k in
+            ['update_id','rollout_id','log_prob_raw','value','next_value']})
     validate_row(row,config)
     return row
 
@@ -181,8 +189,21 @@ def validate_row(row,config=None):
         entry=config['plan'][row['episode']];case=entry['case']
         require(row['case_uid']==case['case_uid'] and row['traffic_seed_group_uid']==traffic_group(case),'Case/seed group provenance mismatch')
         require(row['data_split']==entry['data_split'],'Split differs from case manifest')
-        require(row['policy_checkpoint_sha256']==config['teacher']['fingerprint'],'Unknown teacher hash')
-        require(row['policy_id']=='B0' and row['policy_version']==config['teacher']['id'],'Unknown policy/version')
+        online=config.get('online_policy')
+        if online:
+            require(row['policy_id']==online['method'] and row['policy_version']==online['version'] and
+                    row['train_seed']==online['seed'],'Online policy/seed mismatch')
+            checksum=row['policy_checkpoint_sha256']
+            require(isinstance(checksum,str) and len(checksum)==64 and all(c in '0123456789abcdef' for c in checksum),
+                    'Invalid acting-policy hash')
+            require(row['policy_checkpoint_kind']=='acting_state_dict_sha256','Missing acting-policy hash kind')
+            require(all(type(row['learning'][k]) is int and row['learning'][k]>=0 for k in ['update_id','rollout_id']),
+                    'Invalid online update counters')
+            require(all(isinstance(row['learning'][k],(int,float)) and math.isfinite(row['learning'][k])
+                        for k in ['log_prob_raw','value','next_value']),'Missing online learner values')
+        else:
+            require(row['policy_checkpoint_sha256']==config['teacher']['fingerprint'],'Unknown teacher hash')
+            require(row['policy_id']=='B0' and row['policy_version']==config['teacher']['id'],'Unknown policy/version')
         require(row['source_stage']==config['source_stage'] and row['seed_manifest_id']==digest(case['seeds']),'Source/seed version mismatch')
         require(row['scenario_id']==case['scenario_id'] and row['route_id']==case['scenario']['id'],'Route/scenario differs from manifest')
 
@@ -246,11 +267,16 @@ def read_shard(folder):
     files={str(p.relative_to(folder)):file_sha256(p) for p in folder.rglob('*') if p.is_file() and p.name!='SHARD.json'}
     if files!=manifest['files']:raise ValueError('Shard file set/SHA mismatch')
     with gzip.open(folder/'transitions.jsonl.gz','rt') as f:
-        for line in f:yield json.loads(line)
+        rows=(json.loads(line) for line in f)
+        codec=manifest.get('storage_codec','full_v1')
+        if codec==NEXT_CODEC:yield from decode_rows(rows)
+        elif codec=='full_v1':yield from rows
+        else:raise ValueError('Unsupported data storage codec')
 
 
 class ShardWriter:
     def __init__(self,root,config,*,resume=False,shard_rows=25000):
+        if config.get('storage_codec','full_v1') not in ['full_v1',NEXT_CODEC]:raise ValueError('Unsupported data storage codec')
         self.root=Path(root);self.config=deepcopy(config);self.shard_rows=shard_rows
         self.config['writer']=dict(shard_rows=shard_rows);config=self.config
         if not isinstance(shard_rows,int) or isinstance(shard_rows,bool) or shard_rows<1:raise ValueError('Positive shard_rows required')
@@ -311,7 +337,8 @@ class ShardWriter:
         rows=[json.loads(line) for line in (self.partial/'current.jsonl').read_text().splitlines()]
         if len(rows)!=self.pending:raise ValueError('Journal row count mismatch')
         with gzip.GzipFile(filename=str(staging/'transitions.jsonl.gz'),mode='wb',mtime=0) as stream:
-            for row in rows:stream.write((json_text(row)+'\n').encode())
+            compact=self.config.get('storage_codec')==NEXT_CODEC
+            for row in (encode_rows(rows) if compact else rows):stream.write((json_text(row)+'\n').encode())
         np.savez_compressed(staging/'numeric.npz',**numeric_view(rows))
         with gzip.GzipFile(filename=str(staging/'events.jsonl.gz'),mode='wb',mtime=0) as stream:
             for row in rows:
@@ -324,6 +351,7 @@ class ShardWriter:
         manifest=dict(schema_id=SCHEMA_ID,rows=len(rows),first_uid=rows[0]['transition_uid'],last_uid=rows[-1]['transition_uid'],
             split_counts=dict(Counter(r['data_split'] for r in rows)),completed_episodes=completed_episodes,
             run_config_sha256=digest(self.config),files={str(p.relative_to(staging)):file_sha256(p) for p in staging.rglob('*') if p.is_file()})
+        if self.config.get('storage_codec'):manifest['storage_codec']=self.config['storage_codec']
         atomic_json(staging/'SHARD.json',manifest)
         for file in staging.rglob('*'):
             if file.is_file():
@@ -398,9 +426,13 @@ def validate_dataset(root):
             declared={e['episode_uid']:e['metrics'] for e in episodes}
             if declared!=observed_episodes:raise ValueError('Episode summary/BC eligibility differs from raw event trace')
         finally:db.close()
+    retention=None
+    if config.get('checkpoint_policy',{}).get('mode')==CHECKPOINT_MODE:
+        retention=verify_retention(root,folders,config['checkpoint_policy'])
     return dict(passed=True,schema_id=SCHEMA_ID,data_id=release['data_id'],unique_transitions=n,
         committed_shards=len(folders),split_counts=dict(counts),event_counts=dict(events),situation_counts=dict(situations),episodes=episodes,
         local_file_coverage_verified=True,remote_backup_verified=False,training_ready=False,
+        retained_learner_checkpoints=len(retention['retained']) if retention else None,
         incomplete_partial_present=(root/'partial/current.jsonl').exists() and (root/'partial/current.jsonl').stat().st_size>0)
 
 

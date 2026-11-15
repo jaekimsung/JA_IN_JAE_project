@@ -1,6 +1,7 @@
 # KC-06 pilot 실행 현황
 
-상태: **진행 중**. [실행 계약/명령/STOP/재개](../../KCITY_PILOT.md)를 따른다. [시작 기록](PROVENANCE.json)·[PID/경로](LAUNCH.json)·[GPU 검사](CUDA_SMOKE.json)를 보존했다.
+갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
+상태: **완료**(seed11 pilot). 당시 착수 내용: [실행 계약/명령/STOP/재개](../../KCITY_PILOT.md)를 따른다. 시작 기록·PID/경로·GPU 검사를 보존했다.
 
 - 100개 회귀 검사 통과(46.468초): TESTS.log.
 - RTX3070에서 실제4전이/1optimizer step와 재개 smoke 통과. 이4전이는50k pilot 예산과 별도다.
@@ -15,4 +16,4 @@ Pilot expert10,000전이(전체95개완료Episode+마지막부분Episode), BC1,0
 
 첫세션속도약13.84전이/초는학습전0전이평가시간을포함한초기값이다. 안정상태/순수rollout속도나장기예상완료시간으로확대하지않는다. GPU RTX3070의해당PID에CUDA메모리할당도확인했다.
 
-진도확인시점은 [LIVE_VERIFICATION.json](LIVE_VERIFICATION.json)에있다. 두방법의50k완료및과학설정동결은아직완료하지않았다. 프로세스는별도세션에서계속실행중이며로그/STATUS/HANDOFF와checkpoint는실행root에남긴다.
+진도확인시점은 LIVE_VERIFICATION.json에있다. 두방법의50k완료및과학설정동결은아직완료하지않았다. 당시 프로세스는 후속 완료했다. 현재 남은 결과와 모델은 최신 현황을 따른다.

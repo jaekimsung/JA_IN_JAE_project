@@ -1,0 +1,17 @@
+{
+  "checked_at": "2026-11-15T23:27:15.641708+09:00",
+  "frozen_science_and_registered_extension_verified": true,
+  "launch_guards_passed": [
+    "collect",
+    "views",
+    "bc",
+    "ppo"
+  ],
+  "main_run_root_created": false,
+  "new_main_transitions": 0,
+  "markdown_links_checked": 18,
+  "archive_compressed_sha_reverified": true,
+  "remote_uploads_enabled": false,
+  "commit_or_push_performed_this_step": false,
+  "regression_tests_passed": 118
+}

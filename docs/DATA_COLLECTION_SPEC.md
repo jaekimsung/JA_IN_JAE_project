@@ -1,25 +1,27 @@
 # K-CITY 데이터 컬럼·저장·검증 명세
 
-설계 ID: `KC-DATA-v1-draft-20261114` · 상태: **KC-05 후보 수집기/loader 구현·602전이 debug자료 생성·검증 완료**([사용계약](KCITY_DATA_PIPELINE.md)·[실제결과](research_checks/KC-05-20261114-01/README.md)). 본expert_pool/10M분자와연구학습은0이다. KC-04에서 공통 actor/mask·BC 이식·부분 rollout/환경 재개 후보를 검사했다([계약](KCITY_POLICY_AND_RESUME.md)). KC-05에서성공Episode·split·bounded BC target을읽는loader를추가했고실제303/299개를forward검사했다. 연구용pool·모델선택/학습은후속이다. KC-03에서 GAE 경계·substep 측정·사건 지표/평가 분모를 구현했다([계약](KCITY_EVALUATION.md)). KC-02에서 73-D·State·행동/사건 info를 구현했다. [환경 안내](KCITY_ENV.md)·[검사 trace](research_checks/KC-02-20261114-01/README.md)는 공학 검증 자료이며 이 명세의 완성된 dataset이 아니다.
+갱신: 2026-11-16 · 논리 schema `KC-DATA-v1` / observation `KC-OBS73-v1`. **73차원 관측과 기존 전체 필드를 유지**한다. 3seed pilot·본 설정 동결·저장 최적화를 완료했으며 본 pool/BC/PPO는0이다. 현재 실행과 보관 상태는 [현황](RESEARCH_STATUS.md)을 따른다.
+
+73은 정책 입력 벡터 길이다. 현재 기본 transition 생성의 최상위 key는59개이며 중첩 State/행동/사건을 포함한다. 표의 항목 수·벡터 차원·flatten한 열 수를 혼용하지 않는다. `schema_status` 등 기존 candidate 문자열은 계보 식별값으로 보존하며 현재 준비 상태를 뜻하지 않는다.
 
 [연구 계획](RESEARCH_PLAN.md) · [실행 절차](EXECUTION_PROTOCOL.md) · [결과·컨설팅](RESULTS_AND_CONSULTING.md) · [현재 상태](RESEARCH_STATUS.md)
 
 ## 1. 수업 요구와 설계 결정
 
-[6_Project_Evaluation.md](../project_materials/6_Project_Evaluation.md)의 기본 transition 필드는 **전부 보존**한다. `state/next_state`의 절대 정보와 `detected_vehicles`도 필수다. 기존고속도로collector는보존했다. KC-05에서별도수집기로이계약의작은후보실행을확인했다. 최종동결/공개release완료를뜻하지않는다.
+[6_Project_Evaluation.md](../project_materials/6_Project_Evaluation.md)의 기본 transition 필드는 **전부 보존**한다. `state/next_state`의 절대 정보와 `detected_vehicles`도 필수다. 기존 고속도로 collector는 보존한다. 별도 K-CITY writer/loader와 본 실행기는 구현·검증했고, 최종 공개 release는 아직 없다.
 
 | 요구·현재 차이 | 이번 결정 |
 |---|---|
-| 평가 자료의 `observation` 표기는 19-D, 실제 기본 코드는 31-D | 필드명은 유지, K-CITY 신규 버전은 **73-D 후보**. `observation_schema_id`와 정확한 index표를 저장하고 컨설팅에서 차원 확장 인정 여부 확인. KC-02에서 후보 구현·작은 검사 완료, 최종 schema는 동결 전 |
-| 기본 collector의 clipped `action_raw`와 PPO의 Gaussian 원본 표본이 다를 수 있음 | 수업 정의에 맞춰 `action_raw`는 **정책 원본 2-vector**, `action.env_input`은 실제 bounded 입력. `policy_action_raw`는 원본과 동일한 명시적 alias이며 PPO logprob는 원본 기준. 현재 loader의 [-1,1] 가정은 후속 수정 필요 |
+| 평가 자료의 `observation` 표기는 19-D, 실제 기본 코드는 31-D | 필드명은 유지, K-CITY 신규 버전은 **73-D**. `observation_schema_id`와 정확한 index표를 저장하고 컨설팅에서 차원 확장 인정 여부 확인. KC-02 구현·후속 pilot 검증·본 설정 동결 완료 |
+| 기본 collector의 clipped `action_raw`와 PPO의 Gaussian 원본 표본이 다를 수 있음 | 수업 정의에 맞춰 `action_raw`는 **정책 원본 2-vector**, `action.env_input`은 실제 bounded 입력. `policy_action_raw`는 원본과 동일한 명시적 alias이며 PPO logprob는 원본 기준. 새 K-CITY loader는 bounded BC target과 PPO 원본 표본을 구분 |
 | `lane_change_applied`가 API 성공만 나타낼 수 있음 | 기존 필드는 명령 발행 성공 의미로 유지하고 실제 이동은 `action.lane_change_executed`에 별도 기록 |
-| JSONL의 중간 `next_*` 생략 | 모든 행의 `next_observation/next_state`를 **명시 저장**. 읽기 단순성·shard/종료 경계 검증을 우선하고 pilot에서 저장비용 측정 |
+| JSONL의 중간 `next_*` 생략 | 논리 행에는 모든 next를 보존. 물리 JSONL은 `KC-NEXT-REF-v1`로 다음 행 UID 참조를 허용하고 terminal/shardtail은 명시. `read_shard()`가 원값을 복원 |
 | 10^7개 데이터 | **정책 1개가 수행한 유효 AV 환경 전이 1개=1행**. HV별 상태·0.1 s substep·파일 복제·재시도 중복을 행 수에 더하지 않음 |
 | 데이터 제출 | JSONL.gz를 완전한 기준 자료로, NPZ는 같은 행의 수치 학습 view로 제공. 두 파일의 행을 중복 집계하지 않음 |
 
 ## 2. 전이의 시간 계약
 
-기본 SUMO tick 0.1 s, 정책 주기 0.5 s(5 tick)는 설계 후보를 유지한다. 기록 순서는 `snapshot s_t / o_t → policy a_t → 명령 발행 → 최대 5 substep·event 수집 → s_(t+1)/o_(t+1) → reward·종료 판정 → 한 행 확정`이다.
+기본 SUMO tick 0.1 s, 정책 주기 0.5 s(5 tick)는 동결 조건이다. 기록 순서는 `snapshot s_t / o_t → policy a_t → 명령 발행 → 최대 5 substep·event 수집 → s_(t+1)/o_(t+1) → reward·종료 판정 → 한 행 확정`이다.
 
 - `t=0`은 AV가 실제로 삽입된 뒤의 첫 정책 결정이다. warmup·삽입 대기는 별도 비용/traffic 로그이며 데이터 전이가 아니다.
 - `sim_tick_t`, `sim_tick_tp1`은 정수 SUMO tick, `sim_time_s=sim_tick×0.1`이다. Episode 시간은 AV 출발 기준이다. 부동소수 오차로 step 정렬을 판단하지 않는다.
@@ -38,7 +40,7 @@ JSON은 UTF-8, IEEE 유한 숫자만 허용한다. NPZ는 object/pickle array �
 
 `episode_uid=SHA256(run_uid + ':' + logical_episode_index + ':' + case_uid)`로 구체화한다. 같은 case를 서로 다른 정책/학습 seed로 수행한 것은 서로 다른 run의 실제 경험이므로 중복이 아니다. 동일 run의 crash 재시도는 logical_episode_index와 episode_uid를 유지하고 attempt_uid만 바꾼다. run registry를 새로 발급해 같은 재시도를 고유 경험으로 위장하지 않는다.
 
-제출 view의 `episode`는 전체 release registry에서 발급한 **고유 int64**, `t`는 그 Episode의 0-based index다. worker별 `episode=0`을 그대로 병합하지 않는다. `(episode,t)`와 transition UID는 각각 unique해야 한다. 동일한 o/a라도 다른 유효 seed/시각의 정상 전이를 내용 hash만으로 중복 제거하지 않는다.
+현재 `episode`는 dataset/run 안의 단조 증가 int64이며 `t`는 Episode의 0-based index다. 최종 제출 병합 때 release 전체 고유 int64 재배정과 원본 run/episode 매핑이 필요하며 이 병합기는 후속이다. run별 `episode=0`을 그대로 병합하지 않는다. `(episode,t)`와 transition UID는 각각 unique해야 한다. 동일한 o/a라도 다른 유효 seed/시각의 정상 전이를 내용 hash만으로 중복 제거하지 않는다.
 
 ## 4. Transition 한 행의 필수 컬럼
 
@@ -48,9 +50,9 @@ JSON은 UTF-8, IEEE 유한 숫자만 허용한다. NPZ는 object/pickle array �
 
 | 컬럼 | 타입·형태 | 단위·시점 | 의미·검증 |
 |---|---|---|---|
-| `episode` | int64 | ID | release 내 고유 Episode 번호 |
+| `episode` | int64 | ID | 현재 dataset 내 번호. release 병합 시 전역 매핑 필요 |
 | `t` | int64 | step | Episode 내부 정책 전이 index, 0부터 연속 |
-| `observation` | float32[73] 후보 | 정규화·t | 정책이 실제 사용한 부분관측. index는 7절 |
+| `observation` | float32[73] | 정규화·t | 정책이 실제 사용한 부분관측. index는 7절 |
 | `action_raw` | float32[2] | 가감속 latent는 유한 실수·t | 정책 원본 `[accel_sample,lane_cmd]`; clip 전 원본을 보존 |
 | `action.accel_raw` | float | [-1,1] | 환경에 전달한 `action.env_input[0]`. 원본 `action_raw[0]`와 다를 수 있음 |
 | `action.lane_change_raw` | float | [-1,1] | 환경 입력의 Lane 값. hybrid 정책은 {-1,0,+1}이며 원본 Lane 명령과 같음 |
@@ -65,17 +67,17 @@ JSON은 UTF-8, IEEE 유한 숫자만 허용한다. NPZ는 object/pickle array �
 | `event.arrived` | bool | interval OR | AV가 도착 목록에 있음. 지정 목적지 검사는 추가 필드 |
 | `event.lane_before` | int/null | index·t | 행동 전 AV 차선. 내부 교차로는 lane_id도 함께 읽음 |
 | `event.lane_after` | int/null | index·t+1 | interval 종료 차선. 사라진 차량은 null |
-| `next_observation` | float32[73] | t+1 | 모든 행에 명시. AV 소실 시 absorbing vector+valid=false |
-| `next_state` | object | 절대 정보·t+1 | 모든 행에 명시. ego_alive=false라도 남아 있는 HV/신호/시각은 기록 |
+| `next_observation` | float32[73] | t+1 | 모든 논리 행에 존재. 물리 next참조는 reader로 복원. AV소실은 absorbing+valid=false |
+| `next_state` | object | 절대 정보·t+1 | 모든 논리 행에 존재. 물리 next참조 허용. ego_alive=false라도 남은 HV/신호/시각 기록 |
 
 ### 4.2 식별·출처·시간·종료 확장
 
 | 컬럼 | 타입 | 의미·허용 값 |
 |---|---|---|
-| `schema_id`, `observation_schema_id` | str | `KC-DATA-v1`, `KC-OBS73-v1`은 아직 draft. 실제 구현/동결 시 manifest에서 승인 |
+| `schema_id`, `observation_schema_id` | str | `KC-DATA-v1`, `KC-OBS73-v1`. 본 과학 설정에서 채택한 논리 계약 |
 | `run_uid`, `case_uid`, `episode_uid`, `attempt_uid`, `transition_uid` | str | 위 식별 규칙. 재개/재시도 연결 |
 | `source_stage` | enum | `expert_pool / ppo_train / dev_eval / final_eval / archive_rollout / pilot / debug` |
-| `data_split` | enum | `expert_train / expert_val / train_log / dev / final / archive / pilot / debug` |
+| `data_split` | enum | 현재 본 writer는 `expert_train / expert_val / ppo_train`, 운영 probe는 `ops_probe`. dev/final/archive/pilot/debug의 최종 release label은 후속 병합에서 명시 |
 | `policy_id`, `policy_version`, `policy_checkpoint_sha256` | str | B0/B1/B2/B3, teacher hash 또는 실행중 frozen rollout policy hash. PPO는 `update_id`와 연결 |
 | `train_seed`, `seed_manifest_id`, `scenario_id`, `route_id`, `demand_id` | int/null·str | 실제 값을 manifest와 대조. 학습 없는 정책의 train_seed는 null |
 | `sim_tick_t`, `sim_tick_tp1`, `sim_time_s`, `next_sim_time_s` | int64/float64 | tick·s, 모든 state와 시간 정렬 |
@@ -91,7 +93,7 @@ JSON은 UTF-8, IEEE 유한 숫자만 허용한다. NPZ는 object/pickle array �
 |---|---|---|
 | `policy_action_raw` | float32[2] | `action_raw`와 동일한 명시적 alias. B0/BC는 결정적 원본 출력. alias가 다르면 오류 |
 | `action.env_input` | float32[2] | 환경에 전달한 bounded [가감속,Lane]. 원본→clip 변환의 결과 |
-| `action.accel_clipped`, `action.accel_request_mps2` | float | clip 결과, +2.0/-4.5 m/s² 후보 변환. 원본과 혼동 금지 |
+| `action.accel_clipped`, `action.accel_request_mps2` | float | clip 결과, +2.0/-4.5 m/s² 변환. 원본과 혼동 금지 |
 | `action.lane_category`, `action.lane_mask` | int8/bool[3] | category 0좌/1유지/2우. sampling 당시 mask를 저장 |
 | `action.command_issue_tick`, `action.target_lane_id`, `action.lane_duration_s` | int64/str/null/float | 발행 시각·목표 Lane·유효시간. issued speed를 쓰면 그 값과 substep별 명령도 event log에 기록 |
 | `action.accel_observed_mean_mps2`, `action.speed_after_mps` | float/null | substep의 실측 평균 가속도·최종 속도. 명령값 복사 금지 |
@@ -103,7 +105,7 @@ JSON은 UTF-8, IEEE 유한 숫자만 허용한다. NPZ는 object/pickle array �
 | `learning.log_prob_raw`, `learning.value`, `learning.next_value` | float/null | 원본 정책 분포와 관측. 제출 필수 아님; PPO 재현용 내부 기록. B0에 가짜 logprob를 넣지 않음 |
 | `learning.bootstrap_mask`, `learning.trace_mask` | bool/null | termination의 bootstrap와 Episode 경계의 trace 중단 분리 |
 
-가감속은 interval 시작에 목표 가속도를 정하고 `setAcceleration` 명령으로 실제 실행 substep 동안 유지하는 설계로 우선 통일한다. 속도 clip/안전 조정은 SUMO mode에 따른다. `setSpeed(v+a·dt)`를 사용한다면 manifest의 `longitudinal_adapter`를 다른 버전으로 구분하고 혼용하지 않는다. **KC-02 후보 환경은 `setAcceleration`을 구현하고 요청/실측·substep 수를 기록한다.** 기존 고속도로 adapter는 변경하지 않았다. KC-05의별도writer/validator는필수State·next·행동/시간·JSONL/NPZ·복구를실제소량검사했다. 연구학습실행기/최종동결은후속이다.
+가감속은 interval 시작에 목표 가속도를 정하고 `setAcceleration` 명령으로 실제 실행 substep 동안 유지하는 설계로 우선 통일한다. 속도 clip/안전 조정은 SUMO mode에 따른다. `setSpeed(v+a·dt)`를 사용한다면 manifest의 `longitudinal_adapter`를 다른 버전으로 구분하고 혼용하지 않는다. **KC-02 후보 환경은 `setAcceleration`을 구현하고 요청/실측·substep 수를 기록한다.** 기존 고속도로 adapter는 변경하지 않았다. KC-05의별도writer/validator는필수State·next·행동/시간·JSONL/NPZ·복구를실제소량검사했다. 본 collect/views/bc/ppo 실행기와 과학 설정 동결도 완료했다. 본 학습 카운터는0이다.
 
 ## 5. 절대 State 명세: 반드시 포함
 
@@ -133,7 +135,7 @@ AV가 소실되면 `ego_alive=false`, ego 필드는 null, 관측은 73개의 0�
 
 `detected_vehicles`의 각 원소는 기존 `id,x,y,rel_pos,speed,lane_offset`을 유지하고 `y`는 절대 m다. 추가 필드는 `edge_id,lane_id,accel_mps2,rel_speed_mps,relation,projection_valid,in_policy_slot`이다. `relation`은 `same_corridor / adjacent_corridor / crossing`이다.
 
-주변차는 경로 corridor의 전100/후50 m와 교차로 주변100 m 범위에서 수집하는 **후보 규칙**을 동결한다. `rel_pos`는 같은/인접 corridor에만 경로방향 투영 부호 거리(앞+,뒤-), 교차 차량은 null+projection_valid=false다. `lane_offset`도 crossing에는 null이다. 가까운 순·ID 동률로 결정적 정렬한다. 정책73-D에는 lane별 nearest 전후10대까지만 들어가며, detected 목록에 더 많은 차가 있어도 모두 actor 입력인 것은 아니다.
+주변차는 경로 corridor의 전100/후50 m와 교차로 주변100 m 범위에서 수집하는 **규칙**으로 구현했다. `rel_pos`는 같은/인접 corridor에만 경로방향 투영 부호 거리(앞+,뒤-), 교차 차량은 null+projection_valid=false다. `lane_offset`도 crossing에는 null이다. 가까운 순·ID 동률로 결정적 정렬한다. 정책73-D에는 lane별 nearest 전후10대까지만 들어가며, detected 목록에 더 많은 차가 있어도 모두 actor 입력인 것은 아니다.
 
 73-D에는 crossing 차량의 속도/위치 슬롯이 없다. **교차 차량 gap 선택을 정책이 직접 학습했다는 주장을 하지 않는다.** A/B/C의 유신호 과제와 공통 SUMO 안전 설정으로 범위를 제한한다. 무신호·회전교차로 양보를 주과제로 확대하면 crossing 슬롯·교통 마스크를 추가한 새 관측 버전과 모든 방법의 재학습을 요구한다. B0도 추가 detected 정보를 몰래 쓰지 않는다.
 
@@ -152,9 +154,9 @@ AV가 소실되면 `ego_alive=false`, ego 필드는 null, 관측은 73개의 0�
 
 ## 7. 정책 관측 73-D index 계약
 
-아래는 구현할 **draft-v1**의 정확한 순서다. actor는 절대 State를 받지 않는다. 모든 연속 관측은 최종 [-1,1] clip, mask/one-hot은 {0,1}. `clip`은 입력 정규화이며 원시 state를 잘라 저장하지 않는다. 동적 평균/표준편차 대신 모든 방법에 같은 물리 정규화를 사용한다.
+아래는 현재 `KC-OBS73-v1` 구현의 정확한 순서다. actor는 절대 State를 받지 않는다. 모든 연속 관측은 최종 [-1,1] clip, mask/one-hot은 {0,1}. `clip`은 입력 정규화이며 원시 state를 잘라 저장하지 않는다. 동적 평균/표준편차 대신 모든 방법에 같은 물리 정규화를 사용한다.
 
-정규화 기준: `V=8.33m/s`, 전방100m·후방50m, `H=300s`, `Dmax=1000m`, max_accel=2.0/max_decel=4.5m/s², Lane index denominator는 전체 맵 max passenger lane count-1이다. 이 값들은 pilot 뒤 변경 시 schema/config 버전을 올린다.
+정규화 기준: `V=8.33m/s`, 전방100m·후방50m, `H=300s`, `Dmax=1000m`, max_accel=2.0/max_decel=4.5m/s², Lane index denominator는 전체 맵 max passenger lane count-1이다. 이 값은 동결됐으며 변경 시 schema/config 버전과 모든 비교 방법의 재학습 범위를 검토한다.
 
 | index | 내용 | 정규화·결측 |
 |---|---|---|
@@ -188,7 +190,9 @@ policy input validator는 길이73·float32·finite·범위·one-hot·mask 일�
 
 ## 8. 파일·NPZ·분할·복원 계약
 
-기준 결과 root는 저장소 밖 `/home/heven/kcity_research_runs/<protocol>/<run_uid>/`를 추천한다. 아직 생성하지 않는다. 디스크 경로는 freeze 시 가용 공간 확인 후 지정한다. Git에는 문서/작은 설정/집계, 외부 저장소에는 모델·replay가 필요한 다른 알고리즘 자료·원시 데이터를 둔다. PPO는 보관 자료를 replay해 학습하지 않는다.
+본 결과 root 예정은 저장소 밖 `/home/heven/kcity_research_runs/KC-MAIN-v1/`이며 아직 본 실행 출력은 없다. 현재 pilot/검증 root는 별도다. Git에는 문서/작은 설정/집계, 외부 저장소에는 모델·replay가 필요한 다른 알고리즘 자료·원시 데이터를 둔다. PPO는 보관 자료를 replay해 학습하지 않는다.
+
+아래는 **후속 최종 제출 패키지 설계**이며 현재 writer 디렉터리와 다르다. 실제 RUN/RELEASE/shards/checkpoints 구조는 [파이프라인](KCITY_DATA_PIPELINE.md)을 따른다.
 
 ```text
 release/
@@ -196,7 +200,7 @@ release/
   manifests/ runs.jsonl, episodes.jsonl, cases.jsonl, splits.json
   expert_train/<shard>.jsonl.gz, <shard>.npz, <shard>.MANIFEST.json
   expert_val/...
-  train_log/...
+  ppo_train/...
   archive/...
   dev/..., final/...
   events/<run_uid>/*.jsonl.gz
@@ -217,9 +221,9 @@ release/
 | `detected_xy` | (M,2)/float64 |
 | `detected_offsets` | (N+1,)/int64, first0,lastM,단조 비감소 |
 
-NPZ 확장: `policy_action_raw, action_env_input, action_mask, transition_uid`(고정 길이 ASCII), `sim_tick_t,sim_tick_tp1,control_dt_s,observation_valid,next_observation_valid,row_valid`. `detected_xy`의 순서는 같은 행 JSON detected 목록과 동일하다. **State/next_state는 JSONL 기준 파일에 반드시 존재**하며 NPZ에는 object dict로 넣지 않는다. JSONL+NPZ+manifest를 하나의 필수 shard 세트로 제출한다.
+NPZ 확장: `policy_action_raw, action_env_input, action_mask, transition_uid`(고정 길이 ASCII), `sim_tick_t,sim_tick_tp1,control_dt_s,observation_valid,next_observation_valid,row_valid`. `detected_xy`의 순서는 같은 행 JSON detected 목록과 동일하다. **State/next_state는 JSONL의 복원된 논리 행에 반드시 존재**하며 NPZ에는 object dict로 넣지 않는다. JSONL+NPZ+manifest를 하나의 필수 shard 세트로 제출한다. 물리 JSONL은 반드시 codec-aware reader로 복원해 읽는다.
 
-shard는 최대25,000전이 후보, 여러 Episode를 담을 수 있다. Episode가 file boundary를 넘으면 next를 명시하고 동일 episode_uid·t 연속성을 유지한다. split은 row가 아니라 **Episode·traffic seed group**으로 먼저 정한다. 한 Episode가 expert_train과 expert_val에 동시에 존재하면 전체 release reject다. 같은 case의 재시도는 같은 split이다.
+일반 writer 기본값은25,000행이지만 본 expert는 실측 운영 크기512행, 본 PPO는 rollout2048·50k경계에 맞춰 commit한다. 여러 Episode를 담을 수 있다. Episode가 file boundary를 넘으면 next를 명시하고 동일 episode_uid·t 연속성을 유지한다. split은 row가 아니라 **Episode·traffic seed group**으로 먼저 정한다. 한 Episode가 expert_train과 expert_val에 동시에 존재하면 전체 release reject다. 같은 case의 재시도는 같은 split이다.
 
 쓰기 절차: `.partial` 스트리밍 → 마지막 명시 next 확인 → JSON/NPZ 완성 → fsync → schema·정렬·SHA 검사 → `.MANIFEST.json` 확정 → atomic rename → 전역 manifest에 append. crash 복구 시 manifest로 확정된 파일만 유효수에 넣고 partial은 별도 격리한다. 한 worker의 전체10M 배열을 메모리에 쌓지 않는다.
 
@@ -235,14 +239,20 @@ shard는 최대25,000전이 후보, 여러 Episode를 담을 수 있다. Episode
 | DQ-06 NPZ/JSON 동등 | N·UID·73-D·action/reward/done 같음; offsets[-1]=M | 파일세트 전체 미확정 |
 | DQ-07 출처 | code/config/map/signals/teacher/checkpoint hash 해결 가능 | 알 수 없는 policy 자료를 expert_train에 섞지 않음 |
 | DQ-08 분포/상호작용 | speed<0.1m/s 정지비율·유형별수·mask 거부·근접차·적색대기·필수차선 case 수 보고 | 희소 유형/정지편중은 데이터 한계·추가 수집 판단; 성능 실패 행을 조용히 삭제하지 않음 |
-| DQ-09 저장/복원 | local 전체 file SHA; 원격 목록/bytes/SHA·내려받기 검증; 무작위 shard가 아닌 필수 manifest 전체 파일 coverage 확인 | 원본 보존·재전송. 검증 전 정리 금지 |
+| DQ-09 저장/복원(로컬 구현·외부 제출 후속) | local 전체 file SHA; 원격 목록/bytes/SHA·내려받기 검증; 무작위 shard가 아닌 필수 manifest 전체 파일 coverage 확인 | 원본 보존·재전송. 검증 전 정리 금지 |
 
 품질 유효성과 정책 성공은 다르다. 충돌/위반/기한 초과가 정확히 기록된 자료는 분석용 유효 전이다. 다만 **BC fitting 대상은 baseline 수요에서 충돌·위반 없이 정상 완주한 B0 Episode**로 제한하며, 원본 실패 Episode도 expert_pool에 보존하고 필터 통과율을 보고한다.
 
 수집량 장부는 [실행 절차](EXECUTION_PROTOCOL.md)의 `1M expert_pool + 6M PPO train + 3M fixed-policy archive`를 기본으로 한다. pilot/debug·평가자료는 별도 보관하되 목표10M의 기본 분자에서 제외한다. 확정된 유효 UID union이 **10,000,000 이상**이고 JSON/NPZ 양쪽 존재·복원이 가능해야 제출 완료다. 완주 Episode 경계 때문에 초과한 수량은 실제 값으로 보고한다. 부족한 유효 행은 추가 **새 case**로 채우며 실패 로그·필수 State를 잘라 저장량만 맞추지 않는다.
 
-## 10. 개인정보·공개·참고 자료
+## 10. 저장 최적화·모델 참조
 
-수집 대상은 합성 차량이다. 토큰·로컬 계정·SSH 정보·원본 재배포 허용 여부가 불명확한 항공사진/MGEO를 dataset에 자동 포함하지 않는다. State의 SUMO 좌표와 네트워크 좌표계 설명은 필요하지만 원본 지도 재배포 허용을 뜻하지 않는다. 후속 실제 제출 때 사용하는 Hub/Drive 목적지·모델·설정 manifest를 확인하고 공개 권한과 재배포 범위를 검토한다. 이번 작업에서는 업로드하지 않는다.
+새 JSONL의 `storage_codec=KC-NEXT-REF-v1`은 같은 Episode의 다음 행과 정확히 같은 next_state/next_observation만 `next_reference`의 transition UID로 대체한다. terminal·shard 마지막 행에는 next를 직접 저장한다. 논리행·정밀도·전체State·NPZnext는 줄이지 않는다. 과거 full-next도 읽는다.
 
-수업 필드 근거는 [평가 문서 기본 데이터 항목](../project_materials/6_Project_Evaluation.md)이다. 기술 참고는 [SUMO 차량 상태](https://sumo.dlr.de/docs/TraCI/Vehicle_Value_Retrieval.html), [제어 명령](https://sumo.dlr.de/docs/TraCI/Change_Vehicle_State.html), [시간 제한 구분](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/), [Hugging Face dataset 공유](https://huggingface.co/docs/datasets/upload_dataset)이며 2026-11-14에 공식 문서를 확인했다. 반환형과 event 판정은 실제 구현 후 설치1.28 fixture로 검증한다.
+PPO는 `transitions/checkpoints/`에 native 모델/Adam/RNG/부분buffer/환경replay bundle을 검증·확정한 뒤 shard의 `environment/REFERENCE.json`에 경로/SHA/T를 기록한다. `checkpoint_from_shard()`로 해석한다. 최신·직전·50k평가 모델과 초기모델을 보관하며 데이터 shard/UID/SHA는 immutable이다. 예전 shard의 참조 모델은 보관 정책에 따라 제거될 수 있으므로 모든 shard에서 개별 재개가 가능하다고 주장하지 않는다. 최신 재개 및 평가 모델을 보장하는 정책이다. BC는 최신·직전·재개에 필요한best를 유지한다.
+
+## 11. 개인정보·공개·참고 자료
+
+수집 대상은 합성 차량이다. 토큰·로컬 계정·SSH 정보·원본 재배포 허용 여부가 불명확한 항공사진/MGEO를 dataset에 자동 포함하지 않는다. State의 SUMO 좌표와 네트워크 좌표계 설명은 필요하지만 원본 지도 재배포 허용을 뜻하지 않는다. 후속 실제 제출 때 사용하는 Hub/제출 목적지·모델·설정 manifest를 확인하고 공개 권한과 재배포 범위를 검토한다. 이번 작업에서는 업로드하지 않는다.
+
+수업 필드 근거는 [평가 문서 기본 데이터 항목](../project_materials/6_Project_Evaluation.md)이다. 기술 참고는 [SUMO 차량 상태](https://sumo.dlr.de/docs/TraCI/Vehicle_Value_Retrieval.html), [제어 명령](https://sumo.dlr.de/docs/TraCI/Change_Vehicle_State.html), [시간 제한 구분](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/), [Hugging Face dataset 공유](https://huggingface.co/docs/datasets/upload_dataset)이며 2026-11-14에 공식 문서를 확인했다. 현재 반환형/사건 판정은 설치1.28 기반 제한 fixture와 pilot에서 확인했다. 모든 정지/양보 규칙 검증은 아니다. Drive 업로드는 사용자 지시로 금지했고 이번 문서 개정에서도 수행하지 않았다.
