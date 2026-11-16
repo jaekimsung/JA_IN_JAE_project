@@ -29,10 +29,9 @@ def atomic(path,value):
         json.dump(value,stream,ensure_ascii=False,allow_nan=False,separators=(',',':'))
         stream.write('\n');stream.flush();os.fsync(stream.fileno())
     temp.replace(path)
-    if hasattr(os,'O_DIRECTORY'):  # POSIX directory fsync; unavailable on Windows
-        fd=os.open(path.parent,os.O_DIRECTORY)
-        try:os.fsync(fd)
-        finally:os.close(fd)
+    fd=os.open(path.parent,os.O_DIRECTORY)
+    try:os.fsync(fd)
+    finally:os.close(fd)
 
 
 def encode_rows(rows):

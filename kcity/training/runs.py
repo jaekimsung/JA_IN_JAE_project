@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import signal
 
-from kcity.data.dataset import atomic_json, now
+from kcity.data.dataset import atomic_json, now, pid_alive
 
 STOP = False
 
@@ -39,13 +39,10 @@ class Owner:
         self.path = self.root/'OWNER.json'
         if self.path.exists():
             pid = read(self.path)['pid']
-            try:
-                os.kill(pid,0)
-            except ProcessLookupError:
-                require(resume,'Stale owner requires explicit --resume')
-                self.path.unlink()
-            else:
+            if pid_alive(pid):
                 raise RuntimeError('Another process owns this run')
+            require(resume,'Stale owner requires explicit --resume')
+            self.path.unlink()
         manifest = self.root/'CONFIG.json'
         if manifest.exists():
             require(resume and read(manifest)==config, 'Explicit resume with identical configuration required')

@@ -40,6 +40,17 @@ def now():
     return datetime.now().astimezone().isoformat()
 
 
+def pid_alive(pid):
+    """Whether a process with this pid exists (signal 0 only checks; nothing is delivered)."""
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
 def atomic_json(path,value):
     path=Path(path);temp=path.with_name(path.name+'.partial-'+uuid.uuid4().hex)
     with temp.open('w') as f:f.write(json_text(value)+'\n');f.flush();os.fsync(f.fileno())
@@ -298,19 +309,18 @@ class ShardWriter:
         if config.get('storage_codec','full_v1') not in ['full_v1',NEXT_CODEC]:raise ValueError('Unsupported data storage codec')
         self.root=Path(root);self.config=deepcopy(config);self.shard_rows=shard_rows
         self.config['writer']=dict(shard_rows=shard_rows);config=self.config
+        self.config_sha256=digest(self.config)  # the config never changes during a run
         if not isinstance(shard_rows,int) or isinstance(shard_rows,bool) or shard_rows<1:raise ValueError('Positive shard_rows required')
         self.root.mkdir(parents=True,exist_ok=True)
         if not (self.root/'RUN.json').exists() and any(self.root.iterdir()):
             raise FileExistsError('Refusing a nonempty unrecognized output directory')
         self.lock=self.root/'.writer.lock';self.attempt_uid=uuid.uuid4().hex
-        self.db=None;self.journal=None;self.last=None;self.count=0;self.pending=0
+        self.db=None;self.journal=None;self.last=None;self.count=0;self.pending=0;self.buffer=[]
         if self.lock.exists():
             old=json.loads(self.lock.read_text())
-            try:os.kill(old['pid'],0)
-            except ProcessLookupError:
-                if not resume:raise RuntimeError('Stale writer lock requires explicit resume')
-                q=self.root/'quarantine';q.mkdir(exist_ok=True);self.lock.rename(q/('stale-lock-'+self.attempt_uid+'.json'))
-            else:raise RuntimeError('Another writer owns this dataset')
+            if pid_alive(old['pid']):raise RuntimeError('Another writer owns this dataset')
+            if not resume:raise RuntimeError('Stale writer lock requires explicit resume')
+            q=self.root/'quarantine';q.mkdir(exist_ok=True);self.lock.rename(q/('stale-lock-'+self.attempt_uid+'.json'))
         fd=os.open(self.lock,os.O_CREAT|os.O_EXCL|os.O_WRONLY)
         with os.fdopen(fd,'w') as f:f.write(json_text(dict(pid=os.getpid(),attempt_uid=self.attempt_uid)))
         try:
@@ -335,6 +345,7 @@ class ShardWriter:
             partial.mkdir();self.partial=partial
             index=partial/'index.sqlite';self.db=create_index(index)
             self.folders=shard_directories(self.root)
+            self.shard_sha256=[file_sha256(p/'SHARD.json') for p in self.folders]
             for folder in self.folders:
                 for row in read_shard(folder):
                     validate_row(row,config);validate_pair(self.last,row);index_row(self.db,row)
@@ -353,6 +364,7 @@ class ShardWriter:
     def append(self,row):
         text=validate_row(row,self.config);validate_pair(self.last,row);index_row(self.db,row)
         self.journal.write(text+'\n');self.journal.flush()
+        self.buffer.append(row)  # the journal is for crash recovery; commit uses these rows (<= shard_rows)
         self.last={k:row[k] for k in PAIR_FIELDS};self.pending+=1
 
     def commit(self,checkpoint,completed_episodes,save_environment=None):
@@ -363,9 +375,8 @@ class ShardWriter:
             save_environment=lambda stub:save_external(self.root,stub,save_learner,count)
         self.journal.flush();os.fsync(self.journal.fileno());self.journal.close()
         staging=self.partial/('commit-'+uuid.uuid4().hex);staging.mkdir()
-        # Bounded by shard_rows; never buffers the complete dataset.
-        rows=[json.loads(line) for line in (self.partial/'current.jsonl').read_text().splitlines()]
-        if len(rows)!=self.pending:raise ValueError('Journal row count mismatch')
+        rows=self.buffer
+        if len(rows)!=self.pending:raise ValueError('Buffered row count mismatch')
         with gzip.GzipFile(filename=str(staging/'transitions.jsonl.gz'),mode='wb',mtime=0) as stream:
             compact=self.config.get('storage_codec')==NEXT_CODEC
             for row in (encode_rows(rows) if compact else rows):stream.write((json_text(row)+'\n').encode())
@@ -380,23 +391,24 @@ class ShardWriter:
         if save_environment is not None:save_environment(staging/'environment')
         manifest=dict(schema_id=SCHEMA_ID,rows=len(rows),first_uid=rows[0]['transition_uid'],last_uid=rows[-1]['transition_uid'],
             split_counts=dict(Counter(r['data_split'] for r in rows)),completed_episodes=completed_episodes,
-            run_config_sha256=digest(self.config),files={str(p.relative_to(staging)):file_sha256(p) for p in staging.rglob('*') if p.is_file()})
+            run_config_sha256=self.config_sha256,files={str(p.relative_to(staging)):file_sha256(p) for p in staging.rglob('*') if p.is_file()})
         if self.config.get('storage_codec'):manifest['storage_codec']=self.config['storage_codec']
         atomic_json(staging/'SHARD.json',manifest)
         for file in staging.rglob('*'):
             if file.is_file():
-                with file.open('r+b') as f:os.fsync(f.fileno())
+                with file.open('rb') as f:os.fsync(f.fileno())
         target=self.root/'shards'/f'shard-{len(self.folders):06d}';staging.rename(target)
-        self.db.commit();self.count+=self.pending;self.pending=0;self.folders.append(target)
+        self.db.commit();self.count+=self.pending;self.pending=0;self.buffer=[];self.folders.append(target)
+        self.shard_sha256.append(file_sha256(target/'SHARD.json'))
         (self.partial/'current.jsonl').unlink();self.journal=(self.partial/'current.jsonl').open('w')
         self.refresh_release()
         if self.external:sync_retention(self.root,self.folders,self.config['checkpoint_policy'])
         return target
 
     def refresh_release(self):
-        shards=[dict(path=str(p.relative_to(self.root)),manifest_sha256=file_sha256(p/'SHARD.json')) for p in self.folders]
+        shards=[dict(path=str(p.relative_to(self.root)),manifest_sha256=sha) for p,sha in zip(self.folders,self.shard_sha256)]
         eligible=bool(self.config.get('source_stage')=='expert_pool' and self.config.get('eligible_for_research_training'))
-        body=dict(schema_id=SCHEMA_ID,run_uid=self.config['run_uid'],run_config_sha256=digest(self.config),
+        body=dict(schema_id=SCHEMA_ID,run_uid=self.config['run_uid'],run_config_sha256=self.config_sha256,
             committed_transitions=self.count,shards=shards,eligible_for_research_training=eligible,training_ready=False)
         atomic_json(self.root/'RELEASE.json',dict(body,data_id=digest(body)))
 
@@ -413,7 +425,8 @@ class ShardWriter:
 def validate_dataset(root):
     root=Path(root);config=json.loads((root/'RUN.json').read_text());release=json.loads((root/'RELEASE.json').read_text())
     body={k:v for k,v in release.items() if k!='data_id'}
-    if release['data_id']!=digest(body) or release['run_config_sha256']!=digest(config):raise ValueError('Release/run manifest mismatch')
+    config_sha256=digest(config)
+    if release['data_id']!=digest(body) or release['run_config_sha256']!=config_sha256:raise ValueError('Release/run manifest mismatch')
     folders=shard_directories(root)
     if release['shards']!=[dict(path=str(p.relative_to(root)),manifest_sha256=file_sha256(p/'SHARD.json')) for p in folders]:
         raise ValueError('Release index is stale or incomplete; recover writer before reading')
@@ -423,7 +436,7 @@ def validate_dataset(root):
         try:
             for folder in folders:
                 rows=list(read_shard(folder));manifest=json.loads((folder/'SHARD.json').read_text())
-                if len(rows)!=manifest['rows'] or manifest['run_config_sha256']!=digest(config):raise ValueError('Shard row/config mismatch')
+                if len(rows)!=manifest['rows'] or manifest['run_config_sha256']!=config_sha256:raise ValueError('Shard row/config mismatch')
                 expected=numeric_view(rows)
                 with np.load(folder/'numeric.npz',allow_pickle=False) as numeric:
                     if set(numeric.files)!=set(expected):raise ValueError('NPZ key set mismatch')

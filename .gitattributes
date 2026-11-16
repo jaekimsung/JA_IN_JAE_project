@@ -1,8 +1,0 @@
-# 동결 SHA는 LF 기준이다. Windows(core.autocrlf=true)에서도 LF로 체크아웃한다.
-* text=auto eol=lf
-*.png binary
-*.jpg binary
-*.npz binary
-*.pt binary
-*.gz binary
-**/tb/events.out.tfevents.* binary

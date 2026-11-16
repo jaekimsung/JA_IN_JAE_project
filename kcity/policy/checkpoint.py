@@ -52,16 +52,14 @@ def write_bundle(path,kind,config,payload,env=None):
         (staging/'SHA256.json').write_text(json.dumps(manifest,indent=2)+'\n')
         for p in staging.rglob('*'):
             if p.is_file():
-                with p.open('r+b') as f:os.fsync(f.fileno())  # write access: Windows fsync needs it
-        if hasattr(os,'O_DIRECTORY'):
-            fd=os.open(staging,os.O_DIRECTORY)
-            try:os.fsync(fd)
-            finally:os.close(fd)
+                with p.open('rb') as f:os.fsync(f.fileno())
+        fd=os.open(staging,os.O_DIRECTORY)
+        try:os.fsync(fd)
+        finally:os.close(fd)
         staging.rename(path)
-        if hasattr(os,'O_DIRECTORY'):
-            fd=os.open(path.parent,os.O_DIRECTORY)
-            try:os.fsync(fd)
-            finally:os.close(fd)
+        fd=os.open(path.parent,os.O_DIRECTORY)
+        try:os.fsync(fd)
+        finally:os.close(fd)
     except BaseException:
         shutil.rmtree(staging);raise
 
