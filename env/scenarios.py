@@ -1,4 +1,4 @@
-"""Validate KC-01 geometry/seed contracts; optional bounded scripted route smoke.
+"""Validate route geometry and seed contracts of the A/B/C scenarios; optional scripted route smoke run.
 
 No map generation, Gym environment, expert dataset, BC or PPO training.
 """
@@ -283,7 +283,7 @@ def main():
     report, routes = validate_contract(spec)
     version = subprocess.check_output(['sumo', '--version'], text=True).splitlines()[0]
     if version != 'Eclipse SUMO sumo ' + spec['protocol']['expected_sumo_version']:
-        raise ContractError('Installed SUMO version differs from pinned KC-01 contract')
+        raise ContractError('Installed SUMO version differs from the environment contract')
     case = make_case(spec, 'contract_check', 'C', 0)
     (output/'CASE_C.json').write_text(json.dumps(case, ensure_ascii=False, indent=2)+'\n')
     (output/'TRAFFIC_REQUESTS_C.json').write_text(json.dumps(

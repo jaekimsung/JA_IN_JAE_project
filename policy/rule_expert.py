@@ -1,4 +1,4 @@
-"""B0 candidate: deterministic memoryless OBS73 -> acceleration/lane request.
+"""B0 rule expert: deterministic, memoryless 73-D observation -> acceleration/lane request.
 
 No TraCI handle, full State, detected list, future signal or hidden state is
 accepted. SUMO safety still participates in the resulting vehicle behavior.
@@ -50,7 +50,7 @@ class KCityRuleExpert:
         if required and not requested:
             stops.append(max(0.,float(o[49])*100-c['stop_buffer_m']));reasons.append('route_lane_wait')
         if o[60]>.5:
-            # Memoryless candidate only: no claim of a certified dwell/priority
+            # Memoryless rule: no certified dwell/priority
             # rule. A/B/C currently have no allway_stop on the assigned route.
             distance=float(o[61])*100
             if not (distance<1. and v<.15):stops.append(max(0.,distance-.5))

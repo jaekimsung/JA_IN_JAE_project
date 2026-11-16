@@ -1,6 +1,6 @@
-"""KC-02: finite-route K-CITY Gym environment, isolated TraCI connections.
+"""K-CITY Gym environment: finite A/B/C routes with background traffic, isolated TraCI connections.
 
-Research candidate only: no learner, expert or dataset writer is started here.
+Each decision runs 5 SUMO ticks (0.1 s). No learner, expert or dataset writer is started here.
 """
 from copy import deepcopy
 import json
@@ -412,7 +412,7 @@ class KCityExternalTimeLimit(gym.Wrapper):
 
     Native task termination takes precedence. Terminal observation remains the
     current observation, and the downstream learner must bootstrap/truncate
-    with an independent trace mask (KC-03).
+    with an independent trace mask.
     """
     def __init__(self,env,max_episode_steps):
         super().__init__(env)

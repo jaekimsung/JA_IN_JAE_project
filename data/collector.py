@@ -35,7 +35,7 @@ def build_config(env,expert,run_uid,plan=None):
         resolved.append(dict(case=case,data_split=entry['data_split']))
     if len({r['case']['case_uid'] for r in resolved})!=len(resolved):raise ValueError('Duplicate planned case')
     if json.loads(DEFAULT_PROTOCOL.read_text())!=env.contract['protocol']:
-        raise ValueError('KC-05 collector is pinned to the current default candidate protocol')
+        raise ValueError('Collector requires the default environment contract (configs/kcity/v1/protocol.json)')
     teacher=dict(id=EXPERT_ID,config=deepcopy(expert.config))
     teacher['fingerprint']=digest(teacher)
     assets=deepcopy(env.contract['protocol']['assets'])
@@ -99,7 +99,7 @@ class ExpertCollector:
 
     def collect_until(self,absolute_cap):
         if isinstance(absolute_cap,bool) or not isinstance(absolute_cap,int) or not 1<=absolute_cap<=10000:
-            raise ValueError('KC-05 validation collection is bounded to 1..10000 transitions')
+            raise ValueError('collect_until is a bounded check (1..10000 transitions); use collect() for pools')
         if absolute_cap<self.writer.count:raise ValueError('Absolute collection cap is behind committed progress')
         while self.index<len(self.config['plan']) and self.writer.count+self.writer.pending<absolute_cap:
             if self.metrics is None:self._start()

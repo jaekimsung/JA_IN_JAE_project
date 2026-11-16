@@ -1,4 +1,4 @@
-"""KC-04 common BC/PPO hybrid actor: fixed OBS73 scaling and geometric masks."""
+"""Shared BC/PPO actor-critic for the 73-D observation: lane masks from the observation, sampling, BC loss and BC->PPO transfer."""
 from copy import deepcopy
 import numpy as np
 import torch

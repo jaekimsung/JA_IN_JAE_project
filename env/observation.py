@@ -1,4 +1,4 @@
-"""KC-OBS73-v1 candidate; actor input is separate from privileged snapshots."""
+"""73-D policy observation (KC-OBS73-v1) and detected-vehicle list, built from a privileged SUMO snapshot."""
 import math
 import numpy as np
 

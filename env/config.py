@@ -1,4 +1,4 @@
-"""KC-01 contracts and isolated RNG streams. No Gym/SUMO process is started here."""
+"""Environment contract (configs/kcity/v1), case/seed generation and file hashing. Starts no SUMO process."""
 from copy import deepcopy
 import hashlib
 import json
@@ -81,9 +81,9 @@ def validate_settings(spec):
         if isinstance(value, bool) or not isinstance(value, int) or not 0 <= value <= upper:
             raise ContractError('Invalid control bitset: ' + name)
     if p['training']['enabled'] or p['research_settings_frozen']:
-        raise ContractError('KC-01 cannot authorize research training or claim final freeze')
+        raise ContractError('Environment contract must not set training/frozen flags; experiment settings live in configs/kcity/experiment.json')
     if p['control']['longitudinal_adapter'] != 'setAcceleration':
-        raise ContractError('KC-01 adapter must match documented setAcceleration candidate')
+        raise ContractError('Longitudinal adapter must be setAcceleration')
     if p['seed']['algorithm'] != 'sha256_component_streams_v1':
         raise ContractError('Unsupported seed algorithm')
     namespace_values = list(p['seed']['namespaces'].values())

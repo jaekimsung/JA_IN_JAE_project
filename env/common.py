@@ -1,4 +1,4 @@
-"""Shared helpers for the isolated K-City map workflow (no ROS/CARLA runtime)."""
+"""SUMO tool discovery, map paths and JSON/XML helpers shared by the environment and map tools."""
 import json
 import os
 from pathlib import Path

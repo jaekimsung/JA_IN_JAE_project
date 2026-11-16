@@ -1,4 +1,4 @@
-"""Bounded KC-02 fixtures and real SUMO integration, no learning updates."""
+"""Bounded environment fixtures and real SUMO integration, no learning updates."""
 from pathlib import Path
 from copy import deepcopy
 import unittest

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Open the isolated K-City network. Does not regenerate the highway training map."""
+"""Open the K-CITY map demo in SUMO GUI (red demo ego + continuous background traffic), headless check or netedit."""
 import argparse
 from pathlib import Path
 import subprocess

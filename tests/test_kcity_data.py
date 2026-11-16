@@ -1,4 +1,4 @@
-"""KC-05 expert/data fixtures: real SUMO rows, corruption, split and recovery tests."""
+"""expert/data fixtures: real SUMO rows, corruption, split and recovery tests."""
 from copy import deepcopy
 from pathlib import Path
 import json
@@ -122,7 +122,7 @@ class DataTests(unittest.TestCase):
             root=Path(temp)/'data';self.complete(root,shard_rows=7);q=validate_dataset(root)
             self.assertEqual(q['unique_transitions'],len(self.rows));self.assertGreater(q['committed_shards'],1)
             self.assertEqual(sum(len(b['observation']) for b in iter_bc_batches(root,'expert_train',allow_debug=True)),len(self.rows))
-            with self.assertRaisesRegex(ValueError,'Debug/pilot'):list(iter_bc_batches(root,'expert_train'))
+            with self.assertRaisesRegex(ValueError,'Debug data'):list(iter_bc_batches(root,'expert_train'))
             self.assertEqual(list(iter_bc_batches(root,'expert_val',allow_debug=True)),[])
 
     def test_duplicate_transition_is_not_counted(self):

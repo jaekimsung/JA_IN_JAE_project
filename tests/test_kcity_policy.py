@@ -1,4 +1,4 @@
-"""KC-04 synthetic gradient/transfer and real SUMO resume fixtures; no study training."""
+"""synthetic gradient/transfer and real SUMO resume fixtures; no study training."""
 from copy import deepcopy
 from pathlib import Path
 import random

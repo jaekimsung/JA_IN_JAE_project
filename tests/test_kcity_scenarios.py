@@ -1,4 +1,4 @@
-"""KC-01 contract regression checks; no learner or simulator process is started."""
+"""contract regression checks; no learner or simulator process is started."""
 from copy import deepcopy
 import json
 from pathlib import Path

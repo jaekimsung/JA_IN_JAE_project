@@ -1,7 +1,6 @@
 """Episode metrics from the event trace, case panels and aggregation; no policy execution.
 
-This is separate from the legacy single-road evaluator. Unknown classifications
-remain unknown; performance failures stay in the valid-case denominator.
+Unknown signal classifications remain unknown; performance failures stay in the valid-case denominator.
 """
 from collections import Counter
 from copy import deepcopy

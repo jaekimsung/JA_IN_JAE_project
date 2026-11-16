@@ -1,4 +1,4 @@
-"""KC-03 GAE/update/metric fixtures; no optimizer steps or research learning."""
+"""GAE/update/metric fixtures; no optimizer steps or research learning."""
 from copy import deepcopy
 from pathlib import Path
 import sys

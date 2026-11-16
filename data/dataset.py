@@ -1,4 +1,4 @@
-"""KC-05 candidate data contract, atomic shards, quality checks and BC views.
+"""Transition schema (KC-DATA-v1), validation, atomic shard writer and dataset validation.
 
 JSONL is authoritative for full State. NPZ is the same transitions, not a
 second dataset. Only atomically committed shard directories count as data.
@@ -461,7 +461,7 @@ def iter_bc_batches(root,split,*,batch_size=256,allow_debug=False):
     root=Path(root);report=validate_dataset(root);config=json.loads((root/'RUN.json').read_text())
     release=json.loads((root/'RELEASE.json').read_text())
     if not allow_debug and (config['source_stage']!='expert_pool' or not config['eligible_for_research_training'] or not release['eligible_for_research_training']):
-        raise ValueError('Debug/pilot data cannot initialize research BC')
+        raise ValueError('Debug data cannot initialize research BC')
     successful={e['episode_uid'] for e in report['episodes'] if e['metrics']['compliant_completion'] is True
                 and e['metrics']['primary_end_reason']=='arrival' and e['data_split']==split}
     for folder in shard_directories(root):
