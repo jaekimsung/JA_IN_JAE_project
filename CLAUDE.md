@@ -12,7 +12,7 @@ K-CITY(SUMO) 자율주행 의사결정 연구: 규칙 전문가 B0, BC-only B1, 
 ## 실행
 
 - 구성: `env/`(실행환경) · `policy/`(정책·알고리즘) · `training/`(학습 루프·설정) · `data/`(수집·저장) · `evaluation/`(지표·평가) · `runner/`(실행). 의존 방향은 env ← policy ← training, data → evaluation이며 data는 training을 import하지 않는다.
-- 진입점: `runner/collect.py` → `runner/train_bc.py views|train` → `runner/train_ppo.py` → `runner/evaluate.py` → `runner/record_video.py` / `runner/export_hf.py`. 장기 실행은 `<output>/STOP` 후 `--resume`.
+- 진입점: `runner/collect.py --workers N`(사례 주기 단위 병렬 수집, `<pool>/part-XX`) → `runner/train_bc.py views|train` → `runner/train_ppo.py` → `runner/evaluate.py` → `runner/record_video.py` / `runner/export_hf.py`. 장기 실행은 `<output>/STOP` 후 `--resume`.
 - 회귀 검사: `PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 python -B -m unittest discover -s tests`. 검증 환경은 Linux·SUMO 1.28.0이며, 다른 SUMO 버전에서는 SUMO를 띄우는 테스트가 버전 검사로 실패한다.
 - 본 수집·학습은 원격 Linux 서버에서 한다. 처리량은 SUMO TraCI 조회가 지배한다(PPO/BC 연산은 1% 미만).
 - 맵 데모는 `python runner/view_kcity.py`.

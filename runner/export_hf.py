@@ -1,9 +1,9 @@
 """Prepare validated K-CITY datasets as a Hugging Face dataset folder (no upload).
 
-    python export_hf.py --dataset runs/expert/dataset --dataset runs/B2_seed11/transitions ... \
+    python runner/export_hf.py --dataset runs/expert --dataset runs/B2_seed11/transitions ... \
         --output runs/hf_export --name kcity-driving
 
-Each dataset is validated, then its shards' data files (transitions.jsonl.gz, numeric.npz,
+Each dataset (or every part of an expert pool) is validated, then its shards' data files (transitions.jsonl.gz, numeric.npz,
 events.jsonl.gz) are hard-linked (or copied with --copy) under <output>/data/<dataset-name>/.
 Resume/learner state (collector.json, environment/) is not exported. Upload yourself, e.g.
     huggingface-cli upload <user>/<repo> <output> --repo-type dataset
@@ -19,7 +19,8 @@ import shutil
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # 저장소 루트
 from training.experiment import git_info
-from data.dataset import OBSERVATION_ID, SCHEMA_ID, shard_directories, validate_dataset
+from data.dataset import OBSERVATION_ID, SCHEMA_ID, shard_directories
+from data.pool import part_report, pool_parts
 
 DATA_FILES = ('transitions.jsonl.gz', 'numeric.npz', 'events.jsonl.gz')
 
@@ -136,21 +137,26 @@ def main():
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--name', default='K-CITY Autonomous Driving Transitions')
     parser.add_argument('--copy', action='store_true', help='copy files instead of hard-linking')
+    parser.add_argument('--revalidate', action='store_true', help='re-run full validation even if a worker report matches')
     args = parser.parse_args()
     if args.output.exists() and any(args.output.iterdir()):
         parser.error('Output must be a new or empty directory')
     reports = {}
-    for root in args.dataset:
-        part = root.parent.name if root.name in ('dataset', 'transitions') else root.name
-        if part in reports:
-            parser.error(f'Duplicate part name {part}; pass distinct run directories')
-        report = validate_dataset(root)
-        report['source_stage'] = json.loads((root / 'RUN.json').read_text())['source_stage']
-        for shard in shard_directories(root):
-            for name in DATA_FILES:
-                link(shard / name, args.output / 'data' / part / shard.name / name, args.copy)
-        reports[part] = report
-        print(f"{part}: {report['unique_transitions']:,} transitions, {report['committed_shards']} shards")
+    for given in args.dataset:
+        parts = pool_parts(given)
+        for root in parts:
+            run = root.parent.name if root.name in ('dataset', 'transitions') else root.name
+            # pool parts are exported flat as <pool>-part-XX so every shard sits at data/<part>/shard-*
+            part = f'{given.name}-{run}' if len(parts) > 1 else run
+            if part in reports:
+                parser.error(f'Duplicate part name {part}; pass distinct run directories')
+            report = dict(part_report(root, args.revalidate))
+            report['source_stage'] = json.loads((root / 'RUN.json').read_text())['source_stage']
+            for shard in shard_directories(root):
+                for name in DATA_FILES:
+                    link(shard / name, args.output / 'data' / part / shard.name / name, args.copy)
+            reports[part] = report
+            print(f"{part}: {report['unique_transitions']:,} transitions, {report['committed_shards']} shards")
     (args.output / 'README.md').write_text(card(args.name, reports), encoding='utf-8')
     (args.output / 'load_kcity.py').write_text(READER, encoding='utf-8')
     summary = {part: {k: r[k] for k in ['data_id', 'unique_transitions', 'committed_shards', 'split_counts',

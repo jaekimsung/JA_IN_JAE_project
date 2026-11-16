@@ -1,7 +1,7 @@
 """PPO training: B2 (fresh) or B3 (initialized from the same-seed BC best actor).
 
-    python train_ppo.py --method B2 --seed 11 --output runs/B2_seed11
-    python train_ppo.py --method B3 --seed 11 --bc-run runs/bc_seed11 --output runs/B3_seed11
+    python runner/train_ppo.py --method B2 --seed 11 --output runs/B2_seed11
+    python runner/train_ppo.py --method B3 --seed 11 --bc-run runs/bc_seed11 --output runs/B3_seed11
 
 Trains exactly the experiment budget (1M transitions), evaluates the dev panel every 50k,
 and records every transition in the dataset format under <output>/transitions.

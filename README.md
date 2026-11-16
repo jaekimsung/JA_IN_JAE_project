@@ -77,10 +77,10 @@ python runner/view_kcity.py --netedit
 `runner/`의 실행 파일입니다. 강의 권장 구분(Environment / Training / Evaluation / Data Collection)을 따릅니다. 실험 설정(예산·seed·PPO/BC 하이퍼파라미터·평가 패널)은 [configs/kcity/experiment.json](configs/kcity/experiment.json) 하나에 있습니다. 모든 장기 실행은 `<output>/STOP` 파일로 안전하게 멈추고, 같은 명령에 `--resume`을 붙여 이어갑니다.
 
 ```bash
-# 1) 전문가(B0) 데이터 수집: 최소 1M 전이, 마지막 Episode까지 마무리
-python runner/collect.py --output runs/expert
+# 1) 전문가(B0) 데이터 수집: 최소 1M 전이, 워커 N개 병렬 (각자 마지막 Episode까지 마무리)
+python runner/collect.py --output runs/expert --workers 8
 # 2) BC: 성공 Episode에서 train 200k / val 50k view 고정 → seed별 학습(B1)
-python runner/train_bc.py views --pool runs/expert/dataset --output runs/bc_views
+python runner/train_bc.py views --pool runs/expert --output runs/bc_views
 python runner/train_bc.py train --views runs/bc_views --seed 11 --output runs/bc_seed11
 # 3) PPO 1M: B2(새로 시작) / B3(같은 seed BC actor로 초기화), 50k마다 dev 평가
 python runner/train_ppo.py --method B2 --seed 11 --output runs/B2_seed11
@@ -89,7 +89,7 @@ python runner/train_ppo.py --method B3 --seed 11 --bc-run runs/bc_seed11 --outpu
 python runner/evaluate.py --policy runs/B3_seed11/transitions/checkpoints/<bundle> --panel final --output runs/eval/B3_seed11
 # 5) 주행 영상(30초 이상, mp4) · Hugging Face용 데이터 폴더(업로드는 직접)
 python runner/record_video.py --policy <bundle 또는 expert> --scenario C --video --once --output runs/video/C
-python runner/export_hf.py --dataset runs/expert/dataset --dataset runs/B3_seed11/transitions --output runs/hf_export
+python runner/export_hf.py --dataset runs/expert --dataset runs/B3_seed11/transitions --output runs/hf_export
 ```
 
 자세한 설명은 [실행 안내](docs/guides/KCITY_MAIN_EXECUTION.md)를 봅니다.
@@ -101,7 +101,7 @@ python runner/export_hf.py --dataset runs/expert/dataset --dataset runs/B3_seed1
 ├── env/          # 실행환경: Gym 환경(env)·73D 관측(observation)·경로(route)·시나리오/계약(scenarios, config)·SUMO 헬퍼(common)
 ├── policy/       # 정책·알고리즘: 정책망(networks, policy)·PPO(ppo)·BC 학습기(bc)·버퍼/GAE(buffer)·규칙 전문가 B0(rule_expert)·checkpoint
 ├── training/     # 학습 코드: BC run·view(bc)·PPO run·dev 곡선(ppo)·실험 설정(experiment)·실행 폴더/STOP(runs)
-├── data/         # 데이터: 전문가 수집·사례 계획(collector)·shard 저장/검증(dataset, storage)·PPO 전이 기록(online)
+├── data/         # 데이터: 전문가 수집·사례 계획(collector)·병렬 수집 pool(pool)·shard 저장/검증(dataset, storage)·PPO 전이 기록(online)
 ├── evaluation/   # 평가: Episode 지표(metrics)·사례 패널 평가(evaluate)
 ├── runner/       # 실행: collect · train_bc · train_ppo · evaluate · record_video · export_hf · view_kcity
 ├── configs/kcity/  # experiment.json(실험 설정), v1/(환경 계약), panels/(dev·final 평가 사례)
@@ -111,7 +111,7 @@ python runner/export_hf.py --dataset runs/expert/dataset --dataset runs/B3_seed1
 └── docs/           # 문서 색인: docs/README.md (research·specs·guides·course)
 ```
 
-의존 방향은 `env ← policy ← training → runner`, `data → evaluation`입니다. 어느 패키지도 import만으로 SUMO를 시작하지 않습니다.
+패키지는 아래 순서로만 import합니다(위쪽 패키지는 아래쪽을 모름). `env`는 다른 패키지를 쓰지 않고, `evaluation`·`policy`는 `env`를, `data`는 `env`·`evaluation`·`policy`(규칙 전문가)를, `training`은 `env`·`policy`·`data`·`evaluation`을, `runner`는 전부를 사용합니다. 모듈을 import하는 것만으로는 SUMO가 실행되지 않으며, SUMO는 `SumoKCityEnv.reset()`을 호출할 때 시작됩니다.
 
 ```bash
 # 회귀 검사 (검증 환경: Linux, SUMO 1.28.0)

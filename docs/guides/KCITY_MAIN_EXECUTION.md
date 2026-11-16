@@ -12,11 +12,11 @@
 export PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1
 RUNS=/home/heven/kcity_research_runs/KC-MAIN-v1
 
-# 1. 전문가(B0) pool: 최소 1M 전이를 채운 뒤 현재 Episode를 끝낸다.
-python -B runner/collect.py --output "$RUNS/expert"
+# 1. 전문가(B0) pool: 워커 N개가 사례를 나눠 최소 1M 전이를 채운다 (nproc으로 코어 확인 후 N 결정).
+python -B runner/collect.py --output "$RUNS/expert" --workers 8
 
 # 2. 공통 BC view 고정 → BC 3 seed (seed11 예시; 22/33은 output만 바꿔 반복)
-python -B runner/train_bc.py views --pool "$RUNS/expert/dataset" --output "$RUNS/bc_views"
+python -B runner/train_bc.py views --pool "$RUNS/expert" --workers 8 --output "$RUNS/bc_views"
 python -B runner/train_bc.py train --views "$RUNS/bc_views" --seed 11 --output "$RUNS/bc_seed11"
 
 # 3. PPO: B2/B3 × seed마다 정확히 1M
@@ -28,12 +28,27 @@ python -B runner/evaluate.py --policy <COMPLETE.json의 checkpoint> --panel fina
 
 # 5. 영상과 Hugging Face 폴더 (업로드는 직접)
 python -B runner/record_video.py --policy <bundle 또는 expert> --scenario C --video --once --output "$RUNS/video/B3_C"
-python -B runner/export_hf.py --dataset "$RUNS/expert/dataset" --dataset "$RUNS/B3_seed11/transitions" --output "$RUNS/hf_export"
+python -B runner/export_hf.py --dataset "$RUNS/expert" --dataset "$RUNS/B3_seed11/transitions" --output "$RUNS/hf_export"
 ```
 
 작은 확인 실행은 `collect.py --target 2000`, `evaluate.py --limit 3`처럼 규모를 줄인다. `evaluate.py`의 `--policy`는 `expert` 또는 learner bundle 폴더(`metadata.json`·`training.pt`·`SHA256.json`)다.
 
 학습 seed11/22/33은 정책 초기화·행동/미니배치 난수이며 환경 seed와 분리된다. 모든 방법의 훈련 사례 순서는 공통 A/A/A/B/B/B/C/C/C/C이다. 사례 길이에 따라 같은 전이에서 소비한 사례 수는 달라질 수 있다. main case index는 0부터이며 pilot의 1,000,000번대·운영 검증의 3,000,000번대 자료를 이월하지 않는다.
+
+## 병렬 수집
+
+`runner/collect.py --workers N`은 사례 계획을 **10개 사례 주기(A/A/A/B/B/B/C/C/C/C) 단위로 round robin** 분할해 워커 N개에 나눈다. 모든 워커가 같은 3:3:4 시나리오 구성을 갖고, 각 사례는 순차 계획과 같은 교통 seed·train/val split을 유지한다. 워커마다 자기 SUMO·`ShardWriter`·재개 상태를 `<pool>/part-XX/`에 두고 `ceil(target/N)` 전이를 채운 뒤 현재 Episode를 마친다(합계는 목표를 조금 넘는다). 각 워커는 끝날 때 자기 part를 검증해 `QUALITY.json`을 남기고, coordinator가 모든 part가 끝나면 사례·Episode가 겹치지 않는지 확인해 `POOL.json`(합계·`pool_id`)을 쓴다.
+
+```bash
+python -B runner/collect.py --output "$RUNS/expert" --workers 8            # 진행률은 30초마다, 로그는 <pool>/logs/
+touch "$RUNS/expert/STOP"                                                  # 모든 워커가 저장 후 종료
+rm "$RUNS/expert/STOP"; python -B runner/collect.py --output "$RUNS/expert" --workers 8 --resume
+# 여러 서버: 서버마다 part 하나씩 실행 → part-XX/를 한 폴더에 모은 뒤
+python -B runner/collect.py --output "$RUNS/expert" --part 3 --parts 8
+python -B runner/collect.py --output "$RUNS/expert" --finalize
+```
+
+BC view·HF 내보내기는 pool 폴더를 그대로 받는다. part 순서와 shard 순서가 고정되어 있어 view 추출은 재현된다. 워커가 남긴 검증 보고서는 `RELEASE.json`의 data_id가 같을 때만 재사용하며, `--revalidate`로 전체를 다시 검증할 수 있다. 워커 수는 재개할 때 바꾸지 않는다(사례 분할이 달라진다). 워커 하나는 Python·SUMO 프로세스 하나씩, 대략 CPU 1~1.5코어를 쓴다.
 
 ## 중단과 재개
 

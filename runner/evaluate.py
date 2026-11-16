@@ -1,7 +1,7 @@
 """Deterministic evaluation on the fixed dev/final case panels.
 
-    python evaluate.py --policy expert --panel dev --output runs/eval/expert_dev
-    python evaluate.py --policy runs/B3_seed11/transitions/checkpoints/T001000000-... --panel final \
+    python runner/evaluate.py --policy expert --panel dev --output runs/eval/expert_dev
+    python runner/evaluate.py --policy runs/B3_seed11/transitions/checkpoints/T001000000-... --panel final \
         --demand 1.0 1.5 2.0 --output runs/eval/B3_seed11_final
 
 --policy is `expert` or a BC/PPO learner bundle directory (contains metadata.json/training.pt).

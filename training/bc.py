@@ -10,7 +10,8 @@ import numpy as np
 import torch
 
 from training.experiment import experiment_sha256, run_metadata, training_config
-from data.dataset import atomic_json, shard_directories, validate_dataset
+from data.dataset import atomic_json, shard_directories
+from data.pool import pool_data_id, pool_reports
 from data.storage import verify_bundle
 from env.config import digest, file_sha256
 from training.runs import Owner, now, read, require, stopped
@@ -18,14 +19,19 @@ from policy.bc import KCityBC
 from policy.checkpoint import read_bundle
 
 
-def build_views(pool,output,spec):
+def build_views(pool,output,spec,*,workers=1,revalidate=False):
+    """Fixed BC train/val views from successful Episodes of an expert pool (one dataset or parallel parts)."""
     output = Path(output)
     require(not output.exists(),'New immutable BC view directory required')
-    config = read(Path(pool)/'RUN.json')
-    report = validate_dataset(pool)
-    require(config['source_stage']=='expert_pool' and config['eligible_for_research_training'], 'Not a new main expert pool')
+    parts,reports = pool_reports(pool,workers=workers,revalidate=revalidate)
+    for part in parts:
+        config = read(part/'RUN.json')
+        require(config['source_stage']=='expert_pool' and config['eligible_for_research_training'], 'Not a new main expert pool: '+str(part))
+        require(read(part/'RELEASE.json')['eligible_for_research_training'],'Pool release not eligible: '+str(part))
+    report = dict(unique_transitions=sum(r['unique_transitions'] for r in reports),
+                  episodes=[e for r in reports for e in r['episodes']])
     require(report['unique_transitions']>=spec['budgets']['expert_valid_transitions_min'],'Main pool budget not met')
-    require(read(Path(pool)/'RELEASE.json')['eligible_for_research_training'],'Pool release not eligible')
+    shards = [folder for part in parts for folder in shard_directories(part)]
     rng = np.random.default_rng(20261115)
     arrays = {}
     for split,size in [('expert_train',spec['bc']['train_view_rows']),('expert_val',spec['bc']['validation_view_rows'])]:
@@ -37,7 +43,7 @@ def build_views(pool,output,spec):
         uids = [e['episode_uid'] for e in episodes]
         chunks = {k:[] for k in ['observation','action_target','action_mask','transition_uid']}
         cursor = 0
-        for folder in shard_directories(pool):
+        for folder in shards:
             with np.load(folder/'numeric.npz',allow_pickle=False) as a:
                 eligible = np.flatnonzero((a['data_split']==split)&np.isin(a['episode_uid'],uids))
                 local = chosen[(chosen>=cursor)&(chosen<cursor+len(eligible))]-cursor
@@ -52,7 +58,8 @@ def build_views(pool,output,spec):
     output.mkdir(parents=True)
     for split,data in arrays.items():
         np.savez_compressed(output/(split+'.npz'),**data)
-    body = dict(schema='KC-MAIN-BC-VIEWS-v1',pool=str(Path(pool).resolve()),data_id=report['data_id'],
+    body = dict(schema='KC-MAIN-BC-VIEWS-v1',pool=str(Path(pool).resolve()),data_id=pool_data_id(pool),
+                parts=[str(part.resolve()) for part in parts],
                 experiment_sha256=experiment_sha256(spec),rng_seed=20261115,
                 files={p.name:file_sha256(p) for p in output.glob('*.npz')})
     atomic_json(output/'MANIFEST.json',dict(body,view_id=digest(body)))
@@ -63,7 +70,7 @@ def read_views(folder):
     folder = Path(folder)
     manifest = read(folder/'MANIFEST.json')
     require(manifest['view_id']==digest({k:v for k,v in manifest.items() if k!='view_id'}),'BC view identity mismatch')
-    require(read(Path(manifest['pool'])/'RELEASE.json')['data_id']==manifest['data_id'],'Pool changed after BC view selection')
+    require(pool_data_id(manifest['pool'])==manifest['data_id'],'Pool changed after BC view selection')
     data = {}
     for name,checksum in manifest['files'].items():
         require(file_sha256(folder/name)==checksum,'BC view checksum mismatch')
