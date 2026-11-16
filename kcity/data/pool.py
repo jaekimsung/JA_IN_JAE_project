@@ -8,6 +8,7 @@ Layout (runner/collect.py):
 
 A plain dataset directory (with RUN.json) is also accepted as a one-part pool.
 """
+
 from collections import Counter
 from concurrent.futures import ProcessPoolExecutor
 import json
@@ -23,7 +24,9 @@ CYCLE = 10  # one A/A/A/B/B/B/C/C/C/C scenario pattern
 def partition(plan, part, parts):
     """Cases of one part: whole 10-case cycles, round robin. Every part keeps the 3:3:4 scenario mix
     and each case keeps the seeds/split it has in the sequential plan."""
-    require(type(parts) is int and parts >= 1 and type(part) is int and 0 <= part < parts, 'Invalid part/parts')
+    require(
+        type(parts) is int and parts >= 1 and type(part) is int and 0 <= part < parts, 'Invalid part/parts'
+    )
     return [r for i, r in enumerate(plan) if (i // CYCLE) % parts == part]
 
 
@@ -87,13 +90,25 @@ def write_pool(root, *, workers=1, revalidate=False):
     for r in reports:
         splits.update(r['split_counts'])
         events.update(r['event_counts'])
-    body = dict(schema='KC-POOL-v1', pool_id=pool_data_id(root), created_at=now(),
-                unique_transitions=sum(r['unique_transitions'] for r in reports),
-                completed_episodes=sum(len(r['episodes']) for r in reports),
-                split_counts=dict(splits), event_counts=dict(events),
-                parts=[dict(path=p.relative_to(root).as_posix() if p != root else '.', run_uid=json.loads((p / 'RUN.json').read_text())['run_uid'],
-                            data_id=r['data_id'], unique_transitions=r['unique_transitions'],
-                            completed_episodes=len(r['episodes']), split_counts=r['split_counts'])
-                       for p, r in zip(parts, reports)])
+    body = dict(
+        schema='KC-POOL-v1',
+        pool_id=pool_data_id(root),
+        created_at=now(),
+        unique_transitions=sum(r['unique_transitions'] for r in reports),
+        completed_episodes=sum(len(r['episodes']) for r in reports),
+        split_counts=dict(splits),
+        event_counts=dict(events),
+        parts=[
+            dict(
+                path=p.relative_to(root).as_posix() if p != root else '.',
+                run_uid=json.loads((p / 'RUN.json').read_text())['run_uid'],
+                data_id=r['data_id'],
+                unique_transitions=r['unique_transitions'],
+                completed_episodes=len(r['episodes']),
+                split_counts=r['split_counts'],
+            )
+            for p, r in zip(parts, reports)
+        ],
+    )
     atomic_json(root / 'POOL.json', body)
     return body

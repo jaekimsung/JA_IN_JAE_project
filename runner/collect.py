@@ -27,7 +27,7 @@ import sys
 import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # 저장소 루트
-from kcity.data.collector import ExpertCollector, case_plan, dataset_config
+from kcity.data.collector import PolicyCollector, case_plan, dataset_config
 from kcity.data.dataset import ShardWriter, atomic_json, validate_dataset
 from kcity.data.pool import part_dir, partition, write_pool
 from kcity.env.config import file_sha256
@@ -79,7 +79,7 @@ def collect_part(args, spec, target):
         atomic_json(root / 'STATUS.json', dict(phase='COLLECTING', transitions=writer.count, target=target,
                                                part=args.part, parts=args.parts, updated_at=now()))
         stop = lambda: stopped(root) or stopped(args.output)
-        result = ExpertCollector(env, actor, writer).collect(target, stop)
+        result = PolicyCollector(env, actor, writer).collect(target, stop)
         quality = validate_dataset(writer.root)
         atomic_json(root / 'QUALITY.json', quality)
         atomic_json(root / 'STATUS.json', dict(result, part=args.part, parts=args.parts,

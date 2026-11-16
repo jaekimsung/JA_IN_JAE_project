@@ -187,7 +187,7 @@ def run_ppo(root,method,seed,spec,device,bc_root=None,resume=False):
                               experiment_sha256=cfg['experiment_sha256'])
         dcfg['learner_config'] = cfg
         writer = ShardWriter(root/'transitions',dcfg,resume=resume,shard_rows=spec['ppo']['n_steps'])
-        recorder = OnlineRecorder(runner,writer,method,seed)
+        recorder = OnlineRecorder(runner,writer)
         runner.recorder = recorder
         if runner.obs is None:
             if (root/'initial_policy').exists():

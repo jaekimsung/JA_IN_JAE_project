@@ -14,7 +14,7 @@ ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from kcity.policy.rule_expert import KCityRuleExpert
 from kcity.env.env import SumoKCityEnv
 from kcity.policy.policy import KCityPolicy
-from kcity.data.collector import build_config,ExpertCollector
+from kcity.data.collector import PolicyCollector,dataset_config,resolve_plan
 from kcity.data.dataset import (ShardWriter,validate_row,validate_pair,make_transition,validate_dataset,
     create_index,index_row,atomic_json,digest,file_sha256)
 from kcity.evaluation.metrics import EpisodeMetrics
@@ -63,8 +63,8 @@ class DataTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         e=SumoKCityEnv(background=True);expert=KCityRuleExpert()
-        cls.config=build_config(e,expert,'KC05-unit-actual-A',[
-            dict(scenario_id='A',namespace='expert_train',case_index=0,data_split='expert_train')])
+        cls.config=dataset_config(e,'KC05-unit-actual-A',resolve_plan(e,[
+            dict(scenario_id='A',namespace='expert_train',case_index=0,data_split='expert_train')]))
         case=cls.config['plan'][0]['case'];cls.rows=[]
         try:
             obs,reset=e.reset(options={k:case[k] for k in ['namespace','scenario_id','case_index','demand_multiplier']})
@@ -239,16 +239,16 @@ class CollectorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp)/'data';expert=KCityRuleExpert();e=self.env()
             plan=[dict(scenario_id='A',namespace='expert_train',case_index=i,data_split='expert_train') for i in range(3)]
-            config=build_config(e,expert,'collector-resume-unit',plan);w=ShardWriter(root,config,shard_rows=2)
+            config=dataset_config(e,'collector-resume-unit',resolve_plan(e,plan));w=ShardWriter(root,config,shard_rows=2)
             try:
                 # STOP after 3 rows: the active Episode is checkpointed mid-way and replayed on resume.
-                stopped=ExpertCollector(e,expert,w).collect(6,lambda:w.count+w.pending>=3)
+                stopped=PolicyCollector(e,expert,w).collect(6,lambda:w.count+w.pending>=3)
                 self.assertEqual(stopped['phase'],'STOPPED')
             finally:w.close();e.close()
             committed=validate_dataset(root)['unique_transitions'];self.assertEqual(committed,3)
             e=self.env();w=ShardWriter(root,config,resume=True,shard_rows=2)
             try:
-                result=ExpertCollector(e,expert,w).collect(6)
+                result=PolicyCollector(e,expert,w).collect(6)
                 self.assertEqual(result['phase'],'COMPLETE');self.assertEqual(result['transitions'],6)
             finally:w.close()
             report=validate_dataset(root);self.assertEqual(len(report['episodes']),3)

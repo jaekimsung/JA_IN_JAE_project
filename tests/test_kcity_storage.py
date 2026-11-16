@@ -11,7 +11,7 @@ from kcity.env.config import file_sha256
 from kcity.env.env import SumoKCityEnv
 from kcity.policy.rule_expert import KCityRuleExpert
 from kcity.data.dataset import ShardWriter,read_shard,validate_dataset,atomic_json
-from kcity.data.collector import ExpertCollector,dataset_config,case_plan
+from kcity.data.collector import PolicyCollector,dataset_config,case_plan
 from kcity.data.storage import (NEXT_CODEC,CHECKPOINT_MODE,encode_rows,decode_rows,
     save_external,sync_retention,verify_retention,checkpoint_from_shard)
 
@@ -100,7 +100,7 @@ class ActualDataStorageTests(unittest.TestCase):
         try:
             cfg=dataset_config(env,'crash-storage-fixture',case_plan(env.contract,'expert',10,3000000),'debug')
             writer=ShardWriter(root/'fixture',cfg,shard_rows=512)
-            ExpertCollector(env,KCityRuleExpert(),writer).collect(1)
+            PolicyCollector(env,KCityRuleExpert(),writer).collect(1)
             return cfg,[row for folder in writer.folders for row in read_shard(folder)]
         finally:
             if writer is not None:writer.close()
@@ -157,7 +157,7 @@ class ActualDataStorageTests(unittest.TestCase):
                 def capture(row):
                     full.append(deepcopy(row));append(row)
                 with patch.object(writer,'append',side_effect=capture):
-                    ExpertCollector(env,KCityRuleExpert(),writer).collect(1)
+                    PolicyCollector(env,KCityRuleExpert(),writer).collect(1)
                 restored=[r for folder in writer.folders for r in read_shard(folder)]
                 self.assertEqual(full,restored)
                 self.assertTrue(validate_dataset(writer.root)['passed'])

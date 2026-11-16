@@ -8,7 +8,7 @@ from unittest.mock import patch
 import torch
 
 from kcity.training.experiment import load_experiment
-from kcity.data.collector import ExpertCollector,case_plan,dataset_config
+from kcity.data.collector import PolicyCollector,case_plan,dataset_config
 from kcity.data.online import OnlineRecorder
 from kcity.training.runs import Owner,read
 from kcity.training.bc import run_bc
@@ -65,7 +65,7 @@ class MainContractTests(unittest.TestCase):
                 native.case_cursor=record.case_cursor=3000000
                 cfg=dataset_config(r,'recorded-fixture',case_plan(r.contract,'probe',20,3000000),'debug','B2',22)
                 writer=ShardWriter(Path(d)/'data',cfg,shard_rows=2048)
-                recorder=OnlineRecorder(record,writer,'B2',22)
+                recorder=OnlineRecorder(record,writer)
                 record.recorder=recorder
                 left=native.collect(32)
                 right=record.collect(32)
@@ -92,11 +92,11 @@ class MainContractTests(unittest.TestCase):
             try:
                 cfg=dataset_config(env,'finish-episode-fixture',case_plan(env.contract,'expert',10,3000000),'debug')
                 writer=ShardWriter(Path(d)/'data',cfg,shard_rows=512)
-                collector=ExpertCollector(env,KCityRuleExpert(),writer)
+                collector=PolicyCollector(env,KCityRuleExpert(),writer)
                 result=collector.collect(1)
                 self.assertEqual(result['phase'],'COMPLETE')
                 self.assertGreater(result['transitions'],1)
-                self.assertIsNone(collector.metrics)
+                self.assertFalse(collector.recorder.active)
                 self.assertEqual(len(validate_dataset(writer.root)['episodes']),1)
             finally:
                 if writer is not None:writer.close()

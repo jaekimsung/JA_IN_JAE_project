@@ -36,7 +36,7 @@ POMDP 전이(transition) 단위로 저장합니다. 전이 하나에는 정책�
 ```text
 <pool>/POOL.json                       part 목록·합계·pool_id
 <pool>/part-XX/dataset/
-  RUN.json                             수집 설정(환경 계약, 사례 계획, 전문가 설정, 맵 파일 SHA, git commit)
+  RUN.json                             수집 설정(환경 계약, 사례 계획(압축: 사례 키+case_uid, 읽을 때 재생성·검증), 정책 정보, 맵 파일 SHA, git commit)
   RELEASE.json                         확정된 shard 목록, 고유 전이 수, data_id
   shards/shard-XXXXXX/
     transitions.jsonl.gz               전이 원본 (기준 데이터)

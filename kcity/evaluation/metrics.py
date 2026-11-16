@@ -32,6 +32,19 @@ class EpisodeMetrics:
         self.near_time = self.near_weighted = self.near_present = 0.0
         self.near_max = None
 
+    def state(self):
+        """JSON-able snapshot for resuming an Episode that spans a checkpoint."""
+        return deepcopy(self.__dict__)
+
+    @classmethod
+    def from_state(cls, state):
+        metrics = cls.__new__(cls)
+        metrics.__dict__.update(deepcopy(state))
+        metrics.commands = Counter({int(k): v for k, v in metrics.commands.items()})  # JSON keys are strings
+        metrics.rejections = Counter(metrics.rejections)
+        metrics._ensure_exposure_fields()
+        return metrics
+
     def _ensure_exposure_fields(self):
         # Metrics restored from a checkpoint written before exposure tracking existed.
         if not hasattr(self, 'near_time'):
