@@ -1,0 +1,464 @@
+{
+  "schema_id": "KC-LAYOUT-MIGRATION-v1",
+  "revision": 2,
+  "previous_git_revision": "a5a829c07f20ea334ea3a608b7be4ee927a4e402",
+  "purpose": "기능별 디렉터리 재구성. 과학 설정·환경·보상·정책·학습 수식·예산·사례 패널 불변.",
+  "files": {
+    "algorithms/__init__.py": "rl/__init__.py",
+    "algorithms/bc.py": "rl/bc.py",
+    "algorithms/ppo.py": "rl/ppo.py",
+    "utils/buffer.py": "rl/buffer.py",
+    "utils/networks.py": "rl/networks.py",
+    "utils/evaluator.py": "rl/evaluator.py",
+    "utils/logger.py": "rl/logger.py",
+    "utils/__init__.py": "kcity/__init__.py",
+    "scripts/kcity/common.py": "kcity/common.py",
+    "env/kcity_config.py": "kcity/env/config.py",
+    "env/kcity_env.py": "kcity/env/env.py",
+    "env/kcity_observation.py": "kcity/env/observation.py",
+    "env/kcity_route.py": "kcity/env/route.py",
+    "scripts/kcity/scenarios.py": "kcity/env/scenarios.py",
+    "experts/__init__.py": "kcity/policy/__init__.py",
+    "algorithms/kcity_policy.py": "kcity/policy/policy.py",
+    "experts/kcity_rule_expert.py": "kcity/policy/rule_expert.py",
+    "algorithms/kcity_training.py": "kcity/training.py",
+    "utils/kcity_collector.py": "kcity/data/collector.py",
+    "utils/kcity_data.py": "kcity/data/dataset.py",
+    "utils/kcity_storage.py": "kcity/data/storage.py",
+    "utils/kcity_evaluator.py": "kcity/evaluator.py",
+    "utils/kcity_main.py": "kcity/experiment.py",
+    "scripts/kcity/__init__.py": "tools/__init__.py",
+    "scripts/kcity/requirements.txt": "tools/map/requirements.txt",
+    "scripts/kcity/audit_sources.py": "tools/map/audit_sources.py",
+    "scripts/kcity/build.py": "tools/map/build.py",
+    "scripts/kcity/lane_usage.py": "tools/map/lane_usage.py",
+    "scripts/kcity/live_demo.py": "tools/map/live_demo.py",
+    "scripts/kcity/prune_lanes.py": "tools/map/prune_lanes.py",
+    "scripts/kcity/render_signals.py": "tools/map/render_signals.py",
+    "scripts/kcity/scenery.py": "tools/map/scenery.py",
+    "scripts/kcity/signals.py": "tools/map/signals.py",
+    "scripts/kcity/validate.py": "tools/map/validate.py",
+    "scripts/kcity/validate_signals.py": "tools/map/validate_signals.py",
+    "scripts/kcity/main_experiment.py": "tools/main/main_experiment.py",
+    "scripts/kcity/preflight_main.py": "tools/main/preflight_main.py",
+    "scripts/kcity/check_main_operations.py": "tools/main/check_main_operations.py",
+    "scripts/kcity/view_policy.py": "tools/main/view_policy.py",
+    "scripts/kcity/check_env.py": "tools/checks/check_env.py",
+    "scripts/kcity/check_learning.py": "tools/checks/check_learning.py",
+    "scripts/kcity/check_policy.py": "tools/checks/check_policy.py",
+    "scripts/kcity/collect_expert.py": "tools/checks/collect_expert.py",
+    "scripts/kcity/validate_data.py": "tools/checks/validate_data.py",
+    "scripts/kcity/pilot.py": "tools/checks/pilot.py",
+    "scripts/kcity/pilot_seeds.py": "tools/checks/pilot_seeds.py",
+    "scripts/kcity/diagnose_pilot.py": "tools/checks/diagnose_pilot.py",
+    "scripts/research/finalize_kcity_settings.py": "tools/freeze/finalize_kcity_settings.py",
+    "env/__init__.py": "legacy/highway/env/__init__.py",
+    "env/mdp_config.py": "legacy/highway/env/mdp_config.py",
+    "env/road_builder.py": "legacy/highway/env/road_builder.py",
+    "env/road_config.py": "legacy/highway/env/road_config.py",
+    "env/sumo_env.py": "legacy/highway/env/sumo_env.py",
+    "train.py": "legacy/highway/train.py",
+    "test.py": "legacy/highway/test.py",
+    "train_bc.py": "legacy/highway/train_bc.py",
+    "collect_pomdp_data.py": "legacy/highway/collect_pomdp_data.py",
+    "view_road.py": "legacy/highway/view_road.py",
+    "docs/RESEARCH_STATUS.md": "docs/research/RESEARCH_STATUS.md",
+    "docs/RESEARCH_PLAN.md": "docs/research/RESEARCH_PLAN.md",
+    "docs/RESEARCH_HISTORY.md": "docs/research/RESEARCH_HISTORY.md",
+    "docs/EXPERIMENTS.md": "docs/research/EXPERIMENTS.md",
+    "docs/RESULTS_AND_CONSULTING.md": "docs/research/RESULTS_AND_CONSULTING.md",
+    "docs/DATA_COLLECTION_SPEC.md": "docs/specs/DATA_COLLECTION_SPEC.md",
+    "docs/KCITY_DATA_PIPELINE.md": "docs/specs/KCITY_DATA_PIPELINE.md",
+    "docs/KCITY_EVALUATION.md": "docs/specs/KCITY_EVALUATION.md",
+    "docs/KCITY_POLICY_AND_RESUME.md": "docs/specs/KCITY_POLICY_AND_RESUME.md",
+    "docs/EXECUTION_PROTOCOL.md": "docs/specs/EXECUTION_PROTOCOL.md",
+    "docs/KCITY_ENV.md": "docs/guides/KCITY_ENV.md",
+    "docs/KCITY_MAIN_EXECUTION.md": "docs/guides/KCITY_MAIN_EXECUTION.md",
+    "docs/KCITY_PILOT.md": "docs/guides/KCITY_PILOT.md"
+  },
+  "dirs": {
+    "env/sumo/": "legacy/highway/env/sumo/",
+    "data/": "legacy/highway/data/",
+    "results/": "legacy/highway/results/",
+    "project_materials/": "docs/course/",
+    "prompts/": "docs/prompts/",
+    "maps/kcity/reports/signals_validation_v1/": "maps/kcity/audit/signals_validation_v1/",
+    "maps/kcity/reports/signals_validation_v2/": "maps/kcity/audit/signals_validation_v2/"
+  },
+  "deleted": [
+    "scripts/__init__.py",
+    "MUJOCO_LOG.TXT"
+  ],
+  "modules": {
+    "algorithms.bc": "rl.bc",
+    "algorithms.ppo": "rl.ppo",
+    "utils.buffer": "rl.buffer",
+    "utils.networks": "rl.networks",
+    "utils.evaluator": "rl.evaluator",
+    "utils.logger": "rl.logger",
+    "scripts.kcity.common": "kcity.common",
+    "env.kcity_config": "kcity.env.config",
+    "env.kcity_env": "kcity.env.env",
+    "env.kcity_observation": "kcity.env.observation",
+    "env.kcity_route": "kcity.env.route",
+    "scripts.kcity.scenarios": "kcity.env.scenarios",
+    "algorithms.kcity_policy": "kcity.policy.policy",
+    "experts.kcity_rule_expert": "kcity.policy.rule_expert",
+    "algorithms.kcity_training": "kcity.training",
+    "utils.kcity_collector": "kcity.data.collector",
+    "utils.kcity_data": "kcity.data.dataset",
+    "utils.kcity_storage": "kcity.data.storage",
+    "utils.kcity_evaluator": "kcity.evaluator",
+    "utils.kcity_main": "kcity.experiment",
+    "scripts.kcity.audit_sources": "tools.map.audit_sources",
+    "scripts.kcity.build": "tools.map.build",
+    "scripts.kcity.lane_usage": "tools.map.lane_usage",
+    "scripts.kcity.live_demo": "tools.map.live_demo",
+    "scripts.kcity.prune_lanes": "tools.map.prune_lanes",
+    "scripts.kcity.render_signals": "tools.map.render_signals",
+    "scripts.kcity.scenery": "tools.map.scenery",
+    "scripts.kcity.signals": "tools.map.signals",
+    "scripts.kcity.validate": "tools.map.validate",
+    "scripts.kcity.validate_signals": "tools.map.validate_signals",
+    "scripts.kcity.main_experiment": "tools.main.main_experiment",
+    "scripts.kcity.preflight_main": "tools.main.preflight_main",
+    "scripts.kcity.check_main_operations": "tools.main.check_main_operations",
+    "scripts.kcity.view_policy": "tools.main.view_policy",
+    "scripts.kcity.check_env": "tools.checks.check_env",
+    "scripts.kcity.check_learning": "tools.checks.check_learning",
+    "scripts.kcity.check_policy": "tools.checks.check_policy",
+    "scripts.kcity.collect_expert": "tools.checks.collect_expert",
+    "scripts.kcity.validate_data": "tools.checks.validate_data",
+    "scripts.kcity.pilot": "tools.checks.pilot",
+    "scripts.kcity.pilot_seeds": "tools.checks.pilot_seeds",
+    "scripts.kcity.diagnose_pilot": "tools.checks.diagnose_pilot",
+    "scripts.research.finalize_kcity_settings": "tools.freeze.finalize_kcity_settings"
+  },
+  "renamed_protocol_fields": {
+    ".case_generation.source": {
+      "before": "env/kcity_config.py:case_seeds/make_case/traffic_requests",
+      "after": "kcity/env/config.py:case_seeds/make_case/traffic_requests"
+    }
+  },
+  "pinned_sources": {
+    "configs/kcity/v1/learning.json": {
+      "previous_path": "configs/kcity/v1/learning.json",
+      "previous_sha256": "5723c2566dc868252ce9758b5a6a1a149de1bd70e35e086747e18c05b45bf52d",
+      "sha256": "5723c2566dc868252ce9758b5a6a1a149de1bd70e35e086747e18c05b45bf52d",
+      "content_changed": false
+    },
+    "configs/kcity/v1/protocol.json": {
+      "previous_path": "configs/kcity/v1/protocol.json",
+      "previous_sha256": "89bb929087afad03e7fd4b6aa006931387b8b56223db559b55c88f5065d428cf",
+      "sha256": "89bb929087afad03e7fd4b6aa006931387b8b56223db559b55c88f5065d428cf",
+      "content_changed": false
+    },
+    "configs/kcity/v1/scenarios.json": {
+      "previous_path": "configs/kcity/v1/scenarios.json",
+      "previous_sha256": "bdaeb02be3847a9a8b2412076f16a1dc259a867ca8db1f7d1f035c1b8ad408e9",
+      "sha256": "bdaeb02be3847a9a8b2412076f16a1dc259a867ca8db1f7d1f035c1b8ad408e9",
+      "content_changed": false
+    },
+    "kcity/__init__.py": {
+      "previous_path": "utils/__init__.py",
+      "previous_sha256": "47451a3a85074d6d7169734290344ff2074a34164eaa5171e9b962df7e82ef49",
+      "sha256": "5ec3411ba77b32c407666648b0ae5929019dc694d692cdb3042365404115d266",
+      "content_changed": true
+    },
+    "kcity/common.py": {
+      "previous_path": "scripts/kcity/common.py",
+      "previous_sha256": "e1d6fd36ed4d0173ebb4a2859e464d359c6f459666892764f5aa3413d2d4ceaa",
+      "sha256": "7b96b1ae439d1cec891b4fd8bf84ef3cc8850c443183be61c848111320c86246",
+      "content_changed": true
+    },
+    "kcity/data/__init__.py": {
+      "previous_path": null,
+      "previous_sha256": null,
+      "sha256": "56d0e8ca129e66b4362206ff1739c5da5c370853df05041231a2bc2744bcd184",
+      "content_changed": false
+    },
+    "kcity/data/collector.py": {
+      "previous_path": "utils/kcity_collector.py",
+      "previous_sha256": "df8de6a0859c22adfb7710f0978f03881d415519d382e291b9271d296a641553",
+      "sha256": "6d2df4b7577adcce6f7b97c198b8a38636d1a252cfaccd205b64146dd4266509",
+      "content_changed": true
+    },
+    "kcity/data/dataset.py": {
+      "previous_path": "utils/kcity_data.py",
+      "previous_sha256": "fb693430bd1fb7bd40d5053ea9e9b2d88b9c46b782f7a1662f7fcf9c99a1fdfe",
+      "sha256": "17748bd81135b88955191e6bd01d05786396ff21b7d7b29f1e366569f2d739b4",
+      "content_changed": true
+    },
+    "kcity/env/__init__.py": {
+      "previous_path": null,
+      "previous_sha256": null,
+      "sha256": "f154ce146afcbaddae4594d2e9cc8cd102cdf582a7c8108ee8277699907bb876",
+      "content_changed": false
+    },
+    "kcity/env/config.py": {
+      "previous_path": "env/kcity_config.py",
+      "previous_sha256": "c6ea10544d5ad699b40743de09a5f86358488898e64d5bb0b388ae15cd350f52",
+      "sha256": "0087b38a63e9b18f84d9e7312be59b4acdb3b53d8ad4adb75311bbafa7e66105",
+      "content_changed": true
+    },
+    "kcity/env/env.py": {
+      "previous_path": "env/kcity_env.py",
+      "previous_sha256": "98e6700fb051e004ddb2e71202aa8ce4021f3a5a35051cbcd50d8c478b7fa302",
+      "sha256": "e5115951835d7bc1704334dac97767a91d2cc3cbcaba4de3adef616f4965c19d",
+      "content_changed": true
+    },
+    "kcity/env/observation.py": {
+      "previous_path": "env/kcity_observation.py",
+      "previous_sha256": "2898d287f42a46cc8676eeb2a0c1cbeb1261448fdf829e62a807ce7526c57d79",
+      "sha256": "2898d287f42a46cc8676eeb2a0c1cbeb1261448fdf829e62a807ce7526c57d79",
+      "content_changed": false
+    },
+    "kcity/env/route.py": {
+      "previous_path": "env/kcity_route.py",
+      "previous_sha256": "558eb0085c5ce12c48bdd71e9d3792e2237318a9fc5135eace6d3cecfcf507c7",
+      "sha256": "9f7e61f6bee18f44c7b90cb2e7ecd1304878009c43f7fdcda4c1ae73366fac1e",
+      "content_changed": true
+    },
+    "kcity/env/scenarios.py": {
+      "previous_path": "scripts/kcity/scenarios.py",
+      "previous_sha256": "9bf1c117e5748dad8f381d50fdff038c07b33f7c8059a6d2059e3aefef5a3dce",
+      "sha256": "0904848b30068a70b01655f9020a487c16c163a50ea4107a4eda92fb9e67e8a7",
+      "content_changed": true
+    },
+    "kcity/evaluator.py": {
+      "previous_path": "utils/kcity_evaluator.py",
+      "previous_sha256": "a2efad9a0d96bb3f1f32423946ec553cd4c297069207f5fdfd68855645074936",
+      "sha256": "215b3e8ac5c32759f9c71351490e9edfec15bd965fa14bc68bae669205a45eb6",
+      "content_changed": true
+    },
+    "kcity/policy/__init__.py": {
+      "previous_path": "experts/__init__.py",
+      "previous_sha256": "f5339ff5bcdbc235bf7565c2ca2dadeae1c547e2ff57bab8c14933d9554cea0d",
+      "sha256": "f5339ff5bcdbc235bf7565c2ca2dadeae1c547e2ff57bab8c14933d9554cea0d",
+      "content_changed": false
+    },
+    "kcity/policy/policy.py": {
+      "previous_path": "algorithms/kcity_policy.py",
+      "previous_sha256": "faabadfdf23bb45eaea59c026e747a78ba8f5f596614dc836122b30e32fd558c",
+      "sha256": "2f6576695bb22d75edde77893ce02485c2a520c278672260e1ecd52aaea44f02",
+      "content_changed": true
+    },
+    "kcity/policy/rule_expert.py": {
+      "previous_path": "experts/kcity_rule_expert.py",
+      "previous_sha256": "2a22832e1c380663fcdb95d9ec96b96a9c7da51aca0a8ce5141a24fb4f8242bf",
+      "sha256": "2a22832e1c380663fcdb95d9ec96b96a9c7da51aca0a8ce5141a24fb4f8242bf",
+      "content_changed": false
+    },
+    "kcity/training.py": {
+      "previous_path": "algorithms/kcity_training.py",
+      "previous_sha256": "1ae8fe264a43531f67f0ed67390da8a93bc497d5d9d1f5b703b02af3c5009e00",
+      "sha256": "b9bc260d4c9158d8f5ebc93a2a0d46e490f29b49b73d152286d04f39f447759f",
+      "content_changed": true
+    },
+    "legacy/highway/env/__init__.py": {
+      "previous_path": "env/__init__.py",
+      "previous_sha256": "b63ce1640d47f87ca2b3f49b4df94fcadef8a1941018472670c5fa31b70f4124",
+      "sha256": "b63ce1640d47f87ca2b3f49b4df94fcadef8a1941018472670c5fa31b70f4124",
+      "content_changed": false
+    },
+    "legacy/highway/env/mdp_config.py": {
+      "previous_path": "env/mdp_config.py",
+      "previous_sha256": "5c73def0c58466fc5dd9210e349b0688a74c802b787d331ba33e02c191d31dd8",
+      "sha256": "5c73def0c58466fc5dd9210e349b0688a74c802b787d331ba33e02c191d31dd8",
+      "content_changed": false
+    },
+    "legacy/highway/env/road_builder.py": {
+      "previous_path": "env/road_builder.py",
+      "previous_sha256": "cd2323d246271450c763d5a5812c1863b3f96657e05196acd0a687045f48f408",
+      "sha256": "cd2323d246271450c763d5a5812c1863b3f96657e05196acd0a687045f48f408",
+      "content_changed": false
+    },
+    "legacy/highway/env/road_config.py": {
+      "previous_path": "env/road_config.py",
+      "previous_sha256": "44fd8a7622b9340d0370ed87dd09001d699da78e8e6b9d97e35c4c68318e51de",
+      "sha256": "44fd8a7622b9340d0370ed87dd09001d699da78e8e6b9d97e35c4c68318e51de",
+      "content_changed": false
+    },
+    "legacy/highway/env/sumo_env.py": {
+      "previous_path": "env/sumo_env.py",
+      "previous_sha256": "4364f8a6bd80d214351a606028e3928e8b9b33ec88584dadddcdbbd297b8d808",
+      "sha256": "4364f8a6bd80d214351a606028e3928e8b9b33ec88584dadddcdbbd297b8d808",
+      "content_changed": false
+    },
+    "rl/__init__.py": {
+      "previous_path": "algorithms/__init__.py",
+      "previous_sha256": "971747a6d3cca942c283c03eaa4bc45363aa7eba7e73a426243adc9afcfd48d9",
+      "sha256": "179786a080949838dea83c1111a86bd793ea768081af802835d2c56027dbc696",
+      "content_changed": true
+    },
+    "rl/bc.py": {
+      "previous_path": "algorithms/bc.py",
+      "previous_sha256": "13a912e1521c9e9431f49b9ad708779bf4c3552802ca5291bc09525fbc891e35",
+      "sha256": "13a912e1521c9e9431f49b9ad708779bf4c3552802ca5291bc09525fbc891e35",
+      "content_changed": false
+    },
+    "rl/buffer.py": {
+      "previous_path": "utils/buffer.py",
+      "previous_sha256": "db1241638ad9c55d1213d8feaecc5159e25760338961e1135795164cbd5c272a",
+      "sha256": "db1241638ad9c55d1213d8feaecc5159e25760338961e1135795164cbd5c272a",
+      "content_changed": false
+    },
+    "rl/evaluator.py": {
+      "previous_path": "utils/evaluator.py",
+      "previous_sha256": "96b9872469e380279d0478a2da4e431058eab77b47f42b09d0c843b92b3566eb",
+      "sha256": "96b9872469e380279d0478a2da4e431058eab77b47f42b09d0c843b92b3566eb",
+      "content_changed": false
+    },
+    "rl/logger.py": {
+      "previous_path": "utils/logger.py",
+      "previous_sha256": "bb3258cf7d6198c729266814ebab80a7cdf55b5752a2a463d72dfe7b3af23d07",
+      "sha256": "bb3258cf7d6198c729266814ebab80a7cdf55b5752a2a463d72dfe7b3af23d07",
+      "content_changed": false
+    },
+    "rl/networks.py": {
+      "previous_path": "utils/networks.py",
+      "previous_sha256": "98d675ebc30b27ec9b7a86dca4ce2cc979e92de62bd0a75c5053d2823255377b",
+      "sha256": "98d675ebc30b27ec9b7a86dca4ce2cc979e92de62bd0a75c5053d2823255377b",
+      "content_changed": false
+    },
+    "rl/ppo.py": {
+      "previous_path": "algorithms/ppo.py",
+      "previous_sha256": "df9fbe04e645d5e733beffa022ffec5dd3a2079643c5ba313cd3320cde09ee3c",
+      "sha256": "135c6c35168452b6a2187b3908fc0f86288333c1653b9d09b205eb24b3310426",
+      "content_changed": true
+    },
+    "tools/__init__.py": {
+      "previous_path": "scripts/kcity/__init__.py",
+      "previous_sha256": "da5006ca808bb6a7a248ad95488174fc2dd01b9d409407a2d528e7740e72c8a4",
+      "sha256": "5c0747a05dcc3cfb3a6023d1d2e8d1eff09f17c35f7d723732ac5f7ff8a7c9e0",
+      "content_changed": true
+    },
+    "tools/checks/__init__.py": {
+      "previous_path": null,
+      "previous_sha256": null,
+      "sha256": "5463c26f1a9d5d5628e4c1214c76cc31f2ca0139df6d04965cdbf4ff680e1c99",
+      "content_changed": false
+    },
+    "tools/checks/check_env.py": {
+      "previous_path": "scripts/kcity/check_env.py",
+      "previous_sha256": "ce3647d6a3091710eeccb7ba62f4d5167b3ef33b6c8526f9cb61aab37ea81df7",
+      "sha256": "dae07326a39f2919798dfda6e9df7573d70f7500b6f54ad4112fc638b06d9e31",
+      "content_changed": true
+    },
+    "tools/checks/check_learning.py": {
+      "previous_path": "scripts/kcity/check_learning.py",
+      "previous_sha256": "958a9e7f601db30c0ef6c7d21ce65f300cbda05f228a762dbfa13bf3027f4831",
+      "sha256": "fcc3de739556a33b0496792edb6b53a338a015df69548cb5477f24f9357e6c59",
+      "content_changed": true
+    },
+    "tools/checks/check_policy.py": {
+      "previous_path": "scripts/kcity/check_policy.py",
+      "previous_sha256": "886cb50abe4be5c56b873a7378aaf6085d9b139bd8bbc24bd515ba37919de9da",
+      "sha256": "507d2db2f02c00259fe741d0023644a28e6aa765ed51e455208211f716b943cf",
+      "content_changed": true
+    },
+    "tools/checks/collect_expert.py": {
+      "previous_path": "scripts/kcity/collect_expert.py",
+      "previous_sha256": "0274bfad899a65fe0d2c0ee9337ee68756be553d1a7497fa8def036e141ec52a",
+      "sha256": "48c3e62978c35ec7ea45fdeb7e9f4bdde91f85a3ba3a2f642b90e73011070818",
+      "content_changed": true
+    },
+    "tools/checks/diagnose_pilot.py": {
+      "previous_path": "scripts/kcity/diagnose_pilot.py",
+      "previous_sha256": "8f7e4ea37e4cfd917d309e5b16b5c08cce90f78edaaa4c9d418c06265c291c0d",
+      "sha256": "862a917dd8f87383729132366eb9bedf26a3550239a9d2d39c702c10ab6e8b19",
+      "content_changed": true
+    },
+    "tools/checks/pilot.py": {
+      "previous_path": "scripts/kcity/pilot.py",
+      "previous_sha256": "167863e4f019f4d0a5609ddbb52ab0367c029b8586bc34ad10504cd3ce17b3d9",
+      "sha256": "0ed6f1d12bbf1c8da03b44c74a25199c1bdaec8f7bbe622c1e0448822369a093",
+      "content_changed": true
+    },
+    "tools/checks/pilot_seeds.py": {
+      "previous_path": "scripts/kcity/pilot_seeds.py",
+      "previous_sha256": "56f2eb883c3ff9c5cfa4280b54feaaa399c1998b2cee0ab098dd8ede5d7f28d3",
+      "sha256": "50bcfd557cdb5e5203b30761e8f494f863bd78b1863cec2b522d59301724a933",
+      "content_changed": true
+    },
+    "tools/checks/validate_data.py": {
+      "previous_path": "scripts/kcity/validate_data.py",
+      "previous_sha256": "97dc592e354737335c8e3b1fd8ad49954fd2c9712cd9982ec93fb84b21d95cfc",
+      "sha256": "b417c5bc88592280fea5dd780197f7a080242cf6202ed584db47f227ac0e52b8",
+      "content_changed": true
+    },
+    "tools/main/__init__.py": {
+      "previous_path": null,
+      "previous_sha256": null,
+      "sha256": "e45d5dbf940b750f90321036bd68484a1d26eb6d6a5642272c093ee74a6b29ba",
+      "content_changed": false
+    },
+    "tools/main/view_policy.py": {
+      "previous_path": "scripts/kcity/view_policy.py",
+      "previous_sha256": "edf489906b9ada1312bd5108533b5b5539c3ec6c9ab1de92a91228b5ebedcad1",
+      "sha256": "c1a9c83882a8b1ff2242b6020156cd8728bd55109ac22b71eba95088a973f704",
+      "content_changed": true
+    },
+    "tools/map/audit_sources.py": {
+      "previous_path": "scripts/kcity/audit_sources.py",
+      "previous_sha256": "bdf4060a5db128a6d31f4fb5facb720cc04beae66df489dc08dc93d9ca47f03a",
+      "sha256": "b765645046a7909ef2c043df7652515f47cd6f8c202db622acc44ca2ebbe56cc",
+      "content_changed": true
+    },
+    "tools/map/build.py": {
+      "previous_path": "scripts/kcity/build.py",
+      "previous_sha256": "2e9ee9fa788ec10b903953d9e6c9ee45a445a359ca1f799f7286cf001e2b408d",
+      "sha256": "8ebec0d64d8c89fb5763c5dd3390cdc59e90034d64058d8d75d14c69530ca3f0",
+      "content_changed": true
+    },
+    "tools/map/lane_usage.py": {
+      "previous_path": "scripts/kcity/lane_usage.py",
+      "previous_sha256": "2e252dda3b24f79b9271bbac0da082aa7d8a2846586ce27c5e796e2765a14053",
+      "sha256": "8493f70c0934fc0267af263d87a1bd81bf82b552b762f636a0f7c8c24d518c56",
+      "content_changed": true
+    },
+    "tools/map/live_demo.py": {
+      "previous_path": "scripts/kcity/live_demo.py",
+      "previous_sha256": "75e70d31922cc0b2dec4961403f92413e698b353762dbceae25441b3fcccd7e3",
+      "sha256": "575b9b4e652e0d05c19aab2b50884ad86373f4d53a1e670fd5c86a2df65c93d6",
+      "content_changed": true
+    },
+    "tools/map/prune_lanes.py": {
+      "previous_path": "scripts/kcity/prune_lanes.py",
+      "previous_sha256": "d4ca575db12d43bdbf6d01627f9139b845a086210ef51dc2c1cb1442b480fa38",
+      "sha256": "8d8c51b679d71fc2771d0ffb1b845cb46e12a743daf5f6dfc9c4f2c66a2f74ab",
+      "content_changed": true
+    },
+    "tools/map/render_signals.py": {
+      "previous_path": "scripts/kcity/render_signals.py",
+      "previous_sha256": "c294380b8b84098b59d71583b862b9aa1682d190165f2a13589ebd924a692ef7",
+      "sha256": "cdad17400b44b0c686003acc44eaf0efb35452f61cdb3a865377dfe676deebbf",
+      "content_changed": true
+    },
+    "tools/map/scenery.py": {
+      "previous_path": "scripts/kcity/scenery.py",
+      "previous_sha256": "34c9d3181edb3c3e7a479e88155daa7fed35527ab41310adfd17e9eda393cd8b",
+      "sha256": "fd6c5f1d8239817460fa1263d9f41a56d25c45798c3898a69bdfe8e202e1691c",
+      "content_changed": true
+    },
+    "tools/map/signals.py": {
+      "previous_path": "scripts/kcity/signals.py",
+      "previous_sha256": "282a24f72a1a843516d6db241ce268f57747b6fc3d8f88907d333e156fed7637",
+      "sha256": "1af55fb15c98584c62f8031ea641eacceec332b9a122789152b82407d1770a59",
+      "content_changed": true
+    },
+    "tools/map/validate.py": {
+      "previous_path": "scripts/kcity/validate.py",
+      "previous_sha256": "95e1e7f8e3013fff0306f9e3db817e6e11cbbcc7da025d52bd25ee6ecb2e7283",
+      "sha256": "b7733a82ff992c8dfb445a230b3d096a16aac7c35fde22665184f43b1ed43ff3",
+      "content_changed": true
+    },
+    "tools/map/validate_signals.py": {
+      "previous_path": "scripts/kcity/validate_signals.py",
+      "previous_sha256": "e471b5fc8a4f53ef098b242858f0ec0c59f92c8c42f23224a4ca2eb060843988",
+      "sha256": "5d38964980f066ea04c83df0314f38f37496f6e5f3483ee4c4c8ccebb8895175",
+      "content_changed": true
+    }
+  },
+  "history_note": "research_checks의 JSON과 서버 실행 기록에 남은 옛 경로는 계보로 보존한다. 이 표로 새 경로를 찾는다."
+}

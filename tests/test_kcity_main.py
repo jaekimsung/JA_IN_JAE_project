@@ -8,17 +8,17 @@ from unittest.mock import patch
 import numpy as np
 import torch
 
-from algorithms.kcity_training import KCityPPO,KCityRunner
-from env.kcity_config import load_contract,digest
-from env.kcity_env import SumoKCityEnv
-from experts.kcity_rule_expert import KCityRuleExpert
-from scripts.kcity.check_policy import serializable,trace_rows
-from utils.kcity_data import validate_dataset,validate_row,read_shard
-from utils.kcity_main import (case_plan,load_scientific,require_launch,Owner,MainWriter,
+from kcity.training import KCityPPO,KCityRunner
+from kcity.env.config import load_contract,digest
+from kcity.env.env import SumoKCityEnv
+from kcity.policy.rule_expert import KCityRuleExpert
+from tools.checks.check_policy import serializable,trace_rows
+from kcity.data.dataset import validate_dataset,validate_row,read_shard
+from kcity.experiment import (case_plan,load_scientific,require_launch,Owner,MainWriter,
     dataset_config,RecordingRunner,OnlineRecorder,MainExpertCollector,run_bc,run_ppo,read)
-from scripts.kcity.check_policy import fixture_batch
-from algorithms.kcity_training import read_bundle
-from utils.kcity_storage import checkpoint_from_shard
+from tools.checks.check_policy import fixture_batch
+from kcity.training import read_bundle
+from kcity.data.storage import checkpoint_from_shard
 
 
 class MainContractTests(unittest.TestCase):
@@ -106,12 +106,12 @@ class MainContractTests(unittest.TestCase):
         views={'expert_train':data,'expert_val':data}
         with tempfile.TemporaryDirectory() as d:
             root=Path(d)/'bc'
-            with patch('utils.kcity_main.read_views',return_value=({'data_id':'SYNTHETIC-UNIT','view_id':'fixture'},views)):
-                with patch('utils.kcity_main.stopped',return_value=True):
+            with patch('kcity.experiment.read_views',return_value=({'data_id':'SYNTHETIC-UNIT','view_id':'fixture'},views)):
+                with patch('kcity.experiment.stopped',return_value=True):
                     run_bc(root,Path(d)/'mock-views',11,spec,'cpu')
                 self.assertEqual(read(root/'STATUS.json')['updates'],1)
                 self.assertIsNone(read(root/'STATUS.json')['best']['loss'])
-                with patch('utils.kcity_main.stopped',return_value=False):
+                with patch('kcity.experiment.stopped',return_value=False):
                     run_bc(root,Path(d)/'mock-views',11,spec,'cpu',resume=True)
                 self.assertEqual(read(root/'COMPLETE.json')['updates'],10)
                 self.assertIn(read(root/'BEST.json')['path'],['update-000005','update-000010'])
@@ -134,7 +134,7 @@ class MainContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             baseline=Path(d)/'continuous'
             small_plan=lambda c,k:case_plan(c,k,count=60)
-            with patch('utils.kcity_main.case_plan',side_effect=small_plan),patch('utils.kcity_main.evaluate_dev',return_value=True):
+            with patch('kcity.experiment.case_plan',side_effect=small_plan),patch('kcity.experiment.evaluate_dev',return_value=True):
                 run_ppo(baseline,'B2',11,spec,'cpu')
                 for stop_at in [5,8,10,19]:
                     paused=Path(d)/f'paused-{stop_at}'

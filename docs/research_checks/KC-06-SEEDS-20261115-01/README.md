@@ -1,6 +1,6 @@
 # KC-06 추가 학습 seed22/33 pilot
 
-갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
+갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../research/RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../research/RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
 상태: **완료**(pilot 학습·dev평가). 당시 착수 내용: 기존 seed11의결과는보존하고,정책 초기값/학습 난수만바꾸는두개의추가pilot을시작했다. 본1M비교나final평가가아니다.
 
 ## 고정 조건
@@ -13,7 +13,7 @@
 
 ## 실행·재개
 
-실행기: [pilot_seeds.py](../../../scripts/kcity/pilot_seeds.py). 기존 [pilot.py](../../../scripts/kcity/pilot.py)의BC/PPO 생성부만config의seed를읽도록일반화했다. seed11을줄경우설정/학습로직은기존과같다. 기존script원본은 `pilot.before.py`에보존했다.
+실행기: [pilot_seeds.py](../../../tools/checks/pilot_seeds.py). 기존 [pilot.py](../../../tools/checks/pilot.py)의BC/PPO 생성부만config의seed를읽도록일반화했다. seed11을줄경우설정/학습로직은기존과같다. 기존script원본은 `pilot.before.py`에보존했다.
 
 104개회귀검사가통과했다(44.538초). source계약·shareddata전수검사·두config의차이가seed뿐임을확인했다. 사전점검·실행PID/명령.
 

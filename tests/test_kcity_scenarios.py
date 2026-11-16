@@ -10,10 +10,10 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from env.kcity_config import (ContractError, DEFAULT_PROTOCOL, canonical_bytes,
+from kcity.env.config import (ContractError, DEFAULT_PROTOCOL, canonical_bytes,
     case_seeds, load_contract, make_case, repository_path, traffic_requests,
     validate_settings)
-from scripts.kcity.scenarios import validate_contract
+from kcity.env.scenarios import validate_contract
 
 
 class KCityContractTests(unittest.TestCase):
@@ -121,7 +121,7 @@ class KCityContractTests(unittest.TestCase):
         self.assertEqual(len({r['request_id'] for r in first}), len(first))
 
     def test_separate_process_seed_equality(self):
-        code = "from env.kcity_config import *; print(digest(make_case(load_contract(), 'dev', 'C', 42)))"
+        code = "from kcity.env.config import *; print(digest(make_case(load_contract(), 'dev', 'C', 42)))"
         a = subprocess.check_output([sys.executable,'-B','-c',code],cwd=ROOT,text=True)
         b = subprocess.check_output([sys.executable,'-B','-c',code],cwd=ROOT,text=True)
         self.assertEqual(a,b)

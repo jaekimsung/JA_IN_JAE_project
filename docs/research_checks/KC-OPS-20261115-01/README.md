@@ -1,14 +1,14 @@
 # KC-OPS: 본 실험 운영 준비 검증
 
-갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
+갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../research/RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../research/RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
 상태: **READY_LOCAL_ONLY**. 전문가1M·BC·PPO6M을 실행할 운영 준비를 검증했다. **본 전문가0전이·본 BC0updates·본 PPO0전이**이며 이번에 실제 실행한 optimizer 작업은 아래 검증용뿐이다.
 
 사용자 지시로 **Drive 업로드는 하지 않았다**. 원격 백업은 미검증·미실행이며 요구사항을 로컬 보관으로 변경한 사유를 [진도](STATUS.json)와 출처에 남겼다.
 
 ## 구현
 
-- [본 실행기](../../../scripts/kcity/main_experiment.py): collect / views / bc / ppo. 4개 check-only가 실제 output 없이 통과했고, launch record 없는 본 실행은 거부됐다.
-- [운영 계층](../../../utils/kcity_main.py): 고정 설정/해시/owner/디스크 검사, 새 전문가 pool·성공 whole-Episode BC view, same-seed BC actor 이식, 정확한1M cap·post-update50k dev100.
+- [본 실행기](../../../tools/main/main_experiment.py): collect / views / bc / ppo. 4개 check-only가 실제 output 없이 통과했고, launch record 없는 본 실행은 거부됐다.
+- [운영 계층](../../../kcity/experiment.py): 고정 설정/해시/owner/디스크 검사, 새 전문가 pool·성공 whole-Episode BC view, same-seed BC actor 이식, 정확한1M cap·post-update50k dev100.
 - PPO의 전체 State/NPZ/사건과 learner bundle을 같은 shard에 atomic commit한다. 부분 rollout STOP, 정상 rollout 경계, 평가 경계, 예산 끝의 STOP을 연속 실행과 비교했다.
 - 기존 B0 전용 validator에 명시적인 online PPO provenance 분기만 추가했다. [호환 SHA](../../../configs/kcity/main_v1/OPERATIONAL_COMPATIBILITY.json)로 원래 frozen 자료와 연결한다. 환경/보상/actor/PPO 수식과 과학 설정 JSON은 보존했다.
 
@@ -41,6 +41,6 @@ native GPU probe의407결정 중400결정은 긴 환경 replay를 확보하는 �
 ## 다음 단계
 
 별도 지시 후 **새 전문가1M pool 수집 → 품질/고정 fitting view → 본 BC3seed → 본 PPO6run** 순서로 진행한다.
-[실행 명령과 STOP/resume 설명](../../KCITY_MAIN_EXECUTION.md)을 따른다. 현재 본 수집·본 학습 프로세스는 실행하지 않았다.
+[실행 명령과 STOP/resume 설명](../../guides/KCITY_MAIN_EXECUTION.md)을 따른다. 현재 본 수집·본 학습 프로세스는 실행하지 않았다.
 
 실제 artifact: `/home/heven/kcity_research_runs/KC-OPS-20261115-01`. 작은 보고서·해시만 저장소에 두고 모델·실제 State 자료·로컬 archive는 외부 실행 폴더에 보관했다. 이번 단계의 commit/push는 수행하지 않았다.

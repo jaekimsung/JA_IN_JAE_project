@@ -9,10 +9,10 @@ from unittest.mock import patch
 import torch
 
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
-from scripts.kcity.pilot_seeds import replication_config,ReplicationPilot
-from scripts.kcity.pilot import check_config
-from algorithms.kcity_training import KCityBC,KCityPPO,DEFAULT_PPO
-from algorithms.kcity_policy import DEFAULT_POLICY
+from tools.checks.pilot_seeds import replication_config,ReplicationPilot
+from tools.checks.pilot import check_config
+from kcity.training import KCityBC,KCityPPO,DEFAULT_PPO
+from kcity.policy.policy import DEFAULT_POLICY
 
 
 class ReplicationTests(unittest.TestCase):
@@ -36,7 +36,7 @@ class ReplicationTests(unittest.TestCase):
             (Path(td)/'STOP').touch();self.assertTrue(child.stopped())
 
     def test_generic_pilot_constructors_use_config_seed(self):
-        tree=ast.parse((ROOT/'scripts/kcity/pilot.py').read_text());calls=[]
+        tree=ast.parse((ROOT/'tools/checks/pilot.py').read_text());calls=[]
         for node in ast.walk(tree):
             if isinstance(node,ast.Call) and isinstance(node.func,ast.Name) and node.func.id in ['KCityBC','KCityPPO']:
                 seed=next(k.value for k in node.keywords if k.arg=='seed')

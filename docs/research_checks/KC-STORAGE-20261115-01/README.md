@@ -1,13 +1,13 @@
 # K-CITY 저장 용량 최적화: 선택1·2 적용
 
-갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
+갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../research/RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../research/RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
 완료: **손실 없는 next 필드 복원 + 최신·직전·평가용 learner checkpoint 보관**. 사용자 승인한 두 항목만 적용했다.
 본 데이터 수집/본 BC/PPO는0이며, 기존 pilot·이전 운영 검증 artifact를 삭제하거나 Drive에 업로드하지 않았다.
 
 ## 1. 중복 next 저장 축소
 
 새 JSONL 물리 형식은 `KC-NEXT-REF-v1`이다. 같은 Episode 내 다음 행의 State/observation과 완전히 같은 값에만 그 행의 transition UID를 기록한다.
-Episode 종료와 shard 마지막 행에는 next를 직접 저장한다. [read_shard](../../../utils/kcity_data.py)가 한 행 lookahead로 **원래 모든 필드와 값**을 복원한다.
+Episode 종료와 shard 마지막 행에는 next를 직접 저장한다. [read_shard](../../../kcity/data/dataset.py)가 한 행 lookahead로 **원래 모든 필드와 값**을 복원한다.
 NPZ의 next_observation 등 필수 배열,전체 State,차량,정밀도,사건,timing은 그대로다. 과거 full-next 형식도 읽는다.
 
 검증 자료의 실제 비교(구/신 실행별 attempt UUID만 제외):

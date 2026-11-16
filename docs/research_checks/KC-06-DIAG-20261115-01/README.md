@@ -1,6 +1,6 @@
 # KC-06 실패 원인 진단과 독립 dev 평가
 
-갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
+갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../research/RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../research/RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
 본 학습이나 추가 optimizer 업데이트 없이 저장된 모델을 검사했다. final 사례는 사용하지 않았다. 확대 평가의 실제 진행 상태와 완료 결과는 아래 실행 경로 및 최종 요약을 따른다.
 
 ## 직접 확인한 실패 기전
@@ -23,7 +23,7 @@ B2-40k와 B3-30k를 원래 pilot dev 시드의 B/C에서 각각 재현했다. 4�
 
 BC best1000update, B2/B3 budget-end50k를 같은100개 사례(A30/B30/C40)로 평가한다. 기존 pilot3개와 다른 dev namespace/index2,000,000번대다. checkpoint의 파일SHA/source/runtime를 검사하고 가중치만 읽어 결정적으로 평가한다. final이나 학습 case는 사용하지 않는다.
 
-실행 경로: `/home/heven/kcity_research_runs/KC-06-20261115-01/diagnosis_v1/`. STATUS.json, DEV100_PANEL.json, 정책별 EPISODES/SUMMARY.json에 원자료가 있다. 개입/원본 진단 trace는 별도 gzip이다. 실행기: [diagnose_pilot.py](../../../scripts/kcity/diagnose_pilot.py).
+실행 경로: `/home/heven/kcity_research_runs/KC-06-20261115-01/diagnosis_v1/`. STATUS.json, DEV100_PANEL.json, 정책별 EPISODES/SUMMARY.json에 원자료가 있다. 개입/원본 진단 trace는 별도 gzip이다. 실행기: [diagnose_pilot.py](../../../tools/checks/diagnose_pilot.py).
 
 원래 pilot과 같은 CUDA 환경을 사용했다. 실패 기록을 제외하거나 좋은 중간 checkpoint로 바꾸지 않는다. 학습 seed는1개이므로100개 Episode를100개의 독립 학습 반복으로 해석하지 않는다. 원래 모델과 코드·설정은 변경하지 않았다.
 

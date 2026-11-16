@@ -6,14 +6,14 @@
 
 ## 연구 문서 읽는 순서
 
-1. [연구 현황](docs/RESEARCH_STATUS.md): 지금 구현·검증된 범위, 문제, 다음 작업.
-2. [연구 계획](docs/RESEARCH_PLAN.md): BC 초기화 PPO와 PPO-only의 학습 효율·교통 수요 변화 비교 설계.
-3. [실험 인덱스](docs/EXPERIMENTS.md): 기존 일반차량 검증, 새 검사 결과와 미실행 연구 계획의 구분.
-4. [데이터 명세](docs/DATA_COLLECTION_SPEC.md): 수업 필수 컬럼·절대 State·73-D 관측·JSONL/NPZ·품질 검사.
-5. [실행 프로토콜](docs/EXECUTION_PROTOCOL.md): 10M 수집 장부, BC/PPO 비교·평가 순서, 구현·pilot·착수 gate와 CLI 계약.
-6. [결과·컨설팅·제출](docs/RESULTS_AND_CONSULTING.md): 지표·표/그림·영상·컨설팅 질문·Hugging Face/최종 제출 준비.
+1. [연구 현황](docs/research/RESEARCH_STATUS.md): 지금 구현·검증된 범위, 문제, 다음 작업.
+2. [연구 계획](docs/research/RESEARCH_PLAN.md): BC 초기화 PPO와 PPO-only의 학습 효율·교통 수요 변화 비교 설계.
+3. [실험 인덱스](docs/research/EXPERIMENTS.md): 기존 일반차량 검증, 새 검사 결과와 미실행 연구 계획의 구분.
+4. [데이터 명세](docs/specs/DATA_COLLECTION_SPEC.md): 수업 필수 컬럼·절대 State·73-D 관측·JSONL/NPZ·품질 검사.
+5. [실행 프로토콜](docs/specs/EXECUTION_PROTOCOL.md): 10M 수집 장부, BC/PPO 비교·평가 순서, 구현·pilot·착수 gate와 CLI 계약.
+6. [결과·컨설팅·제출](docs/research/RESULTS_AND_CONSULTING.md): 지표·표/그림·영상·컨설팅 질문·Hugging Face/최종 제출 준비.
 
-2026-11-16 현재 **3seed pilot과 본 실험 설정·운영 준비 검증을 완료**했습니다. 본 전문가 pool·본 BC·본 PPO는 아직0입니다. 기존73차원 관측을 유지하며 판단2Hz·물리0.1초로 통제합니다. 다음은 새 전문가pool 수집입니다. [최신현황](docs/RESEARCH_STATUS.md) · [날짜별이력](docs/RESEARCH_HISTORY.md) · [본실행방법](docs/KCITY_MAIN_EXECUTION.md)
+2026-11-16 현재 **3seed pilot과 본 실험 설정·운영 준비 검증을 완료**했습니다. 본 전문가 pool·본 BC·본 PPO는 아직0입니다. 기존73차원 관측을 유지하며 판단2Hz·물리0.1초로 통제합니다. 다음은 새 전문가pool 수집입니다. [최신현황](docs/research/RESEARCH_STATUS.md) · [날짜별이력](docs/research/RESEARCH_HISTORY.md) · [본실행방법](docs/guides/KCITY_MAIN_EXECUTION.md)
 
 Drive 업로드는 하지 않습니다. 사용자 요청에 따라 불필요 raw로그·debug자료·로컬압축본을 삭제했고 필요한 모델·곡선·평가·요약만 남겼습니다. 삭제된 과거 파일이 현재 보관돼 있다고 간주하지 않습니다.
 
@@ -45,7 +45,7 @@ K-CITY 도로 구축 → 교통 흐름 검증 → AV 환경 설계 → BC·PPO �
 
 현재 도로망은 **일반 Edge 176개, 일반 차선 198개, 교차로 내부 차선 346개**입니다. 차선 제거는 시뮬레이션 통행 기록을 기준으로 했으며, 실제 K-CITY에서 사용하지 않는 차선을 판정한 결과는 아닙니다.
 
-**빨간색 `demo_ego`는 SUMO IDM 차량입니다.** 이는 기본 맵 데모이며, 별도 학습정책 시연 및 pilot 결과와 구분합니다. `train.py`, `test.py`, `collect_pomdp_data.py`는 기존 고속도로 환경을 사용하며, `data/`와 `results/`의 기존 예제 산출물도 K-CITY 학습 성과가 아닙니다.
+**빨간색 `demo_ego`는 SUMO IDM 차량입니다.** 이는 기본 맵 데모이며, 별도 학습정책 시연 및 pilot 결과와 구분합니다. [legacy/highway/](legacy/highway/README.md)는 수업의 기존 고속도로 예제이며, 그 안의 `data/`·`results/` 산출물은 K-CITY 학습 성과가 아닙니다.
 
 ## 바로 실행하기
 
@@ -79,23 +79,40 @@ python view_kcity.py --netedit
 
 ```text
 .
-├── view_kcity.py           # K-CITY 도로·교통 데모 실행
-├── maps/kcity/             # SUMO 맵, 경로, 신호, 조경, 원본 스냅샷, 검증 보고서
-├── scripts/kcity/          # 맵 변환, 차선 정리, 신호·조경 생성, 검증 도구
-├── env/                   # 기존 고속도로 및 독립 K-CITY 후보 환경
-├── algorithms/            # PPO·BC 알고리즘
-├── utils/                 # 신경망, 버퍼, 평가·로깅 공통 코드
-├── train.py               # 기존 고속도로 PPO 학습
-├── train_bc.py            # 데이터셋 기반 BC 학습
-├── test.py                # 기존 고속도로 정책 평가
-├── collect_pomdp_data.py   # 기존 고속도로 주행 데이터 수집
-├── view_road.py            # 기존 고속도로 예제 시각화
-├── data/                  # 학습 데이터
-├── results/               # 모델 및 실험 결과
-└── project_materials/     # 수업 원자료와 프로젝트 요구사항
+├── view_kcity.py          # K-CITY 도로·교통 데모 실행
+├── kcity/                 # K-CITY 연구 패키지 (import만으로 SUMO를 시작하지 않음)
+│   ├── common.py          #   SUMO 도구 탐색·맵 경로·JSON/XML 헬퍼
+│   ├── env/               #   계약(config)·Gym 환경(env)·73D 관측·경로·시나리오
+│   ├── policy/            #   공통 BC/PPO 정책(policy)·규칙 전문가 B0(rule_expert)
+│   ├── training.py        #   BC·PPO 학습기·checkpoint bundle·재개
+│   ├── data/              #   전이 수집(collector)·shard 기록/검증(dataset)·저장 codec(storage)
+│   ├── evaluator.py       #   Episode 지표·사례 패널 평가
+│   └── experiment.py      #   동결 설정 guard·본 수집/BC/PPO 실행기
+├── rl/                    # 공통 RL 부품: PPO·BC·신경망·버퍼·평가·로깅 (K-CITY·레거시 공용)
+├── tools/
+│   ├── map/               #   맵 변환·차선 정리·신호·조경 생성·교통 검증
+│   ├── main/              #   본 실험 CLI(main_experiment)·사전점검(preflight)·정책 시연
+│   ├── checks/            #   KC-01~06 단계별 검증·pilot·진단
+│   └── freeze/            #   과학 설정 동결·경로 재동결
+├── configs/kcity/         # 환경 계약 v1, 동결 과학 설정 main_v1 (FROZEN_PROTOCOL.json)
+├── maps/kcity/            # SUMO 맵·경로·신호·조경, 원본 자료, 검증 보고서, audit 스냅샷
+├── tests/                 # unittest 회귀 검사
+├── docs/                  # 문서 색인: docs/README.md
+│   ├── research/          #   현황·계획·이력·실험 인덱스·결과/제출 계획
+│   ├── specs/             #   데이터·평가·정책/재개·실행 계약
+│   ├── guides/            #   환경·본 실행·pilot 사용 안내
+│   ├── research_checks/   #   단계별 검증 기록 (KC-*)
+│   ├── course/            #   수업 원자료와 프로젝트 요구사항
+│   └── prompts/           #   연구 진행용 에이전트 프롬프트
+└── legacy/highway/        # 수업 고속도로 예제 (train/test/collect, data, results)
 ```
 
-K-CITY 맵 데모·독립 Gym 검사와 기존 고속도로 학습은 별도로 실행됩니다. 다음 개발 단계는 K-CITY 환경의 종료·평가를 학습 알고리즘과 신뢰성 있게 연결하는 것입니다.
+`kcity/`, `rl/`, `tools/`의 주요 파일과 `docs/specs/`의 계약 문서 3개는 [FROZEN_PROTOCOL.json](configs/kcity/main_v1/FROZEN_PROTOCOL.json)이 **경로와 SHA로 고정**합니다. 이 파일들을 수정하면 본 실행 guard가 막히므로, 정해진 등록 절차를 거쳐야 합니다. 2026-11-16 폴더 재구성의 옛 경로 → 새 경로 대응은 [LAYOUT_MIGRATION.json](configs/kcity/main_v1/LAYOUT_MIGRATION.json)에 있습니다.
+
+```bash
+# 회귀 검사 (본 검증 환경: Linux, SUMO 1.28.0)
+PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 python -B -m unittest discover -s tests
+```
 
 ## 앞으로 진행할 작업
 
@@ -104,18 +121,18 @@ K-CITY 맵 데모·독립 Gym 검사와 기존 고속도로 학습은 별도로 
 3. **BC·PPO 학습과 비교** — K-CITY 전문가 주행 데이터를 수집하고 BC 기준 모델과 PPO 정책을 학습합니다. 학습 조건과 평가 시드·교통 조건을 기록합니다.
 4. **평가와 산출물 정리** — 충돌률, 완주율, 신호 준수, 주행·대기시간을 평가하고 주행 영상과 데이터셋을 남깁니다. 수업의 기본 목표인 충돌률 5% 미만과 목적지 완주를 기준으로 구체적인 평가 시나리오를 확정합니다.
 
-세부 요구사항은 [프로젝트 준비](project_materials/5_Project_Preparation.md)와 [최종 평가 기준](project_materials/6_Project_Evaluation.md)을 따릅니다.
+세부 요구사항은 [프로젝트 준비](docs/course/5_Project_Preparation.md)와 [최종 평가 기준](docs/course/6_Project_Evaluation.md)을 따릅니다.
 
 ## 맵 재생성과 검증
 
 도로·신호·교통 조건을 수정할 때는 생성 파일과 검증 결과를 함께 갱신합니다. 아래 의존성 파일은 **K-CITY 맵 생성·분석 도구용**이며, 전체 학습 환경의 의존성을 설치하는 파일은 아닙니다.
 
 ```bash
-python -m pip install -r scripts/kcity/requirements.txt
-python scripts/kcity/build.py
-python scripts/kcity/validate_signals.py
-python scripts/kcity/validate.py --seeds 0 1 2
-python scripts/kcity/lane_usage.py
+python -m pip install -r tools/map/requirements.txt
+python tools/map/build.py
+python tools/map/validate_signals.py
+python tools/map/validate.py --seeds 0 1 2
+python tools/map/lane_usage.py
 ```
 
 재생성은 `maps/kcity/`의 생성된 맵·경로·설정을 갱신합니다. 원본 비교 분석과 그림 생성까지 포함한 전체 절차는 [맵 재생성 및 검증 안내](maps/kcity/README.md#재생성-및-검증)를 참고합니다.
@@ -141,8 +158,8 @@ python scripts/kcity/lane_usage.py
 
 ## 수업·개발 참고 자료
 
-- [프로젝트 소개](project_materials/0_Project_Introduction.md)
-- SUMO 설치: [Windows](project_materials/1_SUMO_Windows_Setup.md) · [macOS Apple Silicon](project_materials/1_SUMO_macOS_AppleSilicon_Setup.md)
-- [도로 환경과 POMDP 구조](project_materials/2_Road_Environment_Construction.md)
-- [BC 학습](project_materials/3_Model_Training_BC.md) · [강화학습](project_materials/4_Model_Training_RL.md)
-- [프로젝트 준비](project_materials/5_Project_Preparation.md) · [평가 기준](project_materials/6_Project_Evaluation.md) · [컨설팅](project_materials/7_Project_Consulting.md)
+- [프로젝트 소개](docs/course/0_Project_Introduction.md)
+- SUMO 설치: [Windows](docs/course/1_SUMO_Windows_Setup.md) · [macOS Apple Silicon](docs/course/1_SUMO_macOS_AppleSilicon_Setup.md)
+- [도로 환경과 POMDP 구조](docs/course/2_Road_Environment_Construction.md)
+- [BC 학습](docs/course/3_Model_Training_BC.md) · [강화학습](docs/course/4_Model_Training_RL.md)
+- [프로젝트 준비](docs/course/5_Project_Preparation.md) · [평가 기준](docs/course/6_Project_Evaluation.md) · [컨설팅](docs/course/7_Project_Consulting.md)

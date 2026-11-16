@@ -1,14 +1,14 @@
 # KC-04 — 공통 정책·BC 이식·전체 재개 검증
 
-갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
+갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../research/RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../research/RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
 상태: **KC-04 후보 구현과 제한 검증 완료. 다음은 KC-05 전문가·수집기다.** 본 비교 학습,전문가 dataset,final 평가는 실행하지 않았다. 검증용 실제 optimizer 작업은 아래에 별도로 기록한다. `training_ready=false`.
 
 ## 구현 범위와 식별
 
 - 시작: `2026-11-14T22:14:35.693990+09:00`. HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`,local branch `codex/kcity-kc01-20261114`. 기존 미완료 변경을 보존했다. PROVENANCE.
-- 신규: [공통 masked policy](../../../algorithms/kcity_policy.py), [BC/PPO·Runner·checkpoint](../../../algorithms/kcity_training.py), [후보 설정](../../../configs/kcity/v1/learning.json), [회귀 검사](../../../tests/test_kcity_policy.py), [검사 CLI](../../../scripts/kcity/check_policy.py).
+- 신규: [공통 masked policy](../../../kcity/policy/policy.py), [BC/PPO·Runner·checkpoint](../../../kcity/training.py), [후보 설정](../../../configs/kcity/v1/learning.json), [회귀 검사](../../../tests/test_kcity_policy.py), [검사 CLI](../../../tools/checks/check_policy.py).
 - 수정: shared buffer의 sampling mask 저장,shared PPO의 주입 정책·동일 mask 재평가·update 카운터,K-CITY 환경의 현재 Episode 행동 이력과 replay 재개. 변경 전3개 source는 `before/`에 보존했다. 종전 고속도로 BC/network/map/data/model과 KC-01 protocol은 변경하지 않았다.
-- 실제 사용 계약·호환성과 한계: [KCITY_POLICY_AND_RESUME.md](../../KCITY_POLICY_AND_RESUME.md). 최종 source/파일 보존·문서 검사는 [FINAL_CHECKS.json](FINAL_CHECKS.json).
+- 실제 사용 계약·호환성과 한계: [KCITY_POLICY_AND_RESUME.md](../../specs/KCITY_POLICY_AND_RESUME.md). 최종 source/파일 보존·문서 검사는 [FINAL_CHECKS.json](FINAL_CHECKS.json).
 - 환경 ID `KC-ENV-v3-kc04-candidate`,정책 ID `KC-HYBRID73-v1-candidate`. 현재 config는 미동결 후보이며 본학습 enabled=false다. 이번 commit/push·Drive/GitHub 업로드는 없다.
 
 ## 검증 결과

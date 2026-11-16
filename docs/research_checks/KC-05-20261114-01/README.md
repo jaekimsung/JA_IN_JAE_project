@@ -1,13 +1,13 @@
 # KC-05 — 관측 정렬 전문가·실제 소량 수집·복구
 
-갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
+갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../research/RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../research/RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
 **후보 구현과 소량 검증을 완료했다. 다음은 KC-06의50k 시험 학습이다.** 전문가 B0의 실제 주행602전이를 저장했다. 이 자료는debug 파이프라인 점검용이고,본학습 pool·목표10M·final 평가에 합산하지 않는다. 이번 데이터 검증에서 learner/optimizer는 실행하지 않았다.
 
 ## 식별과 산출물
 
 - 사전 기록: local branch `codex/kcity-kc01-20261114`,HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`. 기존 미완료 변경을 보존했다.
-- 신규 [B0](../../../experts/kcity_rule_expert.py),[data writer/validator/loader](../../../utils/kcity_data.py),[collector/cursor](../../../utils/kcity_collector.py),[수집 CLI](../../../scripts/kcity/collect_expert.py),[검사 CLI](../../../scripts/kcity/validate_data.py),[회귀 검사](../../../tests/test_kcity_data.py).
-- 사용·컬럼·복구 계약은 [KCITY_DATA_PIPELINE.md](../../KCITY_DATA_PIPELINE.md),설계와의 대응은 [데이터 명세](../../DATA_COLLECTION_SPEC.md)를 따른다. 기존 env/PPO/BC/map/model/data와 KC-01 pin은 이번 단계에서 수정하지 않았다.
+- 신규 [B0](../../../kcity/policy/rule_expert.py),[data writer/validator/loader](../../../kcity/data/dataset.py),[collector/cursor](../../../kcity/data/collector.py),[수집 CLI](../../../tools/checks/collect_expert.py),[검사 CLI](../../../tools/checks/validate_data.py),[회귀 검사](../../../tests/test_kcity_data.py).
+- 사용·컬럼·복구 계약은 [KCITY_DATA_PIPELINE.md](../../specs/KCITY_DATA_PIPELINE.md),설계와의 대응은 [데이터 명세](../../specs/DATA_COLLECTION_SPEC.md)를 따른다. 기존 env/PPO/BC/map/model/data와 KC-01 pin은 이번 단계에서 수정하지 않았다.
 - 최종 source/원본 파일/문서 검사는 [FINAL_CHECKS.json](FINAL_CHECKS.json). Git commit/push·Drive/GitHub 업로드는 하지 않았다.
 
 ## 실제 전문가 정보 범위
@@ -72,4 +72,4 @@ RESUME_CHECK.json·RESUME.final.log: 별도run을20전이에서 저장·종료�
 
 다음 KC-06에서는 pilot 실행 계약/학습 CLI·주기 dev 평가/저장/STOP을 연결하고 **PPO-only/BC→PPO 각50,000전이** 시험 학습을 진행한다. 실제90개 feasibility case·writer10k와RAM/I/O·GPU·장기 checkpoint/백업·보상/분포를 확인한 후 본 연구 설정을 동결한다. 현재 pool1M/BC10k/PPO각1M/final평가는 아직 실행하지 않았다.
 
-재검사/수집 명령은 [사용 안내](../../KCITY_DATA_PIPELINE.md)에 있다. 수집기는debug 최대10,000전이만 지원하며 본학습 승인 flag를 바꾸지 않는다.
+재검사/수집 명령은 [사용 안내](../../specs/KCITY_DATA_PIPELINE.md)에 있다. 수집기는debug 최대10,000전이만 지원하며 본학습 승인 flag를 바꾸지 않는다.

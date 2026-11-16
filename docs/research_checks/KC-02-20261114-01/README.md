@@ -1,14 +1,14 @@
 # KC-02 — 독립 K-CITY Gym 환경 구현·검증
 
-갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
+갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../research/RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../research/RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
 상태: **KC-02 후보 구현과 작은 검사 완료**. 다음은 KC-03이다. `training_ready=false`, 학습 업데이트0, 전문가 dataset 전이0을 유지한다.
 
 ## 식별과 변경 범위
 
 - 사전 등록: PROVENANCE.json. 시작 `2026-11-14T20:56:03.554322+09:00`, HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`, local branch `codex/kcity-kc01-20261114`. 시작부터 기존 미완료 변경이 있었으며 이를 보존했다. 이번 commit/push·외부 업로드는 없다.
-- 구현 ID `KC-ENV-v1-kc02-candidate`. [환경](../../../env/kcity_env.py)·[경로 기하](../../../env/kcity_route.py)·[관측](../../../env/kcity_observation.py)·[검사 실행기](../../../scripts/kcity/check_env.py)·[회귀 검사](../../../tests/test_kcity_env.py)를 새로 추가했다.
+- 구현 ID `KC-ENV-v1-kc02-candidate`. [환경](../../../kcity/env/env.py)·[경로 기하](../../../kcity/env/route.py)·[관측](../../../kcity/env/observation.py)·[검사 실행기](../../../tools/checks/check_env.py)·[회귀 검사](../../../tests/test_kcity_env.py)를 새로 추가했다.
 - Python3.10.12, Gymnasium1.2.3, NumPy1.24.4, SUMO1.28.0. 기존 격리 venv를 사용했고 기존 고속도로·PPO/BC·맵·신호·모델·데이터와 KC-01 실행 source/config는 수정하지 않았다.
-- 현재 사용법과 상세 계약: [KCITY_ENV.md](../../KCITY_ENV.md). source hash는 [최종 통합 summary](integration_final/SUMMARY.json), 보호 파일 검증·종료 시각은 [FINAL_CHECKS.json](FINAL_CHECKS.json).
+- 현재 사용법과 상세 계약: [KCITY_ENV.md](../../guides/KCITY_ENV.md). source hash는 [최종 통합 summary](integration_final/SUMMARY.json), 보호 파일 검증·종료 시각은 [FINAL_CHECKS.json](FINAL_CHECKS.json).
 
 ## 구현한 범위
 

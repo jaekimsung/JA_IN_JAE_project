@@ -1,13 +1,13 @@
 # KC-03 — 종료·GAE·평가 신뢰성 후보 구현 결과
 
-갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
+갱신: 2026-11-16. **아래는 해당 단계 실행 당시의 이력**이다. 현재 현황은 [RESEARCH_STATUS](../../research/RESEARCH_STATUS.md), 후속 단계는 [RESEARCH_HISTORY](../../research/RESEARCH_HISTORY.md)를 따른다. 당시 미완료/후속 문구는 현재 미구현을 뜻하지 않는다. 사용자 요청으로 원시 로그·debug 데이터·fixture·source 복사본·로컬 압축본은 삭제했다. 본문에 나온 과거 파일명/경로/SHA는 계보이며 현재 보관 또는 완전 재개를 보장하지 않는다. 필요한 요약·곡선·평가 및 모델11개만 유지하고 새 백업/이동은 하지 않았다.
 **KC-03의 제한된 완료 기준을 통과했다. 다음은 KC-04 공통 actor·BC→PPO 초기화/재개다.** 본 학습·전문가 수집·final 평가는 실행하지 않았다. optimizer steps0, `training_ready=false`다.
 
 ## 코드와 실행 식별
 
 - 사전 기록: HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`, branch `codex/kcity-kc01-20261114`, 시작부터 있던 미완료 변경을 보존했다. 이번 commit/push/외부 업로드는 없다.
-- 변경: [buffer](../../../utils/buffer.py)·[PPO](../../../algorithms/ppo.py)의 경계/예산/평가 처리, [K-CITY 환경](../../../env/kcity_env.py)의 substep 측정·동시 사건 보존, [기존 highway launcher](../../../train.py)의 공유 연결 평가 사전 차단. 변경 전4개 source는 `before/`에 보존했다.
-- 신규: [case/metric evaluator](../../../utils/kcity_evaluator.py)·[검사 실행기](../../../scripts/kcity/check_learning.py)·[회귀 검사](../../../tests/test_kcity_learning.py)·[사용 계약](../../KCITY_EVALUATION.md).
+- 변경: [buffer](../../../rl/buffer.py)·[PPO](../../../rl/ppo.py)의 경계/예산/평가 처리, [K-CITY 환경](../../../kcity/env/env.py)의 substep 측정·동시 사건 보존, [기존 highway launcher](../../../legacy/highway/train.py)의 공유 연결 평가 사전 차단. 변경 전4개 source는 `before/`에 보존했다.
+- 신규: [case/metric evaluator](../../../kcity/evaluator.py)·[검사 실행기](../../../tools/checks/check_learning.py)·[회귀 검사](../../../tests/test_kcity_learning.py)·[사용 계약](../../specs/KCITY_EVALUATION.md).
 - 환경 ID는 `KC-ENV-v2-kc03-candidate`, 지표 ID는 `KC-METRICS-v1-candidate`다. KC-01 protocol/map/TLS pin은 변경하지 않았다. KC-02 결과는 이전 source의 이력으로 그대로 보존했다.
 - 최종 source SHA·실행 시각은 [통합 SUMMARY](integration_final/SUMMARY.json), 전체 보호 파일·문서·소스 검증은 [FINAL_CHECKS](FINAL_CHECKS.json).
 

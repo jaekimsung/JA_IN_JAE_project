@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-SCRIPT = Path(__file__).resolve().parents[1] / 'scripts/research/finalize_kcity_settings.py'
+SCRIPT = Path(__file__).resolve().parents[1] / 'tools/freeze/finalize_kcity_settings.py'
 spec = importlib.util.spec_from_file_location('kcity_settings_handoff', SCRIPT)
 handoff = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(handoff)
@@ -76,8 +76,8 @@ class SettingsHandoffTests(unittest.TestCase):
             root = Path(directory)
             shutil.copytree(original/'configs/kcity/v1', root/'configs/kcity/v1')
             for name in ['DATA_COLLECTION_SPEC.md','KCITY_EVALUATION.md','KCITY_DATA_PIPELINE.md']:
-                (root/'docs').mkdir(exist_ok=True)
-                shutil.copyfile(original/'docs'/name, root/'docs'/name)
+                (root/'docs/specs').mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(original/'docs/specs'/name, root/'docs/specs'/name)
             check = root/'checks'
             handoff.write(check/'SUMMARY.json', {'synthetic_test_only': True})
             with patch.object(handoff,'ROOT',root), patch.object(handoff,'CHECK',check):

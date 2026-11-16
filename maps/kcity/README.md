@@ -4,7 +4,7 @@ K-CITY의 로컬 OpenDRIVE 원본을 변환한 **도로·교통 데모**다. JJ�
 
 ## 바로 실행
 
-프로젝트 루트에서 실행한다. 기존 고속도로 예제의 `env/sumo/` 파일을 덮어쓰지 않는다.
+프로젝트 루트에서 실행한다. 기존 고속도로 예제의 `legacy/highway/env/sumo/` 파일을 덮어쓰지 않는다.
 
 ```bash
 python view_kcity.py                 # 90도 회전, 차량 1배, 연속 주행 자동 시작
@@ -18,7 +18,7 @@ python view_kcity.py --baseline      # 기존 177대 유한 교통, ▶ 버튼�
 
 ### 녹화용 연속 주행
 
-기본 실행은 `scripts/kcity/live_demo.py`의 TraCI 제어를 사용한다. 빨간 차량은 시작부터 1대만 투입하며, 기존 qualifier 경로 뒤에 실제 차선 연결을 따르는 귀환 경로를 붙인다. 경로 끝에 도달하기 전에 다음 순환 경로를 연장하므로 같은 차량 ID와 위치·속도를 유지한다. 신호나 앞차 때문에 정차할 수 있지만 목적지 도착으로 퇴장하지 않는다.
+기본 실행은 `tools/map/live_demo.py`의 TraCI 제어를 사용한다. 빨간 차량은 시작부터 1대만 투입하며, 기존 qualifier 경로 뒤에 실제 차선 연결을 따르는 귀환 경로를 붙인다. 경로 끝에 도달하기 전에 다음 순환 경로를 연장하므로 같은 차량 ID와 위치·속도를 유지한다. 신호나 앞차 때문에 정차할 수 있지만 목적지 도착으로 퇴장하지 않는다.
 
 노란 차량은 기존 6초 간격 대신 **3초마다 최대 1대씩 계속 보충**한다. 주행 중인 차량과 투입 대기 차량을 합쳐 **60대**가 되면 추가 투입을 잠시 멈춘다. 차량 수는 출발·도착·혼잡에 따라 달라진다. GUI는 종료할 때까지 실행하며, `--seconds`를 지정하면 해당 시뮬레이션 시간에 종료한다. 차량 크기는 1배, 기본 화면 회전은 90도다. `/tmp`의 별도 설정 파일은 필요하지 않다.
 
@@ -46,10 +46,10 @@ python view_kcity.py --nogui --seconds 3600 --report /tmp/kcity-live.json
 ```bash
 python view_kcity.py          # 건물·가로수·녹지 표시
 python view_kcity.py --aerial # 항공사진 표시, 가상 조경 제외
-python scripts/kcity/scenery.py # 조경과 기본 화면 설정만 재생성
+python tools/map/scenery.py # 조경과 기본 화면 설정만 재생성
 ```
 
-`build.py`에서도 조경을 자동 생성한다. 생성 의존성은 `shapely>=2,<3`이며 `scripts/kcity/requirements.txt`에 포함했다. [배치 목록](reports/scenery.json), [비교 검증](reports/scenery_check/result.json), [SUMO polygon 문서](https://sumo.dlr.de/docs/Simulation/Shapes.html).
+`build.py`에서도 조경을 자동 생성한다. 생성 의존성은 `shapely>=2,<3`이며 `tools/map/requirements.txt`에 포함했다. [배치 목록](reports/scenery.json), [비교 검증](reports/scenery_check/result.json), [SUMO polygon 문서](https://sumo.dlr.de/docs/Simulation/Shapes.html).
 
 ![항공사진 없는 도심 화면](reports/scenery_detail.png)
 
@@ -94,14 +94,14 @@ python scripts/kcity/scenery.py # 조경과 기본 화면 설정만 재생성
 
 ```bash
 # 필요할 때 별도 가상환경에 설치
-python -m pip install -r scripts/kcity/requirements.txt
+python -m pip install -r tools/map/requirements.txt
 
-python scripts/kcity/build.py
-python scripts/kcity/audit_sources.py
-python scripts/kcity/render_signals.py
-python scripts/kcity/validate_signals.py
-python scripts/kcity/validate.py --seeds 0 1 2
-python scripts/kcity/lane_usage.py
+python tools/map/build.py
+python tools/map/audit_sources.py
+python tools/map/render_signals.py
+python tools/map/validate_signals.py
+python tools/map/validate.py --seeds 0 1 2
+python tools/map/lane_usage.py
 ```
 
 `build.py`는 `source/manifest.json`의 SHA-256을 검사한 뒤 로컬 스냅샷을 입력으로 사용한다. 외부 ROS/CARLA/MORAI 프로세스를 시작하거나 원본 워크스페이스를 수정하지 않는다. 재생성하면 이 디렉터리의 생성된 맵·경로·설정·build 보고서를 갱신한다. 이전 검증 결과는 이전 네트워크 해시를 가리킬 수 있으므로 **재생성 후에는 검증도 다시 실행**한다.

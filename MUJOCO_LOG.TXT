@@ -1,4 +1,0 @@
-WARNING Mon Nov  9 19:12:24 2026: Attaching a spec with an empty prefix may prevent the model from being saved correctly.
-
-WARNING Mon Nov  9 19:19:42 2026: Attaching a spec with an empty prefix may prevent the model from being saved correctly.
-

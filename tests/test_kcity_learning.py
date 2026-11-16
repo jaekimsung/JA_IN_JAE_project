@@ -10,11 +10,11 @@ import numpy as np
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from algorithms.ppo import PPO
-from utils.buffer import RolloutBuffer
-from env.kcity_env import SumoKCityEnv, KCityExternalTimeLimit
-from env.kcity_config import load_contract
-from utils.kcity_evaluator import EpisodeMetrics, aggregate, make_panel, evaluate_cases
+from rl.ppo import PPO
+from rl.buffer import RolloutBuffer
+from kcity.env.env import SumoKCityEnv, KCityExternalTimeLimit
+from kcity.env.config import load_contract
+from kcity.evaluator import EpisodeMetrics, aggregate, make_panel, evaluate_cases
 
 
 class BufferTests(unittest.TestCase):

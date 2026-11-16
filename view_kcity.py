@@ -6,8 +6,8 @@ import subprocess
 import sys
 import xml.etree.ElementTree as ET
 
-sys.path.insert(0, str(Path(__file__).resolve().parent / "scripts" / "kcity"))
-from common import MAP, sumo_tools
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from kcity.common import MAP, sumo_tools
 
 
 def main():

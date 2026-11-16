@@ -8,3 +8,6 @@ __pycache__/
 /docs/research_checks/**/early_probe/
 /docs/research_checks/**/resume_probe*/
 /docs/research_checks/**/transitions.jsonl
+
+# Stray simulator logs
+MUJOCO_LOG.TXT
