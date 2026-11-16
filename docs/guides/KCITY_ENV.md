@@ -1,6 +1,6 @@
 # K-CITY Gym 환경 사용 안내 — KC-02
 
-갱신: 2026-11-16. 현재 구현 ID는 `KC-ENV-v3-kc04-candidate`다. candidate는 기존 계보 문자열이며 현재 본 설정의 미동결을 뜻하지 않는다. [SumoKCityEnv](../../kcity/env/env.py)는 B0·writer·BC/PPO·pilot·본 실행기에 연결돼 있다. 3seed pilot과 본 운영 준비 검증을 마쳤고 **본 수집·본 학습은0**이다. [현황](../research/RESEARCH_STATUS.md) · [재개 계약](../specs/KCITY_POLICY_AND_RESUME.md) · [평가 계약](../specs/KCITY_EVALUATION.md)
+갱신: 2026-11-16. 현재 구현 ID는 `KC-ENV-v3-kc04-candidate`다. candidate는 기존 계보 문자열이며 현재 본 설정의 미동결을 뜻하지 않는다. [SumoKCityEnv](../../env/env.py)는 B0·writer·BC/PPO·pilot·본 실행기에 연결돼 있다. 3seed pilot과 본 운영 준비 검증을 마쳤고 **본 수집·본 학습은0**이다. [현황](../research/RESEARCH_STATUS.md) · [재개 계약](../specs/KCITY_POLICY_AND_RESUME.md) · [평가 계약](../specs/KCITY_EVALUATION.md)
 
 ## 실행 환경과 재검사
 
@@ -20,7 +20,7 @@ PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 "$KCPY" -B tools/checks/check_env.py
 ## 최소 사용 예
 
 ```python
-from kcity.env.env import SumoKCityEnv
+from env.env import SumoKCityEnv
 
 env = SumoKCityEnv(scenario_id="A", background=True)
 try:
@@ -41,7 +41,7 @@ finally:
 
 ## 관측·행동·기록 계약
 
-- 관측: `float32[73]`, 범위 `[-1,1]`. [데이터 명세의 index표](../specs/DATA_COLLECTION_SPEC.md)와 [관측 구현](../../kcity/env/observation.py)을 연결한다. 고정 거리·속도 척도와 clip을 사용한다. 아직 통계 기반 정규화나 센서 모델은 없다.
+- 관측: `float32[73]`, 범위 `[-1,1]`. [데이터 명세의 index표](../specs/DATA_COLLECTION_SPEC.md)와 [관측 구현](../../env/observation.py)을 연결한다. 고정 거리·속도 척도와 clip을 사용한다. 아직 통계 기반 정규화나 센서 모델은 없다.
 - 행동: `[정규화 가속도, 차선 요청]`. 유한 2-vector 원본을 기록한 후 `[-1,1]`로 clip한다. 양의 가속도는 최대 +2, 음은 -4.5 m/s²로 변환한다. 두 번째 값은 ≥0.5 왼쪽, ≤-0.5 오른쪽, 그 사이는 유지다. hybrid categorical adapter는 KC-04에서 연결했고 pilot/본 실행기가 사용한다.
 - 정상 step: `setAcceleration` 요청 후 0.1초 × 5회, 총 0.5초를 실행한다. 사건/기한 발생 시 1~5회에서 끝나며 실제 `control_dt_s`를 기록한다. speedMode31/laneChangeMode512, 속도 상한8.33 m/s를 사용한다.
 - 차선 mask 순서: `[왼쪽, 유지, 오른쪽]`. 차선 부재·내부 교차로·cooldown은 요청을 거부하고 이유를 남긴다. API 발행 `lane_change_applied`와 실제 이동 `lane_change_executed`는 다르다. SUMO 안전 조정 때문에 요청 가속도와 실측 가속도도 다를 수 있다. 개입의 상세 원인은 `unknown`이며 추측해서 채우지 않는다.
@@ -57,8 +57,10 @@ finally:
 
 외부 결정 횟수 제한은 `KCityExternalTimeLimit(env, max_episode_steps=...)`를 쓴다. 과제 종료가 우선이며 그 외는 truncated=True·external_limit과 실제 terminal 관측을 보존한다. KC-03 이후 learner는 bootstrap/trace 경계를 분리한다.
 
-현재 동결 보상은 max(0,Δroute_progress)/10 + 도착10 − 충돌20 − 적색진입10 − 무효요청0.02 − 실제차선변경0.01이다. `unjustified_wait=0`이다. 신호 대기/정당 양보를 구분하는 검증된 인과 판정기는 없다. [보상 구현](../../kcity/env/env.py)
+현재 동결 보상은 max(0,Δroute_progress)/10 + 도착10 − 충돌20 − 적색진입10 − 무효요청0.02 − 실제차선변경0.01이다. `unjustified_wait=0`이다. 신호 대기/정당 양보를 구분하는 검증된 인과 판정기는 없다. [보상 구현](../../env/env.py)
 
-기존 `configs/kcity/v1/protocol.json`의 implemented/training flag와 info의 training_ready=false는 최초 계약의 보수적 상태로 보존한다. 현재 과학 설정은 [main_v1](../../configs/kcity/main_v1/FROZEN_PROTOCOL.json), 본 실행 준비는 별도 [운영 기록](../research_checks/KC-STORAGE-20261115-01/LAUNCH_READY.json)으로 판정한다. 과거 flag 하나를 현재 완료 상태로 혼용하지 않는다. [본 CLI](KCITY_MAIN_EXECUTION.md)
+기존 `configs/kcity/v1/protocol.json`의 implemented/training flag와 info의 training_ready=false는 최초 계약의 보수적 상태로 보존한다. 현재 과학 설정은 [main_v1](../../configs/kcity/experiment.json), 본 실행 준비는 별도 [운영 기록](../research_checks/KC-STORAGE-20261115-01/LAUNCH_READY.json)으로 판정한다. 과거 flag 하나를 현재 완료 상태로 혼용하지 않는다. [본 CLI](KCITY_MAIN_EXECUTION.md)
 
 모든 정지·양보 규칙, 실제 센서/실차 안전, 모든 multi-link 사건을 완전히 검증한 것은 아니다. SUMO 안전 mode의 내부 보정을 포함한 시스템 성능으로 해석한다. 관측·State·기록의 정확한 필드는 [데이터 명세](../specs/DATA_COLLECTION_SPEC.md)를 따른다.
+
+> 2026-11-16 코드 정리로 KC 단계 검증 스크립트(`tools/checks/`, `check_policy.py`, 운영 probe·preflight)는 삭제됐다. 위 검증 명령을 재현하려면 [commit fac8482](https://github.com/jaekimsung/JA_IN_JAE_project/tree/fac8482)를 checkout한다. 현재 실행 방법은 [실행 안내](KCITY_MAIN_EXECUTION.md)를 따른다.

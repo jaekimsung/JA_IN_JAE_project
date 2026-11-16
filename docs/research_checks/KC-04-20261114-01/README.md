@@ -6,7 +6,7 @@
 ## 구현 범위와 식별
 
 - 시작: `2026-11-14T22:14:35.693990+09:00`. HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`,local branch `codex/kcity-kc01-20261114`. 기존 미완료 변경을 보존했다. PROVENANCE.
-- 신규: [공통 masked policy](../../../kcity/policy/policy.py), [BC/PPO·Runner·checkpoint](../../../kcity/training.py), [후보 설정](../../../configs/kcity/v1/learning.json), [회귀 검사](../../../tests/test_kcity_policy.py), [검사 CLI](../../../tools/checks/check_policy.py).
+- 신규: [공통 masked policy](../../../policy/policy.py), [BC/PPO·Runner·checkpoint](../../../policy/ppo.py), [후보 설정](../../../configs/kcity/v1/learning.json), [회귀 검사](../../../tests/test_kcity_policy.py), [검사 CLI](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/check_policy.py).
 - 수정: shared buffer의 sampling mask 저장,shared PPO의 주입 정책·동일 mask 재평가·update 카운터,K-CITY 환경의 현재 Episode 행동 이력과 replay 재개. 변경 전3개 source는 `before/`에 보존했다. 종전 고속도로 BC/network/map/data/model과 KC-01 protocol은 변경하지 않았다.
 - 실제 사용 계약·호환성과 한계: [KCITY_POLICY_AND_RESUME.md](../../specs/KCITY_POLICY_AND_RESUME.md). 최종 source/파일 보존·문서 검사는 [FINAL_CHECKS.json](FINAL_CHECKS.json).
 - 환경 ID `KC-ENV-v3-kc04-candidate`,정책 ID `KC-HYBRID73-v1-candidate`. 현재 config는 미동결 후보이며 본학습 enabled=false다. 이번 commit/push·Drive/GitHub 업로드는 없다.

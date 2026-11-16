@@ -13,7 +13,7 @@
 
 ## 실행·재개
 
-실행기: [pilot_seeds.py](../../../tools/checks/pilot_seeds.py). 기존 [pilot.py](../../../tools/checks/pilot.py)의BC/PPO 생성부만config의seed를읽도록일반화했다. seed11을줄경우설정/학습로직은기존과같다. 기존script원본은 `pilot.before.py`에보존했다.
+실행기: [pilot_seeds.py](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/pilot_seeds.py). 기존 [pilot.py](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/pilot.py)의BC/PPO 생성부만config의seed를읽도록일반화했다. seed11을줄경우설정/학습로직은기존과같다. 기존script원본은 `pilot.before.py`에보존했다.
 
 104개회귀검사가통과했다(44.538초). source계약·shareddata전수검사·두config의차이가seed뿐임을확인했다. 사전점검·실행PID/명령.
 

@@ -2,7 +2,7 @@
 
 갱신: 2026-11-16 · [현황](../research/RESEARCH_STATUS.md) · [데이터](DATA_COLLECTION_SPEC.md) · [실행명령](../guides/KCITY_MAIN_EXECUTION.md) · [결과/제출](../research/RESULTS_AND_CONSULTING.md)
 
-**READY_LOCAL_ONLY, 본 수집·BC/PPO 미시작.** 과학설정은[FROZEN_PROTOCOL.json](../../configs/kcity/main_v1/FROZEN_PROTOCOL.json), 운영준비는[LAUNCH_READY.json](../research_checks/KC-STORAGE-20261115-01/LAUNCH_READY.json)이다. frozen의training_enabled/launch_ready=false는동결당시기록으로보존하고별도운영계층이실행을검증한다.
+**READY_LOCAL_ONLY, 본 수집·BC/PPO 미시작.** 과학설정은[experiment.json](../../configs/kcity/experiment.json), 운영준비는[LAUNCH_READY.json](../research_checks/KC-STORAGE-20261115-01/LAUNCH_READY.json)이다. frozen의training_enabled/launch_ready=false는동결당시기록으로보존하고별도운영계층이실행을검증한다.
 
 ## 1. Gate 현황
 
@@ -46,11 +46,11 @@ BC는지원규칙통과·unknown없는정상whole-Episode만fitting에쓴다. �
 
 | 목적 | 코드 |
 |---|---|
-| 본collect/views/bc/ppo | [main_experiment.py](../../tools/main/main_experiment.py) |
-| debug수집/검증 | [collect_expert.py](../../tools/checks/collect_expert.py), [validate_data.py](../../tools/checks/validate_data.py) |
-| pilot | [pilot.py](../../tools/checks/pilot.py), [pilot_seeds.py](../../tools/checks/pilot_seeds.py) |
-| 환경/학습/정책probe | [check_env.py](../../tools/checks/check_env.py), [check_learning.py](../../tools/checks/check_learning.py), [check_policy.py](../../tools/checks/check_policy.py) |
-| 운영probe/preflight | [check_main_operations.py](../../tools/main/check_main_operations.py), [preflight_main.py](../../tools/main/preflight_main.py) |
+| 본collect/views/bc/ppo | [collect.py](../../runner/collect.py) · [train_bc.py](../../runner/train_bc.py) · [train_ppo.py](../../runner/train_ppo.py) · [evaluate.py](../../runner/evaluate.py) |
+| debug수집/검증 | [collect_expert.py](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/collect_expert.py), [validate_data.py](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/validate_data.py) |
+| pilot | [pilot.py](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/pilot.py), [pilot_seeds.py](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/pilot_seeds.py) |
+| 환경/학습/정책probe | [check_env.py](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/check_env.py), [check_learning.py](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/check_learning.py), [check_policy.py](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/check_policy.py) |
+| 운영probe/preflight | [check_main_operations.py](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/main/check_main_operations.py), [preflight_main.py](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/main/preflight_main.py) |
 
 본argv는[실행안내](../guides/KCITY_MAIN_EXECUTION.md)한곳에서유지한다. check-only는learner/output없지만입력pool/모델전체를검사하는dry-run은아니다. 실제stage에서필수입력을검사한다.
 
@@ -73,3 +73,5 @@ PPO최신·직전·50k평가·초기모델,BC최신·직전·필요best를보관
 **Drive업로드금지.** 원격백업미실행,로컬압축본도삭제했다. rawdebug/log/source복사본삭제는후속사용자지시이며과거검증당시보관과구분한다.
 
 필드누락/중복/GAE오류/NaN/source불일치/공간부족은중단·실패로기록한다. 정책충돌/LC실패를인프라무효로숨기지않는다. 과학조건변경은새설계/runID·비교가능성영향을명시한다.
+
+> 2026-11-16 코드 정리로 KC 단계 검증 스크립트(`tools/checks/`, `check_policy.py`, 운영 probe·preflight)는 삭제됐다. 위 검증 명령을 재현하려면 [commit fac8482](https://github.com/jaekimsung/JA_IN_JAE_project/tree/fac8482)를 checkout한다. 현재 실행 방법은 [실행 안내](../guides/KCITY_MAIN_EXECUTION.md)를 따른다.

@@ -23,7 +23,7 @@ B2-40k와 B3-30k를 원래 pilot dev 시드의 B/C에서 각각 재현했다. 4�
 
 BC best1000update, B2/B3 budget-end50k를 같은100개 사례(A30/B30/C40)로 평가한다. 기존 pilot3개와 다른 dev namespace/index2,000,000번대다. checkpoint의 파일SHA/source/runtime를 검사하고 가중치만 읽어 결정적으로 평가한다. final이나 학습 case는 사용하지 않는다.
 
-실행 경로: `/home/heven/kcity_research_runs/KC-06-20261115-01/diagnosis_v1/`. STATUS.json, DEV100_PANEL.json, 정책별 EPISODES/SUMMARY.json에 원자료가 있다. 개입/원본 진단 trace는 별도 gzip이다. 실행기: [diagnose_pilot.py](../../../tools/checks/diagnose_pilot.py).
+실행 경로: `/home/heven/kcity_research_runs/KC-06-20261115-01/diagnosis_v1/`. STATUS.json, DEV100_PANEL.json, 정책별 EPISODES/SUMMARY.json에 원자료가 있다. 개입/원본 진단 trace는 별도 gzip이다. 실행기: [diagnose_pilot.py](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/diagnose_pilot.py).
 
 원래 pilot과 같은 CUDA 환경을 사용했다. 실패 기록을 제외하거나 좋은 중간 checkpoint로 바꾸지 않는다. 학습 seed는1개이므로100개 Episode를100개의 독립 학습 반복으로 해석하지 않는다. 원래 모델과 코드·설정은 변경하지 않았다.
 

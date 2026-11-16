@@ -14,8 +14,9 @@
 | 11/15 KC-SEEDS/SETTINGS | seed22/33 추가fresh학습·9정책dev100·본설정동결 | [추가seed](../research_checks/KC-06-SEEDS-20261115-01/README.md), [확정](../research_checks/KC-SETTINGS-20261115-01/README.md) |
 | 11/15~16 KC-OPS/STORAGE | 본CLI·GPU부분buffer/환경replay재개·commit·next참조/모델보관 | [운영](../research_checks/KC-OPS-20261115-01/README.md), [저장](../research_checks/KC-STORAGE-20261115-01/README.md) |
 | 11/16 정리 | 사용자요청으로2,014파일·345,894,912bytes할당량 삭제. 백업/이동 없음 | [정리메타데이터](../research_checks/KC-STORAGE-20261115-01/LAUNCH_READY.json) |
-| 11/16 문서개정 | 73D유지·현황/이력분리·실제CLI/저장형식/보관현황 정합화 | [운영호환기록](../../configs/kcity/main_v1/OPERATIONAL_COMPATIBILITY.json) |
-| 11/16 폴더재구성 | 코드 kcity/rl/tools/legacy, 문서 research/specs/guides로 이동. 과학설정 불변·경로SHA만 재고정(layout r2). 서버 LAUNCH_READY 재생성 필요 | [경로대응](../../configs/kcity/main_v1/LAYOUT_MIGRATION.json), [재구성 안내](../guides/KCITY_MAIN_EXECUTION.md#폴더-재구성layout-revision-2-2026-11-16) |
+| 11/16 문서개정 | 73D유지·현황/이력분리·실제CLI/저장형식/보관현황 정합화 | [운영호환기록](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/configs/kcity/main_v1/OPERATIONAL_COMPATIBILITY.json) |
+| 11/16 폴더재구성 | 코드 kcity/rl/tools/legacy, 문서 research/specs/guides로 이동. 과학설정 불변·경로SHA만 재고정(layout r2). 서버 LAUNCH_READY 재생성 필요 | [경로대응](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/configs/kcity/main_v1/LAYOUT_MIGRATION.json), [재구성 안내](../guides/KCITY_MAIN_EXECUTION.md#폴더-재구성layout-revision-2-2026-11-16) |
+| 11/16 코드정리 | 동결 guard·preflight·운영probe·KC검증스크립트·수업 고속도로 예제 삭제, 설정은 experiment.json. kcity/{env,policy,training,evaluation,data}+루트 진입점 6개로 재편. env substep 조회 축소(출력 동일, TraCI 3.5~4.2배 감소), 행 검증·직렬화 1회, quarantine index 누수 수정, PPO 사례계획 소진 guard | [실행 안내](../guides/KCITY_MAIN_EXECUTION.md), [이전 코드 fac8482](https://github.com/jaekimsung/JA_IN_JAE_project/tree/fac8482) |
 
 ## 유지한 결정
 

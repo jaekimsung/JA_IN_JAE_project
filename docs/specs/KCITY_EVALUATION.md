@@ -4,7 +4,7 @@
 
 ## 1. GAE에서 두 경계를 구분
 
-[RolloutBuffer](../../rl/buffer.py)는 원래 reward, `terminated`, `truncated`, 실제 next 관측의 value를 저장한다.
+[RolloutBuffer](../../policy/buffer.py)는 원래 reward, `terminated`, `truncated`, 실제 next 관측의 value를 저장한다.
 
 ```text
 bootstrap_mask = 1 - terminated
@@ -23,7 +23,7 @@ A[t] = delta[t] + gamma * lambda * trace_mask[t] * A[t+1]
 
 `add(obs, action, log_prob, reward, value, terminated=..., truncated=..., next_value=...)`를 사용한다. 종전6번째 positional `done`도 termination 의미로 지원하지만, truncation은 명시적으로 지정해야 한다. truncation에 next_value가 없으면 오류다. reward에 bootstrap 값을 더하는 옛 방식과 혼용하지 않는다.
 
-[PPO.collect_rollout](../../rl/ppo.py)는 reset 전 next value를 계산한다. `final_observation/terminal_observation/final_obs`를 제공하는 same-step autoreset도 처리한다. vector 환경·다른 autoreset mode는 지원을 검증하지 않았다. next 관측이 유효하지 않은 truncation은 오류로 중단하며 가짜 value로 복구하지 않는다.
+[PPO.collect_rollout](../../policy/ppo.py)는 reset 전 next value를 계산한다. `final_observation/terminal_observation/final_obs`를 제공하는 same-step autoreset도 처리한다. vector 환경·다른 autoreset mode는 지원을 검증하지 않았다. next 관측이 유효하지 않은 truncation은 오류로 중단하며 가짜 value로 복구하지 않는다.
 
 검사 사례: r=1,V=2,terminal V=4,gamma=.99에서 정답 A=2.96이다. 다음 reset의 V=100이 섞였던 기존 코드는101.96이었다. 수정 후2.96을 확인했다. 기존 성능 로그/모델은 다시 학습한 결과로 바꾸지 않는다.
 
@@ -33,15 +33,15 @@ A[t] = delta[t] + gamma * lambda * trace_mask[t] * A[t+1]
 
 정기 평가를 켜려면 `PPO.learn(..., eval_env=independent_env, eval_fn=...)`를 제공한다. 같은 unwrapped 환경이면 시작 전에 거부한다. 평가 후 학습 환경을 reset하지 않으며 Python/NumPy/Torch 정책 RNG를 복원한다. 환경의 독립 connection·seed는 호출자가 보장해야 한다. K-CITY의 인스턴스별 connection은 KC-02에서 검사했다. 공통 masked actor·Runner와 주기 dev 평가는 pilot/본 실행기에 연결했다.
 
-**기존 고속도로 실행기의 호환성 변화:** `legacy/highway/train.py`는 global TraCI를 쓰고 기본 `EVAL_INTERVAL=5`다. 이 상태로는 맵 생성/학습 전에 명시적 오류로 중단한다. 기존 고속도로 예제를 사용할 때는 `EVAL_INTERVAL=0`으로 주기 평가를 끄고 저장 정책을 `legacy/highway/test.py`로 별도 평가하거나, 연결부터 독립시킨 실행기가 필요하다. 단순히 고속도로 환경 인스턴스를 두 개 만드는 것은 해결책이 아니다. 이번에는 고속도로 주행/재학습을 하지 않았다.
+**기존 고속도로 실행기의 호환성 변화(r3에서 예제 삭제):** `legacy/highway/train.py`는 global TraCI를 쓰고 기본 `EVAL_INTERVAL=5`다. 이 상태로는 맵 생성/학습 전에 명시적 오류로 중단한다. 기존 고속도로 예제를 사용할 때는 `EVAL_INTERVAL=0`으로 주기 평가를 끄고 저장 정책을 `legacy/highway/test.py`로 별도 평가하거나, 연결부터 독립시킨 실행기가 필요하다. 단순히 고속도로 환경 인스턴스를 두 개 만드는 것은 해결책이 아니다. 이번에는 고속도로 주행/재학습을 하지 않았다.
 
 정기 평가 기본 callback은 종전 고속도로 evaluator다. K-CITY에서는 이를 사용하지 말고 아래 case 평가기를 연결해야 한다. 본 CLI는 전용 evaluate_cases와 native Runner를 사용한다. 전체 재개는 native Runner API로 검증했다. 기존 `save/load`는 계속 weights-only다.
 
 ## 3. 고정 case panel
 
-[kcity/evaluator.py](../../kcity/evaluator.py)의 `make_panel(contract, namespace, counts=None, demand_multiplier=1.0)`은 정책과 독립적으로 case를 생성한다. 기본 A30/B30/C40이며 dev/final namespace를 분리한다. final의1/1.5/2배 수요는 OD/type 기본 seed를 짝짓고 도착 요청 간격을 바꾼다. case UID와 panel SHA를 보관한다.
+[kcity/evaluator.py](../../evaluation/metrics.py)의 `make_panel(contract, namespace, counts=None, demand_multiplier=1.0)`은 정책과 독립적으로 case를 생성한다. 기본 A30/B30/C40이며 dev/final namespace를 분리한다. final의1/1.5/2배 수요는 OD/type 기본 seed를 짝짓고 도착 요청 간격을 바꾼다. case UID와 panel SHA를 보관한다.
 
-본 dev100·final수요별100패널은 [main_v1](../../configs/kcity/main_v1/README.md)에 동결했다. pilot dev100은 별도의 개발진단 index를 사용했으며 본 final은 아직 실행하지 않았다. KC-03 당시의 contract_check 6회는 공학 검사다. 최종평가 통합 실행·attempt 장부는 후속이다.
+본 dev100·final수요별100패널은 [main_v1](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/configs/kcity/main_v1/README.md)에 동결했다. pilot dev100은 별도의 개발진단 index를 사용했으며 본 final은 아직 실행하지 않았다. KC-03 당시의 contract_check 6회는 공학 검사다. 최종평가 통합 실행·attempt 장부는 후속이다.
 
 ## 4. 평가 지표와 불명 값
 
@@ -75,3 +75,5 @@ PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 "$KCPY" -B tools/checks/check_learni
 검사 실행기는 학습 없이 A/B/C×2와 GAE fixture·panel 생성만 수행한다. 산출물은 SUMMARY, PANEL, EPISODES JSON/CSV, AGGREGATE, transition trace, SUMO 경고 로그다. 이 probe는 특권 route 정보를 사용하는 공학 검사이며 연구 B0나 BC/PPO 정책이 아니다. 수집10M 장부에도 합산하지 않는다.
 
 본 설정/목표 동결과 제한된 GPU 운영 preflight는 후속 완료했다. 전체 정지/양보 지표·교통 상호작용 보장·최종 제출 집계는 남아 있다. 과거 작은 검사·pilot을 본1M 성과나 실차 안전 검증으로 확대하지 않는다.
+
+> 2026-11-16 코드 정리로 KC 단계 검증 스크립트(`tools/checks/`, `check_policy.py`, 운영 probe·preflight)는 삭제됐다. 위 검증 명령을 재현하려면 [commit fac8482](https://github.com/jaekimsung/JA_IN_JAE_project/tree/fac8482)를 checkout한다. 현재 실행 방법은 [실행 안내](../guides/KCITY_MAIN_EXECUTION.md)를 따른다.

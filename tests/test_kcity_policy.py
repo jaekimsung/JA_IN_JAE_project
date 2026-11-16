@@ -1,7 +1,6 @@
 """KC-04 synthetic gradient/transfer and real SUMO resume fixtures; no study training."""
 from copy import deepcopy
 from pathlib import Path
-import json
 import random
 import sys
 import tempfile
@@ -11,10 +10,12 @@ import numpy as np
 import torch
 
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
-from rl.bc import BCPolicy
-from kcity.policy.policy import DEFAULT_POLICY,KCityPolicy,initialize_from_bc
-from kcity.training import DEFAULT_PPO,KCityBC,KCityPPO,KCityRunner,new_policy
-from kcity.env.env import SumoKCityEnv
+from policy.networks import HybridActorCritic
+from policy.policy import DEFAULT_POLICY,KCityPolicy,initialize_from_bc
+from training.bc import KCityBC
+from policy.ppo import DEFAULT_PPO,KCityPPO,new_policy
+from training.ppo import KCityRunner
+from env.env import SumoKCityEnv
 
 
 def fixture_batch(n=32):
@@ -89,7 +90,7 @@ class PolicyTests(unittest.TestCase):
 
     def test_transfer_rejects_legacy_config_mismatch_and_nonfresh_target(self):
         p=new_policy(small_config(),11)
-        with self.assertRaises(ValueError):initialize_from_bc(p,BCPolicy(73))
+        with self.assertRaises(ValueError):initialize_from_bc(p,HybridActorCritic(73))
         with self.assertRaises(ValueError):initialize_from_bc(p,new_policy(None,11))
         agent=KCityPPO(small_config(),hparams=small_hp());agent.num_timesteps=1
         with self.assertRaises(ValueError):agent.initialize_bc(p,'fixture')
@@ -175,16 +176,15 @@ class ResumeTests(unittest.TestCase):
             self.assertIsNone(b.env.conn)
 
     def test_exact_cap_with_real_bounded_fixture_updates(self):
-        a=self.runner();history=a.run_until(7,fixture=True)
+        a=self.runner();history=a.run_until(7)
         self.assertEqual([r['transitions'] for r in history],[4,7])
         self.assertEqual(a.agent.num_timesteps,7);self.assertEqual(a.agent.num_updates,2)
         self.assertEqual(len(a.agent.buffer),0)
-        self.assertEqual(a.run_until(7,fixture=True),[])
+        self.assertEqual(a.run_until(7),[])
 
-    def test_research_gate_rejects_before_sumo_start(self):
-        a=self.runner();a.namespace='train'
-        with self.assertRaisesRegex(RuntimeError,'disabled'):a.run_until(7)
-        with self.assertRaises(ValueError):a.run_until(7,fixture=True)
+    def test_run_until_rejects_backwards_target_before_sumo_start(self):
+        a=self.runner();a.agent.num_timesteps=5
+        with self.assertRaises(ValueError):a.run_until(4)
         self.assertIsNone(a.env.conn)
 
 

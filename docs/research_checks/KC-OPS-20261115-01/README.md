@@ -7,10 +7,10 @@
 
 ## 구현
 
-- [본 실행기](../../../tools/main/main_experiment.py): collect / views / bc / ppo. 4개 check-only가 실제 output 없이 통과했고, launch record 없는 본 실행은 거부됐다.
-- [운영 계층](../../../kcity/experiment.py): 고정 설정/해시/owner/디스크 검사, 새 전문가 pool·성공 whole-Episode BC view, same-seed BC actor 이식, 정확한1M cap·post-update50k dev100.
+- [본 실행기](../../../runner/train_ppo.py): collect / views / bc / ppo. 4개 check-only가 실제 output 없이 통과했고, launch record 없는 본 실행은 거부됐다.
+- [운영 계층](../../../training/ppo.py): 고정 설정/해시/owner/디스크 검사, 새 전문가 pool·성공 whole-Episode BC view, same-seed BC actor 이식, 정확한1M cap·post-update50k dev100.
 - PPO의 전체 State/NPZ/사건과 learner bundle을 같은 shard에 atomic commit한다. 부분 rollout STOP, 정상 rollout 경계, 평가 경계, 예산 끝의 STOP을 연속 실행과 비교했다.
-- 기존 B0 전용 validator에 명시적인 online PPO provenance 분기만 추가했다. [호환 SHA](../../../configs/kcity/main_v1/OPERATIONAL_COMPATIBILITY.json)로 원래 frozen 자료와 연결한다. 환경/보상/actor/PPO 수식과 과학 설정 JSON은 보존했다.
+- 기존 B0 전용 validator에 명시적인 online PPO provenance 분기만 추가했다. [호환 SHA](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/configs/kcity/main_v1/OPERATIONAL_COMPATIBILITY.json)로 원래 frozen 자료와 연결한다. 환경/보상/actor/PPO 수식과 과학 설정 JSON은 보존했다.
 
 ## 실제 검증 결과
 

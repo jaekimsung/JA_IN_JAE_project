@@ -6,7 +6,7 @@
 
 ## 1. 전문가 B0의 정보와 제어
 
-[KCityRuleExpert](../../kcity/policy/rule_expert.py)는 `predict(observation)`만 받는 결정적·메모리 없는 규칙 정책이다. 환경 handle,전체 State,detected 목록,미래 신호,현재 case ID를 받지 않는다. 설정 외에 과거 상태나 난수도 저장하지 않는다.
+[KCityRuleExpert](../../policy/rule_expert.py)는 `predict(observation)`만 받는 결정적·메모리 없는 규칙 정책이다. 환경 handle,전체 State,detected 목록,미래 신호,현재 case ID를 받지 않는다. 설정 외에 과거 상태나 난수도 저장하지 않는다.
 
 | OBS73 정보 | 실제 사용 |
 |---|---|
@@ -23,7 +23,7 @@ A/B/C의 지정 경로에는 allway_stop이 없다. 구현에는 관측의 stop 
 
 ## 2. 실제 기록 구조
 
-[Collector](../../kcity/data/collector.py)는 각0.5초 결정에 대해 다음을 저장한다. 사건/기한으로 일찍 끝난 전이는 실제1~5개의0.1초 tick을 기록한다.
+[Collector](../../data/collector.py)는 각0.5초 결정에 대해 다음을 저장한다. 사건/기한으로 일찍 끝난 전이는 실제1~5개의0.1초 tick을 기록한다.
 
 - 수업 필수 `episode,t,observation,action_raw,action,reward,terminated,truncated,state,detected_vehicles,event,next_observation,next_state`와 중첩 행동/사건 필드.
 - 모든 행의 실제 before/after 절대 State·전체 차량·신호,현재/다음 detected 목록. 사라진 ego는null·absorbing 관측·validity flag로 표시한다.
@@ -62,12 +62,12 @@ NPZ는 기본11개 key를 모두 보존하고 raw alias·bounded 입력·mask·U
 
 case의 namespace·시드 그룹·split을 **수집 전에** 정한다. 한 Episode 또는 같은 교통 시드 그룹이 두 split에 들어가면 거부한다. 이번 검증에서는 A/B/C 각1개를expert_train namespace와expert_val namespace에서 수집했다. 작은 파이프라인 점검을 위한3:3 구성이고,본 pool의80:20 설계를 대신하지 않는다.
 
-[iter_bc_batches](../../kcity/data/dataset.py)는 완주·충돌 없음·정의된 적색 위반 없음·신호 unknown 없음이 확인된 **전체 B0 Episode**만 fitting view에 넣는다. 실패·불명·미완결 Episode의 원시 전이는 삭제하지 않는다. 종료 summary는 raw 사건/측정에서 다시 계산해 대조하므로,summary만 성공으로 바꿔 loader를 통과시킬 수 없다.
+[iter_bc_batches](../../data/dataset.py)는 완주·충돌 없음·정의된 적색 위반 없음·신호 unknown 없음이 확인된 **전체 B0 Episode**만 fitting view에 넣는다. 실패·불명·미완결 Episode의 원시 전이는 삭제하지 않는다. 종료 summary는 raw 사건/측정에서 다시 계산해 대조하므로,summary만 성공으로 바꿔 loader를 통과시킬 수 없다.
 
 BC label은 `action.env_input`의 bounded 가감속과 Lane 명령이다. PPO logprob용 원본 action_raw는 그대로 보존한다. 기본 loader는 debug/pilot 자료로 연구 BC를 초기화하는 것을 거부한다. 이번 호환성 검사만 `allow_debug=True`를 명시했다.
 
 ```python
-from kcity.data.dataset import iter_bc_batches
+from data.dataset import iter_bc_batches
 
 for batch in iter_bc_batches(dataset_path, "expert_train", allow_debug=True):
     obs = batch["observation"]     # float32[N,73]
@@ -127,3 +127,5 @@ PPO는 `transitions/checkpoints/`에 native learner bundle을 먼저 저장·fsy
 사용자 요청으로 과거 rawdebug/probe·console로그·source복사본·로컬압축본을 삭제했다. 필요한 코드·설정·곡선·평가·모델11개·작은 검증 결과는 남겼다. 삭제된 과거 dataset을 현재 읽기/재개 입력으로 안내하지 않는다. **Drive 업로드 금지, 새 백업 없음.**
 
 최종 release의 run간 전역Episode ID 매핑·다중run seed교차검사·≥10M UID union·공개 manifest/DatasetCard·Hub 전수 다운로드 복원은 후속이다. 로컬 validator 통과를 원격 제출 완료로 표시하지 않는다. [실행 프로토콜](EXECUTION_PROTOCOL.md)
+
+> 2026-11-16 코드 정리로 KC 단계 검증 스크립트(`tools/checks/`, `check_policy.py`, 운영 probe·preflight)는 삭제됐다. 위 검증 명령을 재현하려면 [commit fac8482](https://github.com/jaekimsung/JA_IN_JAE_project/tree/fac8482)를 checkout한다. 현재 실행 방법은 [실행 안내](../guides/KCITY_MAIN_EXECUTION.md)를 따른다.

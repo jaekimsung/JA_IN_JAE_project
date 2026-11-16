@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # 저장소 루트
-from kcity.common import sha256, write_json, write_xml
+from env.common import sha256, write_json, write_xml
 
 
 def turn(element):

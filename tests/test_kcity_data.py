@@ -1,10 +1,7 @@
 """KC-05 expert/data fixtures: real SUMO rows, corruption, split and recovery tests."""
 from copy import deepcopy
 from pathlib import Path
-from collections import Counter
 import json
-import os
-import sqlite3
 import subprocess
 import sys
 import tempfile
@@ -14,13 +11,13 @@ from unittest.mock import patch
 import numpy as np
 
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
-from kcity.policy.rule_expert import KCityRuleExpert
-from kcity.env.env import SumoKCityEnv
-from kcity.policy.policy import KCityPolicy
-from kcity.data.collector import build_config,ExpertCollector
-from kcity.data.dataset import (ShardWriter,validate_row,validate_pair,make_transition,validate_dataset,
+from policy.rule_expert import KCityRuleExpert
+from env.env import SumoKCityEnv
+from policy.policy import KCityPolicy
+from data.collector import build_config,ExpertCollector
+from data.dataset import (ShardWriter,validate_row,validate_pair,make_transition,validate_dataset,
     iter_bc_batches,create_index,index_row,atomic_json,digest,file_sha256)
-from kcity.evaluator import EpisodeMetrics
+from evaluation.metrics import EpisodeMetrics
 
 
 def observation(speed=6):
@@ -165,6 +162,17 @@ class DataTests(unittest.TestCase):
             finally:w.close()
             self.assertEqual(validate_dataset(root)['unique_transitions'],3)
             self.assertTrue(any((root/'quarantine').iterdir()))
+
+    def test_clean_resume_rebuilds_index_without_quarantine_growth(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp)/'data';w=self.writer(root,shard_rows=2)
+            w.append(self.rows[0]);w.append(self.rows[1]);w.commit({'fixture':True},[]);w.close()
+            for _ in range(2):
+                w=self.writer(root,resume=True,shard_rows=2)
+                try:self.assertEqual(w.count,2)
+                finally:w.close()
+            self.assertFalse((root/'quarantine').exists())
+            self.assertEqual(sorted(p.name for p in (root/'partial').iterdir()),['current.jsonl','index.sqlite'])
 
     def test_commit_directory_survives_release_update_failure(self):
         with tempfile.TemporaryDirectory() as temp:

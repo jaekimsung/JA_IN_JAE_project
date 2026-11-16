@@ -186,7 +186,7 @@ AV가 소실되면 `ego_alive=false`, ego 필드는 null, 관측은 73개의 0�
 
 policy input validator는 길이73·float32·finite·범위·one-hot·mask 일관성, 양 Lane 부호, 내부 Lane, stop line sentinel을 검사한다. 옛 31-D를 0-padding해 새 정책 관측이라고 하지 않는다. 최종 수업 인정 차원이 달라지면 actor·dataset schema·모든 비교 방법을 함께 변경하고 컨설팅 결정으로 남긴다.
 
-현재 `legacy/highway/train_bc.py::load_data`는 `abs(action_raw)<=1`을 요구하고 `legacy/highway/collect_pomdp_data.py`의 일부 정책은 수집 전에 clip한다. 새 데이터에서는 원본 가감속이 범위를 넘을 수 있으므로 이 검사·수집 경로를 그대로 쓰지 않는다. 새 BC loader는 `action.env_input`의 가감속과 `action.lane_category`를 학습 label로 선택하고 schema version으로 동작을 분기한다. PPO는 항상 원본 action_raw로 log probability를 계산한다. label 선택과 필드 의미를 모두 기록해 기존 자료와 조용히 섞지 않는다.
+당시 `legacy/highway/train_bc.py::load_data`(r3에서 삭제)는 `abs(action_raw)<=1`을 요구하고 `legacy/highway/collect_pomdp_data.py`의 일부 정책은 수집 전에 clip한다. 새 데이터에서는 원본 가감속이 범위를 넘을 수 있으므로 이 검사·수집 경로를 그대로 쓰지 않는다. 새 BC loader는 `action.env_input`의 가감속과 `action.lane_category`를 학습 label로 선택하고 schema version으로 동작을 분기한다. PPO는 항상 원본 action_raw로 log probability를 계산한다. label 선택과 필드 의미를 모두 기록해 기존 자료와 조용히 섞지 않는다.
 
 ## 8. 파일·NPZ·분할·복원 계약
 

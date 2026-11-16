@@ -7,7 +7,7 @@
 ## 1. 중복 next 저장 축소
 
 새 JSONL 물리 형식은 `KC-NEXT-REF-v1`이다. 같은 Episode 내 다음 행의 State/observation과 완전히 같은 값에만 그 행의 transition UID를 기록한다.
-Episode 종료와 shard 마지막 행에는 next를 직접 저장한다. [read_shard](../../../kcity/data/dataset.py)가 한 행 lookahead로 **원래 모든 필드와 값**을 복원한다.
+Episode 종료와 shard 마지막 행에는 next를 직접 저장한다. [read_shard](../../../data/dataset.py)가 한 행 lookahead로 **원래 모든 필드와 값**을 복원한다.
 NPZ의 next_observation 등 필수 배열,전체 State,차량,정밀도,사건,timing은 그대로다. 과거 full-next 형식도 읽는다.
 
 검증 자료의 실제 비교(구/신 실행별 attempt UUID만 제외):

@@ -6,7 +6,7 @@
 ## 식별과 변경 범위
 
 - 사전 등록: PROVENANCE.json. 시작 `2026-11-14T20:56:03.554322+09:00`, HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`, local branch `codex/kcity-kc01-20261114`. 시작부터 기존 미완료 변경이 있었으며 이를 보존했다. 이번 commit/push·외부 업로드는 없다.
-- 구현 ID `KC-ENV-v1-kc02-candidate`. [환경](../../../kcity/env/env.py)·[경로 기하](../../../kcity/env/route.py)·[관측](../../../kcity/env/observation.py)·[검사 실행기](../../../tools/checks/check_env.py)·[회귀 검사](../../../tests/test_kcity_env.py)를 새로 추가했다.
+- 구현 ID `KC-ENV-v1-kc02-candidate`. [환경](../../../env/env.py)·[경로 기하](../../../env/route.py)·[관측](../../../env/observation.py)·[검사 실행기](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/check_env.py)·[회귀 검사](../../../tests/test_kcity_env.py)를 새로 추가했다.
 - Python3.10.12, Gymnasium1.2.3, NumPy1.24.4, SUMO1.28.0. 기존 격리 venv를 사용했고 기존 고속도로·PPO/BC·맵·신호·모델·데이터와 KC-01 실행 source/config는 수정하지 않았다.
 - 현재 사용법과 상세 계약: [KCITY_ENV.md](../../guides/KCITY_ENV.md). source hash는 [최종 통합 summary](integration_final/SUMMARY.json), 보호 파일 검증·종료 시각은 [FINAL_CHECKS.json](FINAL_CHECKS.json).
 

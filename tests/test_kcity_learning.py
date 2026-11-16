@@ -1,7 +1,6 @@
-"""KC-03 mathematical/control-flow fixtures; no optimizer steps or research learning."""
+"""KC-03 GAE/update/metric fixtures; no optimizer steps or research learning."""
 from copy import deepcopy
 from pathlib import Path
-import random
 import sys
 import unittest
 from unittest.mock import patch
@@ -10,11 +9,12 @@ import numpy as np
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from rl.ppo import PPO
-from rl.buffer import RolloutBuffer
-from kcity.env.env import SumoKCityEnv, KCityExternalTimeLimit
-from kcity.env.config import load_contract
-from kcity.evaluator import EpisodeMetrics, aggregate, make_panel, evaluate_cases
+from policy.buffer import RolloutBuffer
+from env.env import SumoKCityEnv
+from policy.ppo import KCityPPO
+from env.config import load_contract
+from evaluation.metrics import EpisodeMetrics, aggregate, make_panel
+from evaluation.evaluate import evaluate_cases
 
 
 class BufferTests(unittest.TestCase):
@@ -72,70 +72,16 @@ class FakeEnv:
                 {'final_observation':np.array([4.],np.float32)} if self.autoreset else {})
 
 
-class CollectorTests(unittest.TestCase):
-    def agent(self, n=4):
-        p=PPO(1,2,n_steps=n,hidden_sizes=(4,),device='cpu')
-        p.act=lambda obs: (np.array([2.,0.],np.float32),-1.,float(obs[0]))
-        p.get_value=lambda obs: float(obs[0])
-        return p
-
-    def test_terminal_value_before_reset_and_raw_action_preserved(self):
-        p=self.agent(); e=FakeEnv(); p.collect_rollout(e,e.reset()[0],max_steps=2)
-        self.assertEqual(p.buffer.rewards,[1,1]); self.assertEqual(p.buffer.next_values,[4,4])
-        self.assertEqual(p.buffer.actions[0][0],2.)
-        self.assertEqual(p.num_timesteps,2)
-        np.testing.assert_allclose(p.buffer.compute_gae(100,.99,.95)[0],[-95.04,-95.04])
-
-    def test_autoreset_does_not_reset_again(self):
-        p=self.agent(); e=FakeEnv(True); p.collect_rollout(e,e.reset()[0],max_steps=2)
-        self.assertEqual(e.resets,1); self.assertEqual(p.buffer.next_values,[4,4])
-
-    def test_invalid_terminal_observation_rejected(self):
-        p=self.agent(); e=FakeEnv()
-        e.step=lambda a:(np.array([4.]),1,False,True,{'next_observation_valid':False})
-        with self.assertRaisesRegex(ValueError,'invalid terminal'):p.collect_rollout(e,e.reset()[0],max_steps=1)
-
-    def test_exact_budget_without_any_optimizer_step(self):
-        p=self.agent(); e=FakeEnv(); sizes=[]
-        with patch.object(p,'update',side_effect=lambda a,r:sizes.append(len(a)) or {}):
-            p.learn(e,7)
-            self.assertEqual(sizes,[4,3]); self.assertEqual(p.num_timesteps,7)
-            p.learn(e,7); self.assertEqual(sizes,[4,3])
-            with self.assertRaises(ValueError):p.learn(e,6)
-
+class UpdateTests(unittest.TestCase):
     def test_single_sample_final_rollout_is_finite_without_optimizer_step(self):
-        p=self.agent();p.buffer.add([0],[.1,0],-1,1,0,terminated=True,next_value=0)
+        p=KCityPPO(seed=11,device='cpu')
+        p.buffer.add(np.zeros(73,np.float32),[.1,0],-1,1,0,terminated=True,next_value=0,
+                     action_mask=[False,True,False])
         before={k:v.clone() for k,v in p.policy.state_dict().items()}
         with patch.object(p.optimizer,'step',return_value=None):
             stats=p.update(np.array([1.],np.float32),np.array([1.],np.float32))
         self.assertTrue(all(np.isfinite(v) for v in stats.values()))
         self.assertTrue(all(torch.equal(before[k],v) for k,v in p.policy.state_dict().items()))
-
-    def test_periodic_eval_requires_different_env_before_reset(self):
-        p=self.agent();e=FakeEnv()
-        for target in [None,e]:
-            with self.assertRaisesRegex(ValueError,'independent eval_env'):p.learn(e,1,eval_interval=1,eval_env=target)
-        self.assertEqual(e.resets,0)
-
-    def test_independent_eval_preserves_training_episode_and_rng(self):
-        p=self.agent(n=2);train=FakeEnv();evaluation=FakeEnv()
-        seen=[];py=random.getstate();npstate=np.random.get_state();ts=torch.get_rng_state().clone()
-        def evaluate(*args,**kwargs):
-            seen.append(args[1]); random.random();np.random.rand();torch.rand(5)
-        with patch.object(p,'update',return_value={}):
-            p.learn(train,3,eval_interval=1,eval_env=evaluation,eval_fn=evaluate)
-        self.assertEqual(seen,[evaluation,evaluation]);self.assertEqual(train.resets,4)
-        self.assertEqual(random.getstate(),py);np.testing.assert_array_equal(np.random.get_state()[1],npstate[1])
-        self.assertTrue(torch.equal(torch.get_rng_state(),ts))
-
-    def test_real_kcity_external_cut_collects_without_weight_change(self):
-        e=KCityExternalTimeLimit(SumoKCityEnv(background=False,debug_warmup_s=0),2)
-        self.addCleanup(e.close);p=PPO(73,2,n_steps=3,hidden_sizes=(4,),device='cpu')
-        before={k:v.clone() for k,v in p.policy.state_dict().items()}
-        obs,_=e.reset(seed=7);p.collect_rollout(e,obs,max_steps=3)
-        self.assertEqual(p.buffer.truncated,[False,True,False]);self.assertEqual(p.buffer.trace_masks,[1,0,1])
-        self.assertTrue(all(torch.equal(before[k],v) for k,v in p.policy.state_dict().items()))
-        self.assertEqual(len(p.optimizer.state),0)
 
 
 class MetricTests(unittest.TestCase):

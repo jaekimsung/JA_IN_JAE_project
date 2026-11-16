@@ -6,7 +6,7 @@
 ## 식별과 산출물
 
 - 사전 기록: local branch `codex/kcity-kc01-20261114`,HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`. 기존 미완료 변경을 보존했다.
-- 신규 [B0](../../../kcity/policy/rule_expert.py),[data writer/validator/loader](../../../kcity/data/dataset.py),[collector/cursor](../../../kcity/data/collector.py),[수집 CLI](../../../tools/checks/collect_expert.py),[검사 CLI](../../../tools/checks/validate_data.py),[회귀 검사](../../../tests/test_kcity_data.py).
+- 신규 [B0](../../../policy/rule_expert.py),[data writer/validator/loader](../../../data/dataset.py),[collector/cursor](../../../data/collector.py),[수집 CLI](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/collect_expert.py),[검사 CLI](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/validate_data.py),[회귀 검사](../../../tests/test_kcity_data.py).
 - 사용·컬럼·복구 계약은 [KCITY_DATA_PIPELINE.md](../../specs/KCITY_DATA_PIPELINE.md),설계와의 대응은 [데이터 명세](../../specs/DATA_COLLECTION_SPEC.md)를 따른다. 기존 env/PPO/BC/map/model/data와 KC-01 pin은 이번 단계에서 수정하지 않았다.
 - 최종 source/원본 파일/문서 검사는 [FINAL_CHECKS.json](FINAL_CHECKS.json). Git commit/push·Drive/GitHub 업로드는 하지 않았다.
 

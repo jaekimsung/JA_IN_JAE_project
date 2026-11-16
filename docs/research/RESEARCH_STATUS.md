@@ -2,7 +2,7 @@
 
 기준일: **2026-11-16** · 브랜치 `main` · 이번 개정은 작업 트리 기준이며 commit/push는 하지 않았다.
 
-**3seed pilot과 본 실험 설정·운영 준비 검증을 완료했다. 본 전문가 수집·본 BC·본 PPO는 아직 시작하지 않았다.** 최신 현황은 이 문서, 날짜별 실적은 [연구 이력](RESEARCH_HISTORY.md), 과학 설정은 [FROZEN_PROTOCOL.json](../../configs/kcity/main_v1/FROZEN_PROTOCOL.json)을 따른다.
+**3seed pilot과 본 실험 설정·운영 준비 검증을 완료했다. 본 전문가 수집·본 BC·본 PPO는 아직 시작하지 않았다.** 최신 현황은 이 문서, 날짜별 실적은 [연구 이력](RESEARCH_HISTORY.md), 과학 설정은 [FROZEN_PROTOCOL.json](../../configs/kcity/experiment.json)을 따른다.
 
 ## 주제와 유지한 조건
 
@@ -39,8 +39,7 @@
 
 ## 실행·용량·보관
 
-- **11/16 폴더 재구성(layout r2)으로 동결 경로·SHA를 다시 고정했다. 과학 설정은 그대로다. 기존 LAUNCH_READY는 옛 경로 기준이라 통과하지 않으므로, 본 수집 전에 서버에서 preflight를 다시 실행해야 한다.** [재구성 안내](../guides/KCITY_MAIN_EXECUTION.md#폴더-재구성layout-revision-2-2026-11-16)
-- 현재 CLI는 collect/views/bc/ppo를 지원한다. [실행 방법](../guides/KCITY_MAIN_EXECUTION.md)의 check-only는 수집/학습/출력 생성을 하지 않는다.
+- **11/16 코드 정리:** 동결 guard·preflight를 제거하고 설정을 [experiment.json](../../configs/kcity/experiment.json)으로 옮겼다. 진입점은 collect/train_bc/train_ppo/evaluate/record_video/export_hf다. 수집 처리량 개선(TraCI 호출 3.5~4.2배 감소, 출력 동일)을 적용했으며 서버 처리량은 다시 측정한다. [실행 안내](../guides/KCITY_MAIN_EXECUTION.md)
 - [준비 기록](../research_checks/KC-STORAGE-20261115-01/LAUNCH_READY.json)은 본7M 준비 범위다. final/archive/제출 전체 완료를 뜻하지 않는다. GPU검증·126회귀검사 통과는 해당 시점 실적이며 이번 문서 개정에서 재학습한 결과가 아니다.
 - 선택1·2 적용: 손실없이 next를 복원하는 KC-NEXT-REF-v1, PPO 최신·직전·50k평가 모델 보관. 전체State·NPZ·73D 유지.
 - 필요량은 본7M 약45.91GiB·전체10M 약55.71GiB다. **headroom1.5·운영예비20GiB 포함** 추정치다. 2026-11-16 00:52 KST 읽기전용 확인 free약55.98GiB로 전체기준보다 약0.27GiB 높았다. 이전 저장검증 시점에는 부족했다. 외부 작업으로 변하므로 시작 직전 다시 확인한다.

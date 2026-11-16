@@ -7,10 +7,10 @@ import numpy as np
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from kcity.env.env import SumoKCityEnv,KCityExternalTimeLimit
-from kcity.env.route import RouteGeometry
-from kcity.env.config import load_contract, ContractError
-from kcity.env.scenarios import sumo_library
+from env.env import SumoKCityEnv,KCityExternalTimeLimit
+from env.route import RouteGeometry
+from env.config import load_contract, ContractError
+from env.scenarios import sumo_library
 
 
 class GeometryTests(unittest.TestCase):
@@ -99,6 +99,19 @@ class GymIntegrationTests(unittest.TestCase):
         for bad in [[float('nan'),0],[0],[0,0,0]]:
             with self.assertRaises(ValueError):e.step(bad)
         self.assertEqual(tick,e._tick())
+
+    def test_substep_state_matches_full_snapshot_fields(self):
+        """step() reads _substep_state() on inner substeps; each field must equal the full snapshot."""
+        e=SumoKCityEnv(background=True);self.addCleanup(e.close);e.reset(seed=3)
+        for action in [[1.,0],[.3,1.],[-.5,0],[0,-1.]]*3:
+            light,full=e._substep_state(),e.get_privileged_state()
+            self.assertEqual(light['vehicles'],[v for v in full['vehicles'] if v['is_ego']])
+            self.assertEqual(light['ego_alive'],full['ego_alive'])
+            self.assertEqual(light['signals'],[dict(id=s['id'],state=s['state']) for s in full['signals']])
+            self.assertEqual(light['traffic'],{k:full['traffic'][k] for k in ['running_hv','pending_hv']})
+            self.assertEqual(light['route_state']['route_valid'],full['route_state']['route_valid'])
+            *_,term,trunc,_=e.step(action)
+            if term or trunc:break
 
     def test_lane_mask_missing_lane_and_cooldown(self):
         e=self.create(scenario_id='B');_,i=e.reset(seed=0)

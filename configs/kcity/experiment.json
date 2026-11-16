@@ -1,0 +1,232 @@
+{
+  "schema_id": "KC-EXPERIMENT-v1",
+  "experiment_id": "KC-MAIN-SCIENCE-v1-20261115",
+  "question": "K-CITY 복합 교통 환경에서 전문가 사전학습의 효과와 한계 분석",
+  "methods": {
+    "B0": "observation-aligned rule expert",
+    "B1": "BC-only selected by validation loss",
+    "B2": "fresh PPO-only",
+    "B3": "same-seed main BC actor initialization then PPO"
+  },
+  "base_contract": {
+    "path": "configs/kcity/v1/protocol.json"
+  },
+  "timing": {
+    "sumo_step_s": 0.1,
+    "control_step_s": 0.5,
+    "substeps": 5,
+    "warmup_s": 60.0
+  },
+  "control": {
+    "speed_mode": 31,
+    "lane_change_mode": 512,
+    "longitudinal_adapter": "setAcceleration",
+    "max_accel_mps2": 2.0,
+    "max_decel_mps2": 4.5,
+    "speed_cap_mps": 8.33,
+    "lane_command_duration_s": 1.0,
+    "lane_cooldown_s": 1.0
+  },
+  "traffic": {
+    "request_generator": "poisson_split_streams_v1",
+    "baseline_requested_vph": 600,
+    "evaluation_demand_multipliers": [
+      1.0,
+      1.5,
+      2.0
+    ],
+    "route_prefix": "coverage_",
+    "vehicle_types": [
+      "hv_Krauss",
+      "hv_IDM",
+      "hv_EIDM",
+      "hv_ACC"
+    ],
+    "vehicle_type_weights": [
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "active_vehicle_cap": null,
+    "insertion_lane": "best",
+    "departure_speed_mps": 0.0,
+    "feasibility_status": "90 pilot episodes completed",
+    "exposure_policy": {
+      "baseline_requested_vph": 600,
+      "warmup_s": 60,
+      "evaluation_demand_multipliers": [
+        1.0,
+        1.5,
+        2.0
+      ],
+      "retain_low_exposure_cases": true,
+      "per_case_min_HV_hard_filter": null,
+      "rejected_candidate": "initial HV>=10 in every case is not met: 8/30 baseline pilot cases below10; do not claim pass",
+      "report": [
+        "HV_start",
+        "HV_min",
+        "HV_time_weighted_mean",
+        "leader_present_fraction",
+        "mean_gap_m",
+        "min_gap_m",
+        "actual_HV_departures_post_reset",
+        "red exposure and LC failures"
+      ],
+      "interpretation": "Requested-demand system comparison, not guaranteed dense local interaction or measured real K-CITY flow. Existing case generator and warmup retained for comparability; low exposure is a reported limitation."
+    }
+  },
+  "policy": {
+    "policy_id": "KC-HYBRID73-v1-candidate",
+    "obs_dim": 73,
+    "hidden_sizes": [
+      256,
+      256
+    ],
+    "activation": "relu",
+    "init_log_std": -0.5,
+    "lane_keep_bias": 0.5,
+    "preprocessing": "env_fixed_obs73_identity_v1"
+  },
+  "parameters": {
+    "total": 86022,
+    "bc_trainable": 85764
+  },
+  "ppo": {
+    "lr": 0.0001,
+    "n_steps": 2048,
+    "n_epochs": 10,
+    "minibatch_size": 64,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "clip_eps": 0.2,
+    "value_coef": 0.5,
+    "entropy_coef": 0.0,
+    "lane_entropy_coef": 0.01,
+    "max_grad_norm": 0.5,
+    "normalize_advantage": true
+  },
+  "bc": {
+    "learning_rate": 0.0003,
+    "acceleration_mse_weight": 1.0,
+    "lane_cross_entropy_weight": 1.0,
+    "trainable": [
+      "trunk",
+      "mu_head",
+      "lane_head"
+    ],
+    "frozen": [
+      "v_head",
+      "log_std"
+    ],
+    "dataset_loader_status": "KC05 implemented; main pool not collected",
+    "updates_per_seed": 10000,
+    "batch_size": 256,
+    "validate_every_updates": 500,
+    "train_view_rows": 200000,
+    "validation_view_rows": 50000,
+    "loss": "acceleration MSE + lane cross entropy"
+  },
+  "rewards": {
+    "progress": "max(0,current_progress-last_progress)/10; arrival sets progress to route length",
+    "arrival": 10,
+    "collision": -20,
+    "red_entry": -10,
+    "invalid_request": "-0.02 once per control interval with known rejection reasons",
+    "lane_change": "-0.01 once per interval with actual lane change execution",
+    "unjustified_wait": 0,
+    "deadline_penalty": 0,
+    "reward_is_raw_interval_sum": true,
+    "change_from_pilot": false,
+    "note": "Unsupported causal unjustified-wait classifier stays disabled. No tuning to improve one method; failure and elapsed time still reported."
+  },
+  "seeds": [
+    11,
+    22,
+    33
+  ],
+  "budgets": {
+    "expert_valid_transitions_min": 1000000,
+    "ppo_transitions_per_method_seed": 1000000,
+    "ppo_methods": [
+      "B2",
+      "B3"
+    ],
+    "ppo_total_transitions": 6000000,
+    "archive_per_budget_end_policy": 500000,
+    "archive_total_transitions": 3000000,
+    "planned_submission_unique_transitions_min": 10000000,
+    "final_episodes": 3000,
+    "pilot_reuse_for_main": false
+  },
+  "case_panels": {
+    "dev": {
+      "path": "configs/kcity/panels/cases_dev.json",
+      "sha256": "6d5c67bafc9cc17cbfbc5e9e1c0cfd35adfcf19c103b4e7ec16427ebe194e24c",
+      "cases": 100
+    },
+    "final": {
+      "path": "configs/kcity/panels/cases_final.json",
+      "sha256": "d3b427fcb7dd1ccb4103be900b81811eff459eacf3795f0f6d0248e6f5db86c6",
+      "cases": 300
+    }
+  },
+  "case_generation": {
+    "root_seed": 20261114,
+    "seed_algorithm": "sha256_component_streams_v1",
+    "source": "kcity/env/config.py:case_seeds/make_case/traffic_requests",
+    "main_case_index_start": 0,
+    "pilot_reserved_case_indices_min": 1000000,
+    "scenario_pattern": [
+      "A",
+      "A",
+      "A",
+      "B",
+      "B",
+      "B",
+      "C",
+      "C",
+      "C",
+      "C"
+    ],
+    "training": "train namespace; case cursor0 onward; same order for B2/B3 and no policy RNG in traffic seeds. Different episode lengths mean unequal realized case counts at equal transitions.",
+    "expert": "Before collection, scenario-local ordinal j assigns val iff j%5==4, train otherwise. Use expert_val/expert_train namespace respectively and case_index=j. Group never crosses split; report actual transition split.",
+    "bc_views": "After successful whole-episode filter, freeze 200k train/50k val unique-row views without replacement using view RNG20261115; common views for all3seeds; insufficient successful rows blocks BC.",
+    "archive": "archive namespace case cursor0 onward; six fixed budget-end models; no updates.",
+    "final": "Generated once; sealed until main policies fixed. Never use final for model/config selection."
+  },
+  "metrics": {
+    "primary": "Supported-rule compliant completion: correct goal/route within300s, no AV collision, no classified red entry.",
+    "full_traffic_rule_compliance_verified": false,
+    "target_rate": 0.8,
+    "consecutive_evaluations": 2,
+    "dev_interval_transitions": 50000,
+    "target_time": "First checkpoint of two consecutive complete, valid dev100 evaluations >=0.80. Record confirmation checkpoint separately. If no confirmation by1M, right-censored.",
+    "signal_unknown": "Any unknown classification invalidates supported compliant aggregate; preserve raw completion and unknown counts. No silent exclusion.",
+    "failures": "Policy deadline/collision/removal/etc remain in valid denominator; infrastructure attempts stored separately; incomplete dev100 cannot confirm target.",
+    "time": "Report completion time conditional on success plus failure-penalized time300s and standstill/LC failure; never rank only successful episodes.",
+    "uncertainty": "Three independent learner seeds; same case panel paired within seed; report seed results and variation, avoid treating episodes as independent learner replicates.",
+    "costs": [
+      "expert collection transitions/wall time",
+      "BC updates/wall time",
+      "PPO fresh transitions/wall time",
+      "evaluation time",
+      "storage bytes"
+    ]
+  },
+  "model_selection": {
+    "BC": "Minimum held-out validation MSE+CE at updates500..10000; earliest on exact tie. Train critic/log_std disabled.",
+    "B1_B3": "Exactly same selected main-BC actor for each seed; B3 fresh PPO optimizer and matched fresh critic head/log_std; shared trunk pretraining is part of treatment.",
+    "B2": "Fresh weights/optimizer per seed; no pilot initialization.",
+    "PPO_final": "Budget-end1M primary; dev-best secondary only, no final-driven reselection.",
+    "save": "Post-update at50k boundaries and safe STOP; preserve counters/optimizer/RNG/rollout/environment current-episode replay. GPU long-history resume still requires operational validation."
+  },
+  "scope_limits": [
+    "2Hz fixed, frequency comparison deferred",
+    "SUMO31/512 safety-assisted system results, not standalone AV safety",
+    "No causal unjustified-wait/full stop/yield compliance claim",
+    "No oversampling/reward/mask/hyperparameter change after pilot results",
+    "Only current A/B/C routes and pinned map, demand is synthetic",
+    "Pilot data/models excluded from main initialization and10M numerator"
+  ]
+}

@@ -4,7 +4,7 @@ K-CITY의 로컬 OpenDRIVE 원본을 변환한 **도로·교통 데모**다. JJ�
 
 ## 바로 실행
 
-프로젝트 루트에서 실행한다. 기존 고속도로 예제의 `legacy/highway/env/sumo/` 파일을 덮어쓰지 않는다.
+프로젝트 루트에서 실행한다.
 
 ```bash
 python view_kcity.py                 # 90도 회전, 차량 1배, 연속 주행 자동 시작

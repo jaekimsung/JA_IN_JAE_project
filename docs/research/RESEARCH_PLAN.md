@@ -1,6 +1,6 @@
 # K-CITY 연구 계획
 
-갱신: 2026-11-16 · [현재현황](RESEARCH_STATUS.md) · [이력](RESEARCH_HISTORY.md) · [동결설정](../../configs/kcity/main_v1/FROZEN_PROTOCOL.json)
+갱신: 2026-11-16 · [현재현황](RESEARCH_STATUS.md) · [이력](RESEARCH_HISTORY.md) · [실험설정](../../configs/kcity/experiment.json)
 
 **주제: K-CITY 복합 교통 환경에서 전문가 사전학습의 효과와 한계 분석.** 3seed pilot과 본설정동결을 마쳤다. 본 수집/BC/PPO는0이다. 아래값은 현재적용할 통제설정이며 최적값이나 입증된성과가 아니다.
 
@@ -41,7 +41,7 @@ B3는BC/PPO loss혼합이 아니다. 공유trunk변화가critic표현에영향�
 
 ## 3. 환경·보상과한계
 
-A `-68 → -13 → -71`,B `-3#4 → -3#5 → -3#6 → -3#7 → -3#8 → -68`,C qualifier17edges를사용한다. 출발pos5m·speed2m/s와필수LC/goal을검사했다. 권위자료는[시나리오](../../configs/kcity/v1/scenarios.json)·[패널](../../configs/kcity/main_v1/cases_final.json)이다. 연구중맵재생성금지.
+A `-68 → -13 → -71`,B `-3#4 → -3#5 → -3#6 → -3#7 → -3#8 → -68`,C qualifier17edges를사용한다. 출발pos5m·speed2m/s와필수LC/goal을검사했다. 권위자료는[시나리오](../../configs/kcity/v1/scenarios.json)·[패널](../../configs/kcity/panels/cases_final.json)이다. 연구중맵재생성금지.
 
 실제보상은max(0,Δroute_progress)/10+도착10−AV충돌20−적색진입10−무효요청0.02−실제LC0.01이다. unjustified_wait=0이며 정지원인인과분류는미구현이다. Gaussian원본표본/clip입력/요청/실측을분리한다. [환경계약](../guides/KCITY_ENV.md)
 

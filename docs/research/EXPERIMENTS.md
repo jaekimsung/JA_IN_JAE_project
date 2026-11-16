@@ -53,6 +53,6 @@ test수는단계별누적이며합산하지않는다. GPU probe400결정scripted
 
 - [신호before/after](../../maps/kcity/reports/signals_validation/summary.json): after12회2124/2124도착·충돌기록0,before12회4회판정실패·충돌기록5. 전체24회를무충돌로쓰지않는다.
 - [Live60/80](../../maps/kcity/reports/live_demo_validation.json): 60대상한seed0/1/2각3600초와기각80대trial분리. 충돌카운터는차량-step집계다.
-- [고속도로legacy](../../legacy/highway/results/run_20260907_202220/eval_log.csv): 마지막평가194560전이success0·timeout1.0은K-CITY결과가아니며최종예산완료증거도아니다.
+- [고속도로legacy](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/legacy/highway/results/run_20260907_202220/eval_log.csv): 마지막평가194560전이success0·timeout1.0은K-CITY결과가아니며최종예산완료증거도아니다.
 
 현재필요모델/곡선/집계는남겼고 rawaudit/probe로그·불필요중간모델·압축본은11/16삭제했다. 과거hash는계보이며현재파일존재증명이아니다.

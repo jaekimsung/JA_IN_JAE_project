@@ -41,4 +41,4 @@
 
 설정 확정은 아래 frozen JSON을 기준으로 한다. 기존 KC01 설정은 역사적 후보 및 실행 호환 계약으로 그대로 보존한다. 새 JSON은 과학 명세이며 기존 KC01 loader의 실행 입력으로 바로 사용할 수 없다.
 
-[설정 원본](../../../configs/kcity/main_v1/FROZEN_PROTOCOL.json) · [집계·원자료 SHA](SUMMARY.json) · [진도](STATUS.json) · [결정 사전기록](REQUEST.json)
+[설정 원본](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/configs/kcity/main_v1/FROZEN_PROTOCOL.json) · [집계·원자료 SHA](SUMMARY.json) · [진도](STATUS.json) · [결정 사전기록](REQUEST.json)

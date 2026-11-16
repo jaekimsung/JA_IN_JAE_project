@@ -5,20 +5,22 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-import numpy as np
 import torch
 
-from kcity.training import KCityPPO,KCityRunner
-from kcity.env.config import load_contract,digest
-from kcity.env.env import SumoKCityEnv
-from kcity.policy.rule_expert import KCityRuleExpert
-from tools.checks.check_policy import serializable,trace_rows
-from kcity.data.dataset import validate_dataset,validate_row,read_shard
-from kcity.experiment import (case_plan,load_scientific,require_launch,Owner,MainWriter,
-    dataset_config,RecordingRunner,OnlineRecorder,MainExpertCollector,run_bc,run_ppo,read)
-from tools.checks.check_policy import fixture_batch
-from kcity.training import read_bundle
-from kcity.data.storage import checkpoint_from_shard
+from training.experiment import load_experiment
+from data.collector import ExpertCollector,case_plan,dataset_config
+from data.online import OnlineRecorder
+from training.runs import Owner,read
+from training.bc import run_bc
+from policy.checkpoint import read_bundle
+from policy.ppo import KCityPPO
+from training.ppo import KCityRunner,RecordingRunner,run_ppo
+from env.config import load_contract,digest
+from env.env import SumoKCityEnv
+from policy.rule_expert import KCityRuleExpert
+from fixtures import fixture_batch,serializable,trace_rows
+from data.dataset import ShardWriter,validate_dataset,validate_row,read_shard
+from data.storage import checkpoint_from_shard
 
 
 class MainContractTests(unittest.TestCase):
@@ -30,11 +32,13 @@ class MainContractTests(unittest.TestCase):
             self.assertEqual(sum(r['data_split']=='expert_val' for r in rows),len(rows)//5)
             self.assertTrue(all((r['case']['case_index']%5==4)==(r['data_split']=='expert_val') for r in rows))
 
-    def test_legacy_contract_stays_disabled_and_main_requires_record(self):
-        spec=load_scientific()
-        self.assertFalse(spec['training_enabled'])
-        self.assertFalse(load_contract()['protocol']['training']['enabled'])
-        with self.assertRaisesRegex(ValueError,'launch-record'):require_launch(None)
+    def test_experiment_settings_check_case_panels(self):
+        spec=load_experiment()
+        self.assertEqual(spec['seeds'],[11,22,33])
+        broken=deepcopy(spec);broken['case_panels']['dev']['sha256']='0'*64
+        with tempfile.TemporaryDirectory() as d:
+            path=Path(d)/'experiment.json';path.write_text(__import__('json').dumps(broken))
+            with self.assertRaisesRegex(ValueError,'Case panel dev'):load_experiment(path)
 
     def test_owner_refuses_config_change_and_duplicate_process(self):
         with tempfile.TemporaryDirectory() as d:
@@ -48,7 +52,7 @@ class MainContractTests(unittest.TestCase):
 
     def test_recorded_step_matches_native_policy_and_update(self):
         torch.set_num_threads(1)
-        spec=load_scientific()
+        spec=load_experiment()
         e=SumoKCityEnv(background=True)
         r=SumoKCityEnv(background=True)
         with tempfile.TemporaryDirectory() as d:
@@ -60,7 +64,7 @@ class MainContractTests(unittest.TestCase):
                 record=RecordingRunner(b,r,run_id='recorded',namespace='contract_check')
                 native.case_cursor=record.case_cursor=3000000
                 cfg=dataset_config(r,'recorded-fixture',case_plan(r.contract,'probe',20,3000000),'debug','B2',22)
-                writer=MainWriter(Path(d)/'data',cfg,shard_rows=2048)
+                writer=ShardWriter(Path(d)/'data',cfg,shard_rows=2048)
                 recorder=OnlineRecorder(record,writer,'B2',22)
                 record.recorder=recorder
                 left=native.collect(32)
@@ -87,9 +91,9 @@ class MainContractTests(unittest.TestCase):
             writer=None
             try:
                 cfg=dataset_config(env,'finish-episode-fixture',case_plan(env.contract,'expert',10,3000000),'debug')
-                writer=MainWriter(Path(d)/'data',cfg,shard_rows=512)
-                collector=MainExpertCollector(env,KCityRuleExpert(),writer)
-                result=collector.collect_main(1)
+                writer=ShardWriter(Path(d)/'data',cfg,shard_rows=512)
+                collector=ExpertCollector(env,KCityRuleExpert(),writer)
+                result=collector.collect(1)
                 self.assertEqual(result['phase'],'COMPLETE')
                 self.assertGreater(result['transitions'],1)
                 self.assertIsNone(collector.metrics)
@@ -99,19 +103,19 @@ class MainContractTests(unittest.TestCase):
                 env.close()
 
     def test_bc_stop_before_first_validation_resumes_with_best_selection(self):
-        spec=deepcopy(load_scientific())
+        spec=deepcopy(load_experiment())
         spec['bc'].update(updates_per_seed=10,validate_every_updates=5)
         obs,action,mask=fixture_batch(32)
         data=dict(observation=obs,action_target=action,action_mask=mask)
         views={'expert_train':data,'expert_val':data}
         with tempfile.TemporaryDirectory() as d:
             root=Path(d)/'bc'
-            with patch('kcity.experiment.read_views',return_value=({'data_id':'SYNTHETIC-UNIT','view_id':'fixture'},views)):
-                with patch('kcity.experiment.stopped',return_value=True):
+            with patch('training.bc.read_views',return_value=({'data_id':'SYNTHETIC-UNIT','view_id':'fixture'},views)):
+                with patch('training.bc.stopped',return_value=True):
                     run_bc(root,Path(d)/'mock-views',11,spec,'cpu')
                 self.assertEqual(read(root/'STATUS.json')['updates'],1)
                 self.assertIsNone(read(root/'STATUS.json')['best']['loss'])
-                with patch('kcity.experiment.stopped',return_value=False):
+                with patch('training.bc.stopped',return_value=False):
                     run_bc(root,Path(d)/'mock-views',11,spec,'cpu',resume=True)
                 self.assertEqual(read(root/'COMPLETE.json')['updates'],10)
                 self.assertIn(read(root/'BEST.json')['path'],['update-000005','update-000010'])
@@ -121,7 +125,7 @@ class MainContractTests(unittest.TestCase):
                 self.assertIn(read(root/'BEST.json')['path'],kept)
 
     def test_main_loop_exact_cap_and_partial_stop_match_continuous(self):
-        spec=deepcopy(load_scientific())
+        spec=deepcopy(load_experiment())
         spec['ppo'].update(n_steps=8,n_epochs=1,minibatch_size=4)
         spec['budgets']['ppo_transitions_per_method_seed']=19
         spec['metrics']['dev_interval_transitions']=10
@@ -134,7 +138,7 @@ class MainContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             baseline=Path(d)/'continuous'
             small_plan=lambda c,k:case_plan(c,k,count=60)
-            with patch('kcity.experiment.case_plan',side_effect=small_plan),patch('kcity.experiment.evaluate_dev',return_value=True):
+            with patch('training.ppo.case_plan',side_effect=small_plan),patch('training.ppo.evaluate_dev',return_value=True):
                 run_ppo(baseline,'B2',11,spec,'cpu')
                 for stop_at in [5,8,10,19]:
                     paused=Path(d)/f'paused-{stop_at}'

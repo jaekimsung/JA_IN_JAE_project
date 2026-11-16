@@ -14,13 +14,13 @@
 
 ## specs/ — 계약과 명세
 
-★ 표시는 [FROZEN_PROTOCOL.json](../configs/kcity/main_v1/FROZEN_PROTOCOL.json)이 SHA로 고정한 문서입니다. 수정하면 `OPERATIONAL_COMPATIBILITY.json`의 `documentation_revision.contracts`에 frozen/revised SHA를 등록해야 본 실행 guard를 통과합니다.
+실험 설정은 [experiment.json](../configs/kcity/experiment.json)에 있습니다. 아래 명세 안의 "동결·launch-record·preflight" 서술은 2026-11-16 코드 정리 전의 설계 기록이며, 현재 코드에는 그 장치가 없습니다.
 
 | 문서 | 내용 |
 |---|---|
-| ★ [DATA_COLLECTION_SPEC](specs/DATA_COLLECTION_SPEC.md) | 데이터 컬럼·73D 관측·JSONL/NPZ·품질 검사 |
-| ★ [KCITY_DATA_PIPELINE](specs/KCITY_DATA_PIPELINE.md) | 수집·저장·복구 사용 계약 |
-| ★ [KCITY_EVALUATION](specs/KCITY_EVALUATION.md) | 종료·GAE·평가 지표 계약 |
+| [DATA_COLLECTION_SPEC](specs/DATA_COLLECTION_SPEC.md) | 데이터 컬럼·73D 관측·JSONL/NPZ·품질 검사 |
+| [KCITY_DATA_PIPELINE](specs/KCITY_DATA_PIPELINE.md) | 수집·저장·복구 사용 계약 |
+| [KCITY_EVALUATION](specs/KCITY_EVALUATION.md) | 종료·GAE·평가 지표 계약 |
 | [KCITY_POLICY_AND_RESUME](specs/KCITY_POLICY_AND_RESUME.md) | 공통 BC/PPO 정책·초기화·재개 계약 |
 | [EXECUTION_PROTOCOL](specs/EXECUTION_PROTOCOL.md) | 수집·학습·평가 순서와 착수 gate |
 
@@ -29,11 +29,11 @@
 | 문서 | 내용 |
 |---|---|
 | [KCITY_ENV](guides/KCITY_ENV.md) | K-CITY Gym 환경 사용법 |
-| [KCITY_MAIN_EXECUTION](guides/KCITY_MAIN_EXECUTION.md) | 본 수집·BC·PPO 실행기, STOP/재개 |
+| [KCITY_MAIN_EXECUTION](guides/KCITY_MAIN_EXECUTION.md) | 수집·BC·PPO·평가·영상·HF 내보내기 실행법, STOP/재개 |
 | [KCITY_PILOT](guides/KCITY_PILOT.md) | KC-06 pilot 결과 |
 
 ## 기타
 
-- [research_checks/](research_checks/) — 단계별 검증 기록. `KC-<단계>-<YYYYMMDD>-<NN>/`에 README·FINAL_CHECKS.json·SUMMARY.json을 둡니다. 안의 JSON에 남은 옛 경로는 계보이므로 고치지 않습니다. 새 경로는 [LAYOUT_MIGRATION.json](../configs/kcity/main_v1/LAYOUT_MIGRATION.json)에서 찾습니다.
+- [research_checks/](research_checks/) — 단계별 검증 기록. `KC-<단계>-<YYYYMMDD>-<NN>/`에 README·FINAL_CHECKS.json·SUMMARY.json을 둡니다. 안의 JSON에 남은 옛 경로·동결 기록은 계보이므로 고치지 않습니다. 당시 파일은 commit [fac8482](https://github.com/jaekimsung/JA_IN_JAE_project/tree/fac8482)에 있습니다.
 - [course/](course/0_Project_Introduction.md) — 수업 원자료와 발표·평가 기준.
 - [prompts/](prompts/KCity_Codex_Research_Prompt.md) — 연구 진행용 에이전트 프롬프트.

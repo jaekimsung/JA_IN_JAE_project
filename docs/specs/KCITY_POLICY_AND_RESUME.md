@@ -4,7 +4,7 @@
 
 ## 1. 공통 정책과 실제 파라미터 수
 
-[KCityPolicy](../../kcity/policy/policy.py)는 기존 HybridActorCritic을 바탕으로 만든 별도 K-CITY 정책이다. 종전 고속도로 신경망과 BCPolicy는 보존했다. 정책 설정은 [learning.json](../../configs/kcity/v1/learning.json)과 코드 기본값이 일치하는지 검사한다. 이 파일은 KC-01의 pinned protocol을 수정하는 파일이 아니다.
+[KCityPolicy](../../policy/policy.py)는 기존 HybridActorCritic을 바탕으로 만든 별도 K-CITY 정책이다. 종전 고속도로 신경망과 BCPolicy는 보존했다. 정책 설정은 [learning.json](../../configs/kcity/v1/learning.json)과 코드 기본값이 일치하는지 검사한다. 이 파일은 KC-01의 pinned protocol을 수정하는 파일이 아니다.
 
 ```text
 환경의 고정 스케일 73-D 관측 → 공유 trunk [256,256] ReLU
@@ -37,7 +37,7 @@
 
 ## 3. BC→PPO 초기화
 
-[KCityBC / KCityPPO](../../kcity/training.py)가 같은 KCityPolicy를 사용한다.
+[KCityBC / KCityPPO](../../policy/ppo.py)가 같은 KCityPolicy를 사용한다.
 
 BC loss는 `가감속 MSE + 차선 CE`이며 가중치는1:1이다. BC optimizer는 trunk/mean/lane만 포함하고 value head·log_std는 고정한다. KC-04 초기 검증은 합성 입력/label·[16,16] 모델이었다. 이후 실제 전문가 자료와[256,256]로3seed pilot BC를 학습했다. 합성 fixture와 실제 pilot 성과는 구분한다.
 
@@ -81,7 +81,7 @@ CPU·Linux·고정 버전·단일 learner 검사와 GPU 후속 검증을 수행�
 ```bash
 KCPY=/home/heven/.cache/kcity-research-audit-20261110/venv/bin/python
 PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 "$KCPY" -B -m unittest discover -s tests -p 'test_kcity*.py' -v
-PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 "$KCPY" -B tools/checks/check_policy.py \
+PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 "$KCPY" -B tools/checks/check_policy.py  # commit fac8482 \
   --output /tmp/kcity-kc04-new-check \
   --artifacts /tmp/kcity-kc04-new-fixtures
 ```
@@ -92,8 +92,10 @@ PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 "$KCPY" -B tools/checks/check_policy
 
 ## 6. 본 실행과 보관
 
-기존 KC-01 protocol의 enabled=false는 역사적 계약이다. native Runner의 fixture 범위는 유지하고 별도 [본 운영 계층](../../kcity/experiment.py)이 frozen 과학 설정과 verified launch record를 검사해 실행한다. [본 실행 안내](../guides/KCITY_MAIN_EXECUTION.md)
+기존 KC-01 protocol의 enabled=false는 역사적 계약이다. native Runner의 fixture 범위는 유지하고 별도 [본 운영 계층](../../training/ppo.py)이 frozen 과학 설정과 verified launch record를 검사해 실행한다. [본 실행 안내](../guides/KCITY_MAIN_EXECUTION.md)
 
 본 PPO는 외부 learner bundle을 먼저 SHA 검증·확정한 뒤 데이터 shard에 참조를 저장한다. 최신·직전·50k평가·초기 모델을 보관하며 데이터/UID/SHA는 바꾸지 않는다. BC는 최신·직전·재개에 필요한 best를 보관한다. [물리 저장 계약](KCITY_DATA_PIPELINE.md)
 
 GPU probe의 모델/자료는 본 초기값으로 사용하지 않는다. 이번 개정은 문서·명시적 문서 해시 호환 검증만 수행하며 학습/환경/정책 수식은 바꾸지 않는다. Drive 업로드·새 로컬 압축본은 없다.
+
+> 2026-11-16 코드 정리로 KC 단계 검증 스크립트(`tools/checks/`, `check_policy.py`, 운영 probe·preflight)는 삭제됐다. 위 검증 명령을 재현하려면 [commit fac8482](https://github.com/jaekimsung/JA_IN_JAE_project/tree/fac8482)를 checkout한다. 현재 실행 방법은 [실행 안내](../guides/KCITY_MAIN_EXECUTION.md)를 따른다.

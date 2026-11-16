@@ -6,8 +6,8 @@
 ## 코드와 실행 식별
 
 - 사전 기록: HEAD `5e7a46cabab1ee7adb6baa06279ff59351f4b802`, branch `codex/kcity-kc01-20261114`, 시작부터 있던 미완료 변경을 보존했다. 이번 commit/push/외부 업로드는 없다.
-- 변경: [buffer](../../../rl/buffer.py)·[PPO](../../../rl/ppo.py)의 경계/예산/평가 처리, [K-CITY 환경](../../../kcity/env/env.py)의 substep 측정·동시 사건 보존, [기존 highway launcher](../../../legacy/highway/train.py)의 공유 연결 평가 사전 차단. 변경 전4개 source는 `before/`에 보존했다.
-- 신규: [case/metric evaluator](../../../kcity/evaluator.py)·[검사 실행기](../../../tools/checks/check_learning.py)·[회귀 검사](../../../tests/test_kcity_learning.py)·[사용 계약](../../specs/KCITY_EVALUATION.md).
+- 변경: [buffer](../../../policy/buffer.py)·[PPO](../../../policy/ppo.py)의 경계/예산/평가 처리, [K-CITY 환경](../../../env/env.py)의 substep 측정·동시 사건 보존, [기존 highway launcher](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/legacy/highway/train.py)의 공유 연결 평가 사전 차단. 변경 전4개 source는 `before/`에 보존했다.
+- 신규: [case/metric evaluator](../../../evaluation/metrics.py)·[검사 실행기](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/check_learning.py)·[회귀 검사](../../../tests/test_kcity_learning.py)·[사용 계약](../../specs/KCITY_EVALUATION.md).
 - 환경 ID는 `KC-ENV-v2-kc03-candidate`, 지표 ID는 `KC-METRICS-v1-candidate`다. KC-01 protocol/map/TLS pin은 변경하지 않았다. KC-02 결과는 이전 source의 이력으로 그대로 보존했다.
 - 최종 source SHA·실행 시각은 [통합 SUMMARY](integration_final/SUMMARY.json), 전체 보호 파일·문서·소스 검증은 [FINAL_CHECKS](FINAL_CHECKS.json).
 

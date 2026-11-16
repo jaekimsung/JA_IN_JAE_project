@@ -4,18 +4,15 @@
 
 기존 「자율주행 인공지능 및 제어」 수업 예제 저장소를 **K-CITY 프로젝트 개발용 저장소로 재구성**했습니다. 앞으로 도로와 교통 시나리오, 자율주행 차량(AV) 환경, BC·PPO 학습, 주행 데이터 수집과 평가를 이 저장소에서 이어갑니다. 기존 예제 코드와 수업 자료는 개발 기반과 참고 자료로 유지합니다.
 
-## 연구 문서 읽는 순서
+## 연구 문서
 
 1. [연구 현황](docs/research/RESEARCH_STATUS.md): 지금 구현·검증된 범위, 문제, 다음 작업.
 2. [연구 계획](docs/research/RESEARCH_PLAN.md): BC 초기화 PPO와 PPO-only의 학습 효율·교통 수요 변화 비교 설계.
 3. [실험 인덱스](docs/research/EXPERIMENTS.md): 기존 일반차량 검증, 새 검사 결과와 미실행 연구 계획의 구분.
 4. [데이터 명세](docs/specs/DATA_COLLECTION_SPEC.md): 수업 필수 컬럼·절대 State·73-D 관측·JSONL/NPZ·품질 검사.
-5. [실행 프로토콜](docs/specs/EXECUTION_PROTOCOL.md): 10M 수집 장부, BC/PPO 비교·평가 순서, 구현·pilot·착수 gate와 CLI 계약.
+5. [실행 프로토콜](docs/specs/EXECUTION_PROTOCOL.md): 10M 수집 장부, BC/PPO 비교·평가 순서.
 6. [결과·컨설팅·제출](docs/research/RESULTS_AND_CONSULTING.md): 지표·표/그림·영상·컨설팅 질문·Hugging Face/최종 제출 준비.
 
-2026-11-16 현재 **3seed pilot과 본 실험 설정·운영 준비 검증을 완료**했습니다. 본 전문가 pool·본 BC·본 PPO는 아직0입니다. 기존73차원 관측을 유지하며 판단2Hz·물리0.1초로 통제합니다. 다음은 새 전문가pool 수집입니다. [최신현황](docs/research/RESEARCH_STATUS.md) · [날짜별이력](docs/research/RESEARCH_HISTORY.md) · [본실행방법](docs/guides/KCITY_MAIN_EXECUTION.md)
-
-Drive 업로드는 하지 않습니다. 사용자 요청에 따라 불필요 raw로그·debug자료·로컬압축본을 삭제했고 필요한 모델·곡선·평가·요약만 남겼습니다. 삭제된 과거 파일이 현재 보관돼 있다고 간주하지 않습니다.
 
 ## 프로젝트 목표
 
@@ -45,7 +42,7 @@ K-CITY 도로 구축 → 교통 흐름 검증 → AV 환경 설계 → BC·PPO �
 
 현재 도로망은 **일반 Edge 176개, 일반 차선 198개, 교차로 내부 차선 346개**입니다. 차선 제거는 시뮬레이션 통행 기록을 기준으로 했으며, 실제 K-CITY에서 사용하지 않는 차선을 판정한 결과는 아닙니다.
 
-**빨간색 `demo_ego`는 SUMO IDM 차량입니다.** 이는 기본 맵 데모이며, 별도 학습정책 시연 및 pilot 결과와 구분합니다. [legacy/highway/](legacy/highway/README.md)는 수업의 기존 고속도로 예제이며, 그 안의 `data/`·`results/` 산출물은 K-CITY 학습 성과가 아닙니다.
+**빨간색 `demo_ego`는 SUMO IDM 차량입니다.** 이는 기본 맵 데모이며, 별도 학습정책 시연 및 pilot 결과와 구분합니다. 수업의 기존 고속도로 예제(`legacy/highway/`)는 2026-11-16 코드 정리에서 삭제했으며, Git 이력(commit `fac8482`)에 남아 있습니다.
 
 ## 바로 실행하기
 
@@ -56,70 +53,77 @@ K-CITY 도로 구축 → 교통 흐름 검증 → AV 환경 설계 → BC·PPO �
 sumo --version
 
 # 기본 화면: 90도 회전, 차량 1배, 빨간 차량 1대 순환 및 노란 차량 지속 투입
-python view_kcity.py
+python runner/view_kcity.py
 
 # 항공사진을 배경으로 표시
-python view_kcity.py --aerial
+python runner/view_kcity.py --aerial
 
 # GUI 없이 1시간 연속 주행 검사
-python view_kcity.py --nogui --seconds 3600
+python runner/view_kcity.py --nogui --seconds 3600
 
 # 기존 177대 유한 교통 검증 시나리오
-python view_kcity.py --baseline
+python runner/view_kcity.py --baseline
 
 # 도로 편집기로 열기
-python view_kcity.py --netedit
+python runner/view_kcity.py --netedit
 ```
 
 실행 옵션, 비교용 원본 맵, 세부 설정은 [K-CITY 맵 안내](maps/kcity/README.md)를 참고합니다.
 
 기본 GUI는 자동으로 시작하며 창을 닫을 때까지 실행합니다. 빨간 차량은 귀환 경로를 포함한 순환 경로를 계속 연장해 도착으로 퇴장하지 않습니다. 신호와 주변 차량에 따른 정차는 유지합니다. 연속 주행은 위 Python 실행기를 사용해야 하며, `.sumocfg`를 SUMO에서 직접 열면 기존 유한 교통이 실행됩니다.
 
+## 학습·평가 실행 순서
+
+`runner/`의 실행 파일입니다. 강의 권장 구분(Environment / Training / Evaluation / Data Collection)을 따릅니다. 실험 설정(예산·seed·PPO/BC 하이퍼파라미터·평가 패널)은 [configs/kcity/experiment.json](configs/kcity/experiment.json) 하나에 있습니다. 모든 장기 실행은 `<output>/STOP` 파일로 안전하게 멈추고, 같은 명령에 `--resume`을 붙여 이어갑니다.
+
+```bash
+# 1) 전문가(B0) 데이터 수집: 최소 1M 전이, 마지막 Episode까지 마무리
+python runner/collect.py --output runs/expert
+# 2) BC: 성공 Episode에서 train 200k / val 50k view 고정 → seed별 학습(B1)
+python runner/train_bc.py views --pool runs/expert/dataset --output runs/bc_views
+python runner/train_bc.py train --views runs/bc_views --seed 11 --output runs/bc_seed11
+# 3) PPO 1M: B2(새로 시작) / B3(같은 seed BC actor로 초기화), 50k마다 dev 평가
+python runner/train_ppo.py --method B2 --seed 11 --output runs/B2_seed11
+python runner/train_ppo.py --method B3 --seed 11 --bc-run runs/bc_seed11 --output runs/B3_seed11
+# 4) 평가: dev/final 패널, 수요 1.0/1.5/2.0배, 충돌률·완주율(Wilson 95% 구간)
+python runner/evaluate.py --policy runs/B3_seed11/transitions/checkpoints/<bundle> --panel final --output runs/eval/B3_seed11
+# 5) 주행 영상(30초 이상, mp4) · Hugging Face용 데이터 폴더(업로드는 직접)
+python runner/record_video.py --policy <bundle 또는 expert> --scenario C --video --once --output runs/video/C
+python runner/export_hf.py --dataset runs/expert/dataset --dataset runs/B3_seed11/transitions --output runs/hf_export
+```
+
+자세한 설명은 [실행 안내](docs/guides/KCITY_MAIN_EXECUTION.md)를 봅니다.
+
 ## 저장소 구성
 
 ```text
 .
-├── view_kcity.py          # K-CITY 도로·교통 데모 실행
-├── kcity/                 # K-CITY 연구 패키지 (import만으로 SUMO를 시작하지 않음)
-│   ├── common.py          #   SUMO 도구 탐색·맵 경로·JSON/XML 헬퍼
-│   ├── env/               #   계약(config)·Gym 환경(env)·73D 관측·경로·시나리오
-│   ├── policy/            #   공통 BC/PPO 정책(policy)·규칙 전문가 B0(rule_expert)
-│   ├── training.py        #   BC·PPO 학습기·checkpoint bundle·재개
-│   ├── data/              #   전이 수집(collector)·shard 기록/검증(dataset)·저장 codec(storage)
-│   ├── evaluator.py       #   Episode 지표·사례 패널 평가
-│   └── experiment.py      #   동결 설정 guard·본 수집/BC/PPO 실행기
-├── rl/                    # 공통 RL 부품: PPO·BC·신경망·버퍼·평가·로깅 (K-CITY·레거시 공용)
-├── tools/
-│   ├── map/               #   맵 변환·차선 정리·신호·조경 생성·교통 검증
-│   ├── main/              #   본 실험 CLI(main_experiment)·사전점검(preflight)·정책 시연
-│   ├── checks/            #   KC-01~06 단계별 검증·pilot·진단
-│   └── freeze/            #   과학 설정 동결·경로 재동결
-├── configs/kcity/         # 환경 계약 v1, 동결 과학 설정 main_v1 (FROZEN_PROTOCOL.json)
-├── maps/kcity/            # SUMO 맵·경로·신호·조경, 원본 자료, 검증 보고서, audit 스냅샷
-├── tests/                 # unittest 회귀 검사
-├── docs/                  # 문서 색인: docs/README.md
-│   ├── research/          #   현황·계획·이력·실험 인덱스·결과/제출 계획
-│   ├── specs/             #   데이터·평가·정책/재개·실행 계약
-│   ├── guides/            #   환경·본 실행·pilot 사용 안내
-│   ├── research_checks/   #   단계별 검증 기록 (KC-*)
-│   ├── course/            #   수업 원자료와 프로젝트 요구사항
-│   └── prompts/           #   연구 진행용 에이전트 프롬프트
-└── legacy/highway/        # 수업 고속도로 예제 (train/test/collect, data, results)
+├── env/          # 실행환경: Gym 환경(env)·73D 관측(observation)·경로(route)·시나리오/계약(scenarios, config)·SUMO 헬퍼(common)
+├── policy/       # 정책·알고리즘: 정책망(networks, policy)·PPO(ppo)·BC 학습기(bc)·버퍼/GAE(buffer)·규칙 전문가 B0(rule_expert)·checkpoint
+├── training/     # 학습 코드: BC run·view(bc)·PPO run·dev 곡선(ppo)·실험 설정(experiment)·실행 폴더/STOP(runs)
+├── data/         # 데이터: 전문가 수집·사례 계획(collector)·shard 저장/검증(dataset, storage)·PPO 전이 기록(online)
+├── evaluation/   # 평가: Episode 지표(metrics)·사례 패널 평가(evaluate)
+├── runner/       # 실행: collect · train_bc · train_ppo · evaluate · record_video · export_hf · view_kcity
+├── configs/kcity/  # experiment.json(실험 설정), v1/(환경 계약), panels/(dev·final 평가 사례)
+├── maps/kcity/     # 맵 자산: SUMO 맵·경로·신호·조경, 원본 자료, 검증 보고서 (env가 사용)
+├── tools/map/      # 맵 변환·차선 정리·신호·조경 생성·교통 검증
+├── tests/          # unittest 회귀 검사
+└── docs/           # 문서 색인: docs/README.md (research·specs·guides·course)
 ```
 
-`kcity/`, `rl/`, `tools/`의 주요 파일과 `docs/specs/`의 계약 문서 3개는 [FROZEN_PROTOCOL.json](configs/kcity/main_v1/FROZEN_PROTOCOL.json)이 **경로와 SHA로 고정**합니다. 이 파일들을 수정하면 본 실행 guard가 막히므로, 정해진 등록 절차를 거쳐야 합니다. 2026-11-16 폴더 재구성의 옛 경로 → 새 경로 대응은 [LAYOUT_MIGRATION.json](configs/kcity/main_v1/LAYOUT_MIGRATION.json)에 있습니다.
+의존 방향은 `env ← policy ← training → runner`, `data → evaluation`입니다. 어느 패키지도 import만으로 SUMO를 시작하지 않습니다.
 
 ```bash
-# 회귀 검사 (본 검증 환경: Linux, SUMO 1.28.0)
+# 회귀 검사 (검증 환경: Linux, SUMO 1.28.0)
 PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 python -B -m unittest discover -s tests
 ```
 
-## 앞으로 진행할 작업
+## 남은 작업 (최종 발표 11/28)
 
-1. **AV 주행 과제와 환경 구성** — 출발·도착 지점과 경로를 정의하고, 다중 Edge에서 차량 초기화·목적지 도착·경로 이탈을 처리합니다.
-2. **관측·행동·보상 설계** — 주변 차량뿐 아니라 신호 상태, 정지선 거리, 교차로 진입 방향, 차선 연결을 관측에 반영합니다. 주행 진행도·충돌·교통 규칙·정체를 고려해 보상과 종료 조건을 정합니다.
-3. **BC·PPO 학습과 비교** — K-CITY 전문가 주행 데이터를 수집하고 BC 기준 모델과 PPO 정책을 학습합니다. 학습 조건과 평가 시드·교통 조건을 기록합니다.
-4. **평가와 산출물 정리** — 충돌률, 완주율, 신호 준수, 주행·대기시간을 평가하고 주행 영상과 데이터셋을 남깁니다. 수업의 기본 목표인 충돌률 5% 미만과 목적지 완주를 기준으로 구체적인 평가 시나리오를 확정합니다.
+1. **본 실험 실행** — 전문가 1M 수집, BC 3 seed, PPO B2/B3 × 3 seed × 1M. 처리량을 높이기 위한 병렬 수집을 추가합니다.
+2. **≥10M 데이터셋** — 전문가 + PPO 학습 전이 + 최종 정책 수집으로 10^7개 이상을 저장하고 `export_hf.py`로 HF 폴더를 만듭니다.
+3. **평가·영상** — 수요별 100 Episode 이상 평가(충돌률 < 5%, 완주, 비정상 정지·대기 없음, HV 노출)와 30초 이상 주행 영상.
+4. **제출물** — 프로젝트 페이지(코드·발표자료·HF 링크), 발표자료.
 
 세부 요구사항은 [프로젝트 준비](docs/course/5_Project_Preparation.md)와 [최종 평가 기준](docs/course/6_Project_Evaluation.md)을 따릅니다.
 

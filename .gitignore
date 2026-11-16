@@ -11,3 +11,6 @@ __pycache__/
 
 # Stray simulator logs
 MUJOCO_LOG.TXT
+
+# Local run outputs (datasets, checkpoints, videos, HF exports)
+/runs/

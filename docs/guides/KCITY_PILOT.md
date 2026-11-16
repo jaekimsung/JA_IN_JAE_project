@@ -21,6 +21,8 @@ BCbest3개·PPO끝6개·seed11실패진단2개,총11모델을남겼다. seed22BC
 
 ## 실행범위
 
-[기본pilot](../../tools/checks/pilot.py)·[추가seed](../../tools/checks/pilot_seeds.py)는pilot전용이다. 본실행은[main안내](KCITY_MAIN_EXECUTION.md)를따른다. pilot재현은새output/ID에서새10k수집부터해야한다. 추가seedCLI는유효shared-data가필요하므로삭제된과거pool을입력으로안내하지않는다.
+[기본pilot](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/pilot.py)·[추가seed](https://github.com/jaekimsung/JA_IN_JAE_project/blob/fac8482/tools/checks/pilot_seeds.py)는pilot전용이다. 본실행은[main안내](KCITY_MAIN_EXECUTION.md)를따른다. pilot재현은새output/ID에서새10k수집부터해야한다. 추가seedCLI는유효shared-data가필요하므로삭제된과거pool을입력으로안내하지않는다.
 
 당시STATUS/curve는당시실적이다. STOP/--resume도동일source/config/runtime·모든필수입력이남아있는run에한정된다. 완료pilot을실행중으로표시하지않는다. 이번개정에서는재학습/시뮬레이션/업로드를하지않았다.
+
+> 2026-11-16 코드 정리로 KC 단계 검증 스크립트(`tools/checks/`, `check_policy.py`, 운영 probe·preflight)는 삭제됐다. 위 검증 명령을 재현하려면 [commit fac8482](https://github.com/jaekimsung/JA_IN_JAE_project/tree/fac8482)를 checkout한다. 현재 실행 방법은 [실행 안내](KCITY_MAIN_EXECUTION.md)를 따른다.

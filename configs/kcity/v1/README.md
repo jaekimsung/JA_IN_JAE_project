@@ -4,7 +4,7 @@
 
 - [protocol.json](protocol.json): SUMO1.28.0·맵/신호/경로 hash, 0.1/0.5 s 시간 단위, 후보 제어/수요, 독립 seed namespace.
 - [scenarios.json](scenarios.json): A 신호 교차로, B 필수 차선 변경, C 복합 경로의 유한 출발/도착과 연결 조건.
-- 구현: [설정 로더·요청 생성](../../../kcity/env/config.py), [구조/경로 검사기](../../../kcity/env/scenarios.py), [회귀 검사](../../../tests/test_kcity_scenarios.py).
+- 구현: [설정 로더·요청 생성](../../../env/config.py), [구조/경로 검사기](../../../env/scenarios.py), [회귀 검사](../../../tests/test_kcity_scenarios.py).
 
 위 구현 링크는 저장소 루트 기준 파일이다. 전체 진행은 [연구 현황](../../../docs/research/RESEARCH_STATUS.md)을 따른다.
 
@@ -14,9 +14,9 @@
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s tests -p test_kcity_scenarios.py -v
-PYTHONDONTWRITEBYTECODE=1 python3 -B kcity/env/scenarios.py --output /tmp/kcity-kc01-new-check
+PYTHONDONTWRITEBYTECODE=1 python3 -B env/scenarios.py --output /tmp/kcity-kc01-new-check
 # 추가로 3개 유한 경로를 SUMO에서 검사할 때만:
-PYTHONDONTWRITEBYTECODE=1 python3 -B kcity/env/scenarios.py --output /tmp/kcity-kc01-new-smoke --smoke
+PYTHONDONTWRITEBYTECODE=1 python3 -B env/scenarios.py --output /tmp/kcity-kc01-new-smoke --smoke
 ```
 
 `SUMMARY.json`, case 설정, 투입 **요청** 목록을 출력한다. `--smoke`는 배경 교통 없이 IDM 종방향 제어와 초기에 한 번 발행하는 필수 Lane 명령으로 A/B/C를 검사한다. 신호·안전 mode 31/512와 실제 출발/도착 위치를 확인한다. 학습 정책·관측 정렬 전문가 B0·Gym lifecycle·73-D 관측·setAcceleration adapter를 구현하거나 평가한 실행은 아니다.

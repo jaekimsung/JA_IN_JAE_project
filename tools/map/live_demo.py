@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # 저장소 루트
-from kcity.common import MAP, sumo_tools, write_xml, write_json, sha256
+from env.common import MAP, sumo_tools, write_xml, write_json, sha256
 
 
 def run(args):

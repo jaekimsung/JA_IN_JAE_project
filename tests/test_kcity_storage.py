@@ -7,12 +7,12 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from kcity.env.config import digest,file_sha256
-from kcity.env.env import SumoKCityEnv
-from kcity.policy.rule_expert import KCityRuleExpert
-from kcity.data.dataset import ShardWriter,read_shard,validate_dataset,atomic_json
-from kcity.experiment import MainWriter,MainExpertCollector,dataset_config,case_plan
-from kcity.data.storage import (NEXT_CODEC,CHECKPOINT_MODE,encode_rows,decode_rows,
+from env.config import file_sha256
+from env.env import SumoKCityEnv
+from policy.rule_expert import KCityRuleExpert
+from data.dataset import ShardWriter,read_shard,validate_dataset,atomic_json
+from data.collector import ExpertCollector,dataset_config,case_plan
+from data.storage import (NEXT_CODEC,CHECKPOINT_MODE,encode_rows,decode_rows,
     save_external,sync_retention,verify_retention,checkpoint_from_shard)
 
 
@@ -99,8 +99,8 @@ class ActualDataStorageTests(unittest.TestCase):
         writer=None
         try:
             cfg=dataset_config(env,'crash-storage-fixture',case_plan(env.contract,'expert',10,3000000),'debug')
-            writer=MainWriter(root/'fixture',cfg,shard_rows=512)
-            MainExpertCollector(env,KCityRuleExpert(),writer).collect_main(1)
+            writer=ShardWriter(root/'fixture',cfg,shard_rows=512)
+            ExpertCollector(env,KCityRuleExpert(),writer).collect(1)
             return cfg,[row for folder in writer.folders for row in read_shard(folder)]
         finally:
             if writer is not None:writer.close()
@@ -111,7 +111,7 @@ class ActualDataStorageTests(unittest.TestCase):
             root=Path(d)
             cfg,rows=self.actual_fixture(root)
             cfg['checkpoint_policy']=RetentionTests.policy
-            writer=MainWriter(root/'data',cfg,shard_rows=512)
+            writer=ShardWriter(root/'data',cfg,shard_rows=512)
             for row in rows[:8]:writer.append(row)
             rename=Path.rename
             def crash_at_publish(path,target):
@@ -121,7 +121,7 @@ class ActualDataStorageTests(unittest.TestCase):
                 with patch.object(Path,'rename',crash_at_publish):
                     with self.assertRaises(OSError):writer.commit({},[],RetentionTests().bundle)
             finally:writer.close()
-            recovered=MainWriter(root/'data',cfg,shard_rows=512,resume=True)
+            recovered=ShardWriter(root/'data',cfg,shard_rows=512,resume=True)
             try:
                 self.assertEqual(recovered.count,0)
                 self.assertEqual(len(list((recovered.root/'checkpoints').iterdir())),0)
@@ -132,13 +132,13 @@ class ActualDataStorageTests(unittest.TestCase):
             root=Path(d)
             cfg,rows=self.actual_fixture(root)
             cfg['checkpoint_policy']=RetentionTests.policy
-            writer=MainWriter(root/'data',cfg,shard_rows=512)
+            writer=ShardWriter(root/'data',cfg,shard_rows=512)
             for row in rows[:8]:writer.append(row)
             try:
                 with patch.object(writer,'refresh_release',side_effect=RuntimeError('fixture crash after shard publish')):
                     with self.assertRaises(RuntimeError):writer.commit({},[],RetentionTests().bundle)
             finally:writer.close()
-            recovered=MainWriter(root/'data',cfg,shard_rows=512,resume=True)
+            recovered=ShardWriter(root/'data',cfg,shard_rows=512,resume=True)
             try:
                 self.assertEqual(recovered.count,8)
                 self.assertTrue(checkpoint_from_shard(recovered.folders[-1]).exists())
@@ -152,12 +152,12 @@ class ActualDataStorageTests(unittest.TestCase):
             full=[]
             try:
                 cfg=dataset_config(env,'storage-real-fixture',case_plan(env.contract,'expert',10,3000000),'debug')
-                writer=MainWriter(Path(d)/'compact',cfg,shard_rows=17)
+                writer=ShardWriter(Path(d)/'compact',cfg,shard_rows=17)
                 append=writer.append
                 def capture(row):
                     full.append(deepcopy(row));append(row)
                 with patch.object(writer,'append',side_effect=capture):
-                    MainExpertCollector(env,KCityRuleExpert(),writer).collect_main(1)
+                    ExpertCollector(env,KCityRuleExpert(),writer).collect(1)
                 restored=[r for folder in writer.folders for r in read_shard(folder)]
                 self.assertEqual(full,restored)
                 self.assertTrue(validate_dataset(writer.root)['passed'])
