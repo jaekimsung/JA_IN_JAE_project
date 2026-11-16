@@ -68,21 +68,6 @@ class KCityRunner:
         result=self.agent.update(a,r);self.agent.buffer.clear()
         return result
 
-    def run_until(self,target):
-        """Collect and update until an absolute transition cap; returns per-update history."""
-        if isinstance(target,bool) or not isinstance(target,int) or target<self.agent.num_timesteps:
-            raise ValueError('Absolute nondecreasing transition target required')
-        history=[]
-        while self.agent.num_timesteps<target or len(self.agent.buffer):
-            room=self.agent.n_steps-len(self.agent.buffer)
-            count=min(max(0,room),target-self.agent.num_timesteps)
-            if count:self.collect(count)
-            if len(self.agent.buffer):
-                stats=self.update()
-                history.append(dict(transitions=self.agent.num_timesteps,
-                    updates=self.agent.num_updates,optimizer_steps=self.agent.num_optimizer_steps,**stats))
-        return history
-
     def save_checkpoint(self,path):
         if self.obs is None:raise RuntimeError('Cannot checkpoint before reset/collection')
         payload=dict(agent=self.agent.training_state(),obs=self.obs.tolist(),ep_stats=self.ep_stats,

@@ -175,17 +175,5 @@ class ResumeTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'run/config'):b.load_checkpoint(path)
             self.assertIsNone(b.env.conn)
 
-    def test_exact_cap_with_real_bounded_fixture_updates(self):
-        a=self.runner();history=a.run_until(7)
-        self.assertEqual([r['transitions'] for r in history],[4,7])
-        self.assertEqual(a.agent.num_timesteps,7);self.assertEqual(a.agent.num_updates,2)
-        self.assertEqual(len(a.agent.buffer),0)
-        self.assertEqual(a.run_until(7),[])
-
-    def test_run_until_rejects_backwards_target_before_sumo_start(self):
-        a=self.runner();a.agent.num_timesteps=5
-        with self.assertRaises(ValueError):a.run_until(4)
-        self.assertIsNone(a.env.conn)
-
 
 if __name__=='__main__':unittest.main()

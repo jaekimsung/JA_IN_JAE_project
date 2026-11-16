@@ -13,7 +13,9 @@ from policy.buffer import RolloutBuffer
 from env.env import SumoKCityEnv
 from policy.ppo import KCityPPO
 from env.config import load_contract
-from evaluation.metrics import EpisodeMetrics, aggregate, make_panel
+from evaluation.metrics import EpisodeMetrics, aggregate
+from env.config import ROOT, make_case
+from training.experiment import load_experiment
 from evaluation.evaluate import evaluate_cases
 
 
@@ -84,14 +86,19 @@ class UpdateTests(unittest.TestCase):
         self.assertTrue(all(torch.equal(before[k],v) for k,v in p.policy.state_dict().items()))
 
 
+def make_panel(contract, namespace, counts):
+    return dict(cases=[make_case(contract, namespace, sid, i) for sid, n in sorted(counts.items()) for i in range(n)])
+
+
 class MetricTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):cls.contract=load_contract()
 
-    def record(self,events=(),failure=None,infra=None):
+    def record(self,events=(),failure=None,infra=None,vehicles=None):
         case=make_panel(self.contract,'contract_check',{'A':1})['cases'][0]
         state=dict(sim_tick=0,route_state=dict(route_valid=True,route_length_m=10),
                    ego_route_progress_m=0,traffic=dict(running_hv=5,requested_lambda_vph=600))
+        if vehicles is not None:state['vehicles']=vehicles
         tracker=EpisodeMetrics(case,{'state':state})
         ns=deepcopy(state);ns['sim_tick']=2;ns['ego_route_progress_m']=2
         info=dict(sim_tick_t=0,sim_tick_tp1=2,executed_substeps=2,control_dt_s=.2,
@@ -102,6 +109,29 @@ class MetricTests(unittest.TestCase):
             action_raw=[2,1],traffic_interval=dict(departed_hv=1),end_reason='deadline')
         tracker.add(1,True,False,info)
         return tracker.finish(failure_reason=failure,infrastructure_error=infra)
+
+    def test_near_hv_exposure_counts_vehicles_within_50m(self):
+        ego=dict(id='kcity_ego',x=0.,y=0.,is_ego=True)
+        hv=lambda i,x:dict(id=f'hv{i}',x=x,y=0.,is_ego=False)
+        r=self.record(vehicles=[ego,hv(1,30.),hv(2,-49.),hv(3,80.)])
+        self.assertEqual(r['near_HV_50m_mean'],2);self.assertEqual(r['near_HV_50m_max'],2)
+        self.assertEqual(r['near_HV_50m_presence_fraction'],1)
+        alone=self.record(vehicles=[ego,hv(3,80.)])
+        self.assertEqual(alone['near_HV_50m_mean'],0);self.assertEqual(alone['near_HV_50m_presence_fraction'],0)
+        unknown=self.record()  # no vehicle snapshot: exposure is unknown, not zero
+        self.assertIsNone(unknown['near_HV_50m_mean']);self.assertIsNone(unknown['near_HV_50m_max'])
+
+    def test_aggregate_reports_exposure_and_stops_for_every_valid_case(self):
+        ego=dict(id='kcity_ego',x=0.,y=0.,is_ego=True)
+        a=self.record(vehicles=[ego,dict(id='hv',x=10.,y=0.,is_ego=False)]);a['requested_case_uid']='a'
+        b=self.record(vehicles=[ego]);b['requested_case_uid']='b'
+        s=aggregate([a,b],2)
+        self.assertEqual(s['exposure']['n_episodes'],2)
+        self.assertEqual(s['exposure']['HV_start_mean'],5);self.assertEqual(s['exposure']['n_HV_start_below_10'],2)
+        self.assertEqual(s['exposure']['near_HV_50m_mean'],.5);self.assertEqual(s['exposure']['near_HV_50m_presence_mean'],.5)
+        self.assertEqual(s['stops']['n_deadline'],0);self.assertEqual(s['stops']['standstill_s_max'],.1)
+        empty=aggregate([],1)
+        self.assertIsNone(empty['exposure']['HV_start_mean']);self.assertEqual(empty['stops']['n_deadline'],0)
 
     def test_time_weighted_metrics_and_no_fabricated_gap(self):
         r=self.record(); self.assertAlmostEqual(r['HV_time_weighted_mean'],3)
@@ -144,13 +174,17 @@ class MetricTests(unittest.TestCase):
         with self.assertRaises(ValueError):aggregate([r,r],2)
         self.assertIsNone(aggregate([],100)['collision_rate'])
 
-    def test_dev_final_disjoint_and_paired_demand_seeds(self):
-        dev=make_panel(self.contract,'dev');final=make_panel(self.contract,'final')
-        heavy=make_panel(self.contract,'final',demand_multiplier=2)
-        self.assertEqual(len(dev['cases']),100)
-        self.assertFalse({c['case_uid'] for c in dev['cases']} & {c['case_uid'] for c in final['cases']})
-        self.assertEqual([c['seeds'] for c in final['cases']],[c['seeds'] for c in heavy['cases']])
-        self.assertEqual(dev,make_panel(self.contract,'dev'))
+    def test_dev_final_panels_disjoint_and_paired_demand_seeds(self):
+        spec=load_experiment()
+        read=lambda name:__import__('json').loads((ROOT/spec['case_panels'][name]['path']).read_text())['cases']
+        dev,final=read('dev'),read('final')
+        self.assertEqual(len(dev),100);self.assertEqual(len(final),300)
+        self.assertFalse({c['case_uid'] for c in dev}&{c['case_uid'] for c in final})
+        by_demand={}
+        for c in final:by_demand.setdefault(c['demand_multiplier'],[]).append(c['seeds'])
+        self.assertEqual(sorted(by_demand),[1.0,1.5,2.0])
+        self.assertTrue(by_demand[1.0]==by_demand[1.5]==by_demand[2.0])
+        self.assertEqual(dev[0],make_case(self.contract,'dev',dev[0]['scenario_id'],dev[0]['case_index']))
 
     def test_reset_transport_failure_excluded_insertion_failure_included(self):
         panel=make_panel(self.contract,'contract_check',{'A':1})

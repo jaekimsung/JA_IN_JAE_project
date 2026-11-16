@@ -22,6 +22,12 @@ python -B runner/collect.py --output runs/expert --workers 8 # 최소 1M 전이 
 python -B runner/collect.py --output runs/expert --target 5000   # 작은 확인 실행
 ```
 
+학습된 정책으로 수집할 때(최종 정책 3M)는 bundle을 `--policy`로 넘깁니다. 방법 이름(B1·B2·B3)은 bundle에서 자동으로 판별하며, 기본 목표는 정책당 500k입니다.
+
+```bash
+python -B runner/collect.py --output runs/archive_B3_seed11 --workers 8 --policy <B3_seed11의 COMPLETE.json checkpoint>
+```
+
 여러 서버에 나눌 때는 서버마다 part 하나씩 실행하고, `part-XX/`를 한 폴더에 모은 뒤 마무리합니다.
 
 ```bash
@@ -55,7 +61,9 @@ python -B runner/evaluate.py --policy <COMPLETE.json의 checkpoint> --panel fina
 python -B runner/evaluate.py --policy <bundle> --panel dev --limit 3 --output runs/eval/smoke   # 작은 확인
 ```
 
-`--policy`는 `expert` 또는 BC·PPO bundle 폴더입니다. 수요 배수별로 `EPISODES.json`(Episode별 지표)과 `SUMMARY.json`(충돌률·완주율과 Wilson 95% 구간)을 씁니다.
+`--policy`는 `expert` 또는 BC·PPO bundle 폴더입니다. 수요 배수별로 `EPISODES.json`(Episode별 지표)과 `SUMMARY.json`을 씁니다. `SUMMARY.json`에는 충돌률·완주율과 Wilson 95% 구간, 교통 노출(`exposure`), 정지 지표(`stops`)가 들어 있습니다. 화면에는 두 개의 표가 출력됩니다.
+- **성능 표:** 충돌률·완주율·규칙 준수 완주율·평균 완주 시간
+- **노출·정지 표:** 출발 시 HV, 시간가중 HV, 출발 HV 10대 미만 사례 수, AV 50m 안 HV 수와 존재 비율, 선행차 존재 비율, 정지 시간 평균·최대, 기한 초과 수
 
 ## 6. 주행 영상과 데이터 공개
 

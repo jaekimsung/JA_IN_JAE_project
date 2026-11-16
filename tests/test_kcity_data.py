@@ -16,7 +16,7 @@ from env.env import SumoKCityEnv
 from policy.policy import KCityPolicy
 from data.collector import build_config,ExpertCollector
 from data.dataset import (ShardWriter,validate_row,validate_pair,make_transition,validate_dataset,
-    iter_bc_batches,create_index,index_row,atomic_json,digest,file_sha256)
+    create_index,index_row,atomic_json,digest,file_sha256)
 from evaluation.metrics import EpisodeMetrics
 
 
@@ -117,13 +117,10 @@ class DataTests(unittest.TestCase):
         r=deepcopy(self.rows[0]);r['detected_vehicles'].append(dict(id='absent-sensor-id',x=0,y=0,speed=0,relation='crossing'))
         with self.assertRaisesRegex(ValueError,'Detected vehicle'):validate_row(r)
 
-    def test_valid_cross_shard_roundtrip_and_bc_selection(self):
+    def test_valid_cross_shard_roundtrip(self):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp)/'data';self.complete(root,shard_rows=7);q=validate_dataset(root)
             self.assertEqual(q['unique_transitions'],len(self.rows));self.assertGreater(q['committed_shards'],1)
-            self.assertEqual(sum(len(b['observation']) for b in iter_bc_batches(root,'expert_train',allow_debug=True)),len(self.rows))
-            with self.assertRaisesRegex(ValueError,'Debug data'):list(iter_bc_batches(root,'expert_train'))
-            self.assertEqual(list(iter_bc_batches(root,'expert_val',allow_debug=True)),[])
 
     def test_duplicate_transition_is_not_counted(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -231,7 +228,6 @@ class DataTests(unittest.TestCase):
                 w.commit({'fixture':True},[summary])
             finally:w.close()
             self.assertEqual(validate_dataset(root)['unique_transitions'],len(rows))
-            self.assertEqual(list(iter_bc_batches(root,'expert_train',allow_debug=True)),[])
 
 
 class CollectorTests(unittest.TestCase):
@@ -244,17 +240,19 @@ class CollectorTests(unittest.TestCase):
             root=Path(temp)/'data';expert=KCityRuleExpert();e=self.env()
             plan=[dict(scenario_id='A',namespace='expert_train',case_index=i,data_split='expert_train') for i in range(3)]
             config=build_config(e,expert,'collector-resume-unit',plan);w=ShardWriter(root,config,shard_rows=2)
-            try:ExpertCollector(e,expert,w).collect_until(3)
+            try:
+                # STOP after 3 rows: the active Episode is checkpointed mid-way and replayed on resume.
+                stopped=ExpertCollector(e,expert,w).collect(6,lambda:w.count+w.pending>=3)
+                self.assertEqual(stopped['phase'],'STOPPED')
             finally:w.close();e.close()
             committed=validate_dataset(root)['unique_transitions'];self.assertEqual(committed,3)
             e=self.env();w=ShardWriter(root,config,resume=True,shard_rows=2)
             try:
-                collector=ExpertCollector(e,expert,w);result=collector.collect_until(6)
-                self.assertTrue(result['completed_plan']);self.assertEqual(result['committed_transitions'],6)
+                result=ExpertCollector(e,expert,w).collect(6)
+                self.assertEqual(result['phase'],'COMPLETE');self.assertEqual(result['transitions'],6)
             finally:w.close()
             report=validate_dataset(root);self.assertEqual(len(report['episodes']),3)
             self.assertTrue(all(e['metrics']['primary_end_reason']=='deadline' for e in report['episodes']))
-            self.assertEqual(list(iter_bc_batches(root,'expert_train',allow_debug=True)),[])
 
 
 if __name__=='__main__':unittest.main()

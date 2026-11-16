@@ -10,22 +10,9 @@ import hashlib
 from env.config import digest, make_case
 
 METRIC_VERSION = 'KC-METRICS-v1-candidate'
+NEAR_RADIUS_M = 50.0  # HV within this distance of the AV count as "near" (interaction exposure)
 REASONS = ('collision', 'red_entry', 'wrong_route', 'teleport', 'removal',
            'arrival', 'deadline', 'external_limit', 'policy_invalid_action', 'step_guard')
-
-
-def make_panel(contract, namespace, counts=None, demand_multiplier=1.0):
-    """Pure generation only. Final cases are not executed by this function."""
-    counts = {'A': 30, 'B': 30, 'C': 40} if counts is None else counts
-    cases = []
-    for sid, count in sorted(counts.items()):
-        if isinstance(count, bool) or not isinstance(count, int) or count < 0:
-            raise ValueError('Case counts must be nonnegative integers')
-        for index in range(count):
-            cases.append(make_case(contract, namespace, sid, index, demand_multiplier))
-    body = dict(namespace=namespace, counts=counts, demand_multiplier=demand_multiplier,
-                cases=cases, contract_sha256=digest(contract))
-    return dict(body, panel_sha256=digest(body))
 
 
 class EpisodeMetrics:
@@ -42,6 +29,27 @@ class EpisodeMetrics:
         self.rejections = Counter()
         self.clipped = self.unknown_overrides = self.departed = 0
         self.route_valid = self.initial['route_state']['route_valid']
+        self.near_time = self.near_weighted = self.near_present = 0.0
+        self.near_max = None
+
+    def _ensure_exposure_fields(self):
+        # Metrics restored from a checkpoint written before exposure tracking existed.
+        if not hasattr(self, 'near_time'):
+            self.near_time = self.near_weighted = self.near_present = 0.0
+            self.near_max = None
+
+    def _near_exposure(self, state, dt):
+        """Time-weighted count of HV within NEAR_RADIUS_M of the AV at the end of each decision."""
+        vehicles = state.get('vehicles')
+        ego = next((v for v in vehicles or [] if v.get('is_ego')), None)
+        if ego is None:
+            return
+        near = sum(1 for v in vehicles if not v['is_ego'] and
+                   math.hypot(v['x'] - ego['x'], v['y'] - ego['y']) <= NEAR_RADIUS_M)
+        self.near_time += dt
+        self.near_weighted += dt * near
+        self.near_present += dt * (near > 0)
+        self.near_max = near if self.near_max is None else max(self.near_max, near)
 
     def add(self, reward, terminated, truncated, info):
         if self.end_reason is not None:
@@ -62,6 +70,8 @@ class EpisodeMetrics:
         self.samples.extend(deepcopy(samples))
         self.last = deepcopy(info['next_state'])
         self.route_valid &= self.last['route_state']['route_valid']
+        self._ensure_exposure_fields()
+        self._near_exposure(self.last, info['control_dt_s'])
         action = info['action']
         self.commands[action['lane_change']] += 1
         self.rejections.update(action['known_rejection_reasons'])
@@ -74,6 +84,7 @@ class EpisodeMetrics:
                 self.quality_errors.append('unknown_end_reason')
 
     def finish(self, *, failure_reason=None, infrastructure_error=None):
+        self._ensure_exposure_fields()
         events = self.events
         counts = Counter(e['type'] for e in events)
         crossings = [e for e in events if e['type'] == 'tls_crossing']
@@ -136,6 +147,9 @@ class EpisodeMetrics:
             accel_or_lane_clip_fraction=self.clipped/self.steps if self.steps else None,
             unknown_override_count=self.unknown_overrides,
             data_quality_valid=not self.quality_errors, quality_errors=list(self.quality_errors),
+            near_HV_50m_mean=self.near_weighted/self.near_time if self.near_time else None,
+            near_HV_50m_max=self.near_max,
+            near_HV_50m_presence_fraction=self.near_present/self.near_time if self.near_time else None,
             penalized_time_s=self.elapsed if completion else self.case['scenario']['episode_limit_s'])
 
 
@@ -174,7 +188,38 @@ def aggregate(records, n_planned):
         mean_elapsed_all=sum(observed_times)/len(observed_times) if observed_times else None,
         mean_elapsed_completed=sum(r['elapsed_s'] for r in valid if r['completion'])/completed if completed else None,
         penalized_time_all=sum(r['penalized_time_s'] for r in valid)/n if n else None,
+        exposure=exposure_summary(valid), stops=stop_summary(valid),
         final_ready=False, training_ready=False)
+
+
+def _values(records, key):
+    return [r[key] for r in records if r.get(key) is not None]
+
+
+def _mean(values):
+    return sum(values) / len(values) if values else None
+
+
+def exposure_summary(records):
+    """How much traffic the AV actually met (reported for every case; low-exposure cases are not dropped)."""
+    start = _values(records, 'HV_start')
+    return dict(n_episodes=len(start), HV_start_mean=_mean(start), HV_start_min=min(start, default=None),
+                n_HV_start_below_10=sum(v < 10 for v in start),
+                HV_time_weighted_mean=_mean(_values(records, 'HV_time_weighted_mean')),
+                HV_min=min(_values(records, 'HV_min'), default=None),
+                near_HV_50m_mean=_mean(_values(records, 'near_HV_50m_mean')),
+                near_HV_50m_max=max(_values(records, 'near_HV_50m_max'), default=None),
+                near_HV_50m_presence_mean=_mean(_values(records, 'near_HV_50m_presence_fraction')),
+                leader_present_fraction_mean=_mean(_values(records, 'leader_present_fraction')))
+
+
+def stop_summary(records):
+    """Abnormal stopping / waiting indicators (course: no abnormal stop, no endless waiting)."""
+    standstill = _values(records, 'standstill_s')
+    return dict(standstill_s_mean=_mean(standstill), standstill_s_max=max(standstill, default=None),
+                n_standstill_over_60s=sum(v > 60 for v in standstill),
+                n_deadline=sum(bool(r.get('deadline')) for r in records),
+                mean_speed_mps=_mean(_values(records, 'mean_speed_mps')))
 
 
 def reset_failure(case, reason, infrastructure_error=None):

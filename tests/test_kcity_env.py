@@ -7,7 +7,7 @@ import numpy as np
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from env.env import SumoKCityEnv,KCityExternalTimeLimit
+from env.env import SumoKCityEnv
 from env.route import RouteGeometry
 from env.config import load_contract, ContractError
 from env.scenarios import sumo_library
@@ -132,15 +132,6 @@ class GymIntegrationTests(unittest.TestCase):
         self.assertTrue(term);self.assertFalse(trunc)
         self.assertEqual(i['executed_substeps'],2);self.assertEqual(i['end_reason'],'deadline')
         self.assertAlmostEqual(i['episode_time_s'],.7)
-        with self.assertRaises(RuntimeError):e.step([0,0])
-
-    def test_external_limit_truncates_with_valid_terminal_observation(self):
-        base=self.create();e=KCityExternalTimeLimit(base,2);e.reset(seed=0)
-        self.assertFalse(e.step([0,0])[3])
-        obs,_,term,trunc,i=e.step([0,0])
-        self.assertFalse(term);self.assertTrue(trunc)
-        self.assertEqual(i['end_reason'],'external_limit')
-        self.assertTrue(i['next_observation_valid']);self.assertTrue(e.observation_space.contains(obs))
         with self.assertRaises(RuntimeError):e.step([0,0])
 
     def test_removed_vehicle_has_terminal_absorbing_observation(self):

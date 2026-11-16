@@ -36,7 +36,6 @@ STATE_FIELDS={'sim_tick','sim_time_s','ego_alive','snapshot_valid','ego_x','ego_
 def json_text(value):return json.dumps(value,ensure_ascii=False,allow_nan=False,separators=(',',':'))
 
 
-
 def now():
     return datetime.now().astimezone().isoformat()
 
@@ -121,6 +120,10 @@ def make_transition(*,config,case,episode_index,t,attempt_uid,observation,detect
             policy_checkpoint_sha256=policy_context['behavior_sha'])
         row['learning'].update({k:policy_context[k] for k in
             ['update_id','rollout_id','log_prob_raw','value','next_value']})
+    elif config.get('fixed_policy'):
+        fixed=config['fixed_policy']
+        row.update(policy_id=fixed['method'],policy_version=fixed['version'],train_seed=fixed['seed'],
+            policy_checkpoint_kind='acting_state_dict_sha256',policy_checkpoint_sha256=fixed['policy_sha256'])
     return row
 
 
@@ -210,6 +213,12 @@ def validate_row(row,config=None):
                     'Invalid online update counters')
             require(all(isinstance(row['learning'][k],(int,float)) and math.isfinite(row['learning'][k])
                         for k in ['log_prob_raw','value','next_value']),'Missing online learner values')
+        elif config.get('fixed_policy'):
+            fixed=config['fixed_policy']
+            require(row['policy_id']==fixed['method'] and row['policy_version']==fixed['version'] and
+                    row['train_seed']==fixed['seed'],'Fixed policy/seed mismatch')
+            require(row['policy_checkpoint_kind']=='acting_state_dict_sha256' and
+                    row['policy_checkpoint_sha256']==fixed['policy_sha256'],'Fixed policy weights hash mismatch')
         else:
             require(row['policy_checkpoint_sha256']==config['teacher']['fingerprint'],'Unknown teacher hash')
             require(row['policy_id']=='B0' and row['policy_version']==config['teacher']['id'],'Unknown policy/version')
@@ -454,21 +463,3 @@ def validate_dataset(root):
         local_file_coverage_verified=True,remote_backup_verified=False,training_ready=False,
         retained_learner_checkpoints=len(retention['retained']) if retention else None,
         incomplete_partial_present=(root/'partial/current.jsonl').exists() and (root/'partial/current.jsonl').stat().st_size>0)
-
-
-def iter_bc_batches(root,split,*,batch_size=256,allow_debug=False):
-    if split not in ['expert_train','expert_val']:raise ValueError('BC only consumes expert train/val')
-    root=Path(root);report=validate_dataset(root);config=json.loads((root/'RUN.json').read_text())
-    release=json.loads((root/'RELEASE.json').read_text())
-    if not allow_debug and (config['source_stage']!='expert_pool' or not config['eligible_for_research_training'] or not release['eligible_for_research_training']):
-        raise ValueError('Debug data cannot initialize research BC')
-    successful={e['episode_uid'] for e in report['episodes'] if e['metrics']['compliant_completion'] is True
-                and e['metrics']['primary_end_reason']=='arrival' and e['data_split']==split}
-    for folder in shard_directories(root):
-        with np.load(folder/'numeric.npz',allow_pickle=False) as arrays:
-            selected=np.flatnonzero((arrays['data_split']==split)&np.isin(arrays['episode_uid'],list(successful)))
-            for start in range(0,len(selected),batch_size):
-                idx=selected[start:start+batch_size]
-                yield dict(observation=arrays['observation'][idx].copy(),action_target=arrays['action_env_input'][idx].copy(),
-                    action_mask=arrays['action_mask'][idx].copy(),transition_uid=arrays['transition_uid'][idx].copy(),
-                    episode=arrays['episode'][idx].copy())

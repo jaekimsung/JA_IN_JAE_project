@@ -1,4 +1,4 @@
-"""Collect expert (B0) driving data into an expert pool, optionally with parallel workers.
+"""Collect driving data into a pool with parallel workers: the B0 expert, or a fixed learned policy.
 
     python runner/collect.py --output runs/expert --workers 8            # 8 SUMO workers on this machine
     python runner/collect.py --output runs/expert --workers 8 --resume   # continue after STOP/crash
@@ -8,9 +8,13 @@
     python runner/collect.py --output runs/expert --part 3 --parts 8
     python runner/collect.py --output runs/expert --finalize
 
+    # fixed learned policy (BC/PPO bundle) on the separate `archive` case namespace, deterministic actions
+    python runner/collect.py --output runs/archive_B3_seed11 --workers 8         --policy runs/B3_seed11/transitions/checkpoints/T001000000-...
+
 The case plan (A/A/A/B/B/B/C/C/C/C, every 5th case of a scenario is expert_val) is split into
 whole 10-case cycles, round robin over parts, so each case keeps its traffic seeds and split.
-Each part collects ceil(target / parts) transitions and finishes its current Episode.
+Each part collects ceil(target / parts) transitions and finishes its current Episode. Default target:
+expert 1M (expert_valid_transitions_min), learned policy 500k (archive_per_budget_end_policy).
 `touch <output>/STOP` stops every worker cleanly; rerun the same command with --resume.
 """
 import argparse
@@ -26,29 +30,56 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # 저장소 루트
 from data.collector import ExpertCollector, case_plan, dataset_config
 from data.dataset import ShardWriter, atomic_json, validate_dataset
 from data.pool import part_dir, partition, write_pool
+from env.config import file_sha256
 from env.env import SumoKCityEnv
+from evaluation.metrics import policy_weights_sha256
+from policy.checkpoint import load_policy
 from policy.rule_expert import KCityRuleExpert
 from training.experiment import experiment_sha256, load_experiment, training_config
 from training.runs import Owner, install_signals, now, read, stopped
 
 
+def resolve_policy(args):
+    """(actor, case-plan kind, source stage, fixed-policy identity or None)."""
+    if args.policy == 'expert':
+        return KCityRuleExpert(), 'expert', 'expert_pool', None
+    import torch
+    torch.set_num_threads(1)
+    bundle = Path(args.policy).resolve()
+    policy, meta = load_policy(bundle)
+    method = args.policy_method
+    if method is None:
+        if meta['kind'] == 'bc':
+            method = 'B1'
+        else:  # <run>/transitions/checkpoints/<bundle>: the run CONFIG.json names B2/B3
+            run_config = bundle.parents[2] / 'CONFIG.json'
+            if not run_config.exists():
+                raise SystemExit('Cannot infer B2/B3 for this bundle; pass --policy-method')
+            method = read(run_config)['method']
+    identity = dict(method=method, seed=meta['config']['seed'], version='KC-ARCHIVE-v1',
+                    policy_sha256=policy_weights_sha256(policy), bundle=str(bundle),
+                    bundle_manifest_sha256=file_sha256(bundle / 'SHA256.json'))
+    return policy, 'archive', 'archive', identity
+
+
 def collect_part(args, spec, target):
     """One worker: its own SUMO, ShardWriter and resume state under <output>/part-XX."""
     root = part_dir(args.output, args.part)
-    config = training_config(spec, 'expert_pool_part', part=args.part, parts=args.parts,
-                             target=target, shard_rows=args.shard_rows)
+    actor, kind, stage, fixed = resolve_policy(args)
+    config = training_config(spec, stage + '_part', part=args.part, parts=args.parts, target=target,
+                             shard_rows=args.shard_rows, policy=fixed)
     owner = Owner(root, config, args.resume)
     env = SumoKCityEnv(background=True)
     writer = None
     try:
-        plan = partition(case_plan(env.contract, 'expert'), args.part, args.parts)
+        plan = partition(case_plan(env.contract, kind), args.part, args.parts)
         run_uid = f'{args.output.name}-part{args.part:02d}'
-        data = dataset_config(env, run_uid, plan, 'expert_pool', experiment_sha256=experiment_sha256(spec))
+        data = dataset_config(env, run_uid, plan, stage, experiment_sha256=experiment_sha256(spec), fixed_policy=fixed)
         writer = ShardWriter(root / 'dataset', data, resume=args.resume, shard_rows=args.shard_rows)
         atomic_json(root / 'STATUS.json', dict(phase='COLLECTING', transitions=writer.count, target=target,
                                                part=args.part, parts=args.parts, updated_at=now()))
         stop = lambda: stopped(root) or stopped(args.output)
-        result = ExpertCollector(env, KCityRuleExpert(), writer).collect(target, stop)
+        result = ExpertCollector(env, actor, writer).collect(target, stop)
         quality = validate_dataset(writer.root)
         atomic_json(root / 'QUALITY.json', quality)
         atomic_json(root / 'STATUS.json', dict(result, part=args.part, parts=args.parts,
@@ -74,8 +105,10 @@ def progress(root, parts):
 def run_workers(args, spec, target):
     """Coordinator: start one subprocess per part, report progress, write POOL.json when all finish."""
     root = args.output
-    owner = Owner(root, training_config(spec, 'expert_pool', parts=args.workers, target=args.target,
-                                        shard_rows=args.shard_rows), args.resume)
+    policy = 'expert' if args.policy == 'expert' else str(Path(args.policy).resolve())
+    owner = Owner(root, training_config(spec, 'collection_pool', parts=args.workers, target=args.target,
+                                        shard_rows=args.shard_rows, policy=policy,
+                                        policy_method=args.policy_method), args.resume)
     logs = root / 'logs'
     logs.mkdir(exist_ok=True)
     env = dict(os.environ, OMP_NUM_THREADS='1', PYTHONDONTWRITEBYTECODE='1')
@@ -84,7 +117,8 @@ def run_workers(args, spec, target):
         for k in range(args.workers):
             cmd = [sys.executable, '-B', str(Path(__file__).resolve()), '--output', str(root),
                    '--part', str(k), '--parts', str(args.workers), '--target', str(args.target),
-                   '--shard-rows', str(args.shard_rows)] + (['--resume'] if args.resume else [])
+                   '--shard-rows', str(args.shard_rows), '--policy', policy]
+            cmd += (['--policy-method', args.policy_method] if args.policy_method else []) + (['--resume'] if args.resume else [])
             log = (logs / f'part-{k:02d}.log').open('a')
             procs.append((k, subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT, env=env), log))
         started, last_report = time.monotonic(), time.monotonic()
@@ -119,7 +153,9 @@ def run_workers(args, spec, target):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--output', required=True, type=Path, help='expert pool directory')
+    parser.add_argument('--output', required=True, type=Path, help='pool directory')
+    parser.add_argument('--policy', default='expert', help="'expert' (B0) or a BC/PPO learner bundle directory")
+    parser.add_argument('--policy-method', choices=['B1', 'B2', 'B3'], help='label for a bundle (default: inferred)')
     parser.add_argument('--target', type=int, help='total transition target (default: experiment budget)')
     parser.add_argument('--workers', type=int, default=1, help='parallel SUMO workers on this machine')
     parser.add_argument('--part', type=int, help='run one part only (worker mode)')
@@ -130,7 +166,8 @@ def main():
     parser.add_argument('--resume', action='store_true')
     args = parser.parse_args()
     spec = load_experiment()
-    args.target = args.target or spec['budgets']['expert_valid_transitions_min']
+    budget = 'expert_valid_transitions_min' if args.policy == 'expert' else 'archive_per_budget_end_policy'
+    args.target = args.target or spec['budgets'][budget]
     if args.finalize:
         print(json.dumps(write_pool(args.output, workers=max(1, args.workers)), indent=2)[:2000])
         return

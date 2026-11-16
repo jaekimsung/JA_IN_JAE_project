@@ -24,7 +24,6 @@ from env.scenarios import sumo_library, validate_contract
 IMPLEMENTATION_ID='KC-ENV-v3-kc04-candidate'
 
 
-
 class SumoKCityEnv(gym.Env):
     metadata={'render_modes':['human']}
 
@@ -405,30 +404,3 @@ class SumoKCityEnv(gym.Env):
             raise RuntimeError('Replayed SUMO/Python snapshot differs; exact resume refused')
         self.resume_replayed_control_steps=len(body['action_history'])
         return self._obs.copy()
-
-
-class KCityExternalTimeLimit(gym.Wrapper):
-    """Optional external decision budget; not the finite task's own deadline.
-
-    Native task termination takes precedence. Terminal observation remains the
-    current observation, and the downstream learner must bootstrap/truncate
-    with an independent trace mask.
-    """
-    def __init__(self,env,max_episode_steps):
-        super().__init__(env)
-        if isinstance(max_episode_steps,bool) or not isinstance(max_episode_steps,int) or max_episode_steps<1:
-            raise ValueError('External max_episode_steps must be a positive integer')
-        self.max_episode_steps=max_episode_steps;self.elapsed=0;self.finished=True
-
-    def reset(self,**kwargs):
-        obs,info=self.env.reset(**kwargs);self.elapsed=0;self.finished=False
-        return obs,info
-
-    def step(self,action):
-        if self.finished:raise RuntimeError('Reset after external time limit')
-        obs,reward,terminated,truncated,info=self.env.step(action)
-        self.elapsed+=1
-        if not terminated and not truncated and self.elapsed>=self.max_episode_steps:
-            truncated=True;info=dict(info,end_reason='external_limit')
-        self.finished=terminated or truncated
-        return obs,reward,terminated,truncated,info

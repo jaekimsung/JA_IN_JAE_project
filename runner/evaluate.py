@@ -5,7 +5,8 @@
         --demand 1.0 1.5 2.0 --output runs/eval/B3_seed11_final
 
 --policy is `expert` or a BC/PPO learner bundle directory (contains metadata.json/training.pt).
-Writes EPISODES.json and SUMMARY.json per demand and prints collision/completion rates.
+Writes EPISODES.json and SUMMARY.json per demand and prints collision/completion rates, HV exposure
+(HV on the map, HV within 50 m of the AV, leader presence) and stopping indicators.
 The final panel is for the fixed main policies only; never use it to choose models or settings.
 """
 import sys
@@ -74,12 +75,21 @@ def main():
             rows.append((demand, summary))
     finally:
         env.close()
+    rate = lambda v: '-' if v is None else f'{100 * v:.1f}%'
+    num = lambda v, f='.1f': '-' if v is None else format(v, f)
     print(f"{'demand':>6} {'n':>4} {'collision':>10} {'completion':>11} {'compliant':>10} {'mean_s(done)':>13}")
     for demand, s in rows:
-        rate = lambda v: '-' if v is None else f'{100 * v:.1f}%'
-        mean = s['mean_elapsed_completed']
         print(f"{demand:>6g} {s['n_valid']:>4} {rate(s['collision_rate']):>10} {rate(s['completion_rate']):>11} "
-              f"{rate(s['compliant_completion_rate']):>10} {'-' if mean is None else f'{mean:.1f}':>13}")
+              f"{rate(s['compliant_completion_rate']):>10} {num(s['mean_elapsed_completed']):>13}")
+    print()
+    print(f"{'demand':>6} {'HV@start':>9} {'HV(avg)':>8} {'start<10':>9} {'near50m':>8} {'near>0':>7} "
+          f"{'leader':>7} {'stop_s':>7} {'stop_max':>9} {'deadline':>9}")
+    for demand, s in rows:
+        e, st = s['exposure'], s['stops']
+        print(f"{demand:>6g} {num(e['HV_start_mean']):>9} {num(e['HV_time_weighted_mean']):>8} "
+              f"{e['n_HV_start_below_10']:>9} {num(e['near_HV_50m_mean'], '.2f'):>8} {rate(e['near_HV_50m_presence_mean']):>7} "
+              f"{rate(e['leader_present_fraction_mean']):>7} {num(st['standstill_s_mean']):>7} {num(st['standstill_s_max']):>9} "
+              f"{st['n_deadline']:>9}")
 
 
 if __name__ == '__main__':

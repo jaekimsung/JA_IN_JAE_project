@@ -64,6 +64,7 @@ python runner/train_bc.py views --pool runs/expert --output runs/bc_views
 python runner/train_bc.py train --views runs/bc_views --seed 11 --output runs/bc_seed11
 python runner/train_ppo.py --method B2 --seed 11 --output runs/B2_seed11
 python runner/train_ppo.py --method B3 --seed 11 --bc-run runs/bc_seed11 --output runs/B3_seed11
+python runner/collect.py --output runs/archive_B3_seed11 --workers 8 --policy <bundle>   # 최종 정책 데이터
 python runner/evaluate.py --policy <bundle 또는 expert> --panel final --output runs/eval/B3_seed11
 python runner/record_video.py --policy <bundle 또는 expert> --scenario C --video --once --output runs/video/C
 python runner/export_hf.py --dataset runs/expert --dataset runs/B3_seed11/transitions --output runs/hf_export

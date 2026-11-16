@@ -1,12 +1,11 @@
 # 환경 계약 (v1)
 
-환경이 따르는 시나리오·seed·제어 계약입니다. 이 파일들의 내용은 사례 ID(`case_uid`) 계산에 들어갑니다. 바꾸면 [평가 패널](../panels/)을 다시 만들어야 하고, 기존 결과와 섞을 수 없습니다.
+환경이 따르는 시나리오·seed·제어 계약입니다. 학습 설정(정책·PPO·BC·예산)은 [experiment.json](../experiment.json)에 있습니다. 이 파일들의 내용은 사례 ID(`case_uid`) 계산에 들어갑니다. 바꾸면 [평가 패널](../panels/)을 다시 만들어야 하고, 기존 결과와 섞을 수 없습니다.
 
 | 파일 | 내용 |
 |---|---|
 | [protocol.json](protocol.json) | SUMO 버전(1.28.0), 맵·신호·경로 파일 SHA, 시간 단위(0.1초 tick, 0.5초 결정, warmup 60초), 제어(setAcceleration, +2/−4.5 m/s², 8.33 m/s, speedMode 31, laneChangeMode 512), 교통 수요, seed namespace |
 | [scenarios.json](scenarios.json) | A/B/C 경로의 출발·도착, 필수 신호, 필수 차선 변경, 사례 구성 비율(A3·B3·C4) |
-| [learning.json](learning.json) | 정책·PPO·BC 기본 설정 (실험값은 [experiment.json](../experiment.json)) |
 
 구현: [설정 로더·사례 생성](../../../env/config.py), [경로·seed 검사기](../../../env/scenarios.py), [회귀 검사](../../../tests/test_kcity_scenarios.py)
 

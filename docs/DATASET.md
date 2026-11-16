@@ -8,7 +8,7 @@ POMDP 전이(transition) 단위로 저장합니다. 전이 하나에는 정책�
 |---|---|---|
 | 전문가(B0) pool | 최소 1M 전이 | `runner/collect.py` (병렬 워커) |
 | PPO 학습 전이 | B2·B3 × 3 seed × 1M = 6M | `runner/train_ppo.py`가 학습하면서 기록 |
-| 최종 정책 주행 | 3M (계획) | 고정된 최종 정책으로 수집 |
+| 최종 정책 주행 | 1M 시점 PPO 정책 6개 × 500k = 3M | `runner/collect.py --policy <bundle>` (병렬 워커, 결정적 행동) |
 
 합계 목표는 10^7 전이 이상입니다. 성공, 실패, 판정 불가 Episode를 모두 저장하며, 걸러내는 작업은 BC view를 만들 때만 합니다.
 
@@ -28,7 +28,7 @@ POMDP 전이(transition) 단위로 저장합니다. 전이 하나에는 정책�
 | `detected_vehicles` | list | 관측 시점에 AV 주변으로 감지된 차량(같은 차로·인접 차로·교차 관계, 상대 위치·속도) |
 | `event` | dict | `collided`, `arrived`, `lane_before`, `lane_after` |
 | `events`, `substep_samples` | list | 0.1초 단위 이벤트(차선변경·충돌·신호 통과·도착)와 속도·선행차 간격·HV 수 |
-| 식별·출처 | str | `run_uid`, `case_uid`, `episode_uid`, `transition_uid`, `data_split`, `scenario_id`, `policy_id`(B0/B2/B3), 정책 hash |
+| 식별·출처 | str | `run_uid`, `case_uid`, `episode_uid`, `transition_uid`, `data_split`, `scenario_id`, `policy_id`(B0~B3), `train_seed`, 행동한 정책 가중치 hash |
 | `learning` (PPO만) | dict | 행동 당시 log π, V(s), V(s'), update 번호 |
 
 ## 저장 구조
@@ -53,9 +53,10 @@ POMDP 전이(transition) 단위로 저장합니다. 전이 하나에는 정책�
 ## 수집 방식
 
 1. **사례 계획:** 시나리오를 A/A/A/B/B/B/C/C/C/C로 반복합니다. 시나리오별 순번 5개 중 1개(`j % 5 == 4`)를 `expert_val`, 나머지를 `expert_train`으로 미리 정합니다. 같은 Episode와 교통 seed 묶음은 한 split에만 들어갑니다.
-2. **병렬 수집:** 사례 계획을 10개 사례 주기 단위로 워커 N개에 번갈아 나눕니다. 각 워커는 자기 SUMO와 기록기로 `ceil(목표/N)` 전이를 채우고 진행 중인 Episode까지 마칩니다. 모든 part가 같은 시나리오 구성을 갖고, 사례마다 교통 seed와 split이 고정되어 있습니다.
-3. **기록:** 결정마다 전이를 검증해 journal에 쓰고, 512행마다(PPO는 rollout마다) shard로 확정합니다. 확정은 임시 폴더 rename이라 중단돼도 반쯤 쓴 shard는 데이터로 세지 않습니다.
-4. **중단·재개:** `STOP` 파일이나 SIGINT/SIGTERM이 오면 저장 후 종료합니다. 재개하면 확정 지점부터 이어가고, 확정되지 않은 journal은 `quarantine/`으로 보관합니다.
+2. **최종 정책 수집:** 학습된 정책(BC·PPO bundle)으로 수집할 때는 학습·평가와 겹치지 않는 `archive` namespace 사례를 씁니다. 행동은 결정적이며, 행마다 정책 이름(B1~B3)·학습 seed·가중치 hash를 기록하고 검증합니다. 이 데이터는 BC view에 들어가지 않습니다.
+3. **병렬 수집:** 사례 계획을 10개 사례 주기 단위로 워커 N개에 번갈아 나눕니다. 각 워커는 자기 SUMO와 기록기로 `ceil(목표/N)` 전이를 채우고 진행 중인 Episode까지 마칩니다. 모든 part가 같은 시나리오 구성을 갖고, 사례마다 교통 seed와 split이 고정되어 있습니다.
+4. **기록:** 결정마다 전이를 검증해 journal에 쓰고, 512행마다(PPO는 rollout마다) shard로 확정합니다. 확정은 임시 폴더 rename이라 중단돼도 반쯤 쓴 shard는 데이터로 세지 않습니다.
+5. **중단·재개:** `STOP` 파일이나 SIGINT/SIGTERM이 오면 저장 후 종료합니다. 재개하면 확정 지점부터 이어가고, 확정되지 않은 journal은 `quarantine/`으로 보관합니다.
 
 ## 품질 검사
 
