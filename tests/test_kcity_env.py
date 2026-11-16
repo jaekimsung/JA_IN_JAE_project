@@ -7,10 +7,10 @@ import numpy as np
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from env.env import SumoKCityEnv
-from env.route import RouteGeometry
-from env.config import load_contract, ContractError
-from env.scenarios import sumo_library
+from kcity.env.env import SumoKCityEnv
+from kcity.env.route import RouteGeometry
+from kcity.env.config import load_contract, ContractError
+from kcity.env.scenarios import sumo_library
 
 
 class GeometryTests(unittest.TestCase):

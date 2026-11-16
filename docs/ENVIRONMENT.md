@@ -1,6 +1,6 @@
 # 주행 환경
 
-자율주행 차량(AV)이 K-CITY 도로망에서 일반 차량(HV)·교통신호와 상호작용하며 정해진 경로를 따라 목적지까지 주행하는 Gymnasium 환경입니다. 구현은 [env/](../env/), 맵 자산은 [maps/kcity/](../maps/kcity/README.md), 환경 계약은 [configs/kcity/v1/](../configs/kcity/v1/README.md)에 있습니다.
+자율주행 차량(AV)이 K-CITY 도로망에서 일반 차량(HV)·교통신호와 상호작용하며 정해진 경로를 따라 목적지까지 주행하는 Gymnasium 환경입니다. 구현은 [env/](../kcity/env), 맵 자산은 [maps/kcity/](../maps/kcity/README.md), 환경 계약은 [configs/kcity/v1/](../configs/kcity/v1/README.md)에 있습니다.
 
 ## 도로와 교통
 
@@ -34,7 +34,7 @@
 
 ## 관측 (73차원, `[-1, 1]`)
 
-[env/observation.py](../env/observation.py). 주변 차로 5개(왼쪽 2·왼쪽 1·현재·오른쪽 1·오른쪽 2)를 같은 형식으로 봅니다.
+[env/observation.py](../kcity/env/observation.py). 주변 차로 5개(왼쪽 2·왼쪽 1·현재·오른쪽 1·오른쪽 2)를 같은 형식으로 봅니다.
 
 | index | 의미 |
 |---|---|

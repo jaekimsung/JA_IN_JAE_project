@@ -33,7 +33,7 @@ BC와 PPO의 결합 자체를 새 알고리즘으로 주장하지 않습니다. 
 
 ## 지표
 
-[evaluation/metrics.py](../evaluation/metrics.py)
+[evaluation/metrics.py](../kcity/evaluation/metrics.py)
 
 | 지표 | 정의 |
 |---|---|

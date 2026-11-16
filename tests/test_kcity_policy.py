@@ -10,12 +10,12 @@ import numpy as np
 import torch
 
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
-from policy.networks import HybridActorCritic
-from policy.policy import DEFAULT_POLICY,KCityPolicy,initialize_from_bc
-from training.bc import KCityBC
-from policy.ppo import DEFAULT_PPO,KCityPPO,new_policy
-from training.ppo import KCityRunner
-from env.env import SumoKCityEnv
+from kcity.policy.networks import HybridActorCritic
+from kcity.policy.policy import DEFAULT_POLICY,KCityPolicy,initialize_from_bc
+from kcity.training.bc import KCityBC
+from kcity.policy.ppo import DEFAULT_PPO,KCityPPO,new_policy
+from kcity.training.ppo import KCityRunner
+from kcity.env.env import SumoKCityEnv
 
 
 def fixture_batch(n=32):

@@ -7,7 +7,7 @@
 | [protocol.json](protocol.json) | SUMO 버전(1.28.0), 맵·신호·경로 파일 SHA, 시간 단위(0.1초 tick, 0.5초 결정, warmup 60초), 제어(setAcceleration, +2/−4.5 m/s², 8.33 m/s, speedMode 31, laneChangeMode 512), 교통 수요, seed namespace |
 | [scenarios.json](scenarios.json) | A/B/C 경로의 출발·도착, 필수 신호, 필수 차선 변경, 사례 구성 비율(A3·B3·C4) |
 
-구현: [설정 로더·사례 생성](../../../env/config.py), [경로·seed 검사기](../../../env/scenarios.py), [회귀 검사](../../../tests/test_kcity_scenarios.py)
+구현: [설정 로더·사례 생성](../../../kcity/env/config.py), [경로·seed 검사기](../../../kcity/env/scenarios.py), [회귀 검사](../../../tests/test_kcity_scenarios.py)
 
 ## 시나리오
 
@@ -26,6 +26,6 @@
 
 ```bash
 python -B -m unittest discover -s tests -p test_kcity_scenarios.py -v
-python -B env/scenarios.py --output /tmp/kcity-scenarios-check            # 계약·경로 검사 (output은 새 경로)
-python -B env/scenarios.py --output /tmp/kcity-scenarios-smoke --smoke    # 배경 교통 없이 A/B/C 주행 확인
+python -B kcity/env/scenarios.py --output /tmp/kcity-scenarios-check            # 계약·경로 검사 (output은 새 경로)
+python -B kcity/env/scenarios.py --output /tmp/kcity-scenarios-smoke --smoke    # 배경 교통 없이 A/B/C 주행 확인
 ```

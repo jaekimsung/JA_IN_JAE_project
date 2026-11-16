@@ -31,25 +31,25 @@ K-CITY 도로·신호 구현 → 일반 차량 교통 → AV 환경(관측·행�
 
 ```text
 .
-├── env/          # 실행환경: Gym 환경·73D 관측·경로·시나리오·환경 계약·SUMO 헬퍼
-├── policy/       # 정책·알고리즘: 정책망·PPO·BC 학습기·버퍼/GAE·규칙 전문가 B0·checkpoint
-├── training/     # 학습 코드: BC run·PPO run·dev 평가 곡선·실험 설정·실행 폴더/STOP 관리
-├── data/         # 데이터: 전문가 수집·사례 계획·병렬 수집 pool·shard 저장/검증·PPO 전이 기록
-├── evaluation/   # 평가: Episode 지표·사례 패널 평가
-├── runner/       # 실행: collect · train_bc · train_ppo · evaluate · record_video · export_hf · view_kcity
-├── configs/kcity/  # experiment.json(실험 설정), v1/(환경 계약), panels/(dev·final 평가 사례)
-├── maps/kcity/     # 맵 자산: SUMO 맵·경로·신호·조경, 원본 자료, 검증 보고서
-├── tools/map/      # 맵 변환·차선 정리·신호·조경 생성·교통 검증
-├── tests/          # 회귀 검사
-└── docs/           # 설명 문서 (docs/README.md)
+├── kcity/            # 코드
+│   ├── env/          #   실행환경: Gym 환경·73D 관측·경로·시나리오·환경 계약·SUMO 헬퍼
+│   ├── policy/       #   정책·알고리즘: 정책망·PPO·BC 학습기·버퍼/GAE·규칙 전문가 B0·checkpoint
+│   ├── training/     #   학습 코드: BC run·PPO run·dev 평가 곡선·실험 설정·실행 폴더/STOP 관리
+│   ├── data/         #   데이터: 전문가·정책 수집, 사례 계획, 병렬 pool, shard 저장/검증, PPO 전이 기록
+│   └── evaluation/   #   평가: Episode 지표·HV 노출·사례 패널 평가
+├── runner/           # 실행: collect · train_bc · train_ppo · evaluate · record_video · export_hf · view_kcity
+├── configs/kcity/    # experiment.json(실험 설정), v1/(환경 계약), panels/(dev·final 평가 사례)
+├── maps/             # 맵: kcity/(SUMO 맵·경로·신호·조경, 원본 자료, 검증 보고서), tools/(맵 생성·검증 도구)
+├── tests/            # 회귀 검사
+└── docs/             # 설명 문서 (docs/README.md)
 ```
 
-패키지는 한 방향으로만 import합니다.
+`kcity/` 안의 패키지는 한 방향으로만 import합니다.
 - `env`는 다른 패키지를 쓰지 않습니다.
 - `evaluation`·`policy`는 `env`를 씁니다.
 - `data`는 `env`·`evaluation`·`policy`(규칙 전문가)를 씁니다.
 - `training`은 `env`·`policy`·`data`·`evaluation`을 씁니다.
-- `runner`는 전부를 씁니다.
+- `runner/`는 전부를 씁니다.
 
 모듈을 import하는 것만으로는 SUMO가 실행되지 않으며, SUMO는 `SumoKCityEnv.reset()`을 호출할 때 시작됩니다.
 
@@ -82,11 +82,11 @@ python -m unittest discover -s tests                                     # 회�
 - `--netedit`: 도로 편집기로 열기
 
 ```bash
-python -m pip install -r tools/map/requirements.txt
-python tools/map/build.py
-python tools/map/validate_signals.py
-python tools/map/validate.py --seeds 0 1 2
-python tools/map/lane_usage.py
+python -m pip install -r maps/tools/requirements.txt
+python maps/tools/build.py
+python maps/tools/validate_signals.py
+python maps/tools/validate.py --seeds 0 1 2
+python maps/tools/lane_usage.py
 ```
 
 신호 검증(기본·2배·3배 투입과 무작위 출발·도착, 각 3 seed)에서 **2,124/2,124대가 도착했고 충돌·텔레포트는 0건**이었습니다.

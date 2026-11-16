@@ -1,10 +1,10 @@
 # 정책과 학습 알고리즘
 
-네 가지 방법을 같은 환경·관측·정책 구조에서 비교합니다. 알고리즘은 [policy/](../policy/), 학습 루프는 [training/](../training/), 설정값은 [experiment.json](../configs/kcity/experiment.json)에 있습니다.
+네 가지 방법을 같은 환경·관측·정책 구조에서 비교합니다. 알고리즘은 [policy/](../kcity/policy), 학습 루프는 [training/](../kcity/training), 설정값은 [experiment.json](../configs/kcity/experiment.json)에 있습니다.
 
 | 방법 | 내용 |
 |---|---|
-| **B0** 규칙 전문가 | 73차원 관측만 보는 결정적 규칙. 앞차 추종(IDM 형태), 적·황 신호 정지, 경로상 필요한 차선 변경(앞뒤 간격 확인), 정지 규칙 접근 ([rule_expert.py](../policy/rule_expert.py)) |
+| **B0** 규칙 전문가 | 73차원 관측만 보는 결정적 규칙. 앞차 추종(IDM 형태), 적·황 신호 정지, 경로상 필요한 차선 변경(앞뒤 간격 확인), 정지 규칙 접근 ([rule_expert.py](../kcity/policy/rule_expert.py)) |
 | **B1** BC | B0 데이터를 지도학습한 정책. 검증 손실이 가장 낮은 checkpoint 선택 |
 | **B2** PPO | 무작위 초기화에서 PPO로 학습 |
 | **B3** BC → PPO | 같은 seed의 B1 actor로 초기화한 뒤 PPO로 학습 |
@@ -13,7 +13,7 @@ B3는 BC와 PPO 손실을 섞는 방식이 아닙니다. 초기 가중치만 BC�
 
 ## 정책망
 
-[networks.py](../policy/networks.py), [policy.py](../policy/policy.py)
+[networks.py](../kcity/policy/networks.py), [policy.py](../kcity/policy/policy.py)
 
 ```text
 관측 73 → [256, ReLU] → [256, ReLU] (공유 trunk) ─┬─ 가속 head: tanh(μ)       → Normal(μ, σ)
@@ -29,7 +29,7 @@ B3는 BC와 PPO 손실을 섞는 방식이 아닙니다. 초기 가중치만 BC�
 
 ## PPO (B2, B3)
 
-[policy/ppo.py](../policy/ppo.py), [policy/buffer.py](../policy/buffer.py), [training/ppo.py](../training/ppo.py)
+[policy/ppo.py](../kcity/policy/ppo.py), [policy/buffer.py](../kcity/policy/buffer.py), [training/ppo.py](../kcity/training/ppo.py)
 
 | 항목 | 값 |
 |---|---|
@@ -49,7 +49,7 @@ GAE는 종료(`terminated`)와 잘림(`truncated`)을 구분합니다. 종료는
 
 ## BC (B1)
 
-[policy/bc.py](../policy/bc.py), [training/bc.py](../training/bc.py)
+[policy/bc.py](../kcity/policy/bc.py), [training/bc.py](../kcity/training/bc.py)
 
 - **데이터:** B0 pool에서 정상 완주하고, 규칙 판정을 통과하고, 신호 판정 불가가 없는 Episode만 사용합니다. train 200k / val 50k 행을 seed 20261115로 한 번 비복원 추출해 고정하고, 세 seed가 같은 view를 씁니다.
 - **손실:** 가속 MSE(μ와 전문가 가속) + 차선 Cross-Entropy입니다. 가중치는 1:1이며, 가치 head와 σ는 학습하지 않습니다.
@@ -57,7 +57,7 @@ GAE는 종료(`terminated`)와 잘림(`truncated`)을 구분합니다. 종료는
 
 ## 학습 상태 저장과 재개
 
-[policy/checkpoint.py](../policy/checkpoint.py)
+[policy/checkpoint.py](../kcity/policy/checkpoint.py)
 
 - **bundle 구성:** 가중치, optimizer, 난수 상태, 진행 중인 rollout buffer, 환경 재개 정보를 하나의 폴더(bundle)에 SHA256 목록과 함께 저장합니다. bundle은 임시 폴더에 쓴 뒤 rename으로 확정합니다.
 - **데이터와 함께 확정:** PPO는 rollout을 마칠 때마다 learner bundle을 먼저 확정하고, 그 다음에 같은 전이의 데이터 shard를 확정합니다. 그래서 중단 후 재개해도 데이터 수와 학습 카운터가 일치합니다.

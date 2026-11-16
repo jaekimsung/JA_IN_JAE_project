@@ -11,13 +11,13 @@ from unittest.mock import patch
 import numpy as np
 
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
-from policy.rule_expert import KCityRuleExpert
-from env.env import SumoKCityEnv
-from policy.policy import KCityPolicy
-from data.collector import build_config,ExpertCollector
-from data.dataset import (ShardWriter,validate_row,validate_pair,make_transition,validate_dataset,
+from kcity.policy.rule_expert import KCityRuleExpert
+from kcity.env.env import SumoKCityEnv
+from kcity.policy.policy import KCityPolicy
+from kcity.data.collector import build_config,ExpertCollector
+from kcity.data.dataset import (ShardWriter,validate_row,validate_pair,make_transition,validate_dataset,
     create_index,index_row,atomic_json,digest,file_sha256)
-from evaluation.metrics import EpisodeMetrics
+from kcity.evaluation.metrics import EpisodeMetrics
 
 
 def observation(speed=6):

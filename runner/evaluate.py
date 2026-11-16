@@ -19,14 +19,14 @@ import math
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # 저장소 루트
-from training.experiment import load_experiment
-from data.dataset import atomic_json
-from env.config import ROOT
-from env.env import SumoKCityEnv
-from evaluation.evaluate import evaluate_cases
-from policy.rule_expert import KCityRuleExpert
-from training.runs import now
-from policy.checkpoint import load_policy
+from kcity.training.experiment import load_experiment
+from kcity.data.dataset import atomic_json
+from kcity.env.config import ROOT
+from kcity.env.env import SumoKCityEnv
+from kcity.evaluation.evaluate import evaluate_cases
+from kcity.policy.rule_expert import KCityRuleExpert
+from kcity.training.runs import now
+from kcity.policy.checkpoint import load_policy
 
 
 def wilson(k, n, z=1.96):

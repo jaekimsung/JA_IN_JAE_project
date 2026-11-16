@@ -18,9 +18,9 @@ import os
 import shutil
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # 저장소 루트
-from training.experiment import git_info
-from data.dataset import OBSERVATION_ID, SCHEMA_ID, shard_directories
-from data.pool import part_report, pool_parts
+from kcity.training.experiment import git_info
+from kcity.data.dataset import OBSERVATION_ID, SCHEMA_ID, shard_directories
+from kcity.data.pool import part_report, pool_parts
 
 DATA_FILES = ('transitions.jsonl.gz', 'numeric.npz', 'events.jsonl.gz')
 

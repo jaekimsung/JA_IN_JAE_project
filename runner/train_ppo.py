@@ -15,9 +15,9 @@ import argparse
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # 저장소 루트
-from training.experiment import load_experiment
-from training.runs import install_signals
-from training.ppo import run_ppo
+from kcity.training.experiment import load_experiment
+from kcity.training.runs import install_signals
+from kcity.training.ppo import run_ppo
 
 
 def main():

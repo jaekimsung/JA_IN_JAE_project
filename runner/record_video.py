@@ -22,11 +22,11 @@ import xml.etree.ElementTree as ET
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # 저장소 루트
-from data.dataset import atomic_json
-from env.config import ROOT
-from env.env import SumoKCityEnv
-from policy.rule_expert import KCityRuleExpert
-from policy.checkpoint import load_policy
+from kcity.data.dataset import atomic_json
+from kcity.env.config import ROOT
+from kcity.env.env import SumoKCityEnv
+from kcity.policy.rule_expert import KCityRuleExpert
+from kcity.policy.checkpoint import load_policy
 
 AV_COLOR, HV_COLOR = (255, 30, 30, 255), (255, 215, 0, 255)
 

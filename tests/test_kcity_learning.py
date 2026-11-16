@@ -9,14 +9,14 @@ import numpy as np
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from policy.buffer import RolloutBuffer
-from env.env import SumoKCityEnv
-from policy.ppo import KCityPPO
-from env.config import load_contract
-from evaluation.metrics import EpisodeMetrics, aggregate
-from env.config import ROOT, make_case
-from training.experiment import load_experiment
-from evaluation.evaluate import evaluate_cases
+from kcity.policy.buffer import RolloutBuffer
+from kcity.env.env import SumoKCityEnv
+from kcity.policy.ppo import KCityPPO
+from kcity.env.config import load_contract
+from kcity.evaluation.metrics import EpisodeMetrics, aggregate
+from kcity.env.config import ROOT, make_case
+from kcity.training.experiment import load_experiment
+from kcity.evaluation.evaluate import evaluate_cases
 
 
 class BufferTests(unittest.TestCase):

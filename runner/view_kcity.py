@@ -7,7 +7,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # 저장소 루트
-from env.common import MAP, sumo_tools
+from kcity.env.common import MAP, sumo_tools
 
 
 def main():

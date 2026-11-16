@@ -8,7 +8,7 @@ K-CITY(SUMO) 자율주행 의사결정 연구입니다. 규칙 전문가 B0, BC-
 
 ## 수정 범위
 
-- `maps/kcity/`(원자료·생성 맵·신호·보고서)와 `tools/map/`은 완성된 맵 구현입니다. 사용자 요청 없이 수정하지 않습니다.
+- `maps/kcity/`(원자료·생성 맵·신호·보고서)와 `maps/tools/`는 완성된 맵 구현입니다. 사용자 요청 없이 수정하지 않습니다.
 - `configs/kcity/v1/protocol.json`·`scenarios.json`은 환경 계약입니다. 바꾸면 case_uid가 달라져 `configs/kcity/panels/`의 사례 패널이 무효가 됩니다. 바꿀 때는 패널을 다시 만들고 기존 결과와 섞지 않습니다.
 - 데이터·checkpoint에 기록되는 식별자(`IMPLEMENTATION_ID`, `POLICY_ID`, `EXPERT_ID`, `SCHEMA_ID`, `METRIC_VERSION`)는 사례 ID와 데이터 호환에 쓰이므로 바꾸지 않습니다.
 - 실험 설정은 [configs/kcity/experiment.json](configs/kcity/experiment.json) 하나입니다. 실행 폴더의 CONFIG.json에 이 설정의 digest가 들어가므로, 설정을 바꾸면 이전 run은 `--resume`으로 이어지지 않습니다(의도된 동작).
@@ -16,7 +16,7 @@ K-CITY(SUMO) 자율주행 의사결정 연구입니다. 규칙 전문가 B0, BC-
 
 ## 실행
 
-- **구성:** `env/`(실행환경) · `policy/`(정책·알고리즘) · `training/`(학습 루프·설정) · `data/`(수집·저장) · `evaluation/`(지표·평가) · `runner/`(실행).
+- **구성:** 코드는 `kcity/` 아래 `env/`(실행환경) · `policy/`(정책·알고리즘) · `training/`(학습 루프·설정) · `data/`(수집·저장) · `evaluation/`(지표·평가)이고, 실행 진입점은 `runner/`입니다. 루트는 kcity·runner·configs·maps·tests·docs 6개입니다.
 - **import 방향:** env는 다른 패키지를 쓰지 않고, evaluation·policy → env, data → env·evaluation·policy, training → 나머지 전부입니다. data는 training을 import하지 않습니다.
 - **진입점:** `runner/collect.py --workers N` → `runner/train_bc.py views|train` → `runner/train_ppo.py` → `runner/evaluate.py` → `runner/record_video.py` / `runner/export_hf.py`. 장기 실행은 `<output>/STOP` 후 `--resume`으로 이어갑니다.
 - **회귀 검사:** `PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 python -B -m unittest discover -s tests`. 검증 환경은 Linux·SUMO 1.28.0입니다.

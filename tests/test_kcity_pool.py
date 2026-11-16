@@ -10,11 +10,11 @@ import unittest
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from data.collector import case_plan
-from data.pool import partition, pool_data_id, pool_parts, write_pool
-from env.config import load_contract
-from training.bc import build_views, read_views
-from training.experiment import load_experiment
+from kcity.data.collector import case_plan
+from kcity.data.pool import partition, pool_data_id, pool_parts, write_pool
+from kcity.env.config import load_contract
+from kcity.training.bc import build_views, read_views
+from kcity.training.experiment import load_experiment
 
 
 def write(path, value):

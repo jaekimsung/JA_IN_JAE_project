@@ -27,16 +27,16 @@ import sys
 import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # 저장소 루트
-from data.collector import ExpertCollector, case_plan, dataset_config
-from data.dataset import ShardWriter, atomic_json, validate_dataset
-from data.pool import part_dir, partition, write_pool
-from env.config import file_sha256
-from env.env import SumoKCityEnv
-from evaluation.metrics import policy_weights_sha256
-from policy.checkpoint import load_policy
-from policy.rule_expert import KCityRuleExpert
-from training.experiment import experiment_sha256, load_experiment, training_config
-from training.runs import Owner, install_signals, now, read, stopped
+from kcity.data.collector import ExpertCollector, case_plan, dataset_config
+from kcity.data.dataset import ShardWriter, atomic_json, validate_dataset
+from kcity.data.pool import part_dir, partition, write_pool
+from kcity.env.config import file_sha256
+from kcity.env.env import SumoKCityEnv
+from kcity.evaluation.metrics import policy_weights_sha256
+from kcity.policy.checkpoint import load_policy
+from kcity.policy.rule_expert import KCityRuleExpert
+from kcity.training.experiment import experiment_sha256, load_experiment, training_config
+from kcity.training.runs import Owner, install_signals, now, read, stopped
 
 
 def resolve_policy(args):

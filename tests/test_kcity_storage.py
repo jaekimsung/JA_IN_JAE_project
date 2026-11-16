@@ -7,12 +7,12 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from env.config import file_sha256
-from env.env import SumoKCityEnv
-from policy.rule_expert import KCityRuleExpert
-from data.dataset import ShardWriter,read_shard,validate_dataset,atomic_json
-from data.collector import ExpertCollector,dataset_config,case_plan
-from data.storage import (NEXT_CODEC,CHECKPOINT_MODE,encode_rows,decode_rows,
+from kcity.env.config import file_sha256
+from kcity.env.env import SumoKCityEnv
+from kcity.policy.rule_expert import KCityRuleExpert
+from kcity.data.dataset import ShardWriter,read_shard,validate_dataset,atomic_json
+from kcity.data.collector import ExpertCollector,dataset_config,case_plan
+from kcity.data.storage import (NEXT_CODEC,CHECKPOINT_MODE,encode_rows,decode_rows,
     save_external,sync_retention,verify_retention,checkpoint_from_shard)
 
 

@@ -1,6 +1,6 @@
 # 실행 방법
 
-저장소 루트에서 실행합니다. 필요 환경은 SUMO **1.28.0**(SUMO Python tools 포함), Python 3.10 이상, NumPy, PyTorch, Gymnasium입니다. 맵 생성 도구용 의존성은 [tools/map/requirements.txt](../tools/map/requirements.txt)에 따로 있습니다.
+저장소 루트에서 실행합니다. 필요 환경은 SUMO **1.28.0**(SUMO Python tools 포함), Python 3.10 이상, NumPy, PyTorch, Gymnasium입니다. 맵 생성 도구용 의존성은 [maps/tools/requirements.txt](../maps/tools/requirements.txt)에 따로 있습니다.
 
 ```bash
 export PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1

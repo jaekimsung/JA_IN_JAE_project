@@ -2,7 +2,7 @@
 import numpy as np
 import torch
 
-from policy.policy import KCityPolicy
+from kcity.policy.policy import KCityPolicy
 
 
 def serializable(value):
