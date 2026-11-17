@@ -22,7 +22,8 @@ class RouteGeometry:
                 via = internal_chain(net, c)
                 opts.append(dict(from_lane=c.getFromLane().getID(), to_lane=c.getToLane().getID(),
                     via=via, length=sum(net.getLane(v).getLength() for v in via),
-                    tls=c.getTLSID(), link_index=c.getTLLinkIndex(), direction=c.getDirection()))
+                    tls=c.getTLSID(), link_index=c.getTLLinkIndex(), direction=c.getDirection(),
+                    state=c.getState()))
             self.links.append(opts)
             self.prefix.append(self.prefix[-1] + net.getEdge(a).getLength() + min(x['length'] for x in opts))
         self.start_coordinate = scenario['start']['position_m'] * net.getEdge(self.edges[0]).getLength() / self.net.getEdge(self.edges[0]).getLane(scenario['start']['lane_index']).getLength()

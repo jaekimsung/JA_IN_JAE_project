@@ -1,4 +1,4 @@
-"""Learner bundles (atomic directory + SHA256 manifest), rollout-buffer state and policy loading."""
+"""Learner bundles (atomic directory + SHA256 manifest) and policy loading."""
 import json
 import os
 from pathlib import Path
@@ -18,24 +18,6 @@ def run_metadata():
     """Recorded with every bundle/run for provenance; never compared on resume."""
     return dict(git=git_info(), python=platform.python_version(), numpy=np.__version__,
                 torch=str(torch.__version__), platform=platform.platform())
-
-
-def pack_numpy(state):return [state[0],state[1].tolist(),int(state[2]),int(state[3]),float(state[4])]
-
-
-def unpack_numpy(state):return (state[0],np.asarray(state[1],dtype=np.uint32),state[2],state[3],state[4])
-
-
-def buffer_state(buffer):
-    return [dict(obs=o.tolist(),action=a.tolist(),log_prob=lp,reward=r,value=v,
-            terminated=bool(term),truncated=trunc,next_value=nv,action_mask=mask)
-        for o,a,lp,r,v,term,trunc,nv,mask in zip(buffer.obs,buffer.actions,buffer.log_probs,
-            buffer.rewards,buffer.values,buffer.dones,buffer.truncated,buffer.next_values,buffer.action_masks)]
-
-
-def restore_buffer(buffer,rows):
-    buffer.clear()
-    for row in rows:buffer.add(**row)
 
 
 def write_bundle(path,kind,config,payload,env=None):
@@ -75,13 +57,14 @@ def read_bundle(path,kind,config):
 
 
 def load_policy(path, device='cpu'):
-    """Load the acting policy from a BC or PPO bundle (inference only)."""
-    from kcity.policy.policy import KCityPolicy
+    """Load the acting policy (actor) from a BC or RL bundle (inference only)."""
+    from kcity.env.observation import OBS_DIM
+    from kcity.policy.networks import Actor
     path = Path(path)
     meta = json.loads((path / 'metadata.json').read_text())
     payload = read_bundle(path, meta['kind'], meta['config'])
-    state = payload['policy'] if meta['kind'] == 'bc' else payload['agent']['policy']
-    policy = KCityPolicy(meta['config']['policy']).to(device)
+    state = payload['actor'] if meta['kind'] == 'bc' else payload['agent']['actor']
+    policy = Actor(OBS_DIM, tuple(meta['config']['hidden_dims'])).to(device)
     policy.load_state_dict(state, strict=True)
     policy.eval()
     return policy, meta

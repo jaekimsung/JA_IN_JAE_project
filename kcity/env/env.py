@@ -1,4 +1,5 @@
-"""K-CITY Gym environment: finite A/B/C routes with background traffic, isolated TraCI connections.
+"""K-CITY Gym environment: three decision scenarios (A signal chain, B lane merge, C unprotected yield)
+with background traffic and scripted interaction traffic, on isolated TraCI connections.
 
 Each decision runs 5 SUMO ticks (0.1 s). No learner, expert or dataset writer is started here.
 """
@@ -6,6 +7,7 @@ from copy import deepcopy
 import json
 import math
 from pathlib import Path
+import random
 import subprocess
 import tempfile
 import uuid
@@ -18,10 +20,18 @@ import numpy as np
 from kcity.env.config import (DEFAULT_PROTOCOL, ContractError, digest, load_contract,
     make_case, positive, repository_path, traffic_requests)
 from kcity.env.route import RouteGeometry
-from kcity.env.observation import build_observation
-from kcity.env.scenarios import sumo_library, validate_contract
+from kcity.env.observation import OBS_DIM, build_observation, junction_vehicles
+from kcity.env.scenarios import internal_chain, sumo_library, validate_contract
 
-IMPLEMENTATION_ID='KC-ENV-v3-kc04-candidate'
+IMPLEMENTATION_ID='KC-ENV-v5-noassist'
+SIGNAL_CODES={'r':0.,'y':.5,'Y':.5,'g':1.,'G':1.,'s':0.,'o':-1.,'O':-1.}
+
+
+def signal_codes(state):
+    """Per-link numeric signal state: red 0, yellow 0.5, green 1, off -1."""
+    return [SIGNAL_CODES.get(c,-1.) for c in state]
+STEP_COST=0.01  # reward per decision for elapsed time
+YIELD_GAP_S=3.0  # entering a junction on a minor link closer than this ahead of a priority vehicle is a violation
 
 
 class SumoKCityEnv(gym.Env):
@@ -45,7 +55,7 @@ class SumoKCityEnv(gym.Env):
                 raise ValueError(name+' must be finite and nonnegative (limit positive)')
         self.debug_warmup_s=debug_warmup_s;self.debug_episode_limit_s=debug_episode_limit_s
         self.action_space=spaces.Box(-1,1,shape=(2,),dtype=np.float32)
-        self.observation_space=spaces.Box(-1,1,shape=(73,),dtype=np.float32)
+        self.observation_space=spaces.Box(-1,1,shape=(OBS_DIM,),dtype=np.float32)
         self.conn=None;self.label=None;self._temp=None;self._stdout=None
         self._done=True;self.ego_id='kcity_ego';self.case=None
 
@@ -72,6 +82,8 @@ class SumoKCityEnv(gym.Env):
         for name,edges in sorted(self.background_routes.items()):
             ET.SubElement(out,'route',id=name,edges=' '.join(edges))
         ET.SubElement(out,'route',id='research_task',edges=' '.join(self.case['scenario']['route_edges']))
+        for stream in self.case['scenario']['interaction']:
+            ET.SubElement(out,'route',id='interaction_'+stream['name'],edges=' '.join(stream['route']))
         for r in self.requests:
             ET.SubElement(out,'vehicle',id=r['request_id'],type=r['vehicle_type'],
                 route=r['route_id'],depart=str(r['requested_depart_s']),
@@ -122,6 +134,7 @@ class SumoKCityEnv(gym.Env):
         try:
             self.traci.start(cmd,label=self.label,stdout=self._stdout)
             self.conn=self.traci.getConnection(self.label)
+            self._attach_foes()
             for _ in range(round(self.warmup/self.dt)):self.conn.simulationStep()
             start=self.case['scenario']['start'];goal=self.case['scenario']['goal']
             self.conn.vehicle.add(self.ego_id,'research_task',typeID='research_ego',
@@ -135,6 +148,7 @@ class SumoKCityEnv(gym.Env):
                 self.conn.simulationStep();insertion_wait+=1
             if self.ego_id not in self.conn.vehicle.getIDList():
                 raise RuntimeError('Ego insertion failed after 30s; no Episode was silently dropped')
+            self._add_interaction_traffic()
             self.episode_start_tick=self._tick();self.deadline_tick=self.episode_start_tick+round(self.horizon/self.dt)
             self.cooldown_until=self.episode_start_tick;self.step_count=0;self._lane_request=None;self._action_history=[]
             self.ever_collision=False;self.ever_red=False;self._done=False
@@ -147,6 +161,91 @@ class SumoKCityEnv(gym.Env):
                 training_ready=False,connection_label=self.label)
         except BaseException:
             self._close_connection();raise
+
+    def _attach_foes(self):
+        """Junction facts of every route connection.
+
+        approach_lanes  every other approach into the junction and the junction's internal lanes (what the
+                        observation shows; no right-of-way judgement)
+        priority_lanes  approaches with right of way over this connection and the crossing internal lanes,
+                        from SUMO's junction logic (used only to judge yield violations; never observed)
+        """
+        for index,options in enumerate(self.geometry.links):
+            edge=self.net.getEdge(self.geometry.edges[index]);node=edge.getToNode()
+            own={lane for cs in edge.getOutgoing().values() for c in cs for lane in internal_chain(self.net,c)}
+            others={l.getID() for e in node.getIncoming() if e.getID()!=edge.getID() and e.getFunction()!='internal'
+                    for l in e.getLanes()}
+            inside={l.getID() for e in self.net.getEdges(withInternal=True) if e.getFunction()=='internal'
+                    and e.getID().startswith(':'+node.getID()+'_') for l in e.getLanes()}-own
+            for o in options:
+                o['approach_lanes']=self._approach_lanes(others|inside)
+                crossing={f for v in o['via'] for f in self.conn.lane.getInternalFoes(v)}-own
+                o['priority_lanes']=self._approach_lanes(set(self.conn.lane.getFoes(o['from_lane'],o['to_lane']))|crossing)
+
+    def _approach_lanes(self,lanes,reach=50.):
+        """{lane: distance from its end to the junction} for priority lanes and what feeds them within `reach`.
+
+        Internal lanes of the junction itself map to None (a vehicle there is already inside).
+        """
+        result={l:None for l in lanes if l.startswith(':')}
+        stack=[(l,0.) for l in sorted(lanes) if not l.startswith(':')]
+        while stack:
+            lane_id,offset=stack.pop()
+            if lane_id in result and (result[lane_id] is None or result[lane_id]<=offset):continue
+            result[lane_id]=offset
+            lane=self.net.getLane(lane_id);upstream=offset+lane.getLength()
+            if upstream>=reach:continue
+            for connections in lane.getEdge().getIncoming().values():
+                for c in connections:
+                    if c.getToLane().getID()!=lane_id:continue
+                    distance=upstream
+                    for via in reversed(internal_chain(self.net,c)):
+                        if via not in result:result[via]=distance
+                        distance+=self.net.getLane(via).getLength()
+                    stack.append((c.getFromLane().getID(),distance))
+        return result
+
+    def _yield_violation(self,old_ego,new_ego,tick):
+        """Event when the ego enters a junction on a minor link in front of a vehicle with right of way."""
+        if old_ego is None or new_ego is None or old_ego['road_id'].startswith(':') or not new_ego['road_id'].startswith(':'):
+            return []
+        index=old_ego['route_index']
+        if not 0<=index<len(self.geometry.links):return []
+        link=next((o for o in self.geometry.links[index] if new_ego['lane_id'] in o['via']),None)
+        if link is None or link['tls'] or link['state'] not in 'msw':return []
+        vehicles=[self._vehicle(v) for v in self.conn.vehicle.getIDList()]
+        cut=[v['id'] for gap,_,v,inside in junction_vehicles(self.geometry,link,vehicles,self.ego_id,'priority_lanes')
+             if inside or (v['speed']>.5 and gap/v['speed']<YIELD_GAP_S)]
+        return [dict(type='yield_violation',sim_tick=tick,route_occurrence=index,
+            junction=new_ego['road_id'][1:].rsplit('_',1)[0],priority_vehicles=sorted(cut))] if cut else []
+
+    def _add_interaction_traffic(self):
+        """Scripted vehicles that make the scenario's interaction happen (seeded per case).
+
+        placed: a platoon already on the road at reset. timed: a stream that departs after reset.
+        Both are ordinary HV types driven by SUMO; only their insertion is scripted.
+        """
+        rng=random.Random(self.case['seeds']['initialization'])
+        now=self.conn.simulation.getTime();traffic=self.p['traffic']
+        self.interaction_ids=[]
+        for stream in self.case['scenario']['interaction'] if self.background else []:
+            count=rng.randint(*stream['count'])
+            if stream['kind']=='placed':
+                positions=[rng.uniform(*stream['first_position_m'])]
+                for _ in range(count-1):positions.append(positions[-1]+rng.uniform(*stream['spacing_m']))
+                limit=self.net.getEdge(stream['route'][0]).getLane(stream['lane_index']).getLength()-1
+                plan=[(now,p) for p in sorted(positions,reverse=True) if p<limit]
+            else:
+                times=[now+rng.uniform(*stream['first_s'])]
+                for _ in range(count-1):times.append(times[-1]+rng.uniform(*stream['headway_s']))
+                plan=[(t,stream['position_m']) for t in times]
+            for k,(depart,position) in enumerate(plan):
+                vid='%s-%s-%02d'%(self.case['case_uid'][:16],stream['name'],k)
+                kind=rng.choices(traffic['vehicle_types'],weights=traffic['vehicle_type_weights'])[0]
+                self.conn.vehicle.add(vid,'interaction_'+stream['name'],typeID=kind,depart=str(round(depart,1)),
+                    departLane=str(stream['lane_index']),departPos=str(round(position,2)),departSpeed=str(stream['speed_mps']))
+                self.interaction_ids.append(vid)
+        self.conn.simulationStep(0)  # insert the placed vehicles before the first observation
 
     def _tick(self):
         return round(self.conn.simulation.getTime()/self.dt)
@@ -171,8 +270,9 @@ class SumoKCityEnv(gym.Env):
             ego_x=None,ego_y=None,ego_z=None,ego_speed=None,ego_accel=None,ego_angle_deg=None,
             ego_lane=None,ego_lane_id=None,ego_road_id=None,ego_lane_pos=None,
             ego_route_index=None,ego_route_progress_m=None,ego_distance_m=None,
-            ego_allowed_speed_mps=None,ego_waiting_s=None,ego_speedMode=None,ego_laneChangeMode=None,
+            ego_allowed_speed_mps=None,ego_lane_count=None,ego_lane_length_m=None,ego_waiting_s=None,ego_speedMode=None,ego_laneChangeMode=None,
             signals=[dict(id=t,program_id=self.conn.trafficlight.getProgram(t),
+                link_codes=signal_codes(self.conn.trafficlight.getRedYellowGreenState(t)),
                 phase_index=self.conn.trafficlight.getPhase(t),state=self.conn.trafficlight.getRedYellowGreenState(t))
                 for t in sorted(self.conn.trafficlight.getIDList())],
             traffic=dict(running_hv=len(vehicles)-(ego is not None),pending_hv=sum(v!=self.ego_id for v in pending),
@@ -186,6 +286,8 @@ class SumoKCityEnv(gym.Env):
             state.update({out:ego[key] for key,out in mapping.items()})
             try:state['ego_route_progress_m']=self.geometry.locate(ego['road_id'],ego['lane_id'],ego['lane_pos'],ego['route_index'])
             except ContractError:state['ego_route_progress_m']=None
+            lane=self.net.getLane(ego['lane_id'])
+            state.update(ego_lane_count=lane.getEdge().getLaneNumber(),ego_lane_length_m=lane.getLength())
             state.update(ego_distance_m=self.conn.vehicle.getDistance(self.ego_id),
                 ego_waiting_s=self.conn.vehicle.getWaitingTime(self.ego_id),
                 ego_speedMode=self.conn.vehicle.getSpeedMode(self.ego_id),
@@ -219,7 +321,7 @@ class SumoKCityEnv(gym.Env):
         ego=next((v for v in state['vehicles'] if v['is_ego']),None)
         tls=list(self.conn.vehicle.getNextTLS(self.ego_id)) if ego else []
         if ego and state['ego_route_progress_m'] is None:
-            return np.zeros(73,dtype=np.float32),[],[False,True,False]
+            return np.zeros(OBS_DIM,dtype=np.float32),[],[False,True,False]
         return build_observation(self.geometry,ego,state['vehicles'],tls,
             max(0,self.deadline_tick-self._tick())*self.dt,self.horizon,
             max(0,self.cooldown_until-self._tick())*self.dt,self.p['control']['speed_cap_mps'])
@@ -289,6 +391,7 @@ class SumoKCityEnv(gym.Env):
             departed_hv+=sum(v!=self.ego_id for v in departures);arrived_hv+=sum(v!=self.ego_id for v in arrivals)
             current=self._substep_state();new_ego=next((v for v in current['vehicles'] if v['is_ego']),None)
             events.extend(self._boundary_events(old_ego,new_ego,tick,tls))
+            events.extend(self._yield_violation(old_ego,new_ego,tick))
             for c in self.conn.simulation.getCollisions():
                 if self.ego_id in [c.collider,c.victim]:
                     events.append(dict(type='collision',sim_tick=tick,collider=c.collider,victim=c.victim,collision_type=c.type))
@@ -318,7 +421,7 @@ class SumoKCityEnv(gym.Env):
             collision=any(e['type']=='collision' for e in events)
             red=any(e.get('red_entry',False) for e in events)
             self.ever_collision|=collision;self.ever_red|=red
-            for candidate in ['collision','red_entry','wrong_route','teleport','removal','arrival','deadline']:
+            for candidate in ['collision','red_entry','yield_violation','wrong_route','teleport','removal','arrival','deadline']:
                 if any(e['type']==candidate for e in events) or (candidate=='red_entry' and red):
                     reason=candidate;break
             if reason:break
@@ -332,13 +435,12 @@ class SumoKCityEnv(gym.Env):
         if progress is not None:self.last_progress=progress
         components=dict(progress=delta/10,arrival=10. if reason=='arrival' else 0.,
             collision=-20. if reason=='collision' else 0.,red_entry=-10. if reason=='red_entry' else 0.,
-            invalid_request=-.02*bool(reasons),lane_change=-.01*executed,unjustified_wait=0.)
-        # No unjustified-wait penalty is invented without a verified causal classifier.
+            yield_violation=-10. if reason=='yield_violation' else 0.,time=-STEP_COST)
         reward=float(sum(components.values()));self._done=reason is not None
         info=dict(case_uid=self.case['case_uid'],implementation_id=IMPLEMENTATION_ID,
             state=before,next_state=deepcopy(current),observation_valid=before['ego_alive'] and before['route_state']['route_valid'],
             next_observation_valid=current['ego_alive'] and current['route_state']['route_valid'],
-            action_raw=raw.tolist(),policy_action_raw=raw.tolist(),
+            action_raw=raw.tolist(),
             action=dict(env_input=bounded.tolist(),accel_raw=float(bounded[0]),lane_change_raw=float(bounded[1]),
                 lane_change=lane_cmd,lane_change_applied=issued,lane_change_executed=executed,
                 accel_request_mps2=accel,accel_observed_mean_mps2=float(np.mean(actual)) if actual else None,

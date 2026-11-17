@@ -1,4 +1,4 @@
-"""GAE/update/metric fixtures; no optimizer steps or research learning."""
+"""Situation and metric fixtures."""
 from copy import deepcopy
 from pathlib import Path
 import sys
@@ -9,56 +9,12 @@ import numpy as np
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from kcity.policy.buffer import RolloutBuffer
 from kcity.env.env import SumoKCityEnv
-from kcity.policy.ppo import KCityPPO
 from kcity.env.config import load_contract
 from kcity.evaluation.metrics import EpisodeMetrics, aggregate
 from kcity.env.config import ROOT, make_case
 from kcity.training.experiment import load_experiment
 from kcity.evaluation.evaluate import evaluate_cases
-
-
-class BufferTests(unittest.TestCase):
-    def row(self, b, r=1, v=2, term=False, trunc=False, nv=4):
-        b.add([0], [0, 0], 0, r, v, terminated=term, truncated=trunc, next_value=nv)
-
-    def test_truncation_is_296_not_10196(self):
-        b = RolloutBuffer(); self.row(b, trunc=True)
-        self.row(b, r=100, v=100, term=True, nv=0)
-        a, r = b.compute_gae(999, .99, .95)
-        self.assertAlmostEqual(a[0], 2.96, places=5)
-        self.assertAlmostEqual(r[0], 4.96, places=5)
-        self.assertEqual(b.rewards, [1., 100.])
-        self.assertEqual(b.bootstrap_masks, [1., 0.]); self.assertEqual(b.trace_masks, [0., 0.])
-
-    def test_termination_never_bootstraps(self):
-        b=RolloutBuffer(); self.row(b, term=True, nv=1e6)
-        self.assertEqual(b.compute_gae(1e9,.99,.95)[0][0], -1)
-
-    def test_both_flags_termination_takes_precedence(self):
-        b=RolloutBuffer(); self.row(b, term=True, trunc=True, nv=None)
-        self.assertEqual(b.compute_gae(100,.99,.95)[0][0], -1)
-
-    def test_rollout_cut_bootstraps_once(self):
-        b=RolloutBuffer(); self.row(b, nv=4)
-        self.assertAlmostEqual(b.compute_gae(100,.99,.95)[0][0],2.96,places=5)
-
-    def test_continuing_trace_matches_hand_calculation(self):
-        b=RolloutBuffer(); self.row(b,r=1,v=2,nv=3); self.row(b,r=2,v=3,nv=5)
-        a,_=b.compute_gae(5,.9,.8)
-        np.testing.assert_allclose(a,[1+.9*3-2+.9*.8*(2+.9*5-3),2+.9*5-3])
-
-    def test_truncation_without_terminal_value_rejected(self):
-        with self.assertRaises(ValueError): self.row(RolloutBuffer(),trunc=True,nv=None)
-
-    def test_legacy_add_signature_still_works(self):
-        b=RolloutBuffer(); b.add([0],[0,0],0,1,2,False)
-        self.assertAlmostEqual(b.compute_gae(4,.99,.95)[0][0],2.96,places=5)
-
-    def test_empty_and_clear(self):
-        b=RolloutBuffer(); self.assertEqual(len(b.compute_gae(0,.99,.95)[0]),0)
-        self.row(b); b.clear(); self.assertEqual(b.next_values,[])
 
 
 class FakeEnv:
@@ -74,20 +30,53 @@ class FakeEnv:
                 {'final_observation':np.array([4.],np.float32)} if self.autoreset else {})
 
 
-class UpdateTests(unittest.TestCase):
-    def test_single_sample_final_rollout_is_finite_without_optimizer_step(self):
-        p=KCityPPO(seed=11,device='cpu')
-        p.buffer.add(np.zeros(73,np.float32),[.1,0],-1,1,0,terminated=True,next_value=0,
-                     action_mask=[False,True,False])
-        before={k:v.clone() for k,v in p.policy.state_dict().items()}
-        with patch.object(p.optimizer,'step',return_value=None):
-            stats=p.update(np.array([1.],np.float32),np.array([1.],np.float32))
-        self.assertTrue(all(np.isfinite(v) for v in stats.values()))
-        self.assertTrue(all(torch.equal(before[k],v) for k,v in p.policy.state_dict().items()))
-
-
 def make_panel(contract, namespace, counts):
     return dict(cases=[make_case(contract, namespace, sid, i) for sid, n in sorted(counts.items()) for i in range(n)])
+
+
+class SituationTests(unittest.TestCase):
+    def test_locations_match_network_and_routes(self):
+        import xml.etree.ElementTree as ET
+        from kcity.evaluation.situations import SITUATIONS, situation_of
+        root=ET.parse(ROOT/'maps/kcity/kcity.net.xml').getroot()
+        kinds={j.get('id'):j.get('type') for j in root.findall('junction')}
+        ends={e.get('id'):e.get('to') for e in root.findall('edge') if e.get('function')!='internal'}
+        lanes={e.get('id'):len(e.findall('lane')) for e in root.findall('edge')}
+        signal,drop,plain=(SITUATIONS[k] for k in ['signal_chain','lane_drop','unsignalized'])
+        self.assertTrue(all(kinds[j]=='traffic_light' for j in signal['junctions']))
+        self.assertEqual([ends[e] for e in signal['approach_edges']],list(signal['junctions']))
+        self.assertTrue(all(kinds[j]=='priority' for j in plain['junctions']))
+        self.assertEqual({ends[e] for e in plain['approach_edges']},set(plain['junctions']))
+        self.assertEqual((lanes['-3#4'],lanes['-3#5']),(2,1))
+        scenarios={sid:make_case(load_contract(),'contract_check',sid,0)['scenario'] for sid in 'ABC'}
+        self.assertEqual(sorted(scenarios['A']['required_tls_ids']),sorted(signal['junctions']))
+        self.assertEqual(scenarios['B']['required_lane_change']['edge'],drop['approach_edges'][0])
+        self.assertEqual(tuple(scenarios['C']['route_edges'][:2]),plain['approach_edges'])
+        self.assertEqual(situation_of(':464_3'),'unsignalized');self.assertEqual(situation_of('-13'),'signal_chain')
+        self.assertEqual(situation_of(':647_0'),'signal_chain');self.assertIsNone(situation_of('3#4'))
+
+    def test_failure_is_attributed_to_the_situation_where_the_episode_ended(self):
+        from kcity.evaluation import situations
+        case=dict(scenario=dict(required_lane_change=dict(edge='-3#4',required_exit_lanes=[1])))
+        def step(road,next_road,lane=0,events=(),speed=0.,cmd=0):
+            ego=dict(id='ego',is_ego=True,road_id=next_road,lane=lane,x=0,y=0)
+            other=dict(id='hv',is_ego=False,road_id=':464_1',lane=0,x=3,y=4)
+            return dict(control_dt_s=.5,events=list(events),substep_samples=[],
+                state=dict(ego_road_id=road,ego_lane_pos=20.,vehicles=[]),
+                next_state=dict(ego_road_id=next_road,ego_lane=lane,ego_speed=speed,vehicles=[ego,other]),
+                action=dict(lane_change=cmd,known_rejection_reasons=['cooldown'] if cmd else []))
+        s=situations.new_state()
+        situations.update(s,case,step('-3#4','-3#4',cmd=1))
+        situations.update(s,case,step('-3#4','-3#4',lane=1,speed=3.,
+            events=[dict(type='lane_change',from_lane='-3#4_0',to_lane='-3#4_1')]))
+        situations.update(s,case,step('-3#8',':464_3',speed=3.))
+        situations.update(s,case,step(':464_3',':464_3',speed=3.,events=[dict(type='collision')]))
+        r=situations.finish(s,case,False)
+        self.assertEqual(r['failure_situation'],'unsignalized');self.assertEqual(r['visited'],['lane_drop','unsignalized'])
+        lane=r['lane_drop']
+        self.assertEqual((lane['done'],lane['position_m'],lane['requests'],lane['rejected'],lane['wait_s']),(True,20.,1,1,.5))
+        self.assertEqual(r['unsignalized'],dict(passes=1,passes_with_cross_traffic=1,min_distance_m=5.,collisions=1,yield_violations=0))
+        self.assertIsNone(situations.finish(situations.new_state(),case,True)['failure_situation'])
 
 
 class MetricTests(unittest.TestCase):

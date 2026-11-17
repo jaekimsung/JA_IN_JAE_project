@@ -1,4 +1,4 @@
-"""Per-Episode bookkeeping shared by policy collection and online PPO recording."""
+"""Per-Episode bookkeeping shared by policy collection and online RL recording."""
 
 from copy import deepcopy
 
@@ -51,7 +51,6 @@ class EpisodeRecorder:
         terminated,
         truncated,
         info,
-        segment_reason=None,
         policy_context=None
     ):
         row = make_transition(
@@ -71,11 +70,10 @@ class EpisodeRecorder:
             start_tick=self.start_tick,
             previous_interval=self.previous_interval,
             departure_history=self.departure_history,
-            segment_reason=segment_reason,
             policy_context=policy_context,
         )
         self.writer.append(row)
-        self.metrics.add(row['reward_env_raw'], terminated, truncated, row)
+        self.metrics.add(row['reward'], terminated, truncated, row)
         self.t += 1
         self.previous_interval = deepcopy(info['traffic_interval'])
         self.departure_history.append([info['sim_tick_tp1'], info['traffic_interval']['departed_hv']])

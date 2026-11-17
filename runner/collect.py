@@ -8,13 +8,13 @@
     python runner/collect.py --output runs/expert --part 3 --parts 8
     python runner/collect.py --output runs/expert --finalize
 
-    # fixed learned policy (BC/PPO bundle) on the separate `archive` case namespace, deterministic actions
-    python runner/collect.py --output runs/archive_B3_seed11 --workers 8         --policy runs/B3_seed11/transitions/checkpoints/T001000000-...
+    # fixed learned policy (BC/RL bundle) on the separate `archive` case namespace, deterministic actions
+    python runner/collect.py --output runs/archive_B3_seed11 --workers 8         --policy runs/B3_seed11/transitions/checkpoints/T000300000-...
 
 The case plan (A/A/A/B/B/B/C/C/C/C, every 5th case of a scenario is expert_val) is split into
 whole 10-case cycles, round robin over parts, so each case keeps its traffic seeds and split.
 Each part collects ceil(target / parts) transitions and finishes its current Episode. Default target:
-expert 1M (expert_valid_transitions_min), learned policy 500k (archive_per_budget_end_policy).
+expert 4M (expert_valid_transitions_min), learned policy 700k (archive_per_budget_end_policy).
 `touch <output>/STOP` stops every worker cleanly; rerun the same command with --resume.
 """
 import argparse
@@ -49,13 +49,7 @@ def resolve_policy(args):
     policy, meta = load_policy(bundle)
     method = args.policy_method
     if method is None:
-        if meta['kind'] == 'bc':
-            method = 'B1'
-        else:  # <run>/transitions/checkpoints/<bundle>: the run CONFIG.json names B2/B3
-            run_config = bundle.parents[2] / 'CONFIG.json'
-            if not run_config.exists():
-                raise SystemExit('Cannot infer B2/B3 for this bundle; pass --policy-method')
-            method = read(run_config)['method']
+        method = meta['config']['method']  # B1 (BC), B2 (online SAC) or B3 (RLPD)
     identity = dict(method=method, seed=meta['config']['seed'], version='KC-ARCHIVE-v1',
                     policy_sha256=policy_weights_sha256(policy), bundle=str(bundle),
                     bundle_manifest_sha256=file_sha256(bundle / 'SHA256.json'))
@@ -154,7 +148,7 @@ def run_workers(args, spec, target):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--output', required=True, type=Path, help='pool directory')
-    parser.add_argument('--policy', default='expert', help="'expert' (B0) or a BC/PPO learner bundle directory")
+    parser.add_argument('--policy', default='expert', help="'expert' (B0) or a BC/RL learner bundle directory")
     parser.add_argument('--policy-method', choices=['B1', 'B2', 'B3'], help='label for a bundle (default: inferred)')
     parser.add_argument('--target', type=int, help='total transition target (default: experiment budget)')
     parser.add_argument('--workers', type=int, default=1, help='parallel SUMO workers on this machine')

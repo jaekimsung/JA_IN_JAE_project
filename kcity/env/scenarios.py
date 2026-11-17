@@ -1,6 +1,6 @@
 """Validate route geometry and seed contracts of the A/B/C scenarios; optional scripted route smoke run.
 
-No map generation, Gym environment, expert dataset, BC or PPO training.
+No map generation, Gym environment, expert dataset, BC or RL training.
 """
 import argparse
 from datetime import datetime
@@ -133,9 +133,16 @@ def validate_contract(spec):
                               to_edge=b.getID(), options=options))
         if tls != set(row['required_tls_ids']):
             raise ContractError(sid + ': required TLS set does not match route')
+        for stream in row['interaction']:
+            stream_edges = edges_for(stream['route'])
+            for a, b in zip(stream_edges, stream_edges[1:]):
+                connections_for(a, b)
+            if stream['kind'] not in ['placed', 'timed'] or not 0 <= stream['lane_index'] < stream_edges[0].getLaneNumber():
+                raise ContractError(sid + ': invalid interaction stream ' + stream['name'])
+            ranges = ['count'] + (['first_position_m', 'spacing_m'] if stream['kind'] == 'placed' else ['first_s', 'headway_s'])
+            if any(len(stream[k]) != 2 or stream[k][0] > stream[k][1] or stream[k][0] < 0 for k in ranges):
+                raise ContractError(sid + ': invalid interaction range ' + stream['name'])
         required = row['required_lane_change']
-        if sid in ['B', 'C'] and not required:
-            raise ContractError(sid + ': required Lane-change task cannot be omitted')
         if required:
             if (required['edge'], required['next_edge']) != tuple(row['route_edges'][:2]):
                 raise ContractError(sid + ': required Lane constraint not on start connection')

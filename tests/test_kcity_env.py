@@ -85,7 +85,7 @@ class GymIntegrationTests(unittest.TestCase):
     def test_real_step_raw_clipped_state_and_substeps(self):
         e=self.create();obs,reset=e.reset(seed=0)
         self.assertIsNone(e.spec)  # Reserved Gym EnvSpec is not our config dict.
-        self.assertEqual(obs.shape,(73,));self.assertEqual(obs.dtype,np.float32)
+        self.assertEqual(obs.shape,(63,));self.assertEqual(obs.dtype,np.float32)
         state=reset['state'];_,reward,term,trunc,i=e.step([2.,0])
         self.assertEqual(i['state'],state)
         self.assertEqual(i['executed_substeps'],5);self.assertAlmostEqual(i['control_dt_s'],.5)
@@ -93,8 +93,8 @@ class GymIntegrationTests(unittest.TestCase):
         self.assertAlmostEqual(i['action']['accel_request_mps2'],2.)
         self.assertAlmostEqual(reward,sum(i['reward_components'].values()))
         self.assertFalse(term or trunc)
-        self.assertEqual(i['next_state']['ego_speedMode'],31)
-        self.assertEqual(i['next_state']['ego_laneChangeMode'],512)
+        self.assertEqual(i['next_state']['ego_speedMode'],6)
+        self.assertEqual(i['next_state']['ego_laneChangeMode'],0)
         tick=e._tick()
         for bad in [[float('nan'),0],[0],[0,0,0]]:
             with self.assertRaises(ValueError):e.step(bad)
@@ -140,7 +140,7 @@ class GymIntegrationTests(unittest.TestCase):
         obs,_,term,trunc,i=e.step([0,0])
         self.assertTrue(term);self.assertFalse(trunc);self.assertEqual(i['end_reason'],'removal')
         self.assertFalse(i['next_state']['ego_alive']);self.assertIsNone(i['next_state']['ego_x'])
-        self.assertFalse(i['next_observation_valid']);self.assertTrue(np.array_equal(obs,np.zeros(73)))
+        self.assertFalse(i['next_observation_valid']);self.assertTrue(np.array_equal(obs,np.zeros(63)))
 
     def test_boundary_fixture_tracks_red_and_skipped_occurrences(self):
         e=self.create();e.reset(seed=0)
@@ -186,7 +186,7 @@ class GymIntegrationTests(unittest.TestCase):
         via=e.geometry.links[0][0]['via'][0]
         e.conn.vehicle.moveTo(e.ego_id,via,.1)
         e._state=e.get_privileged_state();obs,_,mask=e._observe(e._state)
-        self.assertEqual(mask,[False,True,False]);self.assertEqual(obs[51],1.)
+        self.assertEqual(mask,[False,True,False]);self.assertEqual(obs[35],1.)
 
     def test_actual_off_route_fixture_terminates(self):
         e=self.create();e.reset(seed=0)
@@ -196,6 +196,56 @@ class GymIntegrationTests(unittest.TestCase):
         obs,_,term,trunc,i=e.step([0,0])
         self.assertTrue(term);self.assertFalse(trunc)
         self.assertEqual(i['end_reason'],'wrong_route');self.assertFalse(i['next_observation_valid'])
+
+
+
+
+class ScenarioDrivingTests(unittest.TestCase):
+    """The three decision scenarios with their scripted interaction traffic (real SUMO)."""
+
+    def drive(self, scenario_id, case_index, policy):
+        env = SumoKCityEnv(background=True)
+        try:
+            obs, info = env.reset(options=dict(namespace='contract_check', scenario_id=scenario_id, case_index=case_index))
+            scripted = [v['id'] for v in info['state']['vehicles'] if '-hv-' not in v['id'] and not v['is_ego']]
+            act = getattr(policy, 'predict', policy)
+            events, slots = [], 0
+            for _ in range(601):
+                slots = max(slots, int(obs[47] + obs[52] + obs[57]))
+                obs, reward, term, trunc, step = env.step(act(obs))
+                events += step['events']
+                if term or trunc:
+                    return step['end_reason'], events, slots, scripted
+        finally:
+            env.close()
+        self.fail('Episode did not end')
+
+    def test_expert_completes_every_scenario_with_its_interaction(self):
+        from kcity.policy.rule_expert import KCityRuleExpert
+        expert = KCityRuleExpert()
+        reason, events, _, scripted = self.drive('A', 1000, expert)
+        self.assertEqual(reason, 'arrival')
+        self.assertTrue(scripted)  # the lead platoon is on the road at reset
+        crossings = [e for e in events if e['type'] == 'tls_crossing']
+        self.assertEqual([e['tls_id'] for e in crossings], ['647', '268', '764', '169'])
+        self.assertFalse(any(e['red_entry'] for e in crossings))
+        reason, events, _, _ = self.drive('B', 1000, expert)
+        self.assertEqual(reason, 'arrival')
+        self.assertEqual([e['to_lane'] for e in events if e['type'] == 'lane_change'], ['-3#4_1'])
+        reason, events, slots, _ = self.drive('C', 1000, expert)
+        self.assertEqual(reason, 'arrival')
+        self.assertGreater(slots, 0)  # priority vehicles were observed at the junctions
+        self.assertFalse(any(e['type'] in ('yield_violation', 'collision') for e in events))
+
+    def test_ignoring_other_vehicles_fails_every_scenario(self):
+        throttle = lambda obs: np.array([1.0, 0.0], np.float32)  # no SUMO assistance protects this policy
+        for scenario_id, expected in [('A', 'collision'), ('C', 'yield_violation')]:
+            for index in (1000, 1001):
+                reason, events, _, _ = self.drive(scenario_id, index, throttle)
+                self.assertEqual(reason, expected)
+        violation = [e for e in events if e['type'] == 'yield_violation'][0]
+        self.assertIn(violation['junction'], ('759', '464'))
+        self.assertTrue(violation['priority_vehicles'])
 
 
 if __name__=='__main__':unittest.main()

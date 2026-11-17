@@ -41,7 +41,7 @@ def build_views(pool,output,spec,*,workers=1,revalidate=False):
         require(total>=size,'Insufficient successful rows for '+split)
         chosen = np.sort(rng.choice(total,size,replace=False))
         uids = [e['episode_uid'] for e in episodes]
-        chunks = {k:[] for k in ['observation','action_target','action_mask','transition_uid']}
+        chunks = {k:[] for k in ['observation','action_target','transition_uid']}
         cursor = 0
         for folder in shards:
             with np.load(folder/'numeric.npz',allow_pickle=False) as a:
@@ -49,7 +49,7 @@ def build_views(pool,output,spec,*,workers=1,revalidate=False):
                 local = chosen[(chosen>=cursor)&(chosen<cursor+len(eligible))]-cursor
                 indices = eligible[local]
                 for key,source in [('observation','observation'),('action_target','action_env_input'),
-                                   ('action_mask','action_mask'),('transition_uid','transition_uid')]:
+                                   ('transition_uid','transition_uid')]:
                     chunks[key].append(a[source][indices].copy())
                 cursor += len(eligible)
         require(cursor==total,'Eligible count differs from completed Episode records')
@@ -58,7 +58,7 @@ def build_views(pool,output,spec,*,workers=1,revalidate=False):
     output.mkdir(parents=True)
     for split,data in arrays.items():
         np.savez_compressed(output/(split+'.npz'),**data)
-    body = dict(schema='KC-MAIN-BC-VIEWS-v1',pool=str(Path(pool).resolve()),data_id=pool_data_id(pool),
+    body = dict(schema='KC-BC-VIEWS-v2',pool=str(Path(pool).resolve()),data_id=pool_data_id(pool),
                 parts=[str(part.resolve()) for part in parts],
                 experiment_sha256=experiment_sha256(spec),rng_seed=20261115,
                 files={p.name:file_sha256(p) for p in output.glob('*.npz')})
@@ -85,7 +85,7 @@ def validation_loss(model,data):
     with torch.no_grad():
         for i in range(0,count,2048):
             end = min(count,i+2048)
-            loss,parts = model.loss(*[data[k][i:end] for k in ['observation','action_target','action_mask']])
+            loss,parts = model.loss(data['observation'][i:end],data['action_target'][i:end])
             for key,value in dict(loss=loss,**parts).items():
                 totals[key] += float(value)*(end-i)/count
     return dict(totals)
@@ -117,7 +117,7 @@ def run_bc(root,views,seed,spec,device,resume=False):
     manifest,data = read_views(views)
     cfg = training_config(spec,'main_bc',seed,views=str(Path(views).resolve()),view_id=manifest['view_id'],device=device)
     owner = Owner(root,cfg,resume)
-    model = KCityBC(spec['policy'],seed=seed,lr=spec['bc']['learning_rate'],device=device)
+    model = KCityBC(spec['rlpd']['hidden_dims'],seed=seed,lr=spec['bc']['learning_rate'],device=device)
     best = dict(loss=None,path=None)
     clock=time.monotonic()
     try:
@@ -129,7 +129,7 @@ def run_bc(root,views,seed,spec,device,resume=False):
         for update in range(model.updates,spec['bc']['updates_per_seed']):
             train = data['expert_train']
             idx = model.sampler.integers(0,len(train['observation']),spec['bc']['batch_size'])
-            training_metrics=model.train_batch(*[train[k][idx] for k in ['observation','action_target','action_mask']])
+            training_metrics=model.train_batch(train['observation'][idx],train['action_target'][idx])
             boundary = model.updates%spec['bc']['validate_every_updates']==0
             if boundary or stopped(root) or model.updates==spec['bc']['updates_per_seed']:
                 path = f'update-{model.updates:06d}'

@@ -12,7 +12,7 @@ from kcity.env.env import SumoKCityEnv
 from kcity.policy.rule_expert import KCityRuleExpert
 from kcity.data.dataset import ShardWriter,read_shard,validate_dataset,atomic_json
 from kcity.data.collector import PolicyCollector,dataset_config,case_plan
-from kcity.data.storage import (NEXT_CODEC,CHECKPOINT_MODE,encode_rows,decode_rows,
+from kcity.data.storage import (CHECKPOINT_MODE,encode_rows,decode_rows,
     save_external,sync_retention,verify_retention,checkpoint_from_shard)
 
 
@@ -167,15 +167,6 @@ class ActualDataStorageTests(unittest.TestCase):
                     self.assertIn('next_state',physical[-1])
                     if len(physical)>1:
                         self.assertTrue(any('next_reference' in r for r in physical[:-1]))
-                # The old full-next format is still readable without conversion.
-                writer.close();writer=None
-                legacy_cfg=dict(cfg);legacy_cfg.pop('storage_codec')
-                legacy=ShardWriter(Path(d)/'legacy',legacy_cfg,shard_rows=len(full))
-                try:
-                    for row in full:legacy.append(row)
-                    legacy.commit({},[])
-                    self.assertEqual(full,list(read_shard(legacy.folders[0])))
-                finally:legacy.close()
             finally:
                 if writer is not None:writer.close()
                 env.close()

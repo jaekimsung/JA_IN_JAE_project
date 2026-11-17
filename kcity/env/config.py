@@ -47,15 +47,15 @@ def positive(value, name):
 
 
 def load_contract(path=DEFAULT_PROTOCOL):
-    protocol = json.loads(Path(path).read_text())
+    protocol = json.loads(Path(path).read_text(encoding='utf-8'))
     if protocol.get('schema_id') != 'KC-PROTOCOL-v1':
         raise ContractError('Unsupported protocol schema')
     for name, ref in dict(protocol['assets'], scenarios=protocol['scenario_manifest']).items():
         asset = repository_path(ref['path'])
         if not asset.is_file() or file_sha256(asset) != ref['sha256']:
             raise ContractError('Pinned file missing or changed: ' + name)
-    scenarios = json.loads(repository_path(protocol['scenario_manifest']['path']).read_text())
-    if scenarios.get('schema_id') != 'KC-SCENARIOS-v1':
+    scenarios = json.loads(repository_path(protocol['scenario_manifest']['path']).read_text(encoding='utf-8'))
+    if scenarios.get('schema_id') != 'KC-SCENARIOS-v2':
         raise ContractError('Unsupported scenario schema')
     spec = dict(protocol=protocol, scenario_manifest=scenarios)
     validate_settings(spec)

@@ -8,10 +8,11 @@ import math
 import hashlib
 
 from kcity.env.config import digest, make_case
+from kcity.evaluation import situations
 
 METRIC_VERSION = 'KC-METRICS-v1-candidate'
 NEAR_RADIUS_M = 50.0  # HV within this distance of the AV count as "near" (interaction exposure)
-REASONS = ('collision', 'red_entry', 'wrong_route', 'teleport', 'removal',
+REASONS = ('collision', 'red_entry', 'yield_violation', 'wrong_route', 'teleport', 'removal',
            'arrival', 'deadline', 'external_limit', 'policy_invalid_action', 'step_guard')
 
 
@@ -31,6 +32,7 @@ class EpisodeMetrics:
         self.route_valid = self.initial['route_state']['route_valid']
         self.near_time = self.near_weighted = self.near_present = 0.0
         self.near_max = None
+        self.situation = situations.new_state()
 
     def state(self):
         """JSON-able snapshot for resuming an Episode that spans a checkpoint."""
@@ -50,6 +52,8 @@ class EpisodeMetrics:
         if not hasattr(self, 'near_time'):
             self.near_time = self.near_weighted = self.near_present = 0.0
             self.near_max = None
+        if not hasattr(self, 'situation'):
+            self.situation = situations.new_state()
 
     def _near_exposure(self, state, dt):
         """Time-weighted count of HV within NEAR_RADIUS_M of the AV at the end of each decision."""
@@ -85,6 +89,7 @@ class EpisodeMetrics:
         self.route_valid &= self.last['route_state']['route_valid']
         self._ensure_exposure_fields()
         self._near_exposure(self.last, info['control_dt_s'])
+        situations.update(self.situation, self.case, info)
         action = info['action']
         self.commands[action['lane_change']] += 1
         self.rejections.update(action['known_rejection_reasons'])
@@ -103,6 +108,7 @@ class EpisodeMetrics:
         crossings = [e for e in events if e['type'] == 'tls_crossing']
         unknown = sum(not e['classification_valid'] for e in crossings)
         reds = sum(e.get('red_entry', False) for e in crossings)
+        yields = counts['yield_violation']
         collision = counts['collision'] > 0
         wrong = counts['wrong_route'] > 0 or not self.route_valid
         correct_goal = any(e['type'] == 'arrival' and e['correct_goal'] for e in events)
@@ -132,9 +138,9 @@ class EpisodeMetrics:
             attempt_valid=infrastructure_error is None, infrastructure_invalid_reason=infrastructure_error,
             performance_failure_reason=failure_reason, primary_end_reason=primary,
             completion=bool(completion),
-            compliant_completion=None if unknown else bool(completion and not collision and not reds),
+            compliant_completion=None if unknown else bool(completion and not collision and not reds and not yields),
             signal_classification_valid=not unknown,
-            supported_rule_checks=['red_entry'], full_traffic_rule_compliance_verified=False,
+            supported_rule_checks=['red_entry', 'yield_violation'], yield_violation_count=yields,
             ever_AV_collision=collision, arrival_event=bool(counts['arrival']), correct_goal=correct_goal,
             correct_route=not wrong, red_entry_count=reds, tls_crossing_count=len(crossings),
             tls_crossing_unknown_count=unknown, valid_tls_crossing_count=len(crossings)-unknown,
@@ -163,6 +169,7 @@ class EpisodeMetrics:
             near_HV_50m_mean=self.near_weighted/self.near_time if self.near_time else None,
             near_HV_50m_max=self.near_max,
             near_HV_50m_presence_fraction=self.near_present/self.near_time if self.near_time else None,
+            situations=situations.finish(self.situation, self.case, bool(completion)),
             penalized_time_s=self.elapsed if completion else self.case['scenario']['episode_limit_s'])
 
 
@@ -187,6 +194,7 @@ def aggregate(records, n_planned):
         n_invalid_attempts=len(records)-n, n_unattempted=n_planned-len(records),
         n_missing_valid=n_planned-n, n_completed=completed, n_compliant_completed=compliant,
         n_collision=collided, n_red_episode=sum(r['red_entry_count'] > 0 for r in valid),
+        n_yield_violation=sum(r.get('yield_violation_count', 0) > 0 for r in valid),
         n_teleport=total('teleport'), n_removal=total('removal'), n_deadline=total('deadline'),
         primary_end_reason_counts=dict(Counter(r['primary_end_reason'] for r in valid)),
         completion_rate=completed/n if n else None, collision_rate=collided/n if n else None,
@@ -202,6 +210,7 @@ def aggregate(records, n_planned):
         mean_elapsed_completed=sum(r['elapsed_s'] for r in valid if r['completion'])/completed if completed else None,
         penalized_time_all=sum(r['penalized_time_s'] for r in valid)/n if n else None,
         exposure=exposure_summary(valid), stops=stop_summary(valid),
+        situations=situations.summary(valid),
         final_ready=False, training_ready=False)
 
 

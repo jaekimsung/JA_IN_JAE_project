@@ -1,12 +1,11 @@
 {
   "schema_id": "KC-PROTOCOL-v1",
-  "protocol_id": "KC-PROTOCOL-v1-kc01-20261114",
-  "readiness": "KC01_contract_only_NOT_READY_FOR_TRAINING",
+  "protocol_id": "KC-PROTOCOL-v3-noassist-20261117",
   "research_settings_frozen": false,
   "expected_sumo_version": "1.28.0",
   "scenario_manifest": {
     "path": "configs/kcity/v1/scenarios.json",
-    "sha256": "bdaeb02be3847a9a8b2412076f16a1dc259a867ca8db1f7d1f035c1b8ad408e9"
+    "sha256": "2be3a0fcbe57c3af4174ae6ebf058f2606fc2b87180b3320311eb6fb03a1e9ef"
   },
   "assets": {
     "network": {
@@ -33,8 +32,8 @@
     "warmup_s": 60.0
   },
   "control": {
-    "speed_mode": 31,
-    "lane_change_mode": 512,
+    "speed_mode": 6,
+    "lane_change_mode": 0,
     "longitudinal_adapter": "setAcceleration",
     "max_accel_mps2": 2.0,
     "max_decel_mps2": 4.5,
@@ -95,9 +94,8 @@
     "policy_or_worker_id_included": false
   },
   "observations": {
-    "schema_id": "KC-OBS73-v1-draft",
-    "dimensions": 73,
-    "implemented": false
+    "schema_id": "KC-OBS63-v1",
+    "dimensions": 63
   },
   "training": {
     "enabled": false,
@@ -109,8 +107,8 @@
     "future_cap_per_PPO_run": 1000000
   },
   "notes": [
-    "KC-01 pins geometry and deterministic request generation only.",
-    "Safety settings, demand, observation and reward need KC-02 through KC-06 verification.",
-    "Generated traffic requests are not realized departures or driving samples."
+    "Scenario interaction traffic is scripted per case from the initialization seed.",
+    "speedMode 6: SUMO only enforces the vehicle acceleration/deceleration limits. Safe following distance, signals and right of way are policy decisions.",
+    "laneChangeMode 0: SUMO makes no lane change on its own and executes a lane request without checking gaps."
   ]
 }

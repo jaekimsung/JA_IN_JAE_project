@@ -1,6 +1,5 @@
 {
-  "schema_id": "KC-SCENARIOS-v1",
-  "status": "geometry_contract_pending_runtime_feasibility",
+  "schema_id": "KC-SCENARIOS-v2",
   "scenario_codes": {
     "A": 1,
     "B": 2,
@@ -14,11 +13,14 @@
   "scenarios": [
     {
       "id": "A",
-      "name": "A_signal",
+      "name": "A_signal_chain",
       "route_edges": [
         "-68",
         "-13",
-        "-71"
+        "-71",
+        "-31",
+        "-42",
+        "-77"
       ],
       "vehicle_class": "passenger",
       "start": {
@@ -28,28 +30,64 @@
         "speed_mps": 2.0
       },
       "goal": {
-        "edge": "-71",
+        "edge": "-77",
         "lane_index": 0,
-        "arrival_position_m": 28.55
+        "arrival_position_m": 25.25
       },
       "required_tls_ids": [
-        "647"
+        "169",
+        "268",
+        "647",
+        "764"
       ],
       "required_lane_change": null,
       "episode_limit_s": 300.0,
-      "task": "signal_stop_restart",
-      "feasibility_status": "not_yet_checked_with_research_controller"
+      "task": "consecutive_actuated_signals",
+      "interaction": [
+        {
+          "kind": "placed",
+          "name": "lead_platoon",
+          "route": [
+            "-68",
+            "-13",
+            "-71",
+            "-31",
+            "-42",
+            "-77",
+            "-54"
+          ],
+          "lane_index": 0,
+          "count": [
+            2,
+            4
+          ],
+          "first_position_m": [
+            20.0,
+            32.0
+          ],
+          "spacing_m": [
+            9.0,
+            13.0
+          ],
+          "speed_mps": 3.0
+        }
+      ],
+      "decisions": [
+        "stop or go at red/yellow",
+        "restart behind a queue",
+        "do not enter a junction whose exit is blocked"
+      ]
     },
     {
       "id": "B",
-      "name": "B_required_lane_change",
+      "name": "B_lane_merge",
       "route_edges": [
         "-3#4",
         "-3#5",
         "-3#6",
         "-3#7",
         "-3#8",
-        "-68"
+        "-9"
       ],
       "vehicle_class": "passenger",
       "start": {
@@ -59,9 +97,9 @@
         "speed_mps": 2.0
       },
       "goal": {
-        "edge": "-68",
+        "edge": "-9",
         "lane_index": 0,
-        "arrival_position_m": 69.0
+        "arrival_position_m": 29.65
       },
       "required_tls_ids": [],
       "required_lane_change": {
@@ -73,23 +111,76 @@
         ]
       },
       "episode_limit_s": 300.0,
-      "task": "route_required_lane_change",
-      "feasibility_status": "not_yet_checked_with_research_controller"
+      "task": "merge_into_through_lane",
+      "interaction": [
+        {
+          "kind": "placed",
+          "name": "beside",
+          "route": [
+            "-3#4",
+            "-3#5",
+            "-3#6",
+            "-3#7",
+            "-3#8",
+            "-9"
+          ],
+          "lane_index": 1,
+          "count": [
+            1,
+            1
+          ],
+          "first_position_m": [
+            8.0,
+            20.0
+          ],
+          "spacing_m": [
+            9.0,
+            9.0
+          ],
+          "speed_mps": 4.0
+        },
+        {
+          "kind": "timed",
+          "name": "through_platoon",
+          "route": [
+            "-3#0",
+            "-3#1",
+            "-3#2",
+            "-3#3",
+            "-3#4",
+            "-3#5",
+            "-3#6",
+            "-3#7",
+            "-3#8",
+            "-9"
+          ],
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 6.0,
+          "count": [
+            5,
+            8
+          ],
+          "first_s": [
+            0.0,
+            2.0
+          ],
+          "headway_s": [
+            1.5,
+            3.0
+          ]
+        }
+      ],
+      "decisions": [
+        "choose a gap in the through lane",
+        "adjust speed to the gap",
+        "wait at the lane end if no gap"
+      ]
     },
     {
       "id": "C",
-      "name": "C_combined",
+      "name": "C_unprotected_yield",
       "route_edges": [
-        "-3#4",
-        "-3#5",
-        "-3#6",
-        "-3#7",
-        "-3#8",
-        "-68",
-        "-13",
-        "-71",
-        "-31",
-        "-42",
         "-77",
         "-54",
         "3#8",
@@ -100,7 +191,7 @@
       ],
       "vehicle_class": "passenger",
       "start": {
-        "edge": "-3#4",
+        "edge": "-77",
         "lane_index": 0,
         "position_m": 5.0,
         "speed_mps": 2.0
@@ -110,23 +201,100 @@
         "lane_index": 0,
         "arrival_position_m": 63.11
       },
-      "required_tls_ids": [
-        "169",
-        "268",
-        "647",
-        "764"
-      ],
-      "required_lane_change": {
-        "edge": "-3#4",
-        "next_edge": "-3#5",
-        "depart_lane": 0,
-        "required_exit_lanes": [
-          1
-        ]
-      },
+      "required_tls_ids": [],
+      "required_lane_change": null,
       "episode_limit_s": 300.0,
-      "task": "combined_signal_and_required_lane_change",
-      "feasibility_status": "not_yet_checked_with_research_controller"
+      "task": "yield_at_unsignalized_junctions",
+      "interaction": [
+        {
+          "kind": "timed",
+          "name": "merge_priority",
+          "route": [
+            "-21",
+            "-54",
+            "-68",
+            "-13"
+          ],
+          "lane_index": 0,
+          "position_m": 140.0,
+          "speed_mps": 6.0,
+          "count": [
+            3,
+            5
+          ],
+          "first_s": [
+            0.0,
+            3.0
+          ],
+          "headway_s": [
+            2.0,
+            4.0
+          ]
+        },
+        {
+          "kind": "timed",
+          "name": "crossing_priority",
+          "route": [
+            "9",
+            "3#8",
+            "3#7",
+            "3#6",
+            "3#5",
+            "3#4"
+          ],
+          "lane_index": 0,
+          "position_m": 2.0,
+          "speed_mps": 5.0,
+          "count": [
+            3,
+            5
+          ],
+          "first_s": [
+            2.0,
+            7.0
+          ],
+          "headway_s": [
+            2.0,
+            4.0
+          ]
+        },
+        {
+          "kind": "timed",
+          "name": "oncoming_through",
+          "route": [
+            "-3#0",
+            "-3#1",
+            "-3#2",
+            "-3#3",
+            "-3#4",
+            "-3#5",
+            "-3#6",
+            "-3#7",
+            "-3#8",
+            "-9"
+          ],
+          "lane_index": 0,
+          "position_m": 5.0,
+          "speed_mps": 6.0,
+          "count": [
+            3,
+            5
+          ],
+          "first_s": [
+            0.0,
+            6.0
+          ],
+          "headway_s": [
+            2.0,
+            5.0
+          ]
+        }
+      ],
+      "decisions": [
+        "yield to the priority stream when merging at 759",
+        "accept or reject gaps for the left turn at 464",
+        "do not wait forever once the junction is clear"
+      ]
     }
   ]
 }

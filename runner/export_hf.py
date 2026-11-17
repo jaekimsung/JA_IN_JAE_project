@@ -69,13 +69,13 @@ if __name__ == '__main__':
 COLUMNS = [
     ('episode', 'int', '-', 'Episode number within the dataset (dataset-local)'),
     ('t', 'int', 'decision', 'Decision index within the Episode (2 Hz policy, 0.5 s per step)'),
-    ('observation', 'float32[73]', 'normalized [-1,1]', 'Partial observation o_t given to the AV policy (KC-OBS73-v1)'),
+    ('observation', 'float32[63]', 'normalized [-1,1]', 'Partial observation o_t given to the AV policy (KC-OBS63-v1)'),
     ('action_raw', 'float32[2]', '-', 'Policy output [acceleration, lane change] before clipping'),
     ('action.accel_raw', 'float', 'normalized [-1,1]', 'Acceleration command passed to SUMO (x2.0 m/s² up, x4.5 m/s² down)'),
     ('action.lane_change_raw', 'float', '-', 'Raw lane command passed to the environment'),
     ('action.lane_change', 'int', '{-1,0,+1}', 'Quantized lane command (+1 left, -1 right)'),
     ('action.lane_change_applied', 'bool', '-', 'Whether the lane command was issued to SUMO (mask/cooldown allowed it)'),
-    ('reward', 'float32', '-', 'Reward r_t (progress/10, +10 arrival, -20 collision, -10 red entry, small LC/invalid penalties)'),
+    ('reward', 'float32', '-', 'Reward r_t (progress/10, +10 arrival, -0.01 per decision, -20 collision, -10 red entry, -10 yield violation, small LC/invalid penalties)'),
     ('terminated', 'bool', '-', 'Task end: arrival, collision, red entry, wrong route, deadline (time is in the observation)'),
     ('truncated', 'bool', '-', 'External time limit (not used by the native task)'),
     ('state', 'dict', 'm, m/s, deg', 'Privileged SUMO state s_t: all vehicles, ego pose/lane/route progress, signals, traffic counts'),
@@ -83,7 +83,7 @@ COLUMNS = [
     ('event.collided', 'bool', '-', 'AV collision during this step'),
     ('event.arrived', 'bool', '-', 'AV reached the goal during this step'),
     ('event.lane_before / lane_after', 'int', 'lane index', 'AV lane before and after the action'),
-    ('next_observation', 'float32[73]', 'normalized', 'o_{t+1}; in JSONL restored from the next row when `next_reference` is used'),
+    ('next_observation', 'float32[63]', 'normalized', 'o_{t+1}; in JSONL restored from the next row when `next_reference` is used'),
     ('next_state', 'dict', '-', 's_{t+1}; in JSONL restored from the next row when `next_reference` is used'),
 ]
 
@@ -120,7 +120,7 @@ def card(name, reports):
     lines += ['', '## Columns (JSONL, one transition per line)', '', '| field | type | unit | meaning |', '|---|---|---|---|']
     lines += [f'| `{a}` | {b} | {c} | {d} |' for a, b, c, d in COLUMNS]
     lines += ['', 'Additional fields: run/case/episode/transition UIDs, data_split, policy identity, reward_components, '
-              'substep_samples (0.1 s), traffic_interval, end_reason, and learner values for online PPO rows.', '',
+              'substep_samples (0.1 s), traffic_interval, end_reason, and learner values for online RL rows.', '',
               '## Files', '', '```text', 'data/<part>/shard-XXXXXX/',
               '  transitions.jsonl.gz   full transitions (authoritative)',
               '  numeric.npz            observation, next_observation, action_raw, action_env_input, action_mask, reward,',

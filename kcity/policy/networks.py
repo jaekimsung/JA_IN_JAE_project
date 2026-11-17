@@ -1,90 +1,91 @@
-"""K-CITY 정책망 부품: 범용 MLP 빌더와 하이브리드 actor-critic 몸체.
+"""Networks shared by BC and RLPD: a tanh-Gaussian actor and a LayerNorm critic ensemble.
 
-`kcity.policy.policy.KCityPolicy`가 HybridActorCritic을 상속해 관측 mask,
-샘플링, 로그확률·엔트로피 계산을 정의한다. 파라미터 생성 순서(trunk → mu_head →
-lane_head → v_head → log_std)는 seed별 초기 가중치를 결정하므로 바꾸지 않는다.
+Actor   obs -> MLP -> (mean, log_std) -> a = tanh(u), u ~ Normal(mean, std);  action = [acceleration, lane command]
+Critic  E independent Q(s, a) MLPs evaluated in one batched pass; LayerNorm after every hidden layer keeps
+        Q-values bounded when updating many times per environment step on a mix of prior and online data.
 """
+import math
+
 import numpy as np
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
+
+LOG_STD_MIN, LOG_STD_MAX = -20.0, 2.0
+ACT_DIM = 2
 
 
-def build_mlp(in_dim: int, hidden_sizes, out_dim: int = None,
-              activation: str = "tanh") -> nn.Sequential:
-    """[in_dim] → hidden_sizes → (out_dim) 형태의 MLP를 만든다.
-
-    Args:
-        in_dim:        입력 차원
-        hidden_sizes:  은닉층 크기 리스트. 예: [64, 64]
-        out_dim:       출력 차원. None이면 마지막 은닉층까지만 만든다
-                       (= 여러 head가 공유하는 "몸통/트렁크"로 쓸 때)
-        activation:    "tanh" | "relu" | "elu"
-                       tanh는 소규모 RL에서 관례적으로 안정적이고,
-                       relu는 층이 깊거나 큰 문제에서 유리한 경향.
-
-    Returns:
-        nn.Sequential. 마지막 층은 활성함수 없음 (out_dim을 준 경우).
-    """
-    act_layer = {"tanh": nn.Tanh, "relu": nn.ReLU, "elu": nn.ELU}[activation]
-
-    layers, last = [], in_dim
-    for h in hidden_sizes:
-        layers += [nn.Linear(last, h), act_layer()]
-        last = h
-    if out_dim is not None:
-        layers.append(nn.Linear(last, out_dim))   # 출력층엔 활성함수 X
-    return nn.Sequential(*layers)
+def xavier(layer):
+    nn.init.xavier_uniform_(layer.weight)
+    nn.init.zeros_(layer.bias)
+    return layer
 
 
-def orthogonal_init(module: nn.Module, gain: float = 1.0):
-    """직교 초기화 — PPO 논문 계열 구현에서 표준으로 쓰이는 초기화.
-
-    policy head는 작은 gain(0.01)으로 초기화해서 학습 초기에
-    모든 행동이 거의 균등하게 나오도록 만드는 것이 관례다
-    (특정 행동으로 성급하게 쏠리는 것을 방지).
-    """
-    if isinstance(module, nn.Linear):
-        nn.init.orthogonal_(module.weight, gain=gain)
-        nn.init.constant_(module.bias, 0.0)
-    return module
-
-
-# ======================================================================
-# 하이브리드 Actor-Critic: 연속 가감속(Normal) + 이산 차선변경(Categorical 좌/유지/우)
-#   action = [가감속 실수, 차선명령(+1/0/-1)],  log π = log N(가감속) + log Cat(차선)
-# ======================================================================
-class HybridActorCritic(nn.Module):
-    # 차선 인덱스 ↔ 명령 매핑: 0=왼쪽(+1), 1=유지(0), 2=오른쪽(-1)
-    LANE_CMDS = (1.0, 0.0, -1.0)
-
-    def __init__(self, obs_dim: int, hidden_sizes=(64, 64),
-                 activation: str = "tanh", init_log_std=-0.5,
-                 lane_keep_bias: float = 1.0):
-        """
-        Args:
-            init_log_std: "가감속" 축의 초기 탐험 폭 σ = exp(·).
-                (시퀀스가 오면 첫 원소를 사용 — Gaussian 정책과의 호환용)
-            lane_keep_bias: 차선 head의 "유지" 로짓 초기 편향.
-                1.0 → 초기 확률 약 (좌 16%, 유지 68%, 우 16%)
-                    = 스텝당 ~32%가 변경 시도 (탐험 충분 + 과폭주 방지)
-                0.0 → 균등 1/3씩 (~67% 시도), 2.0 → ~14% 시도
-        """
+class Actor(nn.Module):
+    def __init__(self, obs_dim, hidden_dims=(256, 256)):
         super().__init__()
-        self.trunk = build_mlp(obs_dim, hidden_sizes, None, activation)
-        last = hidden_sizes[-1]
-        self.mu_head = orthogonal_init(nn.Linear(last, 1), gain=0.01)
-        self.lane_head = orthogonal_init(nn.Linear(last, 3), gain=0.01)
-        self.v_head = orthogonal_init(nn.Linear(last, 1), gain=1.0)
-        with torch.no_grad():
-            self.lane_head.bias[1] = lane_keep_bias   # "유지"를 기본값으로
-
-        if not np.isscalar(init_log_std):
-            init_log_std = float(init_log_std[0])
-        self.log_std = nn.Parameter(torch.ones(1) * float(init_log_std))
+        layers, last = [], obs_dim
+        for width in hidden_dims:
+            layers += [xavier(nn.Linear(last, width)), nn.ReLU()]
+            last = width
+        self.trunk = nn.Sequential(*layers)
+        self.mean = xavier(nn.Linear(last, ACT_DIM))
+        self.log_std = xavier(nn.Linear(last, ACT_DIM))
 
     def forward(self, obs):
         z = self.trunk(obs)
-        mu = torch.tanh(self.mu_head(z))          # 가감속 평균 ∈ [-1,1]
-        std = torch.exp(self.log_std)
-        lane_logits = self.lane_head(z)
-        return mu, std, lane_logits, self.v_head(z).squeeze(-1)
+        return self.mean(z), self.log_std(z).clamp(LOG_STD_MIN, LOG_STD_MAX)
+
+    def sample(self, obs, generator=None):
+        """Reparameterized action in (-1, 1) and its log-probability."""
+        mean, log_std = self(obs)
+        noise = torch.randn(mean.shape, device=mean.device, generator=generator)
+        u = mean + log_std.exp() * noise
+        log_prob = (-0.5 * noise ** 2 - log_std - 0.5 * math.log(2 * math.pi)).sum(-1)
+        log_prob = log_prob - (2 * (math.log(2) - u - F.softplus(-2 * u))).sum(-1)  # tanh change of variables
+        return torch.tanh(u), log_prob
+
+    def mean_action(self, obs):
+        return torch.tanh(self(obs)[0])
+
+    @torch.no_grad()
+    def predict(self, obs, deterministic=True, generator=None):
+        tensor = torch.as_tensor(obs, dtype=torch.float32, device=self.mean.weight.device).unsqueeze(0)
+        action = self.mean_action(tensor) if deterministic else self.sample(tensor, generator)[0]
+        return action[0].cpu().numpy().astype(np.float32)
+
+
+class EnsembleLinear(nn.Module):
+    def __init__(self, members, in_dim, out_dim):
+        super().__init__()
+        weight = torch.empty(members, out_dim, in_dim)
+        for member in weight:
+            nn.init.xavier_uniform_(member)
+        self.weight = nn.Parameter(weight.transpose(1, 2).contiguous())
+        self.bias = nn.Parameter(torch.zeros(members, 1, out_dim))
+
+    def forward(self, x):  # (E, B, in) -> (E, B, out)
+        return torch.baddbmm(self.bias, x, self.weight)
+
+
+class CriticEnsemble(nn.Module):
+    def __init__(self, obs_dim, hidden_dims=(256, 256), num_qs=10, layer_norm=True):
+        super().__init__()
+        self.num_qs, self.layer_norm = num_qs, layer_norm
+        sizes = [obs_dim + ACT_DIM, *hidden_dims]
+        self.hidden = nn.ModuleList(EnsembleLinear(num_qs, a, b) for a, b in zip(sizes, sizes[1:]))
+        self.gain = nn.ParameterList(nn.Parameter(torch.ones(num_qs, 1, b)) for b in sizes[1:])
+        self.shift = nn.ParameterList(nn.Parameter(torch.zeros(num_qs, 1, b)) for b in sizes[1:])
+        self.out = EnsembleLinear(num_qs, sizes[-1], 1)
+
+    def forward(self, obs, action, members=None):
+        """Q-values (E, B); `members` selects a subset of the ensemble."""
+        x = torch.cat([obs, action], -1)
+        index = slice(None) if members is None else members
+        x = x.unsqueeze(0).expand(self.num_qs if members is None else len(members), *x.shape)
+        for layer, gain, shift in zip(self.hidden, self.gain, self.shift):
+            x = torch.baddbmm(layer.bias[index], x, layer.weight[index])
+            if self.layer_norm:
+                x = F.layer_norm(x, x.shape[-1:]) * gain[index] + shift[index]
+            x = F.relu(x)
+        return torch.baddbmm(self.out.bias[index], x, self.out.weight[index]).squeeze(-1)

@@ -38,7 +38,7 @@ def fake_part(root, k, *, rows=6, eligible=True, stale=False):
         split_counts=dict(Counter(splits)), event_counts={}, episodes=episodes))
     shard = dataset / 'shards' / 'shard-000000'
     write(shard / 'SHARD.json', {})
-    obs = np.zeros((rows, 73), np.float32)
+    obs = np.zeros((rows, 63), np.float32)
     obs[:, 0] = np.arange(rows) / 10 + k
     np.savez(shard / 'numeric.npz', observation=obs, action_env_input=np.zeros((rows, 2), np.float32),
              action_mask=np.tile([False, True, False], (rows, 1)),

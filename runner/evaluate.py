@@ -1,12 +1,13 @@
 """Deterministic evaluation on the fixed dev/final case panels.
 
     python runner/evaluate.py --policy expert --panel dev --output runs/eval/expert_dev
-    python runner/evaluate.py --policy runs/B3_seed11/transitions/checkpoints/T001000000-... --panel final \
+    python runner/evaluate.py --policy runs/B3_seed11/transitions/checkpoints/T000300000-... --panel final \
         --demand 1.0 1.5 2.0 --output runs/eval/B3_seed11_final
 
---policy is `expert` or a BC/PPO learner bundle directory (contains metadata.json/training.pt).
+--policy is `expert` or a BC/RL learner bundle directory (contains metadata.json/training.pt).
 Writes EPISODES.json and SUMMARY.json per demand and prints collision/completion rates, HV exposure
-(HV on the map, HV within 50 m of the AV, leader presence) and stopping indicators.
+(HV on the map, HV within 50 m of the AV, leader presence), stopping indicators and the outcome of each
+problem situation (signal chain, lane drop, unsignalized junctions; kcity/evaluation/situations.py).
 The final panel is for the fixed main policies only; never use it to choose models or settings.
 """
 import sys
@@ -90,6 +91,24 @@ def main():
               f"{e['n_HV_start_below_10']:>9} {num(e['near_HV_50m_mean'], '.2f'):>8} {rate(e['near_HV_50m_presence_mean']):>7} "
               f"{rate(e['leader_present_fraction_mean']):>7} {num(st['standstill_s_mean']):>7} {num(st['standstill_s_max']):>9} "
               f"{st['n_deadline']:>9}")
+    print()
+    print(f"{'demand':>6} {'situation':<14} {'exposed':>8} {'failed':>7} {'fail%':>7}  detail")
+    for demand, s in rows:
+        for name, item in s['situations'].items():
+            if name == 'other':
+                detail = ''
+            elif name == 'signal_chain':
+                detail = (f"crossings {item['crossings']}, red {item['red_entries']}, yellow {rate(item['yellow_entry_fraction'])}, "
+                          f"wait {num(item['wait_s_mean'])}s, box stop {num(item['box_stop_s_mean'])}s")
+            elif name == 'lane_drop':
+                detail = (f"done {rate(item['done_rate'])} at {num(item['position_m_mean'])}m, requests {num(item['requests_mean'])}, "
+                          f"rejected {num(item['rejected_mean'])}, target-lane HV {num(item['target_lane_hv_mean'], '.2f')}")
+            else:
+                detail = (f"passes {item['passes']}, cross traffic {rate(item['cross_traffic_fraction'])}, "
+                          f"min distance {num(item['min_distance_m'])}m, collisions {item['collisions']}, "
+                          f"yield violations {item['yield_violations']}")
+            print(f"{demand:>6g} {name:<14} {item.get('n_exposed', '-'):>8} {item['n_failed_here']:>7} "
+                  f"{rate(item.get('failure_rate')):>7}  {detail}")
 
 
 if __name__ == '__main__':

@@ -29,14 +29,14 @@ class KCityContractTests(unittest.TestCase):
 
     def test_signal_and_link_indices_are_grounded(self):
         a = self.report['scenarios']['A']
-        self.assertEqual(a['TLS_ids'], ['647'])
+        self.assertEqual(a['TLS_ids'], ['169','268','647','764'])
         signal = a['connections'][1]['options'][0]
         self.assertEqual(signal['tls_id'], '647')
         self.assertEqual(signal['link_index'], 2)
-        self.assertEqual(self.report['scenarios']['C']['TLS_ids'], ['169','268','647','764'])
+        self.assertEqual(self.report['scenarios']['C']['TLS_ids'], [])
 
     def test_required_lane_change_is_real(self):
-        for sid in ['B', 'C']:
+        for sid in ['B']:
             row = self.report['scenarios'][sid]
             self.assertEqual(row['start']['lane_id'], '-3#4_0')
             self.assertEqual({c['from_lane'] for c in row['connections'][0]['options']}, {'-3#4_1'})
@@ -74,10 +74,14 @@ class KCityContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractError, 'does not require a change'):
             validate_contract(bad)
 
-    def test_required_lane_task_cannot_be_silently_removed(self):
+    def test_interaction_stream_must_be_a_connected_route_with_valid_ranges(self):
         bad = deepcopy(self.spec)
-        bad['scenario_manifest']['scenarios'][1]['required_lane_change'] = None
-        with self.assertRaisesRegex(ContractError, 'cannot be omitted'):
+        bad['scenario_manifest']['scenarios'][1]['interaction'][0]['route'] = ['-3#4', '-68']
+        with self.assertRaisesRegex(ContractError, 'No passenger connection'):
+            validate_contract(bad)
+        bad = deepcopy(self.spec)
+        bad['scenario_manifest']['scenarios'][2]['interaction'][0]['headway_s'] = [4.0, 2.0]
+        with self.assertRaisesRegex(ContractError, 'invalid interaction range'):
             validate_contract(bad)
 
     def test_asset_drift_is_rejected(self):

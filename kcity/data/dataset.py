@@ -19,6 +19,17 @@ import uuid
 import numpy as np
 
 from kcity.env.config import digest, file_sha256, make_case, repository_path
+from kcity.env.observation import (
+    BINARY,
+    CORRIDOR,
+    CURRENT,
+    OBS_DIM,
+    OBSERVATION_ID,
+    TLS_DIST,
+    TLS_GREEN,
+    TLS_RED,
+    lane_mask,
+)
 from kcity.evaluation.metrics import EpisodeMetrics
 from kcity.data.storage import (
     NEXT_CODEC,
@@ -30,8 +41,21 @@ from kcity.data.storage import (
     verify_retention,
 )
 
-SCHEMA_ID = 'KC-DATA-v1'
-OBSERVATION_ID = 'KC-OBS73-v1'
+SCHEMA_ID = 'KC-DATA-v2'
+EGO_COLUMNS = (
+    'ego_x',
+    'ego_y',
+    'ego_speed',
+    'ego_accel',
+    'ego_angle_deg',
+    'ego_lane',
+    'ego_lane_count',
+    'ego_route_progress_m',
+)
+EVENT_COLUMNS = ('collision', 'arrival', 'tls_crossing', 'yield_violation', 'lane_change', 'wrong_route')
+END_CODES = dict(
+    arrival=1, collision=2, red_entry=3, yield_violation=4, wrong_route=5, deadline=6, teleport=7, removal=8
+)  # 0 = Episode continues
 BASE_FIELDS = {
     'episode',
     't',
@@ -185,11 +209,7 @@ def traffic_group(case):
 
 
 def observation_mask(o):
-    return [
-        bool(o[42] > 0.5 and o[51] < 0.5 and o[52] <= 1e-9),
-        True,
-        bool(o[44] > 0.5 and o[51] < 0.5 and o[52] <= 1e-9),
-    ]
+    return lane_mask(np.asarray(o, dtype=np.float32))
 
 
 def enrich_state(state, interval, history, start_tick, dt=0.1):
@@ -208,14 +228,6 @@ def enrich_state(state, interval, history, start_tick, dt=0.1):
             realized_vph=counts * 3600 / ((end - begin) * dt) if end > begin else None,
             scope='post-reset interval endpoints,up to60s',
         ),
-    )
-    route = state['route_state']
-    goal = route['goal']
-    route.update(
-        scenario_id=route['route_id'],
-        goal_edge=goal['edge'],
-        arrival_position_m=goal['arrival_position_m'],
-        connection_occurrence_index=state['ego_route_index'],
     )
     return state
 
@@ -238,35 +250,16 @@ def make_transition(
     start_tick,
     previous_interval,
     departure_history,
-    segment_reason=None,
     policy_context=None,
 ):
     eid = episode_uid(config['run_uid'], episode_index, case['case_uid'])
     old_history = list(departure_history)
     new_history = old_history + [[info['sim_tick_tp1'], info['traffic_interval']['departed_hv']]]
     action = deepcopy(info['action'])
-    command = action['lane_change']
-    action.update(
-        accel_clipped=action['env_input'][0],
-        lane_category=1 - command,
-        command_issue_tick=info['sim_tick_t'],
-        target_lane_id=(
-            f"{info['state']['ego_road_id']}_{action['target_lane_index']}"
-            if action['target_lane_index'] is not None
-            else None
-        ),
-        lane_duration_s=(
-            config['contract']['protocol']['control']['lane_command_duration_s']
-            if action['lane_change_applied']
-            else None
-        ),
-        speed_after_mps=info['next_state']['ego_speed'],
-    )
     split = config['plan'][episode_index]['data_split']
     row = dict(
         schema_id=SCHEMA_ID,
         observation_schema_id=OBSERVATION_ID,
-        schema_status='KC05-candidate',
         run_uid=config['run_uid'],
         case_uid=case['case_uid'],
         episode_uid=eid,
@@ -282,18 +275,12 @@ def make_transition(
         policy_checkpoint_sha256=config['teacher']['fingerprint'],
         policy_checkpoint_kind='rule_source_and_config',
         train_seed=None,
-        seed_manifest_id=digest(case['seeds']),
         scenario_id=case['scenario_id'],
-        route_id=case['scenario']['id'],
-        demand_id=f"requested_{case['requested_lambda_vph']}_vph",
         observation=np.asarray(observation, dtype=np.float32).tolist(),
         action_raw=info['action_raw'],
-        policy_action_raw=info['policy_action_raw'],
         action=action,
         action_mask=action['lane_mask'],
-        next_action_mask=info['action_mask'],
-        reward=float(np.float32(reward)),
-        reward_env_raw=float(reward),
+        reward=float(reward),
         reward_components=info['reward_components'],
         terminated=bool(terminated),
         truncated=bool(truncated),
@@ -308,8 +295,6 @@ def make_transition(
         traffic_interval=info['traffic_interval'],
         sim_tick_t=info['sim_tick_t'],
         sim_tick_tp1=info['sim_tick_tp1'],
-        sim_time_s=info['sim_tick_t'] * 0.1,
-        next_sim_time_s=info['sim_tick_tp1'] * 0.1,
         episode_start_tick=start_tick,
         episode_time_s=info['episode_time_s'],
         control_dt_s=info['control_dt_s'],
@@ -317,20 +302,6 @@ def make_transition(
         observation_valid=info['observation_valid'],
         next_observation_valid=info['next_observation_valid'],
         end_reason=info['end_reason'],
-        episode_complete=bool(terminated or truncated),
-        segment_end=segment_reason is not None,
-        segment_end_reason=segment_reason,
-        row_valid=True,
-        invalid_reasons=[],
-        learning=dict(
-            update_id=None,
-            rollout_id=None,
-            log_prob_raw=None,
-            value=None,
-            next_value=None,
-            bootstrap_mask=not terminated,
-            trace_mask=not (terminated or truncated),
-        ),
     )
     # Validation happens once, in ShardWriter.append(), which every collector uses.
     if config.get('online_policy'):
@@ -343,8 +314,8 @@ def make_transition(
             policy_checkpoint_kind='acting_state_dict_sha256',
             policy_checkpoint_sha256=policy_context['behavior_sha'],
         )
-        row['learning'].update(
-            {k: policy_context[k] for k in ['update_id', 'rollout_id', 'log_prob_raw', 'value', 'next_value']}
+        row['learning'] = dict(
+            update_step=policy_context['update_step'], random_action=policy_context['random_action']
         )
     elif config.get('fixed_policy'):
         fixed = config['fixed_policy']
@@ -377,30 +348,20 @@ def validate_row(row, config=None):
     )
     for name in ['observation', 'next_observation']:
         a = np.asarray(row[name])
-        require(a.shape == (73,) and np.isfinite(a).all() and (np.abs(a) <= 1).all(), 'Invalid ' + name)
+        require(a.shape == (OBS_DIM,) and np.isfinite(a).all() and (np.abs(a) <= 1).all(), 'Invalid ' + name)
         require(np.array_equal(a, a.astype(np.float32)), 'Observation was not stored as actual float32')
         if row['observation_valid' if name == 'observation' else 'next_observation_valid']:
-            binary = (
-                list(range(31, 46))
-                + [51, 54]
-                + list(range(56, 61))
-                + list(range(62, 67))
-                + list(range(68, 72))
-            )
-            require(np.isin(a[binary], [0, 1]).all(), 'Invalid observation binary/mask fields')
-            require(sum(a[56:60]) == a[54], 'TLS presence/onehot mismatch')
-            require(a[54] or a[55] == 0, 'Missing TLS distance sentinel')
-            require(a[60] or a[61] == 0, 'Missing stop distance sentinel')
+            require(np.isin(a[BINARY], [0, 1]).all(), 'Invalid observation binary fields')
+            signal = a[TLS_RED : TLS_GREEN + 1].sum()
+            require(signal <= 1 and (signal or a[TLS_DIST] == 1), 'Signal one-hot/distance mismatch')
             for k in range(5):
                 require(
-                    0 <= a[1 + 4 * k] <= 1 and -1 <= a[3 + 4 * k] <= 0, 'Front/rear distance sign mismatch'
+                    0 <= a[CORRIDOR + 4 * k] <= 1 and -1 <= a[CORRIDOR + 4 * k + 2] <= 0,
+                    'Front/rear distance sign mismatch',
                 )
     raw = np.asarray(row['action_raw'], dtype=np.float32)
     bounded = np.asarray(row['action']['env_input'], dtype=np.float32)
-    require(
-        raw.shape == (2,) and np.array_equal(raw, np.asarray(row['policy_action_raw'])),
-        'Raw action alias mismatch',
-    )
+    require(raw.shape == (2,), 'Invalid raw action')
     require(np.array_equal(np.clip(raw, -1, 1), bounded), 'Incorrect raw->clip transform')
     control = (
         config['contract']['protocol']['control']
@@ -416,17 +377,15 @@ def validate_row(row, config=None):
     )
     a = row['action']
     lane = 1 if bounded[1] >= 0.5 else -1 if bounded[1] <= -0.5 else 0
-    require(a['lane_change'] == lane and a['lane_category'] == 1 - lane, 'Incorrect lane category')
-    require(a['accel_raw'] == bounded[0] and a['accel_clipped'] == bounded[0], 'Clipped action mismatch')
+    require(a['lane_change'] == lane, 'Incorrect lane command')
+    require(a['accel_raw'] == bounded[0], 'Clipped action mismatch')
     mask = row['action_mask']
     require(len(mask) == 3 and all(type(x) is bool for x in mask) and mask[1], 'Invalid mask')
     require(mask == observation_mask(row['observation']) and mask == a['lane_mask'], 'Sampling mask mismatch')
-    require(row['next_action_mask'] == observation_mask(row['next_observation']), 'Next mask mismatch')
     require(
-        math.isclose(sum(row['reward_components'].values()), row['reward_env_raw'], abs_tol=1e-10),
+        math.isclose(sum(row['reward_components'].values()), row['reward'], abs_tol=1e-10),
         'Reward component mismatch',
     )
-    require(row['reward'] == float(np.float32(row['reward_env_raw'])), 'Reward float32 view mismatch')
     for name, tick in [('state', row['sim_tick_t']), ('next_state', row['sim_tick_tp1'])]:
         state = row[name]
         require(STATE_FIELDS <= state.keys(), 'Missing full State fields')
@@ -502,7 +461,6 @@ def validate_row(row, config=None):
         'Episode clock mismatch',
     )
     done = row['terminated'] or row['truncated']
-    require(row['episode_complete'] == done, 'Episode boundary mismatch')
     require(done or ticks == 5, 'Nonterminal partial control interval')
     require((row['end_reason'] is not None) == done, 'End reason/done mismatch')
     if not row['next_observation_valid']:
@@ -546,19 +504,12 @@ def validate_row(row, config=None):
             require(
                 row['policy_checkpoint_kind'] == 'acting_state_dict_sha256', 'Missing acting-policy hash kind'
             )
+            learning = row['learning']
             require(
-                all(
-                    type(row['learning'][k]) is int and row['learning'][k] >= 0
-                    for k in ['update_id', 'rollout_id']
-                ),
-                'Invalid online update counters',
-            )
-            require(
-                all(
-                    isinstance(row['learning'][k], (int, float)) and math.isfinite(row['learning'][k])
-                    for k in ['log_prob_raw', 'value', 'next_value']
-                ),
-                'Missing online learner values',
+                type(learning['update_step']) is int
+                and learning['update_step'] >= 0
+                and type(learning['random_action']) is bool,
+                'Invalid online learner provenance',
             )
         elif config.get('fixed_policy'):
             fixed = config['fixed_policy']
@@ -582,13 +533,8 @@ def validate_row(row, config=None):
                 'Unknown policy/version',
             )
         require(
-            row['source_stage'] == config['source_stage']
-            and row['seed_manifest_id'] == digest(case['seeds']),
-            'Source/seed version mismatch',
-        )
-        require(
-            row['scenario_id'] == case['scenario_id'] and row['route_id'] == case['scenario']['id'],
-            'Route/scenario differs from manifest',
+            row['source_stage'] == config['source_stage'] and row['scenario_id'] == case['scenario_id'],
+            'Source stage/scenario differs from manifest',
         )
     return text
 
@@ -636,12 +582,7 @@ def index_row(db, row):
 def numeric_view(rows):
     result = {}
     n = len(rows)
-    for key, width in [
-        ('observation', 73),
-        ('next_observation', 73),
-        ('action_raw', 2),
-        ('policy_action_raw', 2),
-    ]:
+    for key, width in [('observation', OBS_DIM), ('next_observation', OBS_DIM), ('action_raw', 2)]:
         result[key] = np.asarray([r[key] for r in rows], np.float32).reshape(n, width)
     result['action_env_input'] = np.asarray([r['action']['env_input'] for r in rows], np.float32).reshape(
         n, 2
@@ -658,7 +599,6 @@ def numeric_view(rows):
         ('control_dt_s', np.float64),
         ('observation_valid', bool),
         ('next_observation_valid', bool),
-        ('row_valid', bool),
     ]:
         result[key] = np.asarray([r[key] for r in rows], dtype)
     result['lane_change'] = np.asarray([r['action']['lane_change'] for r in rows], np.int8)
@@ -672,6 +612,16 @@ def numeric_view(rows):
         offsets.append(len(xy))
     result['detected_xy'] = np.asarray(xy, np.float64).reshape(-1, 2)
     result['detected_offsets'] = np.asarray(offsets, np.int64)
+    # Numeric State columns (absolute values; missing ego = NaN), so the table needs no string parsing.
+    ego = []
+    for r in rows:
+        s = r['state']
+        ego.append([np.nan if s[k] is None else s[k] for k in EGO_COLUMNS])
+    result['ego_state'] = np.asarray(ego, np.float64).reshape(n, len(EGO_COLUMNS))
+    result['event_flags'] = np.asarray(
+        [[any(e['type'] == kind for e in r['events']) for kind in EVENT_COLUMNS] for r in rows], bool
+    ).reshape(n, len(EVENT_COLUMNS))
+    result['end_code'] = np.asarray([END_CODES.get(r['end_reason'], 0) for r in rows], np.int8)
     return result
 
 
@@ -694,19 +644,14 @@ def read_shard(folder):
     if files != manifest['files']:
         raise ValueError('Shard file set/SHA mismatch')
     with gzip.open(folder / 'transitions.jsonl.gz', 'rt') as f:
-        rows = (json.loads(line) for line in f)
-        codec = manifest.get('storage_codec', 'full_v1')
-        if codec == NEXT_CODEC:
-            yield from decode_rows(rows)
-        elif codec == 'full_v1':
-            yield from rows
-        else:
+        if manifest.get('storage_codec') != NEXT_CODEC:
             raise ValueError('Unsupported data storage codec')
+        yield from decode_rows(json.loads(line) for line in f)
 
 
 class ShardWriter:
     def __init__(self, root, config, *, resume=False, shard_rows=25000):
-        if config.get('storage_codec', 'full_v1') not in ['full_v1', NEXT_CODEC]:
+        if config.get('storage_codec') != NEXT_CODEC:
             raise ValueError('Unsupported data storage codec')
         self.root = Path(root)
         self.config = deepcopy(config)
@@ -791,7 +736,7 @@ class ShardWriter:
 
     @property
     def external(self):
-        """Online PPO data: each shard references a separately retained learner bundle."""
+        """Online RL data: each shard references a separately retained learner bundle."""
         return self.config.get('checkpoint_policy', {}).get('mode') == CHECKPOINT_MODE
 
     def append(self, row):
@@ -821,8 +766,7 @@ class ShardWriter:
         if len(rows) != self.pending:
             raise ValueError('Buffered row count mismatch')
         with gzip.GzipFile(filename=str(staging / 'transitions.jsonl.gz'), mode='wb', mtime=0) as stream:
-            compact = self.config.get('storage_codec') == NEXT_CODEC
-            for row in (encode_rows(rows) if compact else rows):
+            for row in encode_rows(rows):
                 stream.write((json_text(row) + '\n').encode())
         np.savez_compressed(staging / 'numeric.npz', **numeric_view(rows))
         with gzip.GzipFile(filename=str(staging / 'events.jsonl.gz'), mode='wb', mtime=0) as stream:
@@ -849,10 +793,9 @@ class ShardWriter:
             split_counts=dict(Counter(r['data_split'] for r in rows)),
             completed_episodes=completed_episodes,
             run_config_sha256=self.config_sha256,
+            storage_codec=NEXT_CODEC,
             files={str(p.relative_to(staging)): file_sha256(p) for p in staging.rglob('*') if p.is_file()},
         )
-        if self.config.get('storage_codec'):
-            manifest['storage_codec'] = self.config['storage_codec']
         atomic_json(staging / 'SHARD.json', manifest)
         for file in staging.rglob('*'):
             if file.is_file():
@@ -878,18 +821,13 @@ class ShardWriter:
             dict(path=str(p.relative_to(self.root)), manifest_sha256=sha)
             for p, sha in zip(self.folders, self.shard_sha256)
         ]
-        eligible = bool(
-            self.config.get('source_stage') == 'expert_pool'
-            and self.config.get('eligible_for_research_training')
-        )
         body = dict(
             schema_id=SCHEMA_ID,
             run_uid=self.config['run_uid'],
             run_config_sha256=self.config_sha256,
             committed_transitions=self.count,
             shards=shards,
-            eligible_for_research_training=eligible,
-            training_ready=False,
+            eligible_for_research_training=bool(self.config.get('eligible_for_research_training')),
         )
         atomic_json(self.root / 'RELEASE.json', dict(body, data_id=digest(body)))
 
@@ -976,10 +914,8 @@ def validate_dataset(root):
                     situations['standstill_decisions'] += (
                         row['state']['ego_speed'] is not None and row['state']['ego_speed'] < 0.1
                     )
-                    situations['front_neighbor_decisions'] += row['observation'][35] > 0.5
-                    situations['red_exposure_decisions'] += (
-                        row['observation'][54] > 0.5 and row['observation'][56] > 0.5
-                    )
+                    situations['front_neighbor_decisions'] += row['observation'][CORRIDOR + 4 * CURRENT] < 1
+                    situations['red_exposure_decisions'] += row['observation'][TLS_RED] > 0.5
                     situations['lane_change_requests'] += row['action']['lane_change'] != 0
                     situations['rejected_requests'] += bool(row['action']['known_rejection_reasons'])
                     situations['detected_vehicle_entries'] += len(row['detected_vehicles'])
@@ -987,7 +923,7 @@ def validate_dataset(root):
                         tracker = EpisodeMetrics(
                             config['plan'][row['episode']]['case'], {'state': row['state']}
                         )
-                    tracker.add(row['reward_env_raw'], row['terminated'], row['truncated'], row)
+                    tracker.add(row['reward'], row['terminated'], row['truncated'], row)
                     if row['terminated'] or row['truncated']:
                         observed_episodes[row['episode_uid']] = tracker.finish()
                         tracker = None
@@ -1013,9 +949,6 @@ def validate_dataset(root):
         event_counts=dict(events),
         situation_counts=dict(situations),
         episodes=episodes,
-        local_file_coverage_verified=True,
-        remote_backup_verified=False,
-        training_ready=False,
         retained_learner_checkpoints=len(retention['retained']) if retention else None,
         incomplete_partial_present=(root / 'partial/current.jsonl').exists()
         and (root / 'partial/current.jsonl').stat().st_size > 0,

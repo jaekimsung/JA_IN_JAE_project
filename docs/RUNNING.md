@@ -18,7 +18,7 @@ python runner/view_kcity.py --nogui --seconds 3600
 
 ```bash
 nproc                                                        # 코어 수 확인 → 워커 수 결정 (워커당 약 1~1.5코어)
-python -B runner/collect.py --output runs/expert --workers 8 # 최소 1M 전이 (experiment.json 예산)
+python -B runner/collect.py --output runs/expert --workers 8 # 최소 4M 전이 (experiment.json 예산)
 python -B runner/collect.py --output runs/expert --target 5000   # 작은 확인 실행
 ```
 
@@ -42,16 +42,16 @@ python -B runner/train_bc.py views --pool runs/expert --output runs/bc_views --w
 for s in 11 22 33; do python -B runner/train_bc.py train --views runs/bc_views --seed $s --output runs/bc_seed$s & done; wait
 ```
 
-## 4. PPO
+## 4. 강화학습 (B2 온라인 SAC, B3 RLPD)
 
 ```bash
 for s in 11 22 33; do
-  python -B runner/train_ppo.py --method B2 --seed $s --output runs/B2_seed$s &
-  python -B runner/train_ppo.py --method B3 --seed $s --bc-run runs/bc_seed$s --output runs/B3_seed$s &
+  python -B runner/train_rl.py --method B2 --seed $s --output runs/B2_seed$s &
+  python -B runner/train_rl.py --method B3 --seed $s --prior runs/expert --output runs/B3_seed$s &
 done; wait
 ```
 
-각 run은 정확히 1M 전이를 학습하고, 50k마다 dev 평가를 `dev/T*/SUMMARY.json`, 학습 곡선을 `curve.jsonl`, 목표 도달 전이 수를 `SAMPLE_EFFICIENCY.json`에 남깁니다. 최종 모델은 `COMPLETE.json`의 `checkpoint`(1M 시점 bundle)입니다. 모든 전이는 `<run>/transitions/`에 데이터셋 형식으로 저장됩니다.
+각 run은 300,000 전이를 학습하고, 25,000마다 dev 평가를 `dev/T*/SUMMARY.json`, 학습 곡선을 `curve.jsonl`, 목표 도달 전이 수를 `SAMPLE_EFFICIENCY.json`에 남깁니다. B3는 `--prior`로 준 전문가 pool에서 100만 전이를 사전 데이터로 읽습니다. 환경 1 step마다 critic을 20회 update하므로 GPU 사용을 권장합니다.
 
 ## 5. 평가
 
@@ -61,7 +61,15 @@ python -B runner/evaluate.py --policy <COMPLETE.json의 checkpoint> --panel fina
 python -B runner/evaluate.py --policy <bundle> --panel dev --limit 3 --output runs/eval/smoke   # 작은 확인
 ```
 
-`--policy`는 `expert` 또는 BC·PPO bundle 폴더입니다. 수요 배수별로 `EPISODES.json`(Episode별 지표)과 `SUMMARY.json`을 씁니다. `SUMMARY.json`에는 충돌률·완주율과 Wilson 95% 구간, 교통 노출(`exposure`), 정지 지표(`stops`)가 들어 있습니다. 화면에는 두 개의 표가 출력됩니다.
+`--policy`는 `expert` 또는 BC·RL bundle 폴더입니다. 수요 배수별로 `EPISODES.json`(Episode별 지표)과 `SUMMARY.json`을 씁니다. `SUMMARY.json`에는 충돌률·완주율과 Wilson 95% 구간, 교통 노출(`exposure`), 정지 지표(`stops`), 문제 상황별 지표(`situations`)가 들어 있습니다. 화면에는 세 개의 표가 출력됩니다.
+
+여러 방법의 평가 결과와 RL 학습 곡선을 가설별로 나란히 보려면 `report.py`를 씁니다.
+
+```bash
+python -B runner/report.py --eval B0=runs/eval/expert --eval B1=runs/eval/B1_seed11 \
+    --eval B2=runs/eval/B2_seed11 --eval B3=runs/eval/B3_seed11 \
+    --run B2=runs/B2_seed11 --run B3=runs/B3_seed11 --output runs/report.json
+```
 - **성능 표:** 충돌률·완주율·규칙 준수 완주율·평균 완주 시간
 - **노출·정지 표:** 출발 시 HV, 시간가중 HV, 출발 HV 10대 미만 사례 수, AV 50m 안 HV 수와 존재 비율, 선행차 존재 비율, 정지 시간 평균·최대, 기한 초과 수
 
@@ -80,12 +88,12 @@ python -B runner/export_hf.py --dataset runs/expert --dataset runs/B3_seed11/tra
 ```bash
 touch runs/B2_seed11/STOP          # 저장 후 종료 (SIGINT/SIGTERM도 같음). 수집 pool은 runs/expert/STOP
 rm runs/B2_seed11/STOP
-python -B runner/train_ppo.py --method B2 --seed 11 --output runs/B2_seed11 --resume
+python -B runner/train_rl.py --method B2 --seed 11 --output runs/B2_seed11 --resume
 ```
 
 - **같은 명령으로 재개:** 재개는 같은 출력 폴더와 같은 설정에서만 가능합니다. `CONFIG.json`의 설정 digest를 비교하고, 수집은 워커 수도 같아야 합니다.
 - **같은 SUMO 버전:** 현재 Episode를 같은 행동으로 다시 실행해 복원하므로, SUMO 버전과 환경 코드가 같아야 정확히 재개됩니다.
-- **중단 시점의 처리:** 중단 때문에 추가 PPO update를 하지는 않습니다. rollout이 덜 찬 상태라면 buffer째 저장합니다.
+- **중단 시점의 처리:** 중단 시점까지의 전이와 learner 상태를 함께 확정합니다. 재개하면 replay buffer를 확정된 전이에서 다시 만들고 이어서 학습합니다.
 
 ## 회귀 검사
 

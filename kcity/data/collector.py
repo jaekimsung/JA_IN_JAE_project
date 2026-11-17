@@ -66,7 +66,7 @@ def case_plan(contract, kind, count=20000, start=0):
             index = cursor + start
             namespace, split = dict(
                 probe=('contract_check', 'ops_probe'),
-                train=('train', 'ppo_train'),
+                train=('train', 'rl_train'),
                 archive=('archive', 'archive'),
             )[kind]
         result.append(dict(case=resolved_case(contract, namespace, scenario, index), data_split=split))
@@ -102,9 +102,18 @@ def resolve_plan(env, entries):
 
 
 def dataset_config(
-    env, run_uid, plan, stage='debug', method='B0', seed=None, *, experiment_sha256=None, fixed_policy=None
+    env,
+    run_uid,
+    plan,
+    stage='debug',
+    method='B0',
+    seed=None,
+    *,
+    experiment_sha256=None,
+    fixed_policy=None,
+    evaluation_interval=50000
 ):
-    """ShardWriter config. Rows come from the B0 expert, online PPO (method B2/B3) or a fixed learned policy."""
+    """ShardWriter config. Rows come from the B0 expert, online RL (method B2/B3) or a fixed learned policy."""
     require(isinstance(run_uid, str) and run_uid, 'Stable run UID required')
     require(len({r['case']['case_uid'] for r in plan}) == len(plan), 'Duplicate planned case')
     require(
@@ -123,10 +132,8 @@ def dataset_config(
     config = dict(
         schema_id='KC-COLLECTION-v1-candidate',
         run_uid=run_uid,
-        data_purpose='debug_not_research' if stage == 'debug' else 'main_' + stage,
         source_stage=stage,
         eligible_for_research_training=stage == 'expert_pool',
-        training_ready=False,
         contract=env.contract,
         teacher=teacher,
         code=git_info(),
@@ -153,14 +160,14 @@ def dataset_config(
     )
     if method != 'B0':
         config['checkpoint_policy'] = dict(
-            mode=CHECKPOINT_MODE, keep_recent=2, evaluation_interval_transitions=50000
+            mode=CHECKPOINT_MODE, keep_recent=2, evaluation_interval_transitions=evaluation_interval
         )
-        config['online_policy'] = dict(method=method, seed=seed, version='KC-MAIN-ONLINE-v1')
+        config['online_policy'] = dict(method=method, seed=seed, version='KC-ONLINE-RLPD-v1')
         config['teacher'] = dict(
             id=method + '-online', config=dict(seed=seed), fingerprint=digest(dict(method=method, seed=seed))
         )
     if fixed_policy is not None:
-        require(method == 'B0', 'fixed_policy and online PPO are exclusive')
+        require(method == 'B0', 'fixed_policy and online RL are exclusive')
         require(
             {'method', 'seed', 'version', 'policy_sha256'} <= set(fixed_policy),
             'Incomplete fixed policy identity',
@@ -239,11 +246,6 @@ class PolicyCollector:
             before, detected = self.obs.copy(), deepcopy(self.detected)
             nxt, reward, term, trunc, info = self.env.step(self.policy.predict(before))
             next_detected = self.env.get_detected_vehicles()
-            reason = (
-                'checkpoint'
-                if term or trunc
-                else 'shard' if self.writer.pending + 1 >= self.writer.shard_rows else None
-            )
             self.recorder.record(
                 observation=before,
                 detected=detected,
@@ -253,7 +255,6 @@ class PolicyCollector:
                 terminated=term,
                 truncated=trunc,
                 info=info,
-                segment_reason=reason,
             )
             self.obs, self.detected = nxt, next_detected
             if term or trunc:

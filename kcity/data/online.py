@@ -1,64 +1,39 @@
-"""Record online PPO transitions in the dataset format, committed atomically with the learner bundle."""
+"""Record online RL transitions in the dataset format, committed atomically with the learner bundle."""
 
 from kcity.data.recorder import EpisodeRecorder
-from kcity.data.storage import checkpoint_from_shard, require
 from kcity.evaluation.metrics import policy_weights_sha256
 
 
 class OnlineRecorder:
-    """Receives each runner step (before the terminal reset) and adds PPO learner values to the row.
+    """Adds learner provenance to each online row and commits shard + learner bundle together.
 
-    The data shard and the learner bundle referenced by it are committed together, so after a
-    crash the number of unique transitions equals the restored learner's counter.
+    After a crash the committed transitions are exactly those the restored learner has seen, and they
+    are also what its replay buffer is rebuilt from. The acting-policy hash is taken at each commit:
+    it identifies the actor the shard's rows started from (the actor is updated every step).
     """
 
-    def __init__(self, runner, writer):
-        self.runner, self.writer = runner, writer
+    def __init__(self, agent, writer):
+        self.agent, self.writer = agent, writer
         self.recorder = EpisodeRecorder(writer)
-        self.behavior_sha = policy_weights_sha256(runner.agent)
-        saved, folder = writer.last_checkpoint()
+        self.behavior_sha = policy_weights_sha256(agent)
+        saved, _ = writer.last_checkpoint()
         if saved is not None:
-            runner.load_checkpoint(checkpoint_from_shard(folder))
-            require(writer.count == runner.agent.num_timesteps, 'Atomic learner/data counts differ')
             self.recorder.restore(saved['recorder'])
-            self.behavior_sha = saved['behavior_sha']
 
-    def add(self, before, detected, nxt, next_detected, reward, term, trunc, info, lp, value, nv):
-        runner = self.runner
-        plan = self.writer.config['plan']
-        require(
-            runner.episode_count < len(plan),
-            'PPO case plan exhausted after %d episodes; '
-            'extend case_plan under a new run before continuing' % len(plan),
-        )
+    def add(self, *, episode, start_tick, reset_state, random_action, **transition):
         if not self.recorder.active:
-            self.recorder.start(runner.episode_count, runner.env.episode_start_tick, info['state'])
-        require(self.recorder.case == runner.env.case, 'Online case differs from declared plan')
-        self.recorder.record(
-            observation=before,
-            detected=detected,
-            next_observation=nxt,
-            next_detected=next_detected,
-            reward=reward,
-            terminated=term,
-            truncated=trunc,
-            info=info,
-            segment_reason='checkpoint' if term or trunc else None,
+            self.recorder.start(episode, start_tick, reset_state)
+        return self.recorder.record(
             policy_context=dict(
-                behavior_sha=self.behavior_sha,
-                update_id=runner.agent.num_updates,
-                rollout_id=runner.agent.num_updates,
-                log_prob_raw=lp,
-                value=value,
-                next_value=nv,
+                behavior_sha=self.behavior_sha, update_step=self.agent.num_updates, random_action=bool(random_action)
             ),
+            **transition,
         )
 
-    def commit(self):
-        self.behavior_sha = policy_weights_sha256(self.runner.agent)
-        state = dict(
-            schema='KC-ONLINE-RESUME-v2', behavior_sha=self.behavior_sha, recorder=self.recorder.state()
-        )
-        folder = self.writer.commit(state, self.recorder.completed, self.runner.save_checkpoint)
+    def commit(self, state, save_checkpoint):
+        """`state` is the trainer's resume state; `save_checkpoint(path)` writes the learner bundle."""
+        checkpoint = dict(schema='KC-ONLINE-RESUME-v3', recorder=self.recorder.state(), trainer=state)
+        folder = self.writer.commit(checkpoint, self.recorder.completed, save_checkpoint)
         self.recorder.completed = []
+        self.behavior_sha = policy_weights_sha256(self.agent)
         return folder

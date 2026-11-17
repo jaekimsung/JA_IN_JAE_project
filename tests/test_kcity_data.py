@@ -13,15 +13,18 @@ import numpy as np
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from kcity.policy.rule_expert import KCityRuleExpert
 from kcity.env.env import SumoKCityEnv
-from kcity.policy.policy import KCityPolicy
 from kcity.data.collector import PolicyCollector,dataset_config,resolve_plan
 from kcity.data.dataset import (ShardWriter,validate_row,validate_pair,make_transition,validate_dataset,
     create_index,index_row,atomic_json,digest,file_sha256)
 from kcity.evaluation.metrics import EpisodeMetrics
+from kcity.data.dataset import observation_mask
+from kcity.env.observation import (CORRIDOR, COOLDOWN, EXISTS, INSIDE, LANE_ENDS, LANE_LEFT, OBS_DIM, SPEED,
+                                   TLS_DIST, TLS_RED)
 
 
 def observation(speed=6):
-    o=np.zeros(73,np.float32);o[0]=speed/8.33;o[41:46]=1;o[21:26]=1;o[69]=1;o[71]=1;o[72]=1;o[49]=.6
+    o=np.zeros(OBS_DIM,np.float32);o[SPEED]=speed/8.33;o[EXISTS:EXISTS+5]=1;o[LANE_LEFT]=.6;o[TLS_DIST]=1
+    for k in range(5):o[CORRIDOR+4*k:CORRIDOR+4*k+4]=[1,0,-1,0]
     return o
 
 
@@ -33,29 +36,31 @@ class ExpertTests(unittest.TestCase):
         with self.assertRaises(TypeError):e.predict(o,state={'future_signal':'G'})
 
     def test_red_and_front_vehicle_request_braking(self):
-        e=KCityRuleExpert();o=observation();o[54]=1;o[56]=1;o[55]=.03
+        e=KCityRuleExpert();o=observation();o[TLS_RED]=1;o[TLS_DIST]=.03
         self.assertLess(e.predict(o)[0],0)
-        o=observation();o[35]=1;o[9]=.03;o[10]=-5/8.33
+        o=observation();o[CORRIDOR+4*2]=.03;o[CORRIDOR+4*2+1]=-5/8.33
         self.assertLess(e.predict(o)[0],0)
 
     def test_required_lane_checks_rear_gap(self):
-        e=KCityRuleExpert();o=observation();o[69]=0;o[68]=1
+        e=KCityRuleExpert();o=observation()
+        self.assertEqual(e.predict(o)[1],0)  # the lane continues: no change
+        o[LANE_ENDS]=1;o[EXISTS+3:EXISTS+5]=0  # rightmost lane ends, only the left lane continues
         self.assertEqual(e.predict(o)[1],1)
-        o[34]=1;o[7]=-.02;o[8]=.1
+        o[CORRIDOR+4*1+2]=-.02;o[CORRIDOR+4*1+3]=.1
         self.assertEqual(e.predict(o)[1],0)
-        o[7]=-.9;self.assertEqual(e.predict(o)[1],1)
+        o[CORRIDOR+4*1+2]=-.9;self.assertEqual(e.predict(o)[1],1)
 
-    def test_masks_match_common_actor_and_actions_are_bounded(self):
+    def test_masks_match_environment_and_actions_are_bounded(self):
         e=KCityRuleExpert()
         for internal,cooldown,left,right in [(0,0,1,1),(1,0,1,1),(0,.5,1,1),(0,0,0,1),(0,0,1,0)]:
-            o=observation();o[51]=internal;o[52]=cooldown;o[42]=left;o[44]=right;o[69]=0;o[68]=o[70]=1
-            a,info=e.decision(o)
-            self.assertEqual(info['lane_mask'],KCityPolicy.mask_from_obs(o).tolist())
+            o=observation();o[INSIDE]=internal;o[COOLDOWN]=cooldown;o[EXISTS+1]=left;o[EXISTS+3]=right
+            o[LANE_ENDS]=1;a,info=e.decision(o)
+            self.assertEqual(info['lane_mask'],observation_mask(o))
             self.assertTrue(np.isfinite(a).all() and (np.abs(a)<=1).all())
             self.assertTrue(info['lane_mask'][int(1-a[1])])
 
     def test_invalid_observations_rejected(self):
-        for o in [np.zeros(31),np.ones(73)*2,np.full(73,np.nan)]:
+        for o in [np.zeros(31),np.ones(OBS_DIM)*2,np.full(OBS_DIM,np.nan)]:
             with self.assertRaises(ValueError):KCityRuleExpert().predict(o)
 
 
@@ -75,8 +80,8 @@ class DataTests(unittest.TestCase):
                 row=make_transition(config=cls.config,case=case,episode_index=0,t=t,attempt_uid='unit',
                     observation=obs,detected=detected,next_observation=nxt,next_detected=e.get_detected_vehicles(),
                     reward=r,terminated=term,truncated=trunc,info=info,start_tick=start,
-                    previous_interval=interval,departure_history=history,segment_reason='checkpoint' if term or trunc else None)
-                cls.rows.append(row);metrics.add(row['reward_env_raw'],term,trunc,row)
+                    previous_interval=interval,departure_history=history)
+                cls.rows.append(row);metrics.add(row['reward'],term,trunc,row)
                 history.append([info['sim_tick_tp1'],info['traffic_interval']['departed_hv']]);interval=info['traffic_interval'];obs=nxt
                 if term or trunc:break
             cls.summary=dict(episode_uid=cls.rows[-1]['episode_uid'],episode=0,case_uid=case['case_uid'],
@@ -106,7 +111,7 @@ class DataTests(unittest.TestCase):
         with self.assertRaises(ValueError):validate_row(r)
         r=deepcopy(self.rows[0]);r['state']['vehicles'][0]['x']=float('nan')
         with self.assertRaises(ValueError):validate_row(r)
-        r=deepcopy(self.rows[0]);r['policy_action_raw'][0]=99
+        r=deepcopy(self.rows[0]);r['action_raw'][0]=99
         with self.assertRaises(ValueError):validate_row(r)
 
     def test_reset_observation_contamination_rejected_across_rows(self):
@@ -218,7 +223,7 @@ class DataTests(unittest.TestCase):
         rows=deepcopy(self.rows)
         next(e for r in rows for e in r['events'] if e['type']=='tls_crossing')['classification_valid']=False
         tracker=EpisodeMetrics(self.config['plan'][0]['case'],{'state':rows[0]['state']})
-        for r in rows:tracker.add(r['reward_env_raw'],r['terminated'],r['truncated'],r)
+        for r in rows:tracker.add(r['reward'],r['terminated'],r['truncated'],r)
         summary=deepcopy(self.summary);summary['metrics']=tracker.finish()
         self.assertIsNone(summary['metrics']['compliant_completion'])
         with tempfile.TemporaryDirectory() as temp:

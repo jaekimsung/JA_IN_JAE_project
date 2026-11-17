@@ -1,7 +1,7 @@
 """Drive a policy in SUMO GUI and optionally record an mp4 (inference only, no learning).
 
     python runner/record_video.py --policy expert --scenario C --output runs/video/expert_C --once
-    python runner/record_video.py --policy runs/B3_seed11/.../T001000000-... --scenario C \
+    python runner/record_video.py --policy runs/B3_seed11/.../T000300000-... --scenario C \
         --output runs/video/B3_C --video --once
 
 The AV is red, HVs are yellow. --video saves one GUI screenshot per simulation tick and
