@@ -28,7 +28,7 @@ class EpisodeMetrics:
         self.end_reason = None
         self.commands = Counter()
         self.rejections = Counter()
-        self.clipped = self.unknown_overrides = self.departed = 0
+        self.clipped = self.departed = 0
         self.route_valid = self.initial['route_state']['route_valid']
         self.near_time = self.near_weighted = self.near_present = 0.0
         self.near_max = None
@@ -75,7 +75,7 @@ class EpisodeMetrics:
             self.quality_errors.append('tick_discontinuity_or_duplicate')
         delta = info['sim_tick_tp1'] - info['sim_tick_t']
         samples = info['substep_samples']
-        if (delta != info['executed_substeps'] or delta != len(samples) or
+        if (delta != len(samples) or
                 [s['sim_tick'] for s in samples] != list(range(info['sim_tick_t']+1, info['sim_tick_tp1']+1)) or
                 not math.isclose(sum(s['dt_s'] for s in samples), info['control_dt_s'], abs_tol=1e-8)):
             self.quality_errors.append('substep_alignment')
@@ -93,8 +93,7 @@ class EpisodeMetrics:
         action = info['action']
         self.commands[action['lane_change']] += 1
         self.rejections.update(action['known_rejection_reasons'])
-        self.clipped += any(a != b for a, b in zip(info['action_raw'], action['env_input']))
-        self.unknown_overrides += action['sumo_override_reason'] == 'unknown'
+        self.clipped += any(a != b for a, b in zip(info['action_raw'], (action['accel_raw'], action['lane_change_raw'])))
         self.departed += info['traffic_interval']['departed_hv']
         if terminated or truncated:
             self.end_reason = info['end_reason']
@@ -164,7 +163,6 @@ class EpisodeMetrics:
             commands_left=self.commands[1], commands_right=self.commands[-1],
             executed_LC_count=counts['lane_change'], known_rejection_counts=dict(self.rejections),
             accel_or_lane_clip_fraction=self.clipped/self.steps if self.steps else None,
-            unknown_override_count=self.unknown_overrides,
             data_quality_valid=not self.quality_errors, quality_errors=list(self.quality_errors),
             near_HV_50m_mean=self.near_weighted/self.near_time if self.near_time else None,
             near_HV_50m_max=self.near_max,

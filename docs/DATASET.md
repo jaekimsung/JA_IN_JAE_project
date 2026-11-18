@@ -1,6 +1,23 @@
 # 주행 데이터셋
 
-POMDP 전이(transition) 단위로 저장합니다. 전이 하나에는 정책이 본 63차원 관측, 행동, 보상, 종료 여부, 그리고 **행동 전후의 SUMO 전체 State**가 함께 들어 있습니다. 형식은 `KC-DATA-v1`(관측 `KC-OBS63-v1`)이며, 코드는 [data/](../kcity/data)에 있습니다.
+POMDP 전이(transition) 단위로 저장합니다. 전이 하나에는 정책이 본 63차원 관측, 행동, 보상, 종료 여부, 그리고 **행동 전후의 SUMO 전체 State**가 함께 들어 있습니다. 형식은 `KC-DATA-v2`(관측 `KC-OBS63-v1`)이며, 코드는 [data/](../kcity/data)에 있습니다.
+
+## 요약
+
+| 항목 | 내용 |
+|---|---|
+| 단위 | 0.5초 결정 1회 = 전이 1개 (o, a, r, o', 종료 여부, 행동 전후 SUMO 전체 State) |
+| 규모 | 10^7 이상: B0 전문가 4M 이상 + RL 학습 1.8M + 최종 정책 주행 4.2M |
+| 시나리오 | A 연속 신호 / B 필수 차선 변경 / C 비신호 양보 = 3 : 3 : 4, 성공·실패 Episode 모두 저장 |
+| 파일 | shard마다 `transitions.jsonl.gz`(원본), `numeric.npz`(학습용 숫자 배열), `events.jsonl.gz`(0.1초 이벤트), `SHARD.json`(SHA256·Episode 요약) |
+| 기본 열 | `episode`, `t`, `observation`(63), `action_raw`, `action.*`, `reward`, `terminated`/`truncated`, `state`/`next_state`, `detected_vehicles`, `event.*`, `next_observation` |
+| 추가 열 | 과제 판정(`lane_change_executed`, 거부 사유), 지표 계산(`reward_components`, `events`, `substep_samples`, `traffic_interval`, tick·시간), 누설 방지·출처(UID, `data_split`, `policy_id`, `train_seed`, 가중치 hash) |
+| 숫자 State | NPZ의 `ego_state`(8열), `event_flags`(6열), `end_code` |
+| run 단위 값 | 형식 ID, 정책 버전, 수집 단계는 `RUN.json`·`SHARD.json`에 한 번만 기록 |
+| 용도 | B1 BC(성공 Episode에서 train 200k / val 50k), B3 RLPD 사전 데이터(배치의 50%), 이벤트 기록에서 지표 재계산 |
+| 용량 | 전이당 약 2KB, 10M이면 약 20GB |
+| 품질 검사 | 행 단위 검사, Episode 안 `next_*` 연속성, JSONL·NPZ 일치, train/val 누설 금지 |
+| 공개 | `runner/export_hf.py`가 Hugging Face용 폴더를 만들고, 업로드는 직접 합니다 |
 
 ## 데이터 원천
 
@@ -21,14 +38,17 @@ POMDP 전이(transition) 단위로 저장합니다. 전이 하나에는 정책�
 | `episode`, `t` | int | Episode 번호, Episode 안의 결정 순서(0.5초 단위) |
 | `observation`, `next_observation` | float32[63] | 정책 관측 o_t, o_{t+1} ([관측 표](ENVIRONMENT.md#관측-63차원--1-1)) |
 | `action_raw` | float[2] | 정책 출력 [가속, 차선] (clip 전) |
-| `action` | dict | `accel_raw`, `lane_change_raw`, `lane_change`(−1/0/+1), `lane_change_applied`, `lane_change_executed`, 요청 가속도(m/s²), 실측 평균 가속도, 차선 mask, 거부 사유 |
-| `reward`, `reward_components` | float, dict | 보상과 항목별 값(진행·도착·시간·충돌·적색 진입·양보 위반·무효 요청·차선 변경) |
+| `action` | dict | `accel_raw`, `lane_change_raw`(clip 후 환경에 전달된 값), `lane_change`(−1/0/+1), `lane_change_applied`, `lane_change_executed`(실제 차로 변경), `known_rejection_reasons`(차선 명령 거부 사유) |
+| `reward`, `reward_components` | float, dict | 보상과 항목별 값(진행·도착·시간·충돌·적색 진입·양보 위반) |
 | `terminated`, `truncated`, `end_reason` | bool, str | 종료 여부와 종료 원인 |
-| `state`, `next_state` | dict | s_t, s_{t+1}: 모든 차량의 위치(m)·속도(m/s)·가속·각도·차선·도로·종류, AV의 경로 진행도·목적지, 신호 14곳 상태, HV 수·대기 수·최근 60초 투입량 |
+| `state`, `next_state` | dict | s_t, s_{t+1}: 모든 차량의 위치(m)·속도(m/s)·가속·각도·차선·도로·길이·종류, AV의 차로·경로 진행도, 신호 14곳 상태(`state` 문자열, `link_codes`), HV 수·대기 수·요청 교통량, 경로 길이·경로 유효 여부 |
+| `traffic_interval` | dict | 결정 구간 동안 출발·도착한 HV 수 |
+| `sim_tick_t`, `sim_tick_tp1`, `control_dt_s`, `episode_time_s` | int, float | 결정 시작·끝 tick(0.1초), 실제 결정 간격, Episode 경과 시간 |
+| `observation_valid`, `next_observation_valid` | bool | AV가 살아 있고 경로 위에 있는지(아니면 관측은 0으로 채운 흡수 상태) |
 | `detected_vehicles` | list | 관측 시점에 AV 주변으로 감지된 차량(같은 차로·인접 차로·교차 관계, 상대 위치·속도, 관측 슬롯에 들어갔는지) |
 | `event` | dict | `collided`, `arrived`, `lane_before`, `lane_after` |
 | `events`, `substep_samples` | list | 0.1초 단위 이벤트(차선 변경·충돌·신호 통과·양보 위반·도착)와 속도·선행차 간격·HV 수 |
-| 식별·출처 | str | `run_uid`, `case_uid`, `episode_uid`, `transition_uid`, `data_split`, `scenario_id`, `policy_id`(B0~B3), `train_seed`, 행동한 정책 가중치 hash |
+| 식별·출처 | str | `run_uid`, `case_uid`, `episode_uid`, `transition_uid`, `traffic_seed_group_uid`, `data_split`, `scenario_id`, `policy_id`(B0~B3), `train_seed`, 행동한 정책 가중치 hash(`policy_checkpoint_sha256`) |
 | `learning` (RL 학습 전이만) | dict | 행동 당시 learner update 수(`update_step`), 초기 무작위 탐색 행동 여부(`random_action`) |
 
 ## 저장 구조
@@ -47,7 +67,8 @@ POMDP 전이(transition) 단위로 저장합니다. 전이 하나에는 정책�
 ```
 
 - **숫자 State 열(NPZ):** `ego_state`(x, y, 속도, 가속도, 진행 방향, 차로 번호, 차로 수, 경로 진행 거리), `event_flags`(충돌, 도착, 신호 통과, 양보 위반, 차선 변경, 경로 이탈), `end_code`(0 진행 중, 1 도착, 2 충돌, 3 적색 진입, 4 양보 위반, 5 경로 이탈, 6 기한 초과, 7 텔레포트, 8 차량 제거). 신호 상태는 JSONL `state.signals[*].link_codes`에 연결별 숫자(적 0, 황 0.5, 녹 1, 소등 −1)로도 들어 있습니다.
-- **NPZ 배열:** `observation`, `next_observation`, `action_raw`, `action_env_input`, `action_mask`, `lane_change`, `reward`, `terminated`, `truncated`, `episode`, `t`, `detected_xy`, `detected_offsets`, UID·split 등이 들어 있어 NumPy/PyTorch에서 바로 쓸 수 있습니다.
+- **NPZ 배열:** `observation`, `next_observation`, `action_raw`, `lane_change`, `reward`, `terminated`, `truncated`, `episode`, `t`, `detected_xy`, `detected_offsets`, `ego_state`, `event_flags`, `end_code`, UID·split이 들어 있어 NumPy/PyTorch에서 바로 쓸 수 있습니다. 환경이 실행한 행동은 `clip(action_raw, −1, 1)`입니다.
+- **run 단위 값:** 데이터 형식, 관측 형식, 정책 버전, 수집 단계(`source_stage`)처럼 run 안에서 변하지 않는 값은 행마다 반복하지 않고 `RUN.json`·`SHARD.json`에 한 번만 둡니다.
 - **next 참조 압축:** JSONL은 `next_state`·`next_observation`이 바로 다음 행과 같으면 그 행의 UID(`next_reference`)만 저장합니다. 읽을 때 원래 값으로 복원되므로 정보 손실은 없습니다.
 - **용량:** 전이당 약 2.0~2.3KB이며, 10M이면 약 21~23GB입니다.
 

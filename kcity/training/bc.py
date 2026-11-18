@@ -48,9 +48,9 @@ def build_views(pool,output,spec,*,workers=1,revalidate=False):
                 eligible = np.flatnonzero((a['data_split']==split)&np.isin(a['episode_uid'],uids))
                 local = chosen[(chosen>=cursor)&(chosen<cursor+len(eligible))]-cursor
                 indices = eligible[local]
-                for key,source in [('observation','observation'),('action_target','action_env_input'),
-                                   ('transition_uid','transition_uid')]:
-                    chunks[key].append(a[source][indices].copy())
+                chunks['observation'].append(a['observation'][indices].copy())
+                chunks['action_target'].append(np.clip(a['action_raw'][indices],-1,1))  # the executed action
+                chunks['transition_uid'].append(a['transition_uid'][indices].copy())
                 cursor += len(eligible)
         require(cursor==total,'Eligible count differs from completed Episode records')
         arrays[split] = {k:np.concatenate(v) for k,v in chunks.items()}

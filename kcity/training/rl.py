@@ -136,10 +136,10 @@ def run_rl(root, method, seed, spec, device, prior_pool=None, resume=False):
             action = agent.random_action() if random_action else agent.act(obs)
             detected = env.get_detected_vehicles()
             fresh = not recorder.recorder.active
-            start_tick, reset_state = env.episode_start_tick, (env._state if fresh else None)
+            reset_state = env._state if fresh else None
             nxt, reward, term, trunc, info = env.step(action)
             require(episode < len(plan), 'Training case plan exhausted')
-            recorder.add(episode=episode, start_tick=start_tick, reset_state=reset_state, random_action=random_action,
+            recorder.add(episode=episode, reset_state=reset_state, random_action=random_action,
                          observation=obs, detected=detected, next_observation=nxt,
                          next_detected=env.get_detected_vehicles(), reward=reward, terminated=term, truncated=trunc, info=info)
             replay.add(obs, action, reward, nxt, term)

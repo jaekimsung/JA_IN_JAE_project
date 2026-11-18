@@ -216,7 +216,7 @@ class PolicyCollector:
         )
         require(reset['case'] == case, 'Runtime case differs from declared source/seed manifest')
         self.detected = self.env.get_detected_vehicles()
-        self.recorder.start(self.index, reset['state']['sim_tick'], reset['state'])
+        self.recorder.start(self.index, reset['state'])
 
     def checkpoint(self):
         return dict(

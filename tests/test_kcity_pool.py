@@ -40,8 +40,7 @@ def fake_part(root, k, *, rows=6, eligible=True, stale=False):
     write(shard / 'SHARD.json', {})
     obs = np.zeros((rows, 63), np.float32)
     obs[:, 0] = np.arange(rows) / 10 + k
-    np.savez(shard / 'numeric.npz', observation=obs, action_env_input=np.zeros((rows, 2), np.float32),
-             action_mask=np.tile([False, True, False], (rows, 1)),
+    np.savez(shard / 'numeric.npz', observation=obs, action_raw=np.zeros((rows, 2), np.float32),
              transition_uid=np.asarray([f't{k}-{i}' for i in range(rows)], dtype='U64'),
              data_split=np.asarray(splits, dtype='U32'),
              episode_uid=np.asarray([f'ep{k}-{s}' for s in splits], dtype='U64'))
