@@ -21,8 +21,8 @@ K-CITY 도로·신호 구현 → 일반 차량 교통 → AV 환경(관측·행�
 | 구성 | 내용 | 문서 |
 |---|---|---|
 | 도로·교통 | OpenDRIVE 기반 K-CITY 도로망(Edge 176, 차선 198), 수요 감응 신호 14곳, 정지 규칙 2곳, HV 4종(Krauss·IDM·EIDM·ACC) 600대/h | [ENVIRONMENT](docs/ENVIRONMENT.md), [맵](maps/kcity/README.md) |
-| 주행 과제 | A 신호 정지·재출발, B 필수 차선 변경, C 복합(차선 변경 + 연속 신호 4곳), 제한 300초 | [ENVIRONMENT](docs/ENVIRONMENT.md#주행-과제) |
-| AV 의사결정 | 0.5초마다 73차원 관측 → [가속, 차선 변경], 진행·도착·충돌·적색 진입 보상 | [ENVIRONMENT](docs/ENVIRONMENT.md#관측-73차원--1-1) |
+| 주행 과제 | A 연속 감응식 신호 통과, B 혼잡 속 필수 차선 변경, C 비신호 교차로 양보, 제한 300초 | [ENVIRONMENT](docs/ENVIRONMENT.md#세-가지-주행-과제) |
+| AV 의사결정 | 0.5초마다 63차원 관측 → [가속, 차선 명령], 진행·도착 보상과 시간·충돌·적색 진입·양보 위반 벌점 | [ENVIRONMENT](docs/ENVIRONMENT.md#관측-63차원--1-1) |
 | 학습 | tanh-Gaussian actor(256×256) + LayerNorm critic 10개, RLPD(B3)·온라인 SAC(B2) 3 seed × 300k 전이, BC(B1) 20k update | [ALGORITHMS](docs/ALGORITHMS.md) |
 | 데이터 | POMDP 전이 + SUMO 전체 State, JSONL·NPZ shard, 병렬 수집, 목표 10^7 전이 이상 | [DATASET](docs/DATASET.md) |
 | 평가 | dev/final 고정 사례 패널, 수요 1.0·1.5·2.0배, 충돌률·완주율·규칙 준수 완주·교통 노출 | [EXPERIMENT](docs/EXPERIMENT.md) |
@@ -32,7 +32,7 @@ K-CITY 도로·신호 구현 → 일반 차량 교통 → AV 환경(관측·행�
 ```text
 .
 ├── kcity/            # 코드
-│   ├── env/          #   실행환경: Gym 환경·73D 관측·경로·시나리오·환경 계약·SUMO 헬퍼
+│   ├── env/          #   실행환경: Gym 환경·63차원 관측·경로·시나리오·환경 계약·SUMO 헬퍼
 │   ├── policy/       #   정책·알고리즘: actor·critic ensemble·RLPD·BC 학습기·규칙 전문가 B0·checkpoint
 │   ├── training/     #   학습 코드: BC run·RL run·dev 평가 곡선·실험 설정·실행 폴더/STOP 관리
 │   ├── data/         #   데이터: 전문가·정책 수집, 사례 계획, 병렬 pool, shard 저장/검증, RL 전이 기록, 사전 데이터·replay buffer
