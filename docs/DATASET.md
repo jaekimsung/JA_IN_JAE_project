@@ -2,6 +2,23 @@
 
 POMDP 전이(transition) 단위로 저장합니다. 전이 하나에는 정책이 본 63차원 관측, 행동, 보상, 종료 여부, 그리고 **행동 전후의 SUMO 전체 State**가 함께 들어 있습니다. 형식은 `KC-DATA-v2`(관측 `KC-OBS63-v1`)이며, 코드는 [data/](../kcity/data)에 있습니다.
 
+## 요약
+
+| 항목 | 내용 |
+|---|---|
+| 단위 | 0.5초 결정 1회 = 전이 1개 (o, a, r, o', 종료 여부, 행동 전후 SUMO 전체 State) |
+| 규모 | 10^7 이상: B0 전문가 4M 이상 + RL 학습 1.8M + 최종 정책 주행 4.2M |
+| 시나리오 | A 연속 신호 / B 필수 차선 변경 / C 비신호 양보 = 3 : 3 : 4, 성공·실패 Episode 모두 저장 |
+| 파일 | shard마다 `transitions.jsonl.gz`(원본), `numeric.npz`(학습용 숫자 배열), `events.jsonl.gz`(0.1초 이벤트), `SHARD.json`(SHA256·Episode 요약) |
+| 기본 열 | `episode`, `t`, `observation`(63), `action_raw`, `action.*`, `reward`, `terminated`/`truncated`, `state`/`next_state`, `detected_vehicles`, `event.*`, `next_observation` |
+| 추가 열 | 과제 판정(`lane_change_executed`, 거부 사유), 지표 계산(`reward_components`, `events`, `substep_samples`, `traffic_interval`, tick·시간), 누설 방지·출처(UID, `data_split`, `policy_id`, `train_seed`, 가중치 hash) |
+| 숫자 State | NPZ의 `ego_state`(8열), `event_flags`(6열), `end_code` |
+| run 단위 값 | 형식 ID, 정책 버전, 수집 단계는 `RUN.json`·`SHARD.json`에 한 번만 기록 |
+| 용도 | B1 BC(성공 Episode에서 train 200k / val 50k), B3 RLPD 사전 데이터(배치의 50%), 이벤트 기록에서 지표 재계산 |
+| 용량 | 전이당 약 2KB, 10M이면 약 20GB |
+| 품질 검사 | 행 단위 검사, Episode 안 `next_*` 연속성, JSONL·NPZ 일치, train/val 누설 금지 |
+| 공개 | `runner/export_hf.py`가 Hugging Face용 폴더를 만들고, 업로드는 직접 합니다 |
+
 ## 데이터 원천
 
 | 원천 | 규모 | 생성 |
