@@ -1,4 +1,4 @@
-"""Transition schema (KC-DATA-v1), validation, atomic shard writer and dataset validation.
+"""Transition schema (KC-DATA-v2), validation, atomic shard writer and dataset validation.
 
 JSONL is authoritative for full State. NPZ is the same transitions, not a
 second dataset. Only atomically committed shard directories count as data.
@@ -85,7 +85,6 @@ STATE_FIELDS = {
     'sim_tick',
     'sim_time_s',
     'ego_alive',
-    'snapshot_valid',
     'ego_x',
     'ego_y',
     'ego_z',
@@ -98,12 +97,10 @@ STATE_FIELDS = {
     'ego_lane_pos',
     'ego_route_index',
     'ego_route_progress_m',
-    'ego_distance_m',
     'vehicles',
     'signals',
     'traffic',
     'route_state',
-    'quality',
 }
 
 
@@ -212,33 +209,12 @@ def observation_mask(o):
     return lane_mask(np.asarray(o, dtype=np.float32))
 
 
-def enrich_state(state, interval, history, start_tick, dt=0.1):
-    state = deepcopy(state)
-    end = state['sim_tick']
-    begin = max(start_tick, end - round(60 / dt))
-    counts = sum(n for tick, n in history if begin < tick <= end)
-    state['traffic'].update(
-        departed_hv_interval=interval['departed_hv'],
-        arrived_hv_interval=interval['arrived_hv'],
-        realized_departures_window=dict(
-            start_tick=begin,
-            end_tick=end,
-            observed_s=(end - begin) * dt,
-            departures=counts,
-            realized_vph=counts * 3600 / ((end - begin) * dt) if end > begin else None,
-            scope='post-reset interval endpoints,up to60s',
-        ),
-    )
-    return state
-
-
 def make_transition(
     *,
     config,
     case,
     episode_index,
     t,
-    attempt_uid,
     observation,
     detected,
     next_observation,
@@ -247,45 +223,33 @@ def make_transition(
     terminated,
     truncated,
     info,
-    start_tick,
-    previous_interval,
-    departure_history,
     policy_context=None,
 ):
+    """One transition row. Values constant over a run (schema, policy version, source stage) live in RUN.json."""
     eid = episode_uid(config['run_uid'], episode_index, case['case_uid'])
-    old_history = list(departure_history)
-    new_history = old_history + [[info['sim_tick_tp1'], info['traffic_interval']['departed_hv']]]
-    action = deepcopy(info['action'])
     split = config['plan'][episode_index]['data_split']
     row = dict(
-        schema_id=SCHEMA_ID,
-        observation_schema_id=OBSERVATION_ID,
         run_uid=config['run_uid'],
         case_uid=case['case_uid'],
         episode_uid=eid,
-        attempt_uid=attempt_uid,
         transition_uid=transition_uid(eid, t),
         episode=episode_index,
         t=t,
         traffic_seed_group_uid=traffic_group(case),
-        source_stage=config['source_stage'],
         data_split=split,
         policy_id='B0',
-        policy_version=config['teacher']['id'],
         policy_checkpoint_sha256=config['teacher']['fingerprint'],
-        policy_checkpoint_kind='rule_source_and_config',
         train_seed=None,
         scenario_id=case['scenario_id'],
         observation=np.asarray(observation, dtype=np.float32).tolist(),
         action_raw=info['action_raw'],
-        action=action,
-        action_mask=action['lane_mask'],
+        action=deepcopy(info['action']),
         reward=float(reward),
         reward_components=info['reward_components'],
         terminated=bool(terminated),
         truncated=bool(truncated),
-        state=enrich_state(info['state'], previous_interval, old_history, start_tick),
-        next_state=enrich_state(info['next_state'], info['traffic_interval'], new_history, start_tick),
+        state=deepcopy(info['state']),
+        next_state=deepcopy(info['next_state']),
         detected_vehicles=deepcopy(detected),
         next_detected_vehicles=deepcopy(next_detected),
         next_observation=np.asarray(next_observation, dtype=np.float32).tolist(),
@@ -295,10 +259,8 @@ def make_transition(
         traffic_interval=info['traffic_interval'],
         sim_tick_t=info['sim_tick_t'],
         sim_tick_tp1=info['sim_tick_tp1'],
-        episode_start_tick=start_tick,
         episode_time_s=info['episode_time_s'],
         control_dt_s=info['control_dt_s'],
-        executed_substeps=info['executed_substeps'],
         observation_valid=info['observation_valid'],
         next_observation_valid=info['next_observation_valid'],
         end_reason=info['end_reason'],
@@ -309,9 +271,7 @@ def make_transition(
             raise ValueError('Online records require acting policy provenance')
         row.update(
             policy_id=config['online_policy']['method'],
-            policy_version=config['online_policy']['version'],
             train_seed=config['online_policy']['seed'],
-            policy_checkpoint_kind='acting_state_dict_sha256',
             policy_checkpoint_sha256=policy_context['behavior_sha'],
         )
         row['learning'] = dict(
@@ -321,9 +281,7 @@ def make_transition(
         fixed = config['fixed_policy']
         row.update(
             policy_id=fixed['method'],
-            policy_version=fixed['version'],
             train_seed=fixed['seed'],
-            policy_checkpoint_kind='acting_state_dict_sha256',
             policy_checkpoint_sha256=fixed['policy_sha256'],
         )
     return row
@@ -338,7 +296,6 @@ def validate_row(row, config=None):
 
     require(BASE_FIELDS <= row.keys(), 'Missing required transition fields')
     text = json_text(row)  # Reject nonfinite values anywhere, including full State.
-    require(row['schema_id'] == SCHEMA_ID and row['observation_schema_id'] == OBSERVATION_ID, 'Wrong schema')
     for key in ['episode', 't']:
         require(type(row[key]) is int and row[key] >= 0, 'Invalid episode/t')
     require(row['transition_uid'] == transition_uid(row['episode_uid'], row['t']), 'Wrong transition UID')
@@ -360,28 +317,15 @@ def validate_row(row, config=None):
                     'Front/rear distance sign mismatch',
                 )
     raw = np.asarray(row['action_raw'], dtype=np.float32)
-    bounded = np.asarray(row['action']['env_input'], dtype=np.float32)
+    a = row['action']
+    bounded = np.asarray([a['accel_raw'], a['lane_change_raw']], dtype=np.float32)
     require(raw.shape == (2,), 'Invalid raw action')
     require(np.array_equal(np.clip(raw, -1, 1), bounded), 'Incorrect raw->clip transform')
-    control = (
-        config['contract']['protocol']['control']
-        if config is not None
-        else dict(max_accel_mps2=2.0, max_decel_mps2=4.5)
-    )
-    requested = float(bounded[0]) * (
-        control['max_accel_mps2'] if bounded[0] >= 0 else control['max_decel_mps2']
-    )
-    require(
-        math.isclose(row['action']['accel_request_mps2'], requested, abs_tol=1e-9),
-        'Acceleration adapter mismatch',
-    )
-    a = row['action']
     lane = 1 if bounded[1] >= 0.5 else -1 if bounded[1] <= -0.5 else 0
     require(a['lane_change'] == lane, 'Incorrect lane command')
-    require(a['accel_raw'] == bounded[0], 'Clipped action mismatch')
-    mask = row['action_mask']
-    require(len(mask) == 3 and all(type(x) is bool for x in mask) and mask[1], 'Invalid mask')
-    require(mask == observation_mask(row['observation']) and mask == a['lane_mask'], 'Sampling mask mismatch')
+    if a['lane_change_applied']:
+        mask = observation_mask(row['observation'])
+        require(mask[{1: 0, -1: 2}[lane]], 'Lane change applied outside the observation lane mask')
     require(
         math.isclose(sum(row['reward_components'].values()), row['reward'], abs_tol=1e-10),
         'Reward component mismatch',
@@ -452,14 +396,9 @@ def validate_row(row, config=None):
         'Requested/executed LC mismatch',
     )
     ticks = row['sim_tick_tp1'] - row['sim_tick_t']
-    require(ticks == row['executed_substeps'] and 1 <= ticks <= 5, 'Invalid substep count')
+    require(1 <= ticks <= 5 and len(row['substep_samples']) == ticks, 'Invalid substep count')
     require(math.isclose(ticks * 0.1, row['control_dt_s'], abs_tol=1e-8), 'dt/tick mismatch')
-    require(
-        math.isclose(
-            (row['sim_tick_tp1'] - row['episode_start_tick']) * 0.1, row['episode_time_s'], abs_tol=1e-7
-        ),
-        'Episode clock mismatch',
-    )
+    require(row['episode_time_s'] >= row['control_dt_s'] - 1e-7, 'Episode clock mismatch')
     done = row['terminated'] or row['truncated']
     require(done or ticks == 5, 'Nonterminal partial control interval')
     require((row['end_reason'] is not None) == done, 'End reason/done mismatch')
@@ -489,9 +428,7 @@ def validate_row(row, config=None):
         online = config.get('online_policy')
         if online:
             require(
-                row['policy_id'] == online['method']
-                and row['policy_version'] == online['version']
-                and row['train_seed'] == online['seed'],
+                row['policy_id'] == online['method'] and row['train_seed'] == online['seed'],
                 'Online policy/seed mismatch',
             )
             checksum = row['policy_checkpoint_sha256']
@@ -500,9 +437,6 @@ def validate_row(row, config=None):
                 and len(checksum) == 64
                 and all(c in '0123456789abcdef' for c in checksum),
                 'Invalid acting-policy hash',
-            )
-            require(
-                row['policy_checkpoint_kind'] == 'acting_state_dict_sha256', 'Missing acting-policy hash kind'
             )
             learning = row['learning']
             require(
@@ -514,28 +448,16 @@ def validate_row(row, config=None):
         elif config.get('fixed_policy'):
             fixed = config['fixed_policy']
             require(
-                row['policy_id'] == fixed['method']
-                and row['policy_version'] == fixed['version']
-                and row['train_seed'] == fixed['seed'],
+                row['policy_id'] == fixed['method'] and row['train_seed'] == fixed['seed'],
                 'Fixed policy/seed mismatch',
             )
-            require(
-                row['policy_checkpoint_kind'] == 'acting_state_dict_sha256'
-                and row['policy_checkpoint_sha256'] == fixed['policy_sha256'],
-                'Fixed policy weights hash mismatch',
-            )
+            require(row['policy_checkpoint_sha256'] == fixed['policy_sha256'], 'Fixed policy weights hash mismatch')
         else:
             require(
                 row['policy_checkpoint_sha256'] == config['teacher']['fingerprint'], 'Unknown teacher hash'
             )
-            require(
-                row['policy_id'] == 'B0' and row['policy_version'] == config['teacher']['id'],
-                'Unknown policy/version',
-            )
-        require(
-            row['source_stage'] == config['source_stage'] and row['scenario_id'] == case['scenario_id'],
-            'Source stage/scenario differs from manifest',
-        )
+            require(row['policy_id'] == 'B0', 'Unknown policy')
+        require(row['scenario_id'] == case['scenario_id'], 'Scenario differs from manifest')
     return text
 
 
@@ -584,21 +506,12 @@ def numeric_view(rows):
     n = len(rows)
     for key, width in [('observation', OBS_DIM), ('next_observation', OBS_DIM), ('action_raw', 2)]:
         result[key] = np.asarray([r[key] for r in rows], np.float32).reshape(n, width)
-    result['action_env_input'] = np.asarray([r['action']['env_input'] for r in rows], np.float32).reshape(
-        n, 2
-    )
-    result['action_mask'] = np.asarray([r['action_mask'] for r in rows], bool).reshape(n, 3)
     for key, dtype in [
         ('reward', np.float32),
         ('terminated', bool),
         ('truncated', bool),
         ('episode', np.int64),
         ('t', np.int64),
-        ('sim_tick_t', np.int64),
-        ('sim_tick_tp1', np.int64),
-        ('control_dt_s', np.float64),
-        ('observation_valid', bool),
-        ('next_observation_valid', bool),
     ]:
         result[key] = np.asarray([r[key] for r in rows], dtype)
     result['lane_change'] = np.asarray([r['action']['lane_change'] for r in rows], np.int8)
@@ -644,8 +557,8 @@ def read_shard(folder):
     if files != manifest['files']:
         raise ValueError('Shard file set/SHA mismatch')
     with gzip.open(folder / 'transitions.jsonl.gz', 'rt') as f:
-        if manifest.get('storage_codec') != NEXT_CODEC:
-            raise ValueError('Unsupported data storage codec')
+        if manifest.get('storage_codec') != NEXT_CODEC or manifest.get('schema_id') != SCHEMA_ID:
+            raise ValueError('Unsupported data storage codec or schema')
         yield from decode_rows(json.loads(line) for line in f)
 
 

@@ -20,9 +20,9 @@ class OnlineRecorder:
         if saved is not None:
             self.recorder.restore(saved['recorder'])
 
-    def add(self, *, episode, start_tick, reset_state, random_action, **transition):
+    def add(self, *, episode, reset_state, random_action, **transition):
         if not self.recorder.active:
-            self.recorder.start(episode, start_tick, reset_state)
+            self.recorder.start(episode, reset_state)
         return self.recorder.record(
             policy_context=dict(
                 behavior_sha=self.behavior_sha, update_step=self.agent.num_updates, random_action=bool(random_action)

@@ -90,11 +90,11 @@ class MetricTests(unittest.TestCase):
         if vehicles is not None:state['vehicles']=vehicles
         tracker=EpisodeMetrics(case,{'state':state})
         ns=deepcopy(state);ns['sim_tick']=2;ns['ego_route_progress_m']=2
-        info=dict(sim_tick_t=0,sim_tick_tp1=2,executed_substeps=2,control_dt_s=.2,
+        info=dict(sim_tick_t=0,sim_tick_tp1=2,control_dt_s=.2,
             episode_time_s=.2,substep_samples=[dict(sim_tick=i,dt_s=.1,speed_mps=v,
             running_hv=hv,pending_hv=0,leader_gap_m=None) for i,v,hv in [(1,0,2),(2,4,4)]],
             events=list(events),next_state=ns,action=dict(lane_change=1,
-            known_rejection_reasons=[],env_input=[1,1],sumo_override_reason='unknown'),
+            known_rejection_reasons=[],accel_raw=1,lane_change_raw=1),
             action_raw=[2,1],traffic_interval=dict(departed_hv=1),end_reason='deadline')
         tracker.add(1,True,False,info)
         return tracker.finish(failure_reason=failure,infrastructure_error=infra)

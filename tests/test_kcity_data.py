@@ -73,16 +73,13 @@ class DataTests(unittest.TestCase):
         case=cls.config['plan'][0]['case'];cls.rows=[]
         try:
             obs,reset=e.reset(options={k:case[k] for k in ['namespace','scenario_id','case_index','demand_multiplier']})
-            start=reset['state']['sim_tick'];interval=dict(departed_hv=0,arrived_hv=0);history=[]
             metrics=EpisodeMetrics(case,reset)
             for t in range(600):
                 detected=e.get_detected_vehicles();nxt,r,term,trunc,info=e.step(expert.predict(obs))
-                row=make_transition(config=cls.config,case=case,episode_index=0,t=t,attempt_uid='unit',
+                row=make_transition(config=cls.config,case=case,episode_index=0,t=t,
                     observation=obs,detected=detected,next_observation=nxt,next_detected=e.get_detected_vehicles(),
-                    reward=r,terminated=term,truncated=trunc,info=info,start_tick=start,
-                    previous_interval=interval,departure_history=history)
-                cls.rows.append(row);metrics.add(row['reward'],term,trunc,row)
-                history.append([info['sim_tick_tp1'],info['traffic_interval']['departed_hv']]);interval=info['traffic_interval'];obs=nxt
+                    reward=r,terminated=term,truncated=trunc,info=info)
+                cls.rows.append(row);metrics.add(row['reward'],term,trunc,row);obs=nxt
                 if term or trunc:break
             cls.summary=dict(episode_uid=cls.rows[-1]['episode_uid'],episode=0,case_uid=case['case_uid'],
                 data_split='expert_train',metrics=metrics.finish())

@@ -54,7 +54,7 @@ def shard_arrays(folder, split=None):
     """RL view of one shard. Actions are the clipped values the environment executed."""
     with np.load(Path(folder) / 'numeric.npz', allow_pickle=False) as a:
         keep = np.ones(len(a['reward']), bool) if split is None else a['data_split'] == split
-        return dict(observation=a['observation'][keep], action=a['action_env_input'][keep], reward=a['reward'][keep],
+        return dict(observation=a['observation'][keep], action=np.clip(a['action_raw'][keep], -1, 1), reward=a['reward'][keep],
                     next_observation=a['next_observation'][keep], mask=1.0 - a['terminated'][keep].astype(np.float32))
 
 

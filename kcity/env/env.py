@@ -257,44 +257,33 @@ class SumoKCityEnv(gym.Env):
             angle_deg=v.getAngle(vid),lane=v.getLaneIndex(vid),lane_id=v.getLaneID(vid),
             road_id=v.getRoadID(vid),lane_pos=v.getLanePosition(vid),
             route_index=v.getRouteIndex(vid),length_m=v.getLength(vid),type_id=v.getTypeID(vid),
-            is_ego=vid==self.ego_id,allowed_speed_mps=v.getAllowedSpeed(vid))
+            is_ego=vid==self.ego_id)
 
     def get_privileged_state(self):
         if self.conn is None:raise RuntimeError('Environment must be reset first')
         vehicles=[self._vehicle(vid) for vid in sorted(self.conn.vehicle.getIDList())]
         ego=next((v for v in vehicles if v['is_ego']),None)
         pending=list(self.conn.simulation.getPendingVehicles())
-        now=self.conn.simulation.getTime()  # one query per snapshot, not one per request
+        now=self.conn.simulation.getTime()
         state=dict(sim_tick=round(now/self.dt),sim_time_s=now,
-            ego_alive=ego is not None,snapshot_valid=True,vehicles=vehicles,
+            ego_alive=ego is not None,vehicles=vehicles,
             ego_x=None,ego_y=None,ego_z=None,ego_speed=None,ego_accel=None,ego_angle_deg=None,
             ego_lane=None,ego_lane_id=None,ego_road_id=None,ego_lane_pos=None,
-            ego_route_index=None,ego_route_progress_m=None,ego_distance_m=None,
-            ego_allowed_speed_mps=None,ego_lane_count=None,ego_lane_length_m=None,ego_waiting_s=None,ego_speedMode=None,ego_laneChangeMode=None,
-            signals=[dict(id=t,program_id=self.conn.trafficlight.getProgram(t),
-                link_codes=signal_codes(self.conn.trafficlight.getRedYellowGreenState(t)),
-                phase_index=self.conn.trafficlight.getPhase(t),state=self.conn.trafficlight.getRedYellowGreenState(t))
-                for t in sorted(self.conn.trafficlight.getIDList())],
+            ego_route_index=None,ego_route_progress_m=None,ego_lane_count=None,
+            signals=[dict(id=t,state=s,link_codes=signal_codes(s))
+                for t in sorted(self.conn.trafficlight.getIDList())
+                for s in [self.conn.trafficlight.getRedYellowGreenState(t)]],
             traffic=dict(running_hv=len(vehicles)-(ego is not None),pending_hv=sum(v!=self.ego_id for v in pending),
-                active_request_count=sum(r['requested_depart_s']<=now for r in self.requests),
-                requested_lambda_vph=self.case['requested_lambda_vph'] if self.background else 0),
-            quality=dict(query_errors=[],missing_vehicle_ids=[]))
+                requested_lambda_vph=self.case['requested_lambda_vph'] if self.background else 0))
         if ego:
             mapping={'x':'ego_x','y':'ego_y','z':'ego_z','speed':'ego_speed','accel_mps2':'ego_accel',
                 'angle_deg':'ego_angle_deg','lane':'ego_lane','lane_id':'ego_lane_id','road_id':'ego_road_id',
-                'lane_pos':'ego_lane_pos','route_index':'ego_route_index','allowed_speed_mps':'ego_allowed_speed_mps'}
+                'lane_pos':'ego_lane_pos','route_index':'ego_route_index'}
             state.update({out:ego[key] for key,out in mapping.items()})
             try:state['ego_route_progress_m']=self.geometry.locate(ego['road_id'],ego['lane_id'],ego['lane_pos'],ego['route_index'])
             except ContractError:state['ego_route_progress_m']=None
-            lane=self.net.getLane(ego['lane_id'])
-            state.update(ego_lane_count=lane.getEdge().getLaneNumber(),ego_lane_length_m=lane.getLength())
-            state.update(ego_distance_m=self.conn.vehicle.getDistance(self.ego_id),
-                ego_waiting_s=self.conn.vehicle.getWaitingTime(self.ego_id),
-                ego_speedMode=self.conn.vehicle.getSpeedMode(self.ego_id),
-                ego_laneChangeMode=self.conn.vehicle.getLaneChangeMode(self.ego_id))
-        state['route_state']=dict(route_id=self.case['scenario']['id'],
-            route_edges=list(self.geometry.edges),goal=deepcopy(self.case['scenario']['goal']),
-            route_length_m=self.geometry.total,
+            state['ego_lane_count']=self.net.getLane(ego['lane_id']).getEdge().getLaneNumber()
+        state['route_state']=dict(route_length_m=self.geometry.total,
             route_valid=ego is None or state['ego_route_progress_m'] is not None)
         return state
 
@@ -381,7 +370,7 @@ class SumoKCityEnv(gym.Env):
             self.cooldown_until=tick0+round(ctl['lane_cooldown_s']/self.dt);issued=True
             self._lane_request=dict(target=target,road_id=before['ego_road_id'],
                 until_tick=tick0+round(ctl['lane_command_duration_s']/self.dt))
-        events=[];reason=None;actual=[];samples=[];departed_hv=arrived_hv=0;executed=False
+        events=[];reason=None;samples=[];departed_hv=arrived_hv=0;executed=False
         current=before
         for _ in range(self.p['timing']['substeps']):
             old_ego=next((v for v in current['vehicles'] if v['is_ego']),None)
@@ -398,7 +387,6 @@ class SumoKCityEnv(gym.Env):
             if self.ego_id in self.conn.simulation.getStartingTeleportIDList():events.append(dict(type='teleport',sim_tick=tick))
             if old_ego and new_ego and old_ego['road_id']==new_ego['road_id'] and not old_ego['road_id'].startswith(':') and old_ego['lane']!=new_ego['lane']:
                 executed=True;events.append(dict(type='lane_change',sim_tick=tick,from_lane=old_ego['lane_id'],to_lane=new_ego['lane_id']))
-            if new_ego:actual.append(new_ego['accel_mps2'])
             leader=self.conn.vehicle.getLeader(self.ego_id,100) if new_ego else None
             next_tls=list(self.conn.vehicle.getNextTLS(self.ego_id)) if new_ego else []
             samples.append(dict(sim_tick=tick,dt_s=self.dt,
@@ -441,10 +429,9 @@ class SumoKCityEnv(gym.Env):
             state=before,next_state=deepcopy(current),observation_valid=before['ego_alive'] and before['route_state']['route_valid'],
             next_observation_valid=current['ego_alive'] and current['route_state']['route_valid'],
             action_raw=raw.tolist(),
-            action=dict(env_input=bounded.tolist(),accel_raw=float(bounded[0]),lane_change_raw=float(bounded[1]),
+            action=dict(accel_raw=float(bounded[0]),lane_change_raw=float(bounded[1]),
                 lane_change=lane_cmd,lane_change_applied=issued,lane_change_executed=executed,
-                accel_request_mps2=accel,accel_observed_mean_mps2=float(np.mean(actual)) if actual else None,
-                lane_mask=mask,target_lane_index=target,known_rejection_reasons=reasons,sumo_override_reason='unknown'),
+                known_rejection_reasons=reasons),
             action_mask=list(self._mask),events=events,substep_samples=samples,reward_components=components,
             end_reason=reason,executed_substeps=self._tick()-tick0,control_dt_s=(self._tick()-tick0)*self.dt,
             sim_tick_t=tick0,sim_tick_tp1=self._tick(),episode_time_s=self.elapsed_ticks*self.dt,
