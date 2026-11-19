@@ -56,7 +56,7 @@ POMDP 전이(transition) 단위로 저장합니다. 전이 하나에는 정책�
 ```text
 <pool>/POOL.json                       part 목록·합계·pool_id
 <pool>/part-XX/dataset/
-  RUN.json                             수집 설정(환경 계약, 사례 계획(압축: 사례 키+case_uid, 읽을 때 재생성·검증), 정책 정보, 맵 파일 SHA, git commit)
+  RUN.json                             수집 설정(환경 계약, 사례 계획 생성 규칙, 정책 정보, 맵 파일 SHA, git commit)
   RELEASE.json                         확정된 shard 목록, 고유 전이 수, data_id
   shards/shard-XXXXXX/
     transitions.jsonl.gz               전이 원본 (기준 데이터)
@@ -74,7 +74,7 @@ POMDP 전이(transition) 단위로 저장합니다. 전이 하나에는 정책�
 
 ## 수집 방식
 
-1. **사례 계획:** 시나리오를 A/A/A/B/B/B/C/C/C/C로 반복합니다. 시나리오별 순번 5개 중 1개(`j % 5 == 4`)를 `expert_val`, 나머지를 `expert_train`으로 미리 정합니다. 같은 Episode와 교통 seed 묶음은 한 split에만 들어갑니다.
+1. **사례 계획:** 시나리오를 A/A/A/B/B/B/C/C/C/C로 반복합니다. 시나리오별 순번 5개 중 1개(`j % 5 == 4`)를 `expert_val`, 나머지를 `expert_train`으로 미리 정합니다. 같은 Episode와 교통 seed 묶음은 한 split에만 들어갑니다. `KC-PLAN-GENERATED-v1`은 환경 계약 hash·실행 변형·사례 종류·워커 분할·주기 수를 저장하고 필요한 사례만 생성합니다. 목표 전이 수를 채울 만큼 사례를 확보하며, 기존 사례 키와 case_uid를 저장한 압축 계획도 계속 읽을 수 있습니다.
 2. **최종 정책 수집:** 학습된 정책(BC·RL bundle)으로 수집할 때는 학습·평가와 겹치지 않는 `archive` namespace 사례를 씁니다. 행동은 결정적이며, 행마다 정책 이름(B1~B3)·학습 seed·가중치 hash를 기록하고 검증합니다. 이 데이터는 BC view에 들어가지 않습니다.
 3. **병렬 수집:** 사례 계획을 10개 사례 주기 단위로 워커 N개에 번갈아 나눕니다. 각 워커는 자기 SUMO와 기록기로 `ceil(목표/N)` 전이를 채우고 진행 중인 Episode까지 마칩니다. 모든 part가 같은 시나리오 구성을 갖고, 사례마다 교통 seed와 split이 고정되어 있습니다.
 4. **기록:** 결정마다 전이를 검증해 journal에 쓰고, 512행마다(RL 학습은 5,000행마다) shard로 확정합니다. 확정은 임시 폴더 rename이라 중단돼도 반쯤 쓴 shard는 데이터로 세지 않습니다.

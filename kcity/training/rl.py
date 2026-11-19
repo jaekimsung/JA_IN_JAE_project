@@ -7,10 +7,11 @@ import json
 from pathlib import Path
 import time
 
-from kcity.data.collector import case_plan, dataset_config
+from kcity.data.collector import dataset_config
 from kcity.data.dataset import ShardWriter, atomic_json
 from kcity.data.online import OnlineRecorder
 from kcity.data.pool import pool_data_id
+from kcity.data.plans import GeneratedCasePlan
 from kcity.data.replay import load_prior, load_store
 from kcity.data.storage import checkpoint_from_shard
 from kcity.env.config import ROOT, digest
@@ -19,8 +20,9 @@ from kcity.evaluation.evaluate import evaluate_cases
 from kcity.evaluation.metrics import aggregate, policy_weights_sha256
 from kcity.policy.checkpoint import read_bundle, write_bundle
 from kcity.policy.rlpd import KCityRLPD
-from kcity.training.experiment import run_metadata, training_config
+from kcity.training.experiment import is_pilot, run_metadata, training_config
 from kcity.training.runs import Owner, now, read, require, stopped
+from kcity.training.logging import IntervalMean
 
 RESET_KEYS = ('namespace', 'scenario_id', 'case_index', 'demand_multiplier')
 
@@ -81,7 +83,8 @@ def run_rl(root, method, seed, spec, device, prior_pool=None, resume=False):
     else:
         require(prior_pool is None, 'B2 is online-only; do not pass prior data')
         hparams['offline_ratio'] = 0.0
-    cfg = training_config(spec, 'main_rl', seed, method, device=device,
+    pilot = is_pilot(spec)
+    cfg = training_config(spec, 'pilot_rl' if pilot else 'main_rl', seed, method, device=device,
                           prior_pool=str(Path(prior_pool).resolve()) if prior_pool else None, prior_data_id=prior_id)
     cap = spec['budgets']['rl_transitions_per_method_seed']
     interval = spec['metrics']['dev_interval_transitions']
@@ -93,13 +96,14 @@ def run_rl(root, method, seed, spec, device, prior_pool=None, resume=False):
         agent = KCityRLPD(hparams, seed=seed, device=device)
         bundle_config = dict(method=method, seed=seed, hidden_dims=hparams['hidden_dims'], hparams=hparams,
                              device_type=agent.device.type, contract_sha256=digest(env.contract))
-        prior = load_prior(prior_pool, spec['budgets']['prior_transitions']) if method == 'B3' else None
-        plan = case_plan(env.contract, 'train')
-        dcfg = dataset_config(env, root.name + '-online', plan, 'rl_train', method, seed,
+        prior = load_prior(prior_pool, spec['budgets']['prior_transitions'], pilot=pilot,
+                           minimum_pool_rows=spec['budgets']['expert_valid_transitions_min'],
+                           contract=env.contract) if method == 'B3' else None
+        plan = GeneratedCasePlan.for_budget(env.contract, 'train', cap + 1)
+        dcfg = dataset_config(env, root.name + '-online', plan, 'pilot_rl_train' if pilot else 'rl_train', method, seed,
                               experiment_sha256=cfg['experiment_sha256'], evaluation_interval=interval)
         dcfg['learner_config'] = cfg
         writer = ShardWriter(root / 'transitions', dcfg, resume=resume, shard_rows=spec['rl']['commit_interval'])
-        recorder = OnlineRecorder(agent, writer)
         replay = load_store(writer.folders, cap)  # the committed online transitions are the replay buffer
         require(len(replay) == writer.count, 'Replay buffer differs from committed transitions')
         steps, episode = writer.count, 0
@@ -113,19 +117,28 @@ def run_rl(root, method, seed, spec, device, prior_pool=None, resume=False):
         else:
             obs, _ = env.reset(options={k: plan[episode]['case'][k] for k in RESET_KEYS})
 
-        def commit(stats):
+        # The recorder's behavior hash must describe the restored actor on resume.
+        recorder = OnlineRecorder(agent, writer)
+        training_interval = IntervalMean()
+        interval_start = steps
+
+        def commit():
+            nonlocal interval_start
             folder = recorder.commit(dict(steps=steps, episode=episode),
                                      lambda path: write_bundle(path, 'rl', bundle_config, dict(agent=agent.training_state()), env))
             bundle = checkpoint_from_shard(folder)
             atomic_json(root / 'LATEST.json', dict(path=str(folder.relative_to(root)), transitions=steps))
-            atomic_json(root / 'STATUS.json', dict(phase='STOPPED' if stopped(root) else 'RL_TRAINING',
+            atomic_json(root / 'STATUS.json', dict(phase='STOPPED' if stopped(root) else ('RL_PILOT_TRAINING' if pilot else 'RL_TRAINING'),
                 updated_at=now(), method=method, seed=seed, transitions=steps, target=cap, updates=agent.num_updates,
                 episodes=episode, checkpoint=str(bundle), session_wall_s=time.monotonic() - clock, run=run_metadata()))
             with (root / 'curve.jsonl').open('a') as stream:
                 stream.write(json.dumps(dict(transitions=steps, updates=agent.num_updates, episodes=episode,
-                    metrics=stats, session_wall_s=time.monotonic() - clock, checkpoint=str(bundle))) + '\n')
+                    metrics=training_interval.mean(), metric_aggregation='interval_mean',
+                    training_update_count=training_interval.count, interval_start_transitions=interval_start,
+                    session_wall_s=time.monotonic() - clock, checkpoint=str(bundle))) + '\n')
+            training_interval.reset()
+            interval_start = steps
 
-        stats = None
         while True:
             if steps % interval == 0 and not writer.pending:
                 if not evaluate_dev(agent, root, steps, spec, lambda: stopped(root)):
@@ -150,9 +163,9 @@ def run_rl(root, method, seed, spec, device, prior_pool=None, resume=False):
             else:
                 obs = nxt
             if not random_action:
-                stats = agent.update(agent.sample_batch(replay, prior))
+                training_interval.add(agent.update(agent.sample_batch(replay, prior)))
             if writer.pending >= writer.shard_rows or steps % interval == 0 or steps == cap or stopped(root):
-                commit(stats)
+                commit()
         if steps == cap and not writer.pending:
             atomic_json(root / 'COMPLETE.json', dict(transitions=cap, updates=agent.num_updates, episodes=episode,
                 completed_at=now(), policy_selection='budget_end',

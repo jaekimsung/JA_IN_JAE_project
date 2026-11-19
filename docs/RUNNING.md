@@ -22,7 +22,7 @@ python -B runner/collect.py --output runs/expert --workers 8 # 최소 4M 전이 
 python -B runner/collect.py --output runs/expert --target 5000   # 작은 확인 실행
 ```
 
-학습된 정책으로 수집할 때(최종 정책 3M)는 bundle을 `--policy`로 넘깁니다. 방법 이름(B1·B2·B3)은 bundle에서 자동으로 판별하며, 기본 목표는 정책당 500k입니다.
+학습된 정책으로 수집할 때(최종 정책 4.2M)는 bundle을 `--policy`로 넘깁니다. 방법 이름(B1·B2·B3)은 bundle에서 자동으로 판별하며, 기본 목표는 정책당 700k입니다.
 
 ```bash
 python -B runner/collect.py --output runs/archive_B3_seed11 --workers 8 --policy <B3_seed11의 COMPLETE.json checkpoint>
@@ -34,6 +34,16 @@ python -B runner/collect.py --output runs/archive_B3_seed11 --workers 8 --policy
 python -B runner/collect.py --output runs/expert --part 3 --parts 8
 python -B runner/collect.py --output runs/expert --finalize
 ```
+
+사례 계획은 목표 전이당 최소 한 사례를 확보하는 결정적 생성 규칙으로 저장합니다.
+필요한 사례만 메모리에 생성하므로, 짧은 Episode가 많아도 고정 20,000개 계획이 먼저
+소진되는 문제가 없습니다. 워커별 10개 사례 주기 분할과 기존 사례의 seed·split은 유지됩니다.
+
+작은 예산으로 점검할 때는 본 설정을 복사한 별도 JSON에 `run_purpose: "pilot"`을 지정하고
+각 명령에 `--experiment <pilot.json>`을 전달합니다. 수집·BC view·학습에 동일한 설정을 사용합니다.
+Pilot 전문가 데이터는 학습 사용 가능 표시가 꺼진 `pilot_expert_pool`로 기록되며,
+본 BC·B3 학습에서 거부됩니다. Pilot BC view와 본 학습도 서로 섞을 수 없습니다.
+Pilot 데이터·모델은 본 데이터 수와 본 초기값에 이월하지 않습니다.
 
 ## 3. BC
 
@@ -52,6 +62,26 @@ done; wait
 ```
 
 각 run은 300,000 전이를 학습하고, 25,000마다 dev 평가를 `dev/T*/SUMMARY.json`, 학습 곡선을 `curve.jsonl`, 목표 도달 전이 수를 `SAMPLE_EFFICIENCY.json`에 남깁니다. B3는 `--prior`로 준 전문가 pool에서 100만 전이를 사전 데이터로 읽습니다. 환경 1 step마다 critic을 20회 update하므로 GPU 사용을 권장합니다.
+
+B3는 시작할 때 전문가 pool 전체의 파일·전이 일치와 part 중복을 다시 검증합니다.
+환경 계약·본/Pilot 구분·전체 pool 예산이 맞고, `expert_train` 전이가 설정된 사전 데이터
+수 이상일 때만 학습을 진행합니다.
+
+### 학습 손실 로그
+
+`curve.jsonl`의 BC `training`과 RL `metrics`는 직전 로그 이후 수행한 학습 update의
+구간 평균입니다(`metric_aggregation: "interval_mean"`). BC는 기본 1,000 update마다,
+RL은 기본 5,000 전이마다 기록하며, STOP이나 예산 종료 시 짧은 구간도 기록합니다.
+`training_update_count`는 평균에 포함된 learner update 수입니다.
+구간은 BC의 `interval_start_updates` 또는 RL의 `interval_start_transitions` 초과부터
+현재 `updates` 또는 `transitions` 이하까지이며, 재개 후에는 복원 시점부터 새 구간을 시작합니다.
+
+RL `critic_loss`와 `q`는 learner update 안의 모든 critic minibatch를 먼저 평균한 값입니다.
+따라서 critic loss의 실제 minibatch 수는 `training_update_count × utd_ratio`입니다.
+actor loss·entropy·temperature는 learner update별 값을 평균합니다.
+초기 무작위 탐색 중 실제 학습 update가 없는 구간은 `metrics: null`,
+`training_update_count: 0`으로 남깁니다. BC `validation`은 검증 데이터 전체의 평균이며,
+구간 평균 여부 표시가 없는 기존 로그는 마지막 update 값입니다.
 
 ## 5. 평가
 

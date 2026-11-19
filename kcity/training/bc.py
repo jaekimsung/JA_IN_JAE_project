@@ -9,12 +9,13 @@ import time
 import numpy as np
 import torch
 
-from kcity.training.experiment import experiment_sha256, run_metadata, training_config
+from kcity.training.experiment import experiment_sha256, is_pilot, run_metadata, training_config
 from kcity.data.dataset import atomic_json, shard_directories
 from kcity.data.pool import pool_data_id, pool_reports
 from kcity.data.storage import verify_bundle
 from kcity.env.config import digest, file_sha256
 from kcity.training.runs import Owner, now, read, require, stopped
+from kcity.training.logging import IntervalMean
 from kcity.policy.bc import KCityBC
 from kcity.policy.checkpoint import read_bundle
 
@@ -24,10 +25,13 @@ def build_views(pool,output,spec,*,workers=1,revalidate=False):
     output = Path(output)
     require(not output.exists(),'New immutable BC view directory required')
     parts,reports = pool_reports(pool,workers=workers,revalidate=revalidate)
+    pilot = is_pilot(spec)
     for part in parts:
         config = read(part/'RUN.json')
-        require(config['source_stage']=='expert_pool' and config['eligible_for_research_training'], 'Not a new main expert pool: '+str(part))
-        require(read(part/'RELEASE.json')['eligible_for_research_training'],'Pool release not eligible: '+str(part))
+        require(config['source_stage']==('pilot_expert_pool' if pilot else 'expert_pool')
+                and config['eligible_for_research_training'] is (not pilot), 'Not a new main expert pool or matching pilot pool: '+str(part))
+        require(read(part/'RELEASE.json')['eligible_for_research_training'] is (not pilot),
+                'Pool release not eligible for this run purpose: '+str(part))
     report = dict(unique_transitions=sum(r['unique_transitions'] for r in reports),
                   episodes=[e for r in reports for e in r['episodes']])
     require(report['unique_transitions']>=spec['budgets']['expert_valid_transitions_min'],'Main pool budget not met')
@@ -59,6 +63,7 @@ def build_views(pool,output,spec,*,workers=1,revalidate=False):
     for split,data in arrays.items():
         np.savez_compressed(output/(split+'.npz'),**data)
     body = dict(schema='KC-BC-VIEWS-v2',pool=str(Path(pool).resolve()),data_id=pool_data_id(pool),
+                run_purpose='pilot' if pilot else 'main',
                 parts=[str(part.resolve()) for part in parts],
                 experiment_sha256=experiment_sha256(spec),rng_seed=20261115,
                 files={p.name:file_sha256(p) for p in output.glob('*.npz')})
@@ -115,7 +120,9 @@ def retain_bc(root,best):
 def run_bc(root,views,seed,spec,device,resume=False):
     root = Path(root)
     manifest,data = read_views(views)
-    cfg = training_config(spec,'main_bc',seed,views=str(Path(views).resolve()),view_id=manifest['view_id'],device=device)
+    pilot = is_pilot(spec)
+    require(manifest.get('run_purpose', 'main') == ('pilot' if pilot else 'main'), 'BC view run purpose mismatch')
+    cfg = training_config(spec,'pilot_bc' if pilot else 'main_bc',seed,views=str(Path(views).resolve()),view_id=manifest['view_id'],device=device)
     owner = Owner(root,cfg,resume)
     model = KCityBC(spec['rlpd']['hidden_dims'],seed=seed,lr=spec['bc']['learning_rate'],device=device)
     best = dict(loss=None,path=None)
@@ -126,10 +133,13 @@ def run_bc(root,views,seed,spec,device,resume=False):
             require(state['view_id']==manifest['view_id'],'BC resume views changed')
             best = state['best']
             if best['path']:atomic_json(root/'BEST.json',best)
+        training_interval = IntervalMean()
+        interval_start = model.updates
         for update in range(model.updates,spec['bc']['updates_per_seed']):
             train = data['expert_train']
             idx = model.sampler.integers(0,len(train['observation']),spec['bc']['batch_size'])
             training_metrics=model.train_batch(train['observation'][idx],train['action_target'][idx])
+            training_interval.add(training_metrics)
             boundary = model.updates%spec['bc']['validate_every_updates']==0
             if boundary or stopped(root) or model.updates==spec['bc']['updates_per_seed']:
                 path = f'update-{model.updates:06d}'
@@ -139,13 +149,17 @@ def run_bc(root,views,seed,spec,device,resume=False):
                 state = dict(data_id=manifest['data_id'],view_id=manifest['view_id'],best=best,validation=val)
                 model.save_checkpoint(root/path,state)
                 with (root/'curve.jsonl').open('a') as stream:
-                    stream.write(json.dumps(dict(updates=model.updates,validation=val,training=training_metrics,
+                    stream.write(json.dumps(dict(updates=model.updates,validation=val,training=training_interval.mean(),
+                        metric_aggregation='interval_mean', training_update_count=training_interval.count,
+                        interval_start_updates=interval_start,
                         session_wall_s=time.monotonic()-clock))+'\n')
+                training_interval.reset()
+                interval_start = model.updates
                 atomic_json(root/'LATEST.json',dict(path=path,updates=model.updates))
                 if best['path']:
                     atomic_json(root/'BEST.json',best)
                 retain_bc(root,best)
-                atomic_json(root/'STATUS.json',dict(phase='STOPPED' if stopped(root) else 'BC_MAIN_TRAINING',
+                atomic_json(root/'STATUS.json',dict(phase='STOPPED' if stopped(root) else ('BC_PILOT_TRAINING' if pilot else 'BC_MAIN_TRAINING'),
                     updated_at=now(),updates=model.updates,target=spec['bc']['updates_per_seed'],best=best,
                     session_wall_s=time.monotonic()-clock,run=run_metadata()))
             if stopped(root):

@@ -28,12 +28,13 @@ def main():
     parser.add_argument('--device', choices=['cpu', 'cuda'], default='cuda' if torch.cuda.is_available() else 'cpu')
     parser.add_argument('--threads', type=int, default=1, help='torch CPU threads')
     parser.add_argument('--resume', action='store_true')
+    parser.add_argument('--experiment', type=Path, default=Path('configs/kcity/experiment.json'))
     args = parser.parse_args()
     if (args.method == 'B3') != (args.prior is not None):
         parser.error('--prior is required for B3 and not allowed for B2')
     torch.set_num_threads(args.threads)
     install_signals()
-    run_rl(args.output, args.method, args.seed, load_experiment(), args.device, args.prior, args.resume)
+    run_rl(args.output, args.method, args.seed, load_experiment(args.experiment.resolve()), args.device, args.prior, args.resume)
 
 
 if __name__ == '__main__':

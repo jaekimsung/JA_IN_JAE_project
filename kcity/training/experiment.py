@@ -22,6 +22,13 @@ def experiment_sha256(spec):
     return digest(spec)
 
 
+def is_pilot(spec):
+    purpose = spec.get('run_purpose', 'main')
+    if purpose not in ('main', 'pilot'):
+        raise ValueError('run_purpose must be main or pilot')
+    return purpose == 'pilot'
+
+
 def training_config(spec, kind, seed=None, method=None, **extra):
     """Resume identity of a run: same kind/seed/method/settings. Code version is recorded, not enforced."""
     return dict(kind=kind, seed=seed, method=method, experiment_sha256=experiment_sha256(spec), **extra)

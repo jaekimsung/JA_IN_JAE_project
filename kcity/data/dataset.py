@@ -117,6 +117,9 @@ PLAN_SCHEMA = 'KC-PLAN-COMPACT-v1'
 
 def compact_plan(plan):
     """RUN.json form of a plan: case keys + case_uid; cases are regenerated deterministically on load."""
+    from kcity.data.plans import GeneratedCasePlan
+    if isinstance(plan, GeneratedCasePlan):
+        return plan.descriptor()
     runtime = plan[0]['case']['runtime_variant'] if plan else None
     cases = []
     for entry in plan:
@@ -137,8 +140,11 @@ def compact_plan(plan):
 
 def expand_plan(contract, plan):
     """Full plan (list of {case, data_split}) from either form; regenerated cases must keep their case_uid."""
-    if isinstance(plan, list):
+    from kcity.data.plans import GeneratedCasePlan, GENERATED_PLAN_SCHEMA
+    if isinstance(plan, (list, GeneratedCasePlan)):
         return plan
+    if plan.get('schema') == GENERATED_PLAN_SCHEMA:
+        return GeneratedCasePlan.from_descriptor(contract, plan)
     if plan.get('schema') != PLAN_SCHEMA:
         raise ValueError('Unsupported plan schema')
     result = []

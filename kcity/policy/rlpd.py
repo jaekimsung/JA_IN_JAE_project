@@ -98,6 +98,8 @@ class KCityRLPD:
         if len(tensors['reward']) != h['batch_size'] * h['utd_ratio'] or not all(torch.isfinite(v).all() for v in tensors.values()):
             raise ValueError('RLPD update requires a finite batch of batch_size*utd_ratio rows')
         stats = {}
+        critic_loss_total = torch.zeros((), device=self.device)
+        q_total = torch.zeros((), device=self.device)
         for mini in zip(*(v.chunk(h['utd_ratio']) for v in tensors.values())):
             obs, action, reward, next_obs, mask = mini
             temp = self.log_temp.exp().detach()
@@ -110,6 +112,8 @@ class KCityRLPD:
                 target = reward + h['discount'] * mask * next_q
             qs = self.critic(obs, action)
             critic_loss = ((qs - target) ** 2).mean()
+            critic_loss_total += critic_loss.detach()
+            q_total += qs.detach().mean()
             self.critic_opt.zero_grad()
             critic_loss.backward()
             self.critic_opt.step()
@@ -130,7 +134,8 @@ class KCityRLPD:
         temp_loss.backward()
         self.temp_opt.step()
         self.num_updates += 1
-        stats.update(critic_loss=critic_loss.item(), q=qs.mean().item(), actor_loss=actor_loss.item(),
+        stats.update(critic_loss=(critic_loss_total / h['utd_ratio']).item(),
+                     q=(q_total / h['utd_ratio']).item(), actor_loss=actor_loss.item(),
                      entropy=entropy.item(), temperature=temp.item())
         return stats
 
