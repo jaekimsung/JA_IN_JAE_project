@@ -35,6 +35,35 @@ def make_panel(contract, namespace, counts):
 
 
 class SituationTests(unittest.TestCase):
+    def test_lane_drop_completion_uses_the_event_destination_lane(self):
+        from kcity.evaluation import situations
+
+        case = dict(scenario=dict(required_lane_change=dict(edge='-3#4', required_exit_lanes=[1])))
+        cases = [
+            ('same_edge', '-3#4_0', '-3#4_1', '-3#4', 1, True),
+            ('enters_junction', '-3#4_0', '-3#4_1', ':3#5_1', 0, True),
+            ('enters_next_edge', '-3#4_0', '-3#4_1', '-3#5', 0, True),
+            ('wrong_destination_edge', '-3#4_0', '-other_1', '-3#4', 1, False),
+            ('wrong_source_edge', '-other_0', '-3#4_1', '-3#4', 1, False),
+            ('wrong_destination_lane', '-3#4_1', '-3#4_0', '-3#4', 1, False),
+            ('no_change_event', None, None, '-3#4', 1, False),
+        ]
+        for label, source, destination, next_road, next_lane, expected in cases:
+            with self.subTest(label=label):
+                state = situations.new_state()
+                events = [] if source is None else [dict(
+                    type='lane_change', from_lane=source, to_lane=destination)]
+                info = dict(
+                    control_dt_s=.5, events=events, substep_samples=[],
+                    state=dict(ego_road_id='-3#4', ego_lane_pos=66.5, vehicles=[]),
+                    next_state=dict(ego_road_id=next_road, ego_lane=next_lane,
+                                    ego_speed=3., vehicles=[]),
+                    action=dict(lane_change=1, known_rejection_reasons=[]))
+                situations.update(state, case, info)
+                result = situations.finish(state, case, False)['lane_drop']
+                self.assertEqual(result['done'], expected)
+                self.assertEqual(result['position_m'], 66.5 if expected else None)
+
     def test_locations_match_network_and_routes(self):
         import xml.etree.ElementTree as ET
         from kcity.evaluation.situations import SITUATIONS, situation_of

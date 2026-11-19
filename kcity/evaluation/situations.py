@@ -114,10 +114,16 @@ def update(s, case, info):
             for v in before.get('vehicles') or []
             if not v['is_ego'] and v['road_id'] == road and v['lane'] in required['required_exit_lanes']
         )
+        target_lanes = {f"{required['edge']}_{lane}" for lane in required['required_exit_lanes']}
+        # The interval may end inside the junction or on the next edge, whose
+        # lane indices differ. Judge the actual change using its destination.
         changed = any(
-            e['type'] == 'lane_change' and e['from_lane'].rsplit('_', 1)[0] == road for e in events
+            e['type'] == 'lane_change'
+            and e['from_lane'].rsplit('_', 1)[0] == required['edge']
+            and e['to_lane'] in target_lanes
+            for e in events
         )
-        if changed and after.get('ego_lane') in required['required_exit_lanes']:
+        if changed:
             s['lane_drop_done'] = True
             s['lane_drop_position_m'] = before.get('ego_lane_pos')
         elif stopped:
