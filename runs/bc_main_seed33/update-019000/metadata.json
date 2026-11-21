@@ -1,0 +1,24 @@
+{
+  "schema": "KC-TRAINING-RESUME-v1",
+  "kind": "bc",
+  "config": {
+    "method": "B1",
+    "hidden_dims": [
+      256,
+      256
+    ],
+    "seed": 33,
+    "lr": 0.0003,
+    "device_type": "cuda"
+  },
+  "runtime": {
+    "git": {
+      "commit": "5f936ede1e141fcc64778f1396f66b94d8c9e809",
+      "dirty": true
+    },
+    "python": "3.10.12",
+    "numpy": "1.24.4",
+    "torch": "2.10.0+cu128",
+    "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.35"
+  }
+}

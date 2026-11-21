@@ -13,4 +13,5 @@ __pycache__/
 MUJOCO_LOG.TXT
 
 # Local run outputs (datasets, checkpoints, videos, HF exports)
-/runs/
+/runs/main_collection_20261119_193244
+/runs/main_collection_20261119_193244.zip

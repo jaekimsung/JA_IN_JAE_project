@@ -1,0 +1,241 @@
+[B3 seed=11] Initializing device=cuda output=runs/B3_seed11
+[B3 seed=11] Validating expert pool and loading 1,000,000 prior transitions: runs/main_collection_20261119_193244/expert
+ Retrying in 1 seconds
+[B3 seed=11] START transitions=0/300,000 learner_updates=0 warmup=5,000 prior_ratio=50% utd=20 checkpoint_every=5,000 dev_every=25,000 report_every=30s
+[DEV B3_seed11] START T=0 cases=0/100 (evaluation only; training paused)
+ Retrying in 1 seconds
+Warning: Vehicle 'c29cc43ae7409d71-hv-000008' performs emergency braking on lane ':89_6_0' with decel=8.00, wished=4.50, severity=1.00, time=65.50.
+Warning: Vehicle 'c29cc43ae7409d71-hv-000019' performs emergency braking on lane ':780_0_0' with decel=8.00, wished=4.50, severity=1.00, time=140.20.
+Warning: Vehicle 'c29cc43ae7409d71-hv-000031' performs emergency braking on lane '78_0' with decel=8.00, wished=4.50, severity=1.00, time=216.30.
+Warning: Vehicle 'c29cc43ae7409d71-hv-000031' performs emergency braking on lane '78_0' with decel=8.00, wished=4.50, severity=1.00, time=217.00.
+Warning: Vehicle 'c29cc43ae7409d71-hv-000044' performs emergency braking on lane '-41_1' with decel=8.00, wished=4.50, severity=1.00, time=341.00.
+Warning: Vehicle 'c29cc43ae7409d71-hv-000044' performs emergency braking on lane '-41_1' with decel=8.00, wished=4.50, severity=1.00, time=341.40.
+[DEV B3_seed11] T=0 cases=1/100 scenario=A end=deadline
+ Retrying in 1 seconds
+Warning: Vehicle '678f97d53fc4969c-hv-000027' performs emergency braking on lane '-74_0' with decel=8.00, wished=4.50, severity=1.00, time=299.20.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle 'f30442ccb1611a9d-lead_platoon-03' performs emergency braking on lane '-71_0' with decel=8.00, wished=4.50, severity=1.00, time=89.00.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle 'ddf8281fb389919a-hv-000022' performs emergency braking on lane '-44_0' with decel=8.00, wished=4.50, severity=1.00, time=276.10.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle 'edbb2ab80abbab7b-hv-000040' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=303.50.
+Warning: Vehicle 'edbb2ab80abbab7b-hv-000040' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=303.90.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle '1fec6626ddd9faa7-hv-000034' performs emergency braking on lane '70_0' with decel=8.00, wished=4.50, severity=1.00, time=295.00.
+[DEV B3_seed11] T=0 cases=10/100 scenario=A end=deadline
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle 'd03403e02574b84a-hv-000038' performs emergency braking on lane '-66_1' with decel=8.00, wished=4.50, severity=1.00, time=345.00.
+ Retrying in 1 seconds
+Warning: Vehicle 'c1d209b0a5ea82ca-lead_platoon-03' performs emergency braking on lane '-71_0' with decel=8.00, wished=4.50, severity=1.00, time=86.00.
+ Retrying in 1 seconds
+Warning: Vehicle 'f3120ed7a04e2c86-lead_platoon-02' performs emergency braking on lane '-42_0' with decel=8.00, wished=4.50, severity=1.00, time=115.00.
+ Retrying in 1 seconds
+Warning: Vehicle '56ecebb6b43c5e3e-hv-000028' performs emergency braking on lane '30_0' with decel=8.00, wished=4.50, severity=1.00, time=215.00.
+Warning: Vehicle '56ecebb6b43c5e3e-hv-000028' performs emergency braking on lane '-55_1' with decel=8.00, wished=4.50, severity=1.00, time=275.00.
+ Retrying in 1 seconds
+Warning: Vehicle 'f704419e15898611-hv-000012' performs emergency braking on lane '33_0' with decel=8.00, wished=4.50, severity=1.00, time=71.80.
+Warning: Vehicle 'f704419e15898611-hv-000026' performs emergency braking on lane '75_0' with decel=8.00, wished=4.50, severity=1.00, time=218.90.
+ Retrying in 1 seconds
+Warning: Vehicle 'a8b53b057f5e4323-hv-000009' performs emergency braking on lane '-70_0' with decel=8.00, wished=4.50, severity=1.00, time=129.30.
+Warning: Vehicle 'a8b53b057f5e4323-hv-000021' performs emergency braking on lane '43_0' with decel=8.00, wished=4.50, severity=1.00, time=162.20.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle 'f8c02c391f11b665-hv-000005' performs emergency braking on lane ':482_6_0' with decel=8.00, wished=4.50, severity=1.00, time=187.50.
+[DEV B3_seed11] T=0 cases=20/100 scenario=A end=deadline
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle '1b18cc90f59d85ce-hv-000026' performs emergency braking on lane ':89_6_0' with decel=8.00, wished=4.50, severity=1.00, time=124.00.
+Warning: Vehicle '1b18cc90f59d85ce-hv-000042' performs emergency braking on lane ':89_1_0' with decel=8.00, wished=4.50, severity=1.00, time=265.50.
+Warning: Vehicle '1b18cc90f59d85ce-hv-000042' performs emergency braking on lane ':655_1_0' with decel=8.00, wished=4.50, severity=1.00, time=270.20.
+ Retrying in 1 seconds
+Warning: Vehicle '7ae135b664a3b0f5-lead_platoon-02' performs emergency braking on lane '-13_0' with decel=8.00, wished=4.50, severity=1.00, time=85.00.
+ Retrying in 1 seconds
+Warning: Vehicle 'c8ece44f071fc375-hv-000008' performs emergency braking on lane ':253_2_0' with decel=8.00, wished=4.50, severity=1.00, time=133.90.
+Warning: Vehicle 'c8ece44f071fc375-hv-000041' performs emergency braking on lane '40_0' with decel=8.00, wished=4.50, severity=1.00, time=334.10.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle 'c77c6f85a78e8b14-hv-000033' performs emergency braking on lane '70_0' with decel=8.00, wished=4.50, severity=1.00, time=229.00.
+ Retrying in 1 seconds
+Warning: Vehicle '665de6de7c126e99-hv-000002' performs emergency braking on lane '43_0' with decel=8.00, wished=4.50, severity=1.00, time=101.00.
+ Retrying in 1 seconds
+Warning: Vehicle '58251467c13fc1b2-hv-000036' performs emergency braking on lane '78_0' with decel=8.00, wished=4.50, severity=1.00, time=241.10.
+Warning: Vehicle '58251467c13fc1b2-hv-000036' performs emergency braking on lane '78_0' with decel=8.00, wished=4.50, severity=1.00, time=241.70.
+ Retrying in 1 seconds
+Warning: Vehicle '815a86dc75331523-hv-000039' performs emergency braking on lane ':655_1_0' with decel=8.00, wished=4.50, severity=1.00, time=252.50.
+ Retrying in 1 seconds
+Warning: Vehicle 'b89a84ccf2198415-hv-000012' performs emergency braking on lane '75_0' with decel=8.00, wished=4.50, severity=1.00, time=142.10.
+Warning: Vehicle 'b89a84ccf2198415-hv-000012' performs emergency braking on lane ':581_6_0' with decel=8.00, wished=4.50, severity=1.00, time=146.50.
+Warning: Vehicle 'b89a84ccf2198415-hv-000012' performs emergency braking on lane '-83_0' with decel=8.00, wished=4.50, severity=1.00, time=168.30.
+Warning: Vehicle 'b89a84ccf2198415-hv-000012' performs emergency braking on lane '-41_1' with decel=8.00, wished=4.50, severity=1.00, time=210.00.
+[DEV B3_seed11] T=0 cases=30/100 scenario=A end=deadline
+ Retrying in 1 seconds
+Warning: Vehicle 'cb77bf9c87cad035-hv-000035' performs emergency braking on lane '-44_0' with decel=8.00, wished=4.50, severity=1.00, time=330.50.
+ Retrying in 1 seconds
+Warning: Vehicle '626b3b8591278e5a-hv-000000' performs emergency braking on lane '27_0' with decel=8.00, wished=4.50, severity=1.00, time=155.80.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle '04e6943aa901215a-hv-000009' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=150.50.
+Warning: Vehicle '04e6943aa901215a-hv-000009' performs emergency braking on lane ':780_5_0' with decel=8.00, wished=4.50, severity=1.00, time=304.10.
+Warning: Vehicle '04e6943aa901215a-hv-000009' performs emergency braking on lane '78_0' with decel=8.00, wished=4.50, severity=1.00, time=307.80.
+ Retrying in 1 seconds
+Warning: Vehicle 'e0d379606f28dce6-hv-000005' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=150.20.
+ Retrying in 1 seconds
+Warning: Vehicle 'e1f29407bc4d488b-hv-000003' performs emergency braking on lane '66_2' with decel=8.00, wished=4.50, severity=1.00, time=247.10.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle '9180a86da90ef4e8-hv-000037' performs emergency braking on lane '43_0' with decel=8.00, wished=4.50, severity=1.00, time=292.90.
+ Retrying in 1 seconds
+Warning: Vehicle '1491612050ea54d9-hv-000017' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=193.40.
+ Retrying in 1 seconds
+Warning: Vehicle 'b40c9be578766e05-hv-000011' performs emergency braking on lane '78_0' with decel=8.00, wished=4.50, severity=1.00, time=194.90.
+Warning: Vehicle 'b40c9be578766e05-hv-000012' performs emergency braking on lane '61_0' with decel=8.00, wished=4.50, severity=1.00, time=211.00.
+Warning: Vehicle 'b40c9be578766e05-hv-000038' performs emergency braking on lane '-13_0' with decel=8.00, wished=4.50, severity=1.00, time=254.00.
+[DEV B3_seed11] T=0 cases=40/100 scenario=B end=deadline
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle '4136fa200fc20cd3-hv-000037' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=344.30.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle '4a2d73fe58f2d2db-hv-000011' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=154.50.
+Warning: Vehicle '4a2d73fe58f2d2db-hv-000006' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=167.50.
+ Retrying in 1 seconds
+Warning: Vehicle '60604a972e58fdd9-hv-000003' performs emergency braking on lane '58_0' with decel=8.00, wished=4.50, severity=1.00, time=158.30.
+Warning: Vehicle '60604a972e58fdd9-hv-000041' performs emergency braking on lane '56_0' with decel=8.00, wished=4.50, severity=1.00, time=316.20.
+Warning: Vehicle '60604a972e58fdd9-hv-000041' performs emergency braking on lane '78_0' with decel=8.00, wished=4.50, severity=1.00, time=327.20.
+Warning: Vehicle '60604a972e58fdd9-hv-000033' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=354.30.
+ Retrying in 1 seconds
+Warning: Vehicle 'd236fe4af4206573-hv-000037' performs emergency braking on lane '75_0' with decel=8.00, wished=4.50, severity=1.00, time=263.00.
+ Retrying in 1 seconds
+[DEV B3_seed11] T=0 cases=50/100 scenario=B end=deadline
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle '6d9db5a96e7fbc81-hv-000005' performs emergency braking on lane '-74_0' with decel=8.00, wished=4.50, severity=1.00, time=180.30.
+Warning: Vehicle '6d9db5a96e7fbc81-hv-000009' performs emergency braking on lane '-27_0' with decel=8.00, wished=4.50, severity=1.00, time=191.90.
+Warning: Vehicle '6d9db5a96e7fbc81-hv-000017' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=223.10.
+Warning: Vehicle '6d9db5a96e7fbc81-hv-000043' performs emergency braking on lane '-70_0' with decel=8.00, wished=4.50, severity=1.00, time=271.80.
+Warning: Vehicle '6d9db5a96e7fbc81-hv-000038' performs emergency braking on lane ':655_1_0' with decel=8.00, wished=4.50, severity=1.00, time=278.00.
+Warning: Vehicle '6d9db5a96e7fbc81-hv-000038' performs emergency braking on lane ':780_0_0' with decel=8.00, wished=4.50, severity=1.00, time=283.40.
+Warning: Vehicle '6d9db5a96e7fbc81-hv-000044' performs emergency braking on lane ':655_2_0' with decel=8.00, wished=4.50, severity=1.00, time=298.30.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle '0dbbef5d0e39ac14-hv-000026' performs emergency braking on lane '-79_0' with decel=8.00, wished=4.50, severity=1.00, time=316.40.
+Warning: Vehicle '0dbbef5d0e39ac14-hv-000026' performs emergency braking on lane '-79_0' with decel=8.00, wished=4.50, severity=1.00, time=317.40.
+Warning: Vehicle '0dbbef5d0e39ac14-hv-000026' performs emergency braking on lane '-83_0' with decel=8.00, wished=4.50, severity=1.00, time=323.60.
+ Retrying in 1 seconds
+Warning: Vehicle '9298aa2a5dd73d00-hv-000005' performs emergency braking on lane '43_0' with decel=8.00, wished=4.50, severity=1.00, time=133.80.
+Warning: Vehicle '9298aa2a5dd73d00-hv-000013' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=227.90.
+ Retrying in 1 seconds
+Warning: Vehicle '159da4c70c5b2e15-hv-000009' performs emergency braking on lane '58_0' with decel=8.00, wished=4.50, severity=1.00, time=264.00.
+ Retrying in 1 seconds
+Warning: Vehicle '7a21856e78c872e6-hv-000018' performs emergency braking on lane ':655_1_0' with decel=8.00, wished=4.50, severity=1.00, time=212.90.
+Warning: Vehicle '7a21856e78c872e6-hv-000018' performs emergency braking on lane ':780_0_0' with decel=8.00, wished=4.50, severity=1.00, time=218.00.
+ Retrying in 1 seconds
+Warning: Vehicle 'edfcdd29041c7316-hv-000024' performs emergency braking on lane ':89_1_0' with decel=8.00, wished=4.50, severity=1.00, time=290.50.
+Warning: Vehicle 'edfcdd29041c7316-hv-000024' performs emergency braking on lane ':89_1_0' with decel=8.00, wished=4.50, severity=1.00, time=291.00.
+Warning: Vehicle 'edfcdd29041c7316-hv-000024' performs emergency braking on lane ':89_1_0' with decel=8.00, wished=4.50, severity=1.00, time=291.30.
+Warning: Vehicle 'edfcdd29041c7316-hv-000024' performs emergency braking on lane '82_0' with decel=8.00, wished=4.50, severity=1.00, time=291.90.
+Warning: Vehicle 'edfcdd29041c7316-hv-000024' performs emergency braking on lane '82_0' with decel=8.00, wished=4.50, severity=1.00, time=292.10.
+Warning: Vehicle 'edfcdd29041c7316-hv-000024' performs emergency braking on lane ':655_1_0' with decel=8.00, wished=4.50, severity=1.00, time=297.00.
+Warning: Vehicle 'edfcdd29041c7316-hv-000024' performs emergency braking on lane ':655_1_0' with decel=8.00, wished=4.50, severity=1.00, time=297.60.
+Warning: Vehicle 'edfcdd29041c7316-hv-000024' performs emergency braking on lane ':780_0_0' with decel=8.00, wished=4.50, severity=1.00, time=302.40.
+ Retrying in 1 seconds
+Warning: Vehicle 'b36d5fd4bc0e082d-hv-000017' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=120.10.
+Warning: Vehicle 'b36d5fd4bc0e082d-hv-000004' performs emergency braking on lane ':482_6_0' with decel=8.00, wished=4.50, severity=1.00, time=151.50.
+[DEV B3_seed11] T=0 cases=60/100 scenario=B end=deadline
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle '1af976067d7fdd17-hv-000010' performs emergency braking on lane '-44_0' with decel=8.00, wished=4.50, severity=1.00, time=228.20.
+ Retrying in 1 seconds
+Warning: Vehicle '4a8f69c6f1191b37-hv-000006' performs emergency braking on lane '-85_0' with decel=8.00, wished=4.50, severity=1.00, time=196.00.
+ Retrying in 1 seconds
+Warning: Vehicle '3811ddeae0f4b88b-hv-000000' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=165.60.
+ Retrying in 1 seconds
+Warning: Vehicle '25982b579c0a838e-hv-000008' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=191.00.
+Warning: Vehicle '25982b579c0a838e-hv-000027' performs emergency braking on lane '-42_0' with decel=8.00, wished=4.50, severity=1.00, time=234.80.
+ Retrying in 1 seconds
+Warning: Vehicle '1429cbc0c6ede182-hv-000009' performs emergency braking on lane '68_0' with decel=8.00, wished=4.50, severity=1.00, time=192.00.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle '6f6f8fb23b1a8f47-hv-000002' performs emergency braking on lane '-13_0' with decel=8.00, wished=4.50, severity=1.00, time=156.00.
+Warning: Vehicle '6f6f8fb23b1a8f47-hv-000015' performs emergency braking on lane '13_0' with decel=8.00, wished=4.50, severity=1.00, time=196.60.
+Warning: Vehicle '6f6f8fb23b1a8f47-hv-000001' performs emergency braking on lane '56_0' with decel=8.00, wished=4.50, severity=1.00, time=242.90.
+Warning: Vehicle '6f6f8fb23b1a8f47-hv-000025' performs emergency braking on lane ':353_6_0' with decel=8.00, wished=4.50, severity=1.00, time=269.40.
+[DEV B3_seed11] T=0 cases=70/100 scenario=C end=deadline
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle '7b3329aad67fcaf2-hv-000026' performs emergency braking on lane ':655_1_0' with decel=8.00, wished=4.50, severity=1.00, time=270.10.
+ Retrying in 1 seconds
+Warning: Vehicle '06cda65268d63fd8-hv-000017' performs emergency braking on lane ':353_6_0' with decel=8.00, wished=4.50, severity=1.00, time=334.80.
+ Retrying in 1 seconds
+Warning: Vehicle '54b8d86dc509e515-hv-000001' performs emergency braking on lane '3#0_0' with decel=8.00, wished=4.50, severity=1.00, time=161.70.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle 'b5ef731c658d91fd-hv-000023' performs emergency braking on lane '-70_0' with decel=8.00, wished=4.50, severity=1.00, time=298.00.
+Warning: Vehicle 'b5ef731c658d91fd-hv-000023' performs emergency braking on lane '83_0' with decel=8.00, wished=4.50, severity=1.00, time=303.80.
+Warning: Vehicle 'b5ef731c658d91fd-hv-000026' performs emergency braking on lane '78_0' with decel=8.00, wished=4.50, severity=1.00, time=309.40.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle '02ac26f24ef76b5a-hv-000010' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=246.60.
+[DEV B3_seed11] T=0 cases=80/100 scenario=C end=deadline
+ Retrying in 1 seconds
+Warning: Vehicle '8bf808c032b43dc6-hv-000024' performs emergency braking on lane '-28_0' with decel=8.00, wished=4.50, severity=1.00, time=293.60.
+ Retrying in 1 seconds
+Warning: Vehicle 'dc3c5ec4da9b8aa5-hv-000000' performs emergency braking on lane '0_0' with decel=8.00, wished=4.50, severity=1.00, time=48.80.
+Warning: Vehicle 'dc3c5ec4da9b8aa5-hv-000045' performs emergency braking on lane '43_0' with decel=8.00, wished=4.50, severity=1.00, time=259.50.
+Warning: Vehicle 'dc3c5ec4da9b8aa5-hv-000028' performs emergency braking on lane '11_0' with decel=8.00, wished=4.50, severity=1.00, time=352.50.
+ Retrying in 1 seconds
+Warning: Vehicle 'a29697acda15412e-hv-000002' performs emergency braking on lane '43_0' with decel=8.00, wished=4.50, severity=1.00, time=100.90.
+Warning: Vehicle 'a29697acda15412e-hv-000023' performs emergency braking on lane '-44_0' with decel=8.00, wished=4.50, severity=1.00, time=211.70.
+Warning: Vehicle 'a29697acda15412e-hv-000056' performs emergency braking on lane '66_2' with decel=8.00, wished=4.50, severity=1.00, time=353.00.
+ Retrying in 1 seconds
+Warning: Vehicle '1af8e74753ff2ef1-hv-000027' performs emergency braking on lane ':780_0_0' with decel=8.00, wished=4.50, severity=1.00, time=280.70.
+ Retrying in 1 seconds
+Warning: Vehicle '96927fa5b64c5f5b-hv-000003' performs emergency braking on lane '31_0' with decel=8.00, wished=4.50, severity=1.00, time=73.20.
+ Retrying in 1 seconds
+Warning: Vehicle 'fd1b75bd6ce828c1-hv-000009' performs emergency braking on lane '-83_0' with decel=8.00, wished=4.50, severity=1.00, time=195.40.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle 'c72efe3e99859ca8-hv-000011' performs emergency braking on lane ':253_2_0' with decel=8.00, wished=4.50, severity=1.00, time=249.70.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+[DEV B3_seed11] T=0 cases=90/100 scenario=C end=deadline
+ Retrying in 1 seconds
+Warning: Vehicle '57701d8822386ae3-hv-000037' performs emergency braking on lane '78_0' with decel=8.00, wished=4.50, severity=1.00, time=246.20.
+ Retrying in 1 seconds
+Warning: Vehicle '7e6dfed0e0eabcc8-hv-000008' performs emergency braking on lane '-83_0' with decel=8.00, wished=4.50, severity=1.00, time=167.20.
+Warning: Vehicle '7e6dfed0e0eabcc8-hv-000039' performs emergency braking on lane '-61_2' with decel=8.00, wished=4.50, severity=1.00, time=289.00.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle 'e5343bd0c7ea7d3f-hv-000012' performs emergency braking on lane '-55_1' with decel=8.00, wished=4.50, severity=1.00, time=197.00.
+Warning: Vehicle 'e5343bd0c7ea7d3f-hv-000021' performs emergency braking on lane '55_1' with decel=8.00, wished=4.50, severity=1.00, time=270.30.
+Warning: Vehicle 'e5343bd0c7ea7d3f-hv-000017' performs emergency braking on lane '-55_1' with decel=8.00, wished=4.50, severity=1.00, time=286.00.
+ Retrying in 1 seconds
+Warning: Vehicle '9925cb44b2ab87fd-hv-000026' performs emergency braking on lane '-78_0' with decel=8.00, wished=4.50, severity=1.00, time=230.60.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle '2a466ca5bf08daca-hv-000001' performs emergency braking on lane '75_0' with decel=8.00, wished=4.50, severity=1.00, time=102.50.
+Warning: Vehicle '2a466ca5bf08daca-hv-000005' performs emergency braking on lane ':655_2_0' with decel=8.00, wished=4.50, severity=1.00, time=121.60.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+Warning: Vehicle '63920629f4e83f85-hv-000004' performs emergency braking on lane ':482_6_0' with decel=8.00, wished=4.50, severity=1.00, time=163.10.
+Warning: Vehicle '63920629f4e83f85-hv-000004' performs emergency braking on lane ':780_3_0' with decel=8.00, wished=4.50, severity=1.00, time=167.70.
+ Retrying in 1 seconds
+[DEV B3_seed11] T=0 cases=100/100 scenario=C end=deadline
+[DEV B3_seed11] COMPLETE T=0 valid=100/100 compliant=0.0% collision=0.0% output=runs/B3_seed11/dev/T0000000
+[B3 seed=11] PROGRESS_UNCOMMITTED phase=WARMUP transitions=1/300,000 (0.0%) learner_updates=0 episodes=0 warmup_remaining=4,999 critic_loss=n/a actor_loss=n/a q=n/a entropy=n/a temperature=n/a interval_mean_updates=0 since_T=0 elapsed=4175.5s transitions/s=0.00 eta_approx=1252642957s
+ Retrying in 1 seconds
+Warning: Vehicle '3545c7e5a8f39c6c-hv-000004' performs emergency braking on lane '43_0' with decel=8.00, wished=4.50, severity=1.00, time=117.30.

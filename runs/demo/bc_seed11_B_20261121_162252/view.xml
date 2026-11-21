@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<viewsettings>
+  <scheme name="K-CITY landscaped">
+    <background backgroundColor="#e8eddf" showGrid="0" />
+    <edges laneEdgeMode="0" laneShowBorders="1" showLinkDecals="1" showLinkRules="1" hideConnectors="0" widthExaggeration="1" minSize="0">
+      <colorScheme name="uniform">
+        <entry color="#4c5962" name="road" />
+      </colorScheme>
+    </edges>
+    <junctions junctionMode="0" drawShape="1">
+      <colorScheme name="uniform">
+        <entry color="#4c5962" />
+      </colorScheme>
+    </junctions>
+    <polys poly_minSize="0" poly_exaggeration="1" polyName_show="0" polyType_show="0" />
+  <vehicles vehicleMode="0" vehicle_exaggeration="1" vehicle_minSize="1" vehicleQuality="2" /></scheme>
+  <delay value="40" />
+</viewsettings>
