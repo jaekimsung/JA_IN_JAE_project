@@ -24,6 +24,7 @@ def build_views(pool,output,spec,*,workers=1,revalidate=False):
     """Fixed BC train/val views from successful Episodes of an expert pool (one dataset or parallel parts)."""
     output = Path(output)
     require(not output.exists(),'New immutable BC view directory required')
+    print(f'[BC views] Checking expert pool: {pool}', flush=True)
     parts,reports = pool_reports(pool,workers=workers,revalidate=revalidate)
     pilot = is_pilot(spec)
     for part in parts:
@@ -43,11 +44,12 @@ def build_views(pool,output,spec,*,workers=1,revalidate=False):
                     e['metrics']['compliant_completion'] is True and e['metrics']['primary_end_reason']=='arrival']
         total = sum(e['metrics']['decision_count'] for e in episodes)
         require(total>=size,'Insufficient successful rows for '+split)
+        print(f'[BC views] {split}: selecting {size:,} of {total:,} eligible rows', flush=True)
         chosen = np.sort(rng.choice(total,size,replace=False))
         uids = [e['episode_uid'] for e in episodes]
         chunks = {k:[] for k in ['observation','action_target','transition_uid']}
         cursor = 0
-        for folder in shards:
+        for shard_index,folder in enumerate(shards,1):
             with np.load(folder/'numeric.npz',allow_pickle=False) as a:
                 eligible = np.flatnonzero((a['data_split']==split)&np.isin(a['episode_uid'],uids))
                 local = chosen[(chosen>=cursor)&(chosen<cursor+len(eligible))]-cursor
@@ -56,6 +58,8 @@ def build_views(pool,output,spec,*,workers=1,revalidate=False):
                 chunks['action_target'].append(np.clip(a['action_raw'][indices],-1,1))  # the executed action
                 chunks['transition_uid'].append(a['transition_uid'][indices].copy())
                 cursor += len(eligible)
+            if shard_index % 500 == 0 or shard_index == len(shards):
+                print(f'[BC views] {split}: shards={shard_index:,}/{len(shards):,}', flush=True)
         require(cursor==total,'Eligible count differs from completed Episode records')
         arrays[split] = {k:np.concatenate(v) for k,v in chunks.items()}
         require(len(set(arrays[split]['transition_uid']))==size,'Duplicate BC view rows')
@@ -68,6 +72,7 @@ def build_views(pool,output,spec,*,workers=1,revalidate=False):
                 experiment_sha256=experiment_sha256(spec),rng_seed=20261115,
                 files={p.name:file_sha256(p) for p in output.glob('*.npz')})
     atomic_json(output/'MANIFEST.json',dict(body,view_id=digest(body)))
+    print(f'[BC views] COMPLETE output={output}', flush=True)
     return read(output/'MANIFEST.json')
 
 
@@ -119,6 +124,7 @@ def retain_bc(root,best):
 
 def run_bc(root,views,seed,spec,device,resume=False):
     root = Path(root)
+    print(f'[BC seed={seed}] Loading views: {views}', flush=True)
     manifest,data = read_views(views)
     pilot = is_pilot(spec)
     require(manifest.get('run_purpose', 'main') == ('pilot' if pilot else 'main'), 'BC view run purpose mismatch')
@@ -135,6 +141,12 @@ def run_bc(root,views,seed,spec,device,resume=False):
             if best['path']:atomic_json(root/'BEST.json',best)
         training_interval = IntervalMean()
         interval_start = model.updates
+        session_start_updates = model.updates
+        target = spec['bc']['updates_per_seed']
+        print(f'[BC seed={seed}] {"RESUME" if resume else "START"} device={device} '
+              f'updates={model.updates:,}/{target:,} train_rows={len(data["expert_train"]["observation"]):,} '
+              f'val_rows={len(data["expert_val"]["observation"]):,} '
+              f'log_every={spec["bc"]["validate_every_updates"]:,} updates output={root}', flush=True)
         for update in range(model.updates,spec['bc']['updates_per_seed']):
             train = data['expert_train']
             idx = model.sampler.integers(0,len(train['observation']),spec['bc']['batch_size'])
@@ -148,8 +160,9 @@ def run_bc(root,views,seed,spec,device,resume=False):
                     best = dict(loss=val['loss'],path=path)
                 state = dict(data_id=manifest['data_id'],view_id=manifest['view_id'],best=best,validation=val)
                 model.save_checkpoint(root/path,state)
+                metrics = training_interval.mean()
                 with (root/'curve.jsonl').open('a') as stream:
-                    stream.write(json.dumps(dict(updates=model.updates,validation=val,training=training_interval.mean(),
+                    stream.write(json.dumps(dict(updates=model.updates,validation=val,training=metrics,
                         metric_aggregation='interval_mean', training_update_count=training_interval.count,
                         interval_start_updates=interval_start,
                         session_wall_s=time.monotonic()-clock))+'\n')
@@ -162,8 +175,26 @@ def run_bc(root,views,seed,spec,device,resume=False):
                 atomic_json(root/'STATUS.json',dict(phase='STOPPED' if stopped(root) else ('BC_PILOT_TRAINING' if pilot else 'BC_MAIN_TRAINING'),
                     updated_at=now(),updates=model.updates,target=spec['bc']['updates_per_seed'],best=best,
                     session_wall_s=time.monotonic()-clock,run=run_metadata()))
+                elapsed = time.monotonic()-clock
+                rate = (model.updates-session_start_updates)/max(elapsed,1e-9)
+                eta = (target-model.updates)/rate if rate > 0 else None
+                fmt = lambda value: 'n/a' if value is None else f'{value:.6f}'
+                print(f'[BC seed={seed}] updates={model.updates:,}/{target:,} '
+                      f'({100*model.updates/target:.1f}%) '
+                      f'train_loss={fmt(metrics.get("loss"))} '
+                      f'train_accel_mse={fmt(metrics.get("accel_mse"))} '
+                      f'train_lane_mse={fmt(metrics.get("lane_mse"))} '
+                      f'val_loss={fmt(val["loss"] if val else None)} '
+                      f'val_accel_mse={fmt(val.get("accel_mse") if val else None)} '
+                      f'val_lane_mse={fmt(val.get("lane_mse") if val else None)} '
+                      f'best_val_loss={fmt(best["loss"])} '
+                      f'elapsed={elapsed:.1f}s updates/s={rate:.1f} '
+                      f'eta={"n/a" if eta is None else f"{eta:.1f}s"} checkpoint={path}', flush=True)
             if stopped(root):
+                print(f'[BC seed={seed}] STOPPED updates={model.updates:,}/{target:,} output={root}', flush=True)
                 return
         atomic_json(root/'COMPLETE.json',dict(updates=model.updates,best=best,completed_at=now()))
+        print(f'[BC seed={seed}] COMPLETE updates={model.updates:,}/{target:,} '
+              f'best_checkpoint={best["path"]} best_val_loss={best["loss"]} output={root}', flush=True)
     finally:
         owner.close()

@@ -52,6 +52,37 @@ python -B runner/train_bc.py views --pool runs/expert --output runs/bc_views --w
 for s in 11 22 33; do python -B runner/train_bc.py train --views runs/bc_views --seed $s --output runs/bc_seed$s & done; wait
 ```
 
+BC view 생성은 pool 검사·split별 선택 행 수·500 shard마다 처리 현황을 터미널에 출력합니다.
+BC 학습은 시작·재개 시 설정을, 기본 1,000 update마다 진행률·구간 평균 학습 손실·검증 손실·
+가속도/차선 명령 MSE·최적 검증 손실·경과 시간·처리 속도·예상 남은 시간·체크포인트 경로를 출력합니다.
+예상 남은 시간은 현재 실행 세션의 평균 속도로 계산합니다. 중단·완료도 별도 표시하며,
+출력은 즉시 flush하므로 `| tee bc.log`로 화면과 파일에 함께 기록할 수 있습니다.
+기존 `curve.jsonl`, `STATUS.json`, `BEST.json`, `COMPLETE.json`도 계속 저장됩니다.
+
+### 학습 로그 그래프
+
+Matplotlib이 설치된 데스크톱 터미널에서 실행합니다. 기본 명령은 `runs/` 아래의 모든
+`curve.jsonl`을 찾아 BC·RL 학습 지표와 RL dev 평가 비율을 각각 그래프 창으로 엽니다.
+Pilot 로그도 해당 폴더 아래에 있으면 포함되므로 본 학습만 비교할 때는 `--run`을 지정합니다.
+
+```bash
+python -B runner/plot_training.py
+python -B runner/plot_training.py --root runs/another_experiment
+python -B runner/plot_training.py \
+  --run BC11=runs/bc_main_seed11 \
+  --run BC22=runs/bc_main_seed22 \
+  --run BC33=runs/bc_main_seed33
+```
+
+이미지는 자동 저장하지 않습니다. 그래프 창 도구 모음의 저장 버튼으로 원하는 그림의
+파일명·형식을 선택합니다. 창에서 확대·이동도 할 수 있습니다. BC는 같은 실행의 학습 곡선을
+실선, 검증 곡선을 점선으로 그리고, loss 그래프의 별은 `BEST.json`의 선택 지점입니다.
+로그에 존재하는 숫자 지표를 자동으로 찾아 그리며, 누락된 값과 RL 무작위 탐색 구간은
+0으로 채우지 않습니다. 기존 구간 평균과 과거 마지막 update 값은 원래 기록대로 표시하며,
+추가 평활화나 seed 평균은 적용하지 않습니다.
+학습 중에도 실행할 수 있지만 실행 시점의 스냅샷이므로 갱신하려면 창을 닫고 다시 실행합니다.
+GUI backend 오류가 나면 Tk가 설치된 환경에서 `MPLBACKEND=TkAgg python -B runner/plot_training.py`로 실행합니다.
+
 ## 4. 강화학습 (B2 온라인 SAC, B3 RLPD)
 
 ```bash
@@ -66,6 +97,26 @@ done; wait
 B3는 시작할 때 전문가 pool 전체의 파일·전이 일치와 part 중복을 다시 검증합니다.
 환경 계약·본/Pilot 구분·전체 pool 예산이 맞고, `expert_train` 전이가 설정된 사전 데이터
 수 이상일 때만 학습을 진행합니다.
+
+### RL 터미널 모니터링
+
+RL은 초기화·시작·재개·무작위 탐색 종료·체크포인트 저장·중단·완료를 즉시 출력합니다.
+기본 30초마다 전이 수·진행률·learner update 수·에피소드 수·구간 평균 critic/actor loss·Q·
+entropy·temperature·경과 시간·처리 속도·대략적인 남은 시간을 표시합니다.
+`--report-every 10`으로 터미널 출력 간격만 바꿀 수 있으며 학습 설정·저장 주기는 바뀌지 않습니다.
+`PROGRESS_UNCOMMITTED`는 마지막 저장 이후의 아직 확정되지 않은 진행 상태입니다.
+손실은 마지막 저장 이후의 누적 구간 평균이고 학습 update가 없으면 `n/a`입니다.
+처리 속도·예상 시간은 초기화와 평가 시간을 포함한 현재 실행 세션 기준의 추정치입니다.
+
+시작 시 T=0에서도 dev 100개를 평가하며 이때는 학습하지 않습니다. 평가 시작·10개 사례마다의
+진행·종료·규칙 준수 완주율·충돌률을 출력합니다. 이후에도 25,000 전이마다 같은 평가를 합니다.
+파일 로그 `curve.jsonl`·`STATUS.json`과 dev 결과는 기존 주기로 계속 저장됩니다.
+
+```bash
+set -o pipefail
+python -B runner/train_rl.py --method B2 --seed 11 --device cuda \
+  --output runs/B2_seed11 --report-every 30 2>&1 | tee runs/B2_seed11.log
+```
 
 ### 학습 손실 로그
 
@@ -102,6 +153,22 @@ python -B runner/report.py --eval B0=runs/eval/expert --eval B1=runs/eval/B1_see
 ```
 - **성능 표:** 충돌률·완주율·규칙 준수 완주율·평균 완주 시간
 - **노출·정지 표:** 출발 시 HV, 시간가중 HV, 출발 HV 10대 미만 사례 수, AV 50m 안 HV 수와 존재 비율, 선행차 존재 비율, 정지 시간 평균·최대, 기한 초과 수
+
+### 평가 결과 그래프
+
+```bash
+python -B runner/plot_evaluation.py --root runs/eval/<평가_폴더>
+python -B runner/plot_evaluation.py --eval BC11=<평가_폴더1> --eval BC22=<평가_폴더2>
+```
+
+`SUMMARY.json`과 `EPISODES.json`에서 전체 완주율·규칙 준수 완주율·충돌률, 종료 원인,
+시나리오별 규칙 준수 완주율, 필수 차선 변경 위치와 변경 전 정지 시간을 그래프 창으로 엽니다.
+상위 run에 전체 요약이 있으면 하위 demand 복사본은 중복으로 표시하지 않습니다.
+원인이 겹치지 않도록 종료 원인 그래프는 Episode당 최종 원인 하나를 셉니다.
+차선 변경이 없는 사례의 위치는 0으로 대체하지 않으며, 범례에 변경 건수/대상 건수를 표시합니다.
+차선 끝 1m 기준선은 평가에 해당 진단값이 기록돼 있을 때만 표시합니다.
+이미지는 자동 저장하지 않고 창 도구 모음의 저장 버튼으로 선택 저장합니다.
+동일한 사례 패널인지 확인하고 비교하며, 각 seed는 별도로 표시합니다.
 
 ## 6. 주행 영상과 데이터 공개
 

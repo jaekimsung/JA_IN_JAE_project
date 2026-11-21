@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 
 import argparse
+import math
 
 import torch
 
@@ -28,13 +29,18 @@ def main():
     parser.add_argument('--device', choices=['cpu', 'cuda'], default='cuda' if torch.cuda.is_available() else 'cpu')
     parser.add_argument('--threads', type=int, default=1, help='torch CPU threads')
     parser.add_argument('--resume', action='store_true')
+    parser.add_argument('--report-every', type=float, default=30., metavar='SECONDS',
+                        help='terminal progress interval in seconds (default: 30; does not change file/checkpoint cadence)')
     parser.add_argument('--experiment', type=Path, default=Path('configs/kcity/experiment.json'))
     args = parser.parse_args()
+    if not math.isfinite(args.report_every) or args.report_every <= 0:
+        parser.error('--report-every must be positive and finite')
     if (args.method == 'B3') != (args.prior is not None):
         parser.error('--prior is required for B3 and not allowed for B2')
     torch.set_num_threads(args.threads)
     install_signals()
-    run_rl(args.output, args.method, args.seed, load_experiment(args.experiment.resolve()), args.device, args.prior, args.resume)
+    run_rl(args.output, args.method, args.seed, load_experiment(args.experiment.resolve()), args.device,
+           args.prior, args.resume, report_every=args.report_every)
 
 
 if __name__ == '__main__':

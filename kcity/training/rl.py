@@ -4,6 +4,7 @@ Every environment step is recorded in the dataset format under <run>/transitions
 bundle it refers to are committed together; on resume the replay buffer is rebuilt from the committed shards.
 """
 import json
+import math
 from pathlib import Path
 import time
 
@@ -37,20 +38,27 @@ def evaluate_dev(agent, root, point, spec, stop=lambda: False):
     else:
         atomic_json(folder / 'POLICY.json', dict(acting_state_dict_sha256=policy_sha, actual_transitions=point))
     if (folder / 'SUMMARY.json').exists():
+        print(f'[DEV {Path(root).name}] T={point:,} already evaluated', flush=True)
         return True
     cases = read(ROOT / spec['case_panels']['dev']['path'])['cases']
     records = read(folder / 'EPISODES.json') if (folder / 'EPISODES.json').exists() else []
     require([r['requested_case_uid'] for r in records] == [c['case_uid'] for c in cases[:len(records)]], 'Dev resume panel mismatch')
+    print(f'[DEV {Path(root).name}] START T={point:,} cases={len(records)}/{len(cases)} '
+          '(evaluation only; training paused)', flush=True)
     env = SumoKCityEnv(background=True)
     try:
         for case in cases[len(records):]:
             if stop():
+                print(f'[DEV {Path(root).name}] STOPPED T={point:,} cases={len(records)}/{len(cases)}', flush=True)
                 return False
             rows, _ = evaluate_cases(agent, env, dict(cases=[case]))
             records.extend(rows)
             atomic_json(folder / 'EPISODES.json', records)
             atomic_json(Path(root) / 'STATUS.json', dict(phase='EVALUATING_DEV', transitions=point,
                 completed_cases=len(records), planned_cases=len(cases), updated_at=now()))
+            if len(records) == 1 or len(records) % 10 == 0 or len(records) == len(cases):
+                print(f'[DEV {Path(root).name}] T={point:,} cases={len(records)}/{len(cases)} '
+                      f'scenario={case["scenario_id"]} end={rows[-1]["primary_end_reason"]}', flush=True)
         atomic_json(folder / 'SUMMARY.json', dict(actual_transitions=point, aggregate=aggregate(records, len(cases)),
                                                   acting_state_dict_sha256=policy_sha))
         curve = [read(path) for path in sorted((Path(root) / 'dev').glob('T*/SUMMARY.json'))]
@@ -68,13 +76,22 @@ def evaluate_dev(agent, root, point, spec, stop=lambda: False):
         atomic_json(Path(root) / 'SAMPLE_EFFICIENCY.json', dict(target_transition=target,
             confirmation_transition=confirmation, right_censored=confirmation is None,
             observed_through_transition=point, curve=curve))
+        summary = curve[-1]['aggregate']
+        rate = lambda value: 'n/a' if value is None else f'{value:.1%}'
+        print(f'[DEV {Path(root).name}] COMPLETE T={point:,} '
+              f'valid={summary["n_valid"]}/{len(cases)} '
+              f'compliant={rate(summary["compliant_completion_rate"])} '
+              f'collision={rate(summary["collision_rate"])} output={folder}', flush=True)
         return True
     finally:
         env.close()
 
 
-def run_rl(root, method, seed, spec, device, prior_pool=None, resume=False):
+def run_rl(root, method, seed, spec, device, prior_pool=None, resume=False, *, report_every=30.):
+    require(math.isfinite(report_every) and report_every > 0, 'report_every must be positive and finite')
     root = Path(root)
+    prefix = f'[{method} seed={seed}]'
+    print(f'{prefix} Initializing device={device} output={root}', flush=True)
     hparams = dict(spec['rlpd'])
     prior_id = None
     if method == 'B3':
@@ -96,6 +113,9 @@ def run_rl(root, method, seed, spec, device, prior_pool=None, resume=False):
         agent = KCityRLPD(hparams, seed=seed, device=device)
         bundle_config = dict(method=method, seed=seed, hidden_dims=hparams['hidden_dims'], hparams=hparams,
                              device_type=agent.device.type, contract_sha256=digest(env.contract))
+        if method == 'B3':
+            print(f'{prefix} Validating expert pool and loading {spec["budgets"]["prior_transitions"]:,} '
+                  f'prior transitions: {prior_pool}', flush=True)
         prior = load_prior(prior_pool, spec['budgets']['prior_transitions'], pilot=pilot,
                            minimum_pool_rows=spec['budgets']['expert_valid_transitions_min'],
                            contract=env.contract) if method == 'B3' else None
@@ -121,6 +141,31 @@ def run_rl(root, method, seed, spec, device, prior_pool=None, resume=False):
         recorder = OnlineRecorder(agent, writer)
         training_interval = IntervalMean()
         interval_start = steps
+        session_start_steps = steps
+        last_report = time.monotonic()
+        print(f'{prefix} {"RESUME" if resume else "START"} transitions={steps:,}/{cap:,} '
+              f'learner_updates={agent.num_updates:,} warmup={hparams["start_training"]:,} '
+              f'prior_ratio={hparams["offline_ratio"]:.0%} utd={hparams["utd_ratio"]} '
+              f'checkpoint_every={writer.shard_rows:,} dev_every={interval:,} '
+              f'report_every={report_every:g}s', flush=True)
+
+        def report(event):
+            nonlocal last_report
+            stamp = time.monotonic()
+            elapsed = stamp-clock
+            rate = (steps-session_start_steps)/max(elapsed, 1e-9)
+            eta = f'{(cap-steps)/rate:.0f}s' if rate > 0 else 'n/a'
+            metrics = training_interval.mean() or {}
+            fmt = lambda key: 'n/a' if metrics.get(key) is None else f'{metrics[key]:.6f}'
+            phase = 'WARMUP' if steps < hparams['start_training'] else 'LEARNING'
+            print(f'{prefix} {event} phase={phase} transitions={steps:,}/{cap:,} ({100*steps/cap:.1f}%) '
+                  f'learner_updates={agent.num_updates:,} episodes={episode:,} '
+                  f'warmup_remaining={max(0,hparams["start_training"]-steps):,} '
+                  f'critic_loss={fmt("critic_loss")} actor_loss={fmt("actor_loss")} '
+                  f'q={fmt("q")} entropy={fmt("entropy")} temperature={fmt("temperature")} '
+                  f'interval_mean_updates={training_interval.count:,} since_T={interval_start:,} '
+                  f'elapsed={elapsed:.1f}s transitions/s={rate:.2f} eta_approx={eta}', flush=True)
+            last_report = stamp
 
         def commit():
             nonlocal interval_start
@@ -136,12 +181,14 @@ def run_rl(root, method, seed, spec, device, prior_pool=None, resume=False):
                     metrics=training_interval.mean(), metric_aggregation='interval_mean',
                     training_update_count=training_interval.count, interval_start_transitions=interval_start,
                     session_wall_s=time.monotonic() - clock, checkpoint=str(bundle))) + '\n')
+            report('CHECKPOINT_SAVED')
             training_interval.reset()
             interval_start = steps
 
         while True:
             if steps % interval == 0 and not writer.pending:
                 if not evaluate_dev(agent, root, steps, spec, lambda: stopped(root)):
+                    print(f'{prefix} STOPPED during dev evaluation at T={steps:,}; resume with --resume', flush=True)
                     return
             if steps >= cap or stopped(root):
                 break
@@ -164,12 +211,20 @@ def run_rl(root, method, seed, spec, device, prior_pool=None, resume=False):
                 obs = nxt
             if not random_action:
                 training_interval.add(agent.update(agent.sample_batch(replay, prior)))
+                if steps == hparams['start_training']+1:
+                    print(f'{prefix} LEARNING_STARTED T={steps:,} (random warmup finished)', flush=True)
             if writer.pending >= writer.shard_rows or steps % interval == 0 or steps == cap or stopped(root):
                 commit()
+            elif time.monotonic()-last_report >= report_every:
+                report('PROGRESS_UNCOMMITTED')
         if steps == cap and not writer.pending:
             atomic_json(root / 'COMPLETE.json', dict(transitions=cap, updates=agent.num_updates, episodes=episode,
                 completed_at=now(), policy_selection='budget_end',
                 checkpoint=str(checkpoint_from_shard(root / read(root / 'LATEST.json')['path']))))
+            print(f'{prefix} COMPLETE transitions={steps:,}/{cap:,} learner_updates={agent.num_updates:,} '
+                  f'output={root} (see COMPLETE.json)', flush=True)
+        else:
+            print(f'{prefix} STOPPED transitions={steps:,}/{cap:,} output={root}; resume with --resume', flush=True)
     finally:
         if writer is not None:
             writer.close()

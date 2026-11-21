@@ -1,5 +1,7 @@
 """Logging intervals, including partial STOP windows and critic minibatches (no SUMO)."""
 import json
+import io
+from contextlib import redirect_stdout
 from pathlib import Path
 import sys
 import tempfile
@@ -17,7 +19,7 @@ from kcity.policy.rlpd import DEFAULT_RLPD, KCityRLPD
 from kcity.training.bc import run_bc
 from kcity.training.experiment import load_experiment
 from kcity.training.logging import IntervalMean
-from kcity.training.rl import run_rl
+from kcity.training.rl import evaluate_dev, run_rl
 
 
 def curve(root):
@@ -60,7 +62,8 @@ class LoggingTests(unittest.TestCase):
             models.append(model)
             return model
 
-        with tempfile.TemporaryDirectory() as d, \
+        output = io.StringIO()
+        with tempfile.TemporaryDirectory() as d, redirect_stdout(output), \
                 patch('kcity.training.bc.read_views', return_value=views), \
                 patch('kcity.training.bc.KCityBC', side_effect=make_model):
             full, resumed = Path(d) / 'full', Path(d) / 'resumed'
@@ -75,6 +78,15 @@ class LoggingTests(unittest.TestCase):
             self.assertAlmostEqual(curve(full)[0]['training']['loss'], 14 / 3)
             for key, value in models[0].policy.state_dict().items():
                 self.assertTrue(torch.equal(value, models[-1].policy.state_dict()[key]))
+        log = output.getvalue()
+        self.assertIn('START device=cpu updates=0/5', log)
+        self.assertIn('STOPPED updates=2/5', log)
+        self.assertIn('RESUME device=cpu updates=2/5', log)
+        self.assertIn('train_loss=2.500000', log)
+        self.assertIn('train_loss=20.500000', log)
+        self.assertIn('val_loss=n/a', log)
+        self.assertIn('COMPLETE updates=5/5', log)
+        self.assertIn('eta=', log)
 
     def test_rl_warmup_is_not_counted_and_each_commit_resets_mean(self):
         spec = load_experiment()
@@ -107,7 +119,8 @@ class LoggingTests(unittest.TestCase):
             return root / 'transitions' / f'shard-{writer.count}'
 
         recorder = SimpleNamespace(recorder=SimpleNamespace(active=True), add=add, commit=commit)
-        with tempfile.TemporaryDirectory() as d:
+        output = io.StringIO()
+        with tempfile.TemporaryDirectory() as d, redirect_stdout(output):
             root = Path(d) / 'rl'
             with patch('kcity.training.rl.SumoKCityEnv', return_value=env), \
                     patch('kcity.training.rl.KCityRLPD', return_value=agent), \
@@ -117,7 +130,7 @@ class LoggingTests(unittest.TestCase):
                     patch('kcity.training.rl.OnlineRecorder', return_value=recorder), \
                     patch('kcity.training.rl.checkpoint_from_shard', side_effect=lambda path: path / 'bundle'), \
                     patch('kcity.training.rl.evaluate_dev', return_value=True):
-                run_rl(root, 'B2', 11, spec, 'cpu')
+                run_rl(root, 'B2', 11, spec, 'cpu', report_every=1e-9)
                 rows = curve(root)
                 # A commit with no optimizer updates must not invent a zero loss.
                 root = Path(d) / 'warmup'
@@ -131,6 +144,14 @@ class LoggingTests(unittest.TestCase):
             self.assertEqual([r['interval_start_transitions'] for r in rows], [0, 3, 6])
             self.assertEqual([r['metrics']['critic_loss'] for r in rows], [1., 29 / 3, 25.])
             self.assertEqual([r['metrics']['actor_loss'] for r in rows], [-1., -3., -5.])
+        log = output.getvalue()
+        self.assertIn('[B2 seed=11] START transitions=0/7', log)
+        self.assertIn('PROGRESS_UNCOMMITTED phase=WARMUP', log)
+        self.assertIn('critic_loss=n/a actor_loss=n/a', log)
+        self.assertIn('LEARNING_STARTED T=3', log)
+        self.assertIn('CHECKPOINT_SAVED', log)
+        self.assertIn('critic_loss=9.666667 actor_loss=-3.000000', log)
+        self.assertIn('COMPLETE transitions=7/7 learner_updates=5', log)
 
     def test_rlpd_critic_loss_is_mean_of_all_minibatches(self):
         hp = dict(DEFAULT_RLPD, hidden_dims=[4, 4], num_qs=2, num_min_qs=1,
@@ -155,6 +176,38 @@ class LoggingTests(unittest.TestCase):
         self.assertNotAlmostEqual(stats['critic_loss'], losses[2], places=3)
         for key, value in agent.policy.state_dict().items():
             self.assertTrue(torch.equal(value, reference.policy.state_dict()[key]))
+
+    def test_dev_progress_stop_resume_and_summary_without_repeating_cases(self):
+        spec = load_experiment()
+        spec['case_panels']['dev']['path'] = 'panel.json'
+        cases = [dict(case_uid=str(i), scenario_id='B') for i in range(12)]
+        evaluated = []
+
+        def evaluate(policy, env, panel):
+            case = panel['cases'][0]
+            evaluated.append(case['case_uid'])
+            return [dict(requested_case_uid=case['case_uid'], primary_end_reason='arrival')], {}
+
+        summary = dict(n_valid=12, data_quality_valid=True, compliant_completion_rate=.75, collision_rate=0.)
+        output = io.StringIO()
+        with tempfile.TemporaryDirectory() as d, redirect_stdout(output):
+            root = Path(d)
+            (root/'panel.json').write_text(json.dumps(dict(cases=cases)))
+            with patch('kcity.training.rl.ROOT', root), \
+                    patch('kcity.training.rl.SumoKCityEnv', return_value=SimpleNamespace(close=lambda: None)), \
+                    patch('kcity.training.rl.policy_weights_sha256', return_value='fixture'), \
+                    patch('kcity.training.rl.evaluate_cases', side_effect=evaluate), \
+                    patch('kcity.training.rl.aggregate', return_value=summary):
+                self.assertFalse(evaluate_dev(None, root/'run', 0, spec, lambda: len(evaluated)>=2))
+                self.assertTrue(evaluate_dev(None, root/'run', 0, spec))
+            self.assertEqual(evaluated, [str(i) for i in range(12)])
+            self.assertEqual(json.loads((root/'run/dev/T0000000/SUMMARY.json').read_text())['aggregate'], summary)
+        log = output.getvalue()
+        self.assertIn('START T=0 cases=0/12', log)
+        self.assertIn('STOPPED T=0 cases=2/12', log)
+        self.assertIn('START T=0 cases=2/12', log)
+        self.assertIn('T=0 cases=10/12 scenario=B end=arrival', log)
+        self.assertIn('COMPLETE T=0 valid=12/12 compliant=75.0% collision=0.0%', log)
 
 
 if __name__ == '__main__':
