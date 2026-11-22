@@ -1,0 +1,21 @@
+ Retrying in 1 seconds
+Traceback (most recent call last):
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/runner/record_video.py", line 159, in <module>
+    main()
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/runner/record_video.py", line 148, in main
+    env.close()
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/kcity/env/env.py", line 70, in close
+    self._close_connection();self._done=True
+  File "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/kcity/env/env.py", line 64, in _close_connection
+    try:self.conn.close()
+  File "/usr/share/sumo/tools/traci/connection.py", line 398, in close
+    self._sendCmd(tc.CMD_CLOSE, None, None)
+  File "/usr/share/sumo/tools/traci/connection.py", line 232, in _sendCmd
+    return self._sendExact()
+  File "/usr/share/sumo/tools/traci/connection.py", line 140, in _sendExact
+    err = result.readString()
+  File "/usr/share/sumo/tools/traci/storage.py", line 68, in readString
+    length = self.read("!i")[0]
+  File "/usr/share/sumo/tools/traci/storage.py", line 38, in read
+    return struct.unpack(format, self._content[oldPos:self._pos])
+struct.error: unpack requires a buffer of 4 bytes

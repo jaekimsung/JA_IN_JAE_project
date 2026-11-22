@@ -135,6 +135,59 @@ async function showLog(){
     if(el("log").value===file){el("logText").textContent=text;el("logText").scrollTop=el("logText").scrollHeight;}
   }catch(err){el("logText").textContent="로그 읽기 오류 · "+err.message;}
 }
+let launching = false;
+let launchSequence = 0;
+function demoOptions() {
+  const runs = data.runs.filter(r => r.demo_available)
+    .sort((a,b) => a.method.localeCompare(b.method) || a.seed-b.seed);
+  options("driveModel", [["expert", names.B0], ...runs.map(r => [r.id, nameOf(r)])],
+          runs.find(r => r.method === "B3")?.id || "expert");
+  el("driveLaunch").disabled = launching;
+}
+
+el("driveForm").onsubmit = async event => {
+  event.preventDefault();
+  if (launching) return;
+  const sequence = ++launchSequence;
+  const model = el("driveModel"), scenario = el("driveScenario").value;
+  const label = model.selectedOptions[0].text + " · " + scenario;
+  const status = el("driveStatus");
+  launching = true;
+  el("driveLaunch").disabled = true;
+  status.textContent = label + " · SUMO 창을 여는 중…";
+  try {
+    const response = await fetch("/api/demo", {method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({model: model.value, scenario})});
+    const result = await response.json();
+    if (!response.ok) throw Error(result.error || response.statusText);
+    while (sequence === launchSequence) {
+      const reply = await fetch("/api/demo?job=" + encodeURIComponent(result.job));
+      if (!reply.ok) throw Error(reply.statusText);
+      const state = await reply.json();
+      if (sequence !== launchSequence) return;
+      if (state.phase === "FAILED") throw Error(state.message + (state.log ? " · runs/" + state.log : ""));
+      if (state.phase === "CLOSED") {
+        status.textContent = label + " · 주행 창이 닫혔습니다.";
+        break;
+      }
+      if (["DRIVING", "EPISODE_ENDED"].includes(state.phase)) {
+        status.textContent = label + " · SUMO 창에서 반복 주행 중";
+        launching = false;
+        el("driveLaunch").disabled = false;
+      }
+      await new Promise(resolve => setTimeout(resolve, launching ? 600 : 2500));
+    }
+  } catch (err) {
+    if (sequence === launchSequence) status.textContent = label + " · 실행 상태 확인 실패 · " + err.message;
+  } finally {
+    if (sequence === launchSequence) {
+      launching = false;
+      el("driveLaunch").disabled = false;
+    }
+  }
+};
+
 async function refresh(){
   if(busy)return;
   busy=true;el("refresh").disabled=true;
@@ -154,7 +207,7 @@ async function refresh(){
     options("run",data.runs.map(r=>[r.id,nameOf(r)+" · "+r.id]));
     const evals=[...data.evaluations].sort((a,b)=>Number(b.representative)-Number(a.representative)||label(a).localeCompare(label(b))||a.step-b.step);
     options("evaluation",evals.map(e=>[e.id,label(e)+" · "+e.id]));
-    comparison();training(true);cases();archives();await showLog();
+    demoOptions();comparison();training(true);cases();archives();await showLog();
     el("stamp").textContent=new Date().toLocaleTimeString("ko-KR")+" 갱신";
     el("warning").textContent=data.warnings.join(" / ");
   }catch(err){el("warning").textContent="결과 갱신 실패 · "+err.message+" · 서버 상태를 확인하고 새로고침하세요.";}

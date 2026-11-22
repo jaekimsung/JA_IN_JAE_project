@@ -12,12 +12,39 @@ import sys
 from pathlib import Path
 
 import argparse
+import json
+from importlib.util import find_spec
+import os
 from datetime import datetime
 import shutil
 import subprocess
 import time
 from unittest.mock import patch
 import xml.etree.ElementTree as ET
+
+def use_dashboard_environment():
+    # The stdlib-only dashboard may run under the system Python.
+    required = ("gymnasium", "torch", "numpy")
+    if sys.prefix != sys.base_prefix or all(find_spec(name) for name in required):
+        return
+    root = Path(__file__).resolve().parents[1]
+    candidates = [root / ".venv", root / "venv"]
+    candidates.extend(sorted((Path.home() / ".cache").glob("kcity-research-audit-*/venv"), reverse=True))
+    for environment in candidates:
+        python = environment / "bin/python"
+        if not (environment / "pyvenv.cfg").is_file() or not os.access(python, os.X_OK):
+            continue
+        probe = subprocess.run([str(python), "-c", "import gymnasium, torch, numpy"],
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if probe.returncode == 0:
+            # exec retains the status pipe passed by the running dashboard.
+            os.execv(python, [str(python), "-u", "-B", *sys.argv])
+    raise SystemExit("SUMO 데모용 Python 환경을 찾을 수 없습니다. "
+                     "학습 가상환경의 Python을 --demo-python 옵션으로 지정하세요.")
+
+
+if __name__ == "__main__" and "--status-fd" in sys.argv:
+    use_dashboard_environment()
 
 import torch
 
@@ -56,7 +83,23 @@ def main():
     ap.add_argument('--overview', action='store_true', help='show the whole map instead of tracking the AV')
     ap.add_argument('--once', action='store_true', help='stop after one Episode')
     ap.add_argument('--video', action='store_true', help='record frames and encode <output>/drive.mp4')
+    ap.add_argument('--status-fd', type=int, help='send demo status to an inherited pipe instead of STATUS.json')
     args = ap.parse_args()
+    status_pipe = os.fdopen(args.status_fd, 'w') if args.status_fd is not None else None
+
+    def report(state):
+        nonlocal status_pipe
+        if args.status_fd is None:
+            atomic_json(args.output / 'STATUS.json', state)
+        elif status_pipe is not None:
+            try:
+                update = dict(phase=state['phase'], message=state.get('message', ''),
+                              completed=len(state['episodes']))
+                print(json.dumps(update), file=status_pipe, flush=True)
+            except BrokenPipeError:
+                # The GUI can outlive a dashboard restart.
+                status_pipe = None
+
     if args.speed <= 0 or args.demand_multiplier <= 0 or args.warmup < 0:
         ap.error('Invalid speed/demand/warmup')
     torch.set_num_threads(1)
@@ -90,7 +133,7 @@ def main():
                 display_speed=args.speed, demand_multiplier=args.demand_multiplier, warmup_s=args.warmup,
                 demo_physics_tick_s=args.demo_step, policy_decision_period_s=.5,
                 variant='presentation demo; not the evaluation run', episodes=[])
-    atomic_json(args.output / 'STATUS.json', dict(phase='STARTING_GUI', **info))
+    report(dict(phase='STARTING_GUI', **info))
     frames = args.output / 'frames'
     try:
         while True:
@@ -129,7 +172,7 @@ def main():
                 obs, reward, term, trunc, step = env.step(model.predict(obs, deterministic=True))
                 if t % 10 == 0:
                     state = step['next_state']
-                    atomic_json(args.output / 'STATUS.json', dict(phase='DRIVING', decision=t + 1,
+                    report(dict(phase='DRIVING', decision=t + 1,
                         episode_time_s=step['episode_time_s'], ego_speed_mps=state['ego_speed'],
                         ego_road=state['ego_road_id'], running_hv=state['traffic']['running_hv'],
                         detected_hv=len(env.get_detected_vehicles()), **info))
@@ -138,12 +181,12 @@ def main():
                                                  end_reason=step['end_reason'], episode_time_s=step['episode_time_s'],
                                                  frames=frame[0]))
                     break
-            atomic_json(args.output / 'STATUS.json', dict(phase='EPISODE_ENDED', **info))
+            report(dict(phase='EPISODE_ENDED', **info))
             if args.once:
                 break
             time.sleep(3.)
     except (KeyboardInterrupt, env.traci.exceptions.FatalTraCIError) as error:
-        atomic_json(args.output / 'STATUS.json', dict(phase='CLOSED', message=str(error), **info))
+        report(dict(phase='CLOSED', message=str(error), **info))
     finally:
         env.close()
     if args.video and frames.exists():

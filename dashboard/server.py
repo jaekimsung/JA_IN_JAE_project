@@ -1,9 +1,12 @@
-"""Read-only localhost dashboard for the K-CITY experiment."""
+"""Local experiment dashboard and SUMO demo launcher."""
 import argparse
 import hashlib
 import json
 import os
-import re
+import subprocess
+import sys
+import threading
+import uuid
 import xml.etree.ElementTree as ET
 from collections import Counter
 from functools import lru_cache
@@ -28,6 +31,23 @@ def optional(folder, name):
 
 def rel(path):
     return path.relative_to(RUNS).as_posix()
+
+
+def demo_bundle(folder, cfg, best, complete):
+    if cfg.get("kind") == "main_bc":
+        target = best.get("path")
+        bundle = folder / target if target else None
+    elif cfg.get("kind") == "main_rl":
+        target = complete.get("checkpoint")
+        # COMPLETE may have been created in another checkout.
+        bundle = folder / "transitions/checkpoints" / Path(target).name if target else None
+    else:
+        return None
+    if bundle and bundle.resolve().is_relative_to(folder.resolve()) and all(
+        (bundle / f).is_file() for f in ("training.pt", "metadata.json", "SHA256.json")
+    ):
+        return bundle
+    return None
 
 
 def scan():
@@ -59,6 +79,7 @@ def scan():
                                best=optional(folder,"BEST.json"), curve=[curve[x] for x in sorted(curve)])
                     efficiency = optional(folder, "SAMPLE_EFFICIENCY.json")
                     run["efficiency"] = {k:v for k,v in efficiency.items() if k != "curve"}
+                    run["demo_available"] = demo_bundle(folder, cfg, run["best"], complete) is not None
                     trainers[folder] = run
                     data["runs"].append(run)
             if "POOL.json" in files:
@@ -131,10 +152,115 @@ def map_svg():
     return ''.join(chunks)+'</svg>'
 
 
+class DemoLauncher:
+    def __init__(self, python):
+        self.python = python
+        self.jobs = {}
+        self.lock = threading.Lock()
+
+    def start(self, model, scenario):
+        if scenario not in ("A", "B", "C") or not isinstance(model, str):
+            raise ValueError("모델과 시나리오를 다시 선택하세요.")
+        policy = "expert"
+        if model != "expert":
+            run = next((r for r in scan()["runs"] if r["id"] == model), None)
+            if run is None or not run["demo_available"]:
+                raise ValueError("선택한 모델의 로컬 체크포인트가 없습니다.")
+            policy = str(demo_bundle(RUNS / model, run["config"], run["best"], run["complete"]))
+        with self.lock:
+            for token, (proc, _, selection, _) in list(self.jobs.items()):
+                if proc.poll() is not None:
+                    del self.jobs[token]
+                elif selection == (model, scenario):
+                    return token
+            token = uuid.uuid4().hex
+            folder = RUNS / "demo" / f"{Path(model).name}_{scenario}_{token}"
+            folder.parent.mkdir(exist_ok=True, parents=True)
+            state = {"phase": "STARTING_GUI"}
+            read_fd, write_fd = os.pipe()
+            pipe = os.fdopen(read_fd, encoding="utf-8")
+            try:
+                with folder.with_suffix(".log").open("xb") as log:
+                    proc = subprocess.Popen([
+                        self.python, "-u", "-B", "runner/record_video.py",
+                        "--policy", policy, "--scenario", scenario, "--case-index", "1000000",
+                        "--speed", "1", "--output", str(folder), "--status-fd", str(write_fd),
+                    ], cwd=ROOT, stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT,
+                       pass_fds=(write_fd,), start_new_session=True)
+            except BaseException:
+                pipe.close()
+                raise
+            finally:
+                os.close(write_fd)
+            self.jobs[token] = (proc, folder, (model, scenario), state)
+            threading.Thread(target=self.watch_status, args=(pipe, state), daemon=True).start()
+            return token
+
+    def watch_status(self, pipe, state):
+        with pipe:
+            for line in pipe:
+                update = json.loads(line)
+                with self.lock:
+                    state.update(update)
+
+    def status(self, token):
+        with self.lock:
+            job = self.jobs.get(token)
+            if job is None:
+                return {"phase": "CLOSED"}
+            proc, folder, _, latest = job
+            state = latest.copy()
+        code = proc.poll()
+        phase = state.get("phase", "STARTING_GUI")
+        if code is not None and (code or phase != "CLOSED"):
+            with folder.with_suffix(".log").open("rb") as log:
+                log.seek(max(0, log.seek(0, 2) - 2000))
+                lines = log.read().decode(errors="replace").strip().splitlines()
+            return {"phase": "FAILED", "message": lines[-1] if lines else f"종료 코드 {code}",
+                    "log": rel(folder.with_suffix(".log"))}
+        if phase == "CLOSED" and not state.get("completed") and "closed by SUMO" not in state.get("message", ""):
+            return {"phase": "FAILED", "message": state.get("message", "SUMO 연결 종료")}
+        return {"phase": phase}
+
+
 class Handler(BaseHTTPRequestHandler):
+    def reply_json(self, status, payload):
+        body = json.dumps(payload).encode()
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_POST(self):
+        if self.path != "/api/demo":
+            return self.send_error(404)
+        port = self.server.server_port
+        hosts = {f"localhost:{port}", f"127.0.0.1:{port}"}
+        host = self.headers.get("Host")
+        if host not in hosts or self.headers.get("Origin") != f"http://{host}":
+            return self.reply_json(403, {"error": "로컬 대시보드에서 실행하세요."})
+        try:
+            size = int(self.headers.get("Content-Length", "0"))
+            if self.headers.get_content_type() != "application/json" or not 0 < size <= 2048:
+                raise ValueError("잘못된 실행 요청입니다.")
+            payload = json.loads(self.rfile.read(size))
+            if not isinstance(payload, dict):
+                raise ValueError("잘못된 모델 선택입니다.")
+            token = self.server.launcher.start(payload.get("model"), payload.get("scenario"))
+        except ValueError as exc:
+            return self.reply_json(400, {"error": str(exc)})
+        except OSError as exc:
+            return self.reply_json(500, {"error": f"실행 환경을 확인하세요. {exc}"})
+        self.reply_json(202, {"job": token})
+
     def do_GET(self):
         url = urlsplit(self.path)
         try:
+            if url.path == "/api/demo":
+                token = parse_qs(url.query).get("job", [""])[0]
+                return self.reply_json(200, self.server.launcher.status(token))
             if url.path == "/api/results":
                 body, mime = json.dumps(scan(), allow_nan=False).encode(), "application/json"
             elif url.path == "/map.svg":
@@ -171,7 +297,9 @@ class Handler(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument("--demo-python", default=sys.executable, help="Python from the SUMO training environment")
     args = parser.parse_args()
     with ThreadingHTTPServer(("127.0.0.1",args.port), Handler) as server:
+        server.launcher = DemoLauncher(args.demo_python)
         print(f"http://localhost:{server.server_port}",flush=True)
         server.serve_forever()
