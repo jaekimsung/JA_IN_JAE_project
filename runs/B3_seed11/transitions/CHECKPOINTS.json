@@ -1,1 +1,0 @@
-{"schema":"external_retained_v1","committed_shards":0,"committed_transitions":0,"policy":{"mode":"external_retained_v1","keep_recent":2,"evaluation_interval_transitions":25000},"retained":[]}
