@@ -4,7 +4,8 @@ const esc = value => String(value ?? "—").replace(/[&<>"']/g, c => ({"&":"&amp
 const num = (v,d=0) => Number.isFinite(v) ? v.toLocaleString("ko-KR",{maximumFractionDigits:d}) : "—";
 const pct = v => Number.isFinite(v) ? num(100*v,1)+"%" : "—";
 const names = {B0:"B0 Expert",B1:"B1 BC",B2:"B2 SAC",B3:"B3 RLPD"};
-const nameOf = r => (names[r.method] || r.method) + (r.seed == null ? "" : " · seed "+r.seed);
+const nameOf = r => (names[r.method] || r.method) + (r.seed == null ? "" : " · seed "+r.seed) + (r.training === "v1" ? " · v1 학습 → v2.1 평가" : "");
+const visibleModel = r => !["B1", "B2", "B3"].includes(r.method) || Number(r.seed) === 11;
 const empty = text => '<p class="empty">'+esc(text)+'</p>';
 const table = (headers,rows) => '<div class="scroll"><table><thead><tr>'+headers.map(x=>'<th>'+esc(x)+'</th>').join("")+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+row.map(x=>'<td>'+x+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>';
 function options(id,pairs,fallback) {
@@ -103,6 +104,70 @@ function drawChart(series,yLabel,xLabel,rate){
   });
   el("chart").innerHTML=svg+"</svg>";
 }
+function collisionSeries(evaluations, cohort){
+  const entries=evaluations.filter(e=>scope(e)===cohort&&Number(e.seed)===11);
+  const valid=e=>Number.isFinite(e.aggregate.collision_rate)&&e.aggregate.collision_rate>=0&&
+    e.aggregate.collision_rate<=1&&e.aggregate.n_valid>0&&e.aggregate.n_valid===e.aggregate.n_planned&&
+    e.aggregate.data_quality_valid!==false;
+  const issues=[], series=[];
+  for(const [method,color] of [["B1","#136987"],["B2","#b85b19"],["B3","#7552a1"]]){
+    const candidates=entries.filter(e=>e.method===method&&(method==="B1"?e.representative&&e.step==null:Number.isFinite(e.step)));
+    if(!candidates.length){issues.push((names[method]||method)+" 평가 기록 없음");continue;}
+    if((method==="B1"&&candidates.length>1)||new Set(candidates.map(e=>e.run)).size>1){
+      issues.push(names[method]+"의 복수 실행은 합치지 않습니다.");continue;
+    }
+    const ordered=[...candidates].sort((a,b)=>a.step-b.step);
+    if(method!=="B1"&&new Set(ordered.map(e=>e.step)).size!==ordered.length){
+      issues.push(names[method]+"의 같은 전이 수에 중복 평가가 있습니다.");continue;
+    }
+    const usable=ordered.filter(valid);
+    if(usable.length!==ordered.length)issues.push(names[method]+"의 무효·미완료 평가 "+(ordered.length-usable.length)+"건 제외");
+    if(!usable.length)continue;
+    series.push({method,color,baseline:method==="B1",latest:usable.at(-1),
+      points:ordered.map(e=>[e.step,valid(e)?100*e.aggregate.collision_rate:null])});
+  }
+  return {series,issues};
+}
+function collisionComparison(){
+  const {series,issues}=collisionSeries(data.evaluations,el("collisionCohort").value);
+  const points=series.filter(s=>!s.baseline).flatMap(s=>s.points);
+  const valid=points.filter(([x,y])=>Number.isFinite(x)&&Number.isFinite(y));
+  el("collisionSave").disabled=!valid.length;
+  el("collisionNote").textContent="충돌률 = 충돌 에피소드 / 유효 평가 에피소드. 동일 패널·케이스·지표 버전만 표시합니다. "+issues.join(" / ");
+  el("collisionValues").innerHTML=series.length?table(["모델","평가 시점","충돌 / 유효 에피소드","충돌률"],series.map(s=>{
+    const e=s.latest,a=e.aggregate;
+    return [esc(nameOf(e)),s.baseline?"BC 선택 모델 (고정)":num(e.step)+" 전이",num(a.n_collision)+" / "+num(a.n_valid),pct(a.collision_rate)];
+  })):"";
+  if(!valid.length){el("collisionChart").innerHTML=empty("비교할 SAC·RLPD 학습 중 평가 기록이 없습니다.");return;}
+  const xs=points.map(p=>p[0]).filter(Number.isFinite);
+  const xmin=Math.min(...xs),xmax=Math.max(...xs);
+  const ymax=Math.min(100,Math.max(5,Math.ceil(Math.max(...series.flatMap(s=>s.points.map(p=>p[1])).filter(Number.isFinite))/5)*5));
+  const X=x=>75+(x-xmin)/(xmax-xmin||1)*810,Y=y=>265-y/ymax*195;
+  let svg='<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="BC SAC RLPD seed 11 충돌률 비교" viewBox="0 0 920 330" font-family="sans-serif" font-size="13" fill="#375467"><rect width="920" height="330" fill="white"/><text x="12" y="57">충돌률 (%)</text>';
+  for(let i=0;i<=5;i++){
+    const x=75+i*810/5,y=265-i*195/5;
+    svg+='<path stroke="#d4e0e5" d="M75 '+y+'H885"/><text text-anchor="end" x="65" y="'+(y+4)+'">'+num(i*ymax/5,1)+'</text><text text-anchor="middle" x="'+x+'" y="290">'+num(xmin+i*(xmax-xmin)/5)+'</text>';
+  }
+  svg+='<text x="885" y="318" text-anchor="end">SAC·RLPD 환경 전이 수</text>';
+  series.forEach((s,i)=>{
+    const dash=s.baseline?' stroke-dasharray="8 5"':"";
+    const lx=75+i*275;
+    svg+='<path d="M'+lx+' 25h25" stroke="'+s.color+'" stroke-width="3"'+dash+'/><text x="'+(lx+33)+'" y="29">'+esc(names[s.method])+" · seed 11"+(s.baseline?" (고정)":"")+'</text>';
+    if(s.baseline){
+      const y=Y(100*s.latest.aggregate.collision_rate);
+      svg+='<path data-method="'+s.method+'" d="M75 '+y+'H885" stroke="'+s.color+'" stroke-width="2.7"'+dash+'><title>BC 선택 모델의 고정 충돌률 '+pct(s.latest.aggregate.collision_rate)+'</title></path>';
+    }else{
+      let path="",move=true,dots="";
+      for(const [x,y] of s.points){
+        if(!Number.isFinite(y)){move=true;continue;}
+        path+=(move?"M":"L")+X(x)+" "+Y(y)+" ";move=false;
+        dots+='<circle cx="'+X(x)+'" cy="'+Y(y)+'" r="3.8" fill="'+s.color+'"><title>'+esc(names[s.method])+" · "+num(x)+" 전이 · 충돌률 "+num(y,2)+'%</title></circle>';
+      }
+      svg+='<path data-method="'+s.method+'" d="'+path+'" stroke="'+s.color+'" stroke-width="2.7" fill="none"/>'+dots;
+    }
+  });
+  el("collisionChart").innerHTML=svg+'</svg>';
+}
 function cases(reset=true){
   const e=data.evaluations.find(o=>o.id===el("evaluation").value);
   if(!e){el("scenario").innerHTML=empty("평가 기록이 없습니다.");el("episodes").innerHTML="";return;}
@@ -138,9 +203,9 @@ async function showLog(){
 let launching = false;
 let launchSequence = 0;
 function demoOptions() {
-  const runs = data.runs.filter(r => r.demo_available)
+  const runs = data.demo_models.slice()
     .sort((a,b) => a.method.localeCompare(b.method) || a.seed-b.seed);
-  options("driveModel", [["expert", names.B0], ...runs.map(r => [r.id, nameOf(r)])],
+  options("driveModel", [["expert", names.B0], ...runs.map(r => [r.id, nameOf(r)+" · "+r.training+" 학습"])],
           runs.find(r => r.method === "B3")?.id || "expert");
   el("driveLaunch").disabled = launching;
 }
@@ -195,6 +260,8 @@ async function refresh(){
     const res=await fetch("/api/results");
     if(!res.ok)throw Error(res.status);
     data=await res.json();
+    data.runs=data.runs.filter(visibleModel);
+    data.evaluations=data.evaluations.filter(visibleModel);
     el("overview").innerHTML='<span><strong>'+data.runs.filter(r=>Object.keys(r.complete).length).length+'</strong>학습 완료</span><span><strong>'+data.evaluations.length+'</strong>평가 기록</span>';
     groups=new Map();
     for(const e of data.evaluations){
@@ -203,11 +270,13 @@ async function refresh(){
       groups.get(k).push(e);
     }
     const ranked=[...groups].sort((a,b)=>b[1].filter(e=>e.representative).length-a[1].filter(e=>e.representative).length);
+    const collisionGroups=ranked.filter(([k,g])=>g.some(e=>["B2","B3"].includes(e.method)&&Number(e.seed)===11&&Number.isFinite(e.step)));
+    options("collisionCohort",collisionGroups.map(([k,g])=>[k,g[0].panel+" · "+Object.keys(g[0].scenarios).sort().join("/")+" · "+g[0].cases.length+"케이스"]));
     options("cohort",ranked.map(([k,g])=>[k,g[0].panel+" · "+Object.keys(g[0].scenarios).sort().join("/")+" · "+g[0].cases.length+"케이스 · "+g[0].cohort.slice(0,6)]));
     options("run",data.runs.map(r=>[r.id,nameOf(r)+" · "+r.id]));
     const evals=[...data.evaluations].sort((a,b)=>Number(b.representative)-Number(a.representative)||label(a).localeCompare(label(b))||a.step-b.step);
     options("evaluation",evals.map(e=>[e.id,label(e)+" · "+e.id]));
-    demoOptions();comparison();training(true);cases();archives();await showLog();
+    demoOptions();comparison();training(true);collisionComparison();cases();archives();await showLog();
     el("stamp").textContent=new Date().toLocaleTimeString("ko-KR")+" 갱신";
     el("warning").textContent=data.warnings.join(" / ");
   }catch(err){el("warning").textContent="결과 갱신 실패 · "+err.message+" · 서버 상태를 확인하고 새로고침하세요.";}
@@ -224,6 +293,13 @@ el("save").onclick=()=>{
   const link=document.createElement("a");link.href=url;link.download=el("run").value.replaceAll("/","_")+"-"+el("metric").value+".svg";link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
 el("refresh").onclick=refresh;el("cohort").onchange=comparison;el("run").onchange=()=>training(true);
+el("collisionCohort").onchange=collisionComparison;
+el("collisionSave").onclick=()=>{
+  const svg=el("collisionChart").querySelector("svg");
+  if(!svg)return;
+  const url=URL.createObjectURL(new Blob([svg.outerHTML],{type:"image/svg+xml"}));
+  const link=document.createElement("a");link.href=url;link.download="collision-comparison-seed11.svg";link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
 el("metric").onchange=()=>training();el("evaluation").onchange=()=>cases();
 el("filter").onchange=el("fail").onchange=()=>cases(false);
 el("log").onchange=el("logDetails").ontoggle=showLog;

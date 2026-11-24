@@ -1,3 +1,0 @@
- Retrying in 1 seconds
-START {'ego_lane': '-3#4_0', 'ego_m': 5.219867042573652, 'target_positions_m': [8.1]}
-MERGED 3.0 {'ego_lane': '-3#4_1', 'ego_m': 18.74222319726468, 'target_positions_m': [27.2]}

@@ -13,11 +13,25 @@ from kcity.training.experiment import experiment_sha256, is_pilot, run_metadata,
 from kcity.data.dataset import atomic_json, shard_directories
 from kcity.data.pool import pool_data_id, pool_reports
 from kcity.data.storage import verify_bundle
-from kcity.env.config import digest, file_sha256
+from kcity.env.config import DEFAULT_PROTOCOL, ROOT, digest, file_sha256, load_contract
+from kcity.env.observation import (CONFLICT, INSIDE, LANE_ENDS, LANE_LEFT, SPEED, TLS_DIST,
+                                   TLS_GREEN, TLS_RED, TLS_YELLOW, YIELD_SIGN)
 from kcity.training.runs import Owner, now, read, require, stopped
 from kcity.training.logging import IntervalMean
 from kcity.policy.bc import KCityBC
 from kcity.policy.checkpoint import read_bundle
+
+
+def decision_weights(observation, action, weight):
+    """Give demonstrated merges the highest weight and other local decision windows an intermediate weight."""
+    lane_drop = observation[:, LANE_ENDS] > .5
+    yield_traffic = ((observation[:, YIELD_SIGN] > .5) & (observation[:, CONFLICT] > .5)
+                     & (observation[:, LANE_LEFT] < .4) & (observation[:, INSIDE] < .5))
+    signal = ((observation[:, TLS_DIST] < .4) & ((observation[:, TLS_RED] > .5)
+              | (observation[:, TLS_YELLOW] > .5)
+              | ((observation[:, TLS_GREEN] > .5) & (observation[:, SPEED] < .25))))
+    weights = np.where(lane_drop | yield_traffic | signal, np.sqrt(weight), 1.)
+    return np.where(np.abs(action[:, 1]) >= .5, weight, weights)
 
 
 def build_views(pool,output,spec,*,workers=1,revalidate=False):
@@ -27,12 +41,14 @@ def build_views(pool,output,spec,*,workers=1,revalidate=False):
     print(f'[BC views] Checking expert pool: {pool}', flush=True)
     parts,reports = pool_reports(pool,workers=workers,revalidate=revalidate)
     pilot = is_pilot(spec)
+    contract = load_contract(ROOT / spec['base_contract']['path'])
     for part in parts:
         config = read(part/'RUN.json')
         require(config['source_stage']==('pilot_expert_pool' if pilot else 'expert_pool')
                 and config['eligible_for_research_training'] is (not pilot), 'Not a new main expert pool or matching pilot pool: '+str(part))
         require(read(part/'RELEASE.json')['eligible_for_research_training'] is (not pilot),
                 'Pool release not eligible for this run purpose: '+str(part))
+        require(config['contract'] == contract, 'BC expert pool environment contract mismatch')
     report = dict(unique_transitions=sum(r['unique_transitions'] for r in reports),
                   episodes=[e for r in reports for e in r['episodes']])
     require(report['unique_transitions']>=spec['budgets']['expert_valid_transitions_min'],'Main pool budget not met')
@@ -45,8 +61,20 @@ def build_views(pool,output,spec,*,workers=1,revalidate=False):
         total = sum(e['metrics']['decision_count'] for e in episodes)
         require(total>=size,'Insufficient successful rows for '+split)
         print(f'[BC views] {split}: selecting {size:,} of {total:,} eligible rows', flush=True)
-        chosen = np.sort(rng.choice(total,size,replace=False))
         uids = [e['episode_uid'] for e in episodes]
+        probabilities = None
+        weight = spec['bc'].get('decision_sampling_weight', 1)
+        if split == 'expert_train' and weight != 1:
+            require(np.isfinite(weight) and weight >= 1, 'Invalid BC decision sampling weight')
+            pieces = []
+            for folder in shards:
+                with np.load(folder/'numeric.npz', allow_pickle=False) as a:
+                    eligible = (a['data_split'] == split) & np.isin(a['episode_uid'], uids)
+                    pieces.append(decision_weights(a['observation'][eligible], a['action_raw'][eligible], weight))
+            weights = np.concatenate(pieces)
+            require(len(weights) == total, 'Weighted population differs from successful train rows')
+            probabilities = weights / weights.sum()
+        chosen = np.sort(rng.choice(total, size, replace=False, p=probabilities))
         chunks = {k:[] for k in ['observation','action_target','transition_uid']}
         cursor = 0
         for shard_index,folder in enumerate(shards,1):
@@ -67,7 +95,7 @@ def build_views(pool,output,spec,*,workers=1,revalidate=False):
     for split,data in arrays.items():
         np.savez_compressed(output/(split+'.npz'),**data)
     body = dict(schema='KC-BC-VIEWS-v2',pool=str(Path(pool).resolve()),data_id=pool_data_id(pool),
-                run_purpose='pilot' if pilot else 'main',
+                run_purpose='pilot' if pilot else 'main', contract_sha256=digest(contract),
                 parts=[str(part.resolve()) for part in parts],
                 experiment_sha256=experiment_sha256(spec),rng_seed=20261115,
                 files={p.name:file_sha256(p) for p in output.glob('*.npz')})
@@ -128,6 +156,11 @@ def run_bc(root,views,seed,spec,device,resume=False):
     manifest,data = read_views(views)
     pilot = is_pilot(spec)
     require(manifest.get('run_purpose', 'main') == ('pilot' if pilot else 'main'), 'BC view run purpose mismatch')
+    contract_hash = digest(load_contract(ROOT / spec['base_contract']['path']))
+    view_contract = manifest.get('contract_sha256')
+    if view_contract is None:  # manifests created before multi-contract collection all used v1
+        view_contract = digest(load_contract(DEFAULT_PROTOCOL))
+    require(view_contract == contract_hash, 'BC views environment contract mismatch')
     cfg = training_config(spec,'pilot_bc' if pilot else 'main_bc',seed,views=str(Path(views).resolve()),view_id=manifest['view_id'],device=device)
     owner = Owner(root,cfg,resume)
     model = KCityBC(spec['rlpd']['hidden_dims'],seed=seed,lr=spec['bc']['learning_rate'],device=device)

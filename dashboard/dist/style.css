@@ -2,4 +2,7 @@
 #driveLaunch{background:var(--blue);color:white;border-color:var(--blue);font-weight:650}
 #driveLaunch:disabled{opacity:.6}
 #driveStatus:not(:empty){margin-top:12px}
+#collisionChart{overflow-x:auto}
+#collisionChart svg{display:block;width:100%;min-width:760px;height:auto;max-height:390px}
+#collisionNote{margin:12px 0}
 @media(max-width:600px){nav{overflow-x:auto;justify-content:flex-start}nav a{white-space:nowrap}}

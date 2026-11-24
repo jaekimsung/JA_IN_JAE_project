@@ -45,7 +45,7 @@ def evaluate_dev(agent, root, point, spec, stop=lambda: False):
     require([r['requested_case_uid'] for r in records] == [c['case_uid'] for c in cases[:len(records)]], 'Dev resume panel mismatch')
     print(f'[DEV {Path(root).name}] START T={point:,} cases={len(records)}/{len(cases)} '
           '(evaluation only; training paused)', flush=True)
-    env = SumoKCityEnv(background=True)
+    env = SumoKCityEnv(protocol=ROOT / spec['base_contract']['path'], background=True)
     try:
         for case in cases[len(records):]:
             if stop():
@@ -106,7 +106,7 @@ def run_rl(root, method, seed, spec, device, prior_pool=None, resume=False, *, r
     cap = spec['budgets']['rl_transitions_per_method_seed']
     interval = spec['metrics']['dev_interval_transitions']
     owner = Owner(root, cfg, resume)
-    env = SumoKCityEnv(background=True)
+    env = SumoKCityEnv(protocol=ROOT / spec['base_contract']['path'], background=True)
     writer = None
     clock = time.monotonic()
     try:
@@ -119,7 +119,7 @@ def run_rl(root, method, seed, spec, device, prior_pool=None, resume=False, *, r
         prior = load_prior(prior_pool, spec['budgets']['prior_transitions'], pilot=pilot,
                            minimum_pool_rows=spec['budgets']['expert_valid_transitions_min'],
                            contract=env.contract) if method == 'B3' else None
-        plan = GeneratedCasePlan.for_budget(env.contract, 'train', cap + 1)
+        plan = GeneratedCasePlan.for_budget(env.contract, 'train', cap + 1, case_offset=spec.get('case_offset', 0))
         dcfg = dataset_config(env, root.name + '-online', plan, 'pilot_rl_train' if pilot else 'rl_train', method, seed,
                               experiment_sha256=cfg['experiment_sha256'], evaluation_interval=interval)
         dcfg['learner_config'] = cfg

@@ -12,6 +12,9 @@ def load_experiment(path=EXPERIMENT):
     spec = json.loads((ROOT / path).read_text(encoding='utf-8'))
     if spec.get('schema_id') != 'KC-EXPERIMENT-v1':
         raise ValueError('Unsupported experiment settings schema')
+    contract = spec['base_contract']
+    if 'sha256' in contract and file_sha256(ROOT / contract['path']) != contract['sha256']:
+        raise ValueError('Environment protocol differs from experiment settings')
     for name, panel in spec['case_panels'].items():
         if file_sha256(ROOT / panel['path']) != panel['sha256']:
             raise ValueError(f'Case panel {name} differs from experiment settings: {panel["path"]}')

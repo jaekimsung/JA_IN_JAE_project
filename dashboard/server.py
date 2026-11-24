@@ -17,7 +17,9 @@ from urllib.parse import parse_qs, urlsplit
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 RUNS = ROOT / "runs"
-EXPERIMENT = ROOT / "configs/kcity/experiment.json"
+MAIN = RUNS / "dense_v2_1_main"
+EXPERIMENT = ROOT / "configs/kcity/v2_1/experiment.json"
+DEMO_CASE = {"A": 1000, "B": 1005, "C": 1004}
 
 
 def read(path):
@@ -50,22 +52,49 @@ def demo_bundle(folder, cfg, best, complete):
     return None
 
 
+def legacy_demo_models():
+    models = []
+    for name in ("bc_main_seed11", "B2_seed11", "B3_seed11"):
+        folder = RUNS / name
+        cfg = optional(folder, "CONFIG.json")
+        if cfg.get("seed") == 11 and demo_bundle(folder, cfg, optional(folder, "BEST.json"), optional(folder, "COMPLETE.json")):
+            models.append(dict(id=name, method=cfg.get("method") or "B1", seed=11, training="v1"))
+    return models
+
+
 def scan():
     data = dict(runs=[], evaluations=[], pools=[], demos=[], logs=[], warnings=[], spec=read(EXPERIMENT))
+    spec = data["spec"]
+    experiment_hash = hashlib.sha256(json.dumps(spec, sort_keys=True, separators=(",", ":"),
+                                                ensure_ascii=False).encode()).hexdigest()
+    panel_ids = {name: {row["case_uid"] for row in read(ROOT / ref["path"])["cases"]}
+                 for name, ref in spec["case_panels"].items()}
     trainers = {}
+    legacy_trainers = {}
+    for model in legacy_demo_models():
+        folder = RUNS / model["id"]
+        bundle = demo_bundle(folder, optional(folder, "CONFIG.json"),
+                             optional(folder, "BEST.json"), optional(folder, "COMPLETE.json"))
+        legacy_trainers[bundle.resolve()] = dict(id=model["id"], method=model["method"],
+                                                 seed=model["seed"], training="v1",
+                                                 complete=optional(folder, "COMPLETE.json"))
     folders = []
     for base, dirs, files in os.walk(RUNS):
+        if Path(base) == RUNS:
+            dirs[:] = [d for d in dirs if d in (MAIN.name, "eval")]
         dirs[:] = sorted(d for d in dirs if d not in {
             "dataset", "shards", "checkpoints", "source_snapshot", "transitions", "__pycache__"
         } and not d.startswith("update-"))
         folder = Path(base)
         folders.append((folder, set(files)))
-        data["logs"].extend(rel(folder / f) for f in sorted(files) if f.endswith(".log"))
+        if folder.is_relative_to(MAIN):
+            data["logs"].extend(rel(folder / f) for f in sorted(files) if f.endswith(".log"))
     for folder, files in folders:
         try:
             if "CONFIG.json" in files:
                 cfg = read(folder / "CONFIG.json")
-                if cfg.get("kind", "").endswith(("_bc", "_rl")) or "curve.jsonl" in files:
+                if (cfg.get("kind") in ("main_bc", "main_rl") and cfg.get("seed") == 11
+                        and cfg.get("experiment_sha256") == experiment_hash):
                     complete = optional(folder, "COMPLETE.json")
                     curve = {}
                     for line in (folder / "curve.jsonl").read_text().splitlines() if "curve.jsonl" in files else []:
@@ -82,9 +111,9 @@ def scan():
                     run["demo_available"] = demo_bundle(folder, cfg, run["best"], complete) is not None
                     trainers[folder] = run
                     data["runs"].append(run)
-            if "POOL.json" in files:
+            if "POOL.json" in files and optional(folder, "CONFIG.json").get("experiment_sha256") == experiment_hash:
                 data["pools"].append(dict(id=rel(folder), **read(folder / "POOL.json")))
-            if "STATUS.json" in files and "demo" in folder.relative_to(RUNS).parts:
+            if "STATUS.json" in files and (MAIN / "demo") in folder.parents:
                 data["demos"].append(dict(id=rel(folder), **read(folder / "STATUS.json")))
         except (ValueError, OSError, TypeError) as exc:
             data["warnings"].append(f"{rel(folder)} · {exc}")
@@ -104,12 +133,18 @@ def scan():
             bundle = policy if isinstance(policy,str) else policy.get("bundle","")
             trainer = next((t for path,t in trainers.items() if path in folder.parents
                             or path in Path(bundle).resolve().parents), {})
+            if not trainer and bundle:
+                trainer = legacy_trainers.get(Path(bundle).resolve(), {})
             meta = policy if isinstance(policy,dict) else cfg.get("policy_metadata",{})
             method = trainer.get("method") or meta.get("config",{}).get("method")
             if meta.get("kind") == "expert" or policy == "expert":
                 method = "B0"
             panel = summary.get("panel", episodes[0].get("namespace") if episodes else "unknown")
+            if not ids or not set(ids) <= panel_ids.get(panel, set()) or (method != "B0" and not trainer):
+                continue
             step = summary.get("actual_transitions")
+            if trainer.get("training") == "v1" and method in ("B2", "B3"):
+                step = trainer["complete"].get("transitions")
             cohort = hashlib.sha256(json.dumps(sorted(ids)).encode()).hexdigest() if ids and all(ids) else rel(folder)
             detail = []
             for ep in episodes:
@@ -120,10 +155,14 @@ def scan():
             data["evaluations"].append(dict(id=rel(folder), method=method or "기타", panel=panel,
                 seed=summary.get("seed",trainer.get("seed",meta.get("config",{}).get("seed"))),
                 run=trainer.get("id"), step=step, cohort=cohort, aggregate=summary["aggregate"],
+                training=trainer.get("training", "v2.1"),
                 representative=step is None or step == trainer.get("complete",{}).get("transitions"),
                 cases=detail, scenarios=dict(Counter(e["scenario_id"] for e in detail))))
         except (OSError,ValueError,TypeError,KeyError) as exc:
             data["warnings"].append(f"{rel(folder)} · {exc}")
+    data["demo_models"] = legacy_demo_models() + [
+        dict(id=r["id"], method=r["method"], seed=r["seed"], training="v2.1")
+        for r in data["runs"] if r["demo_available"]]
     return data
 
 
@@ -163,10 +202,14 @@ class DemoLauncher:
             raise ValueError("모델과 시나리오를 다시 선택하세요.")
         policy = "expert"
         if model != "expert":
-            run = next((r for r in scan()["runs"] if r["id"] == model), None)
-            if run is None or not run["demo_available"]:
+            run = next((r for r in scan()["demo_models"] if r["id"] == model), None)
+            if run is None:
                 raise ValueError("선택한 모델의 로컬 체크포인트가 없습니다.")
-            policy = str(demo_bundle(RUNS / model, run["config"], run["best"], run["complete"]))
+            folder = RUNS / model
+            bundle = demo_bundle(folder, read(folder / "CONFIG.json"), optional(folder, "BEST.json"), optional(folder, "COMPLETE.json"))
+            if bundle is None:
+                raise ValueError("선택한 체크포인트를 찾을 수 없습니다.")
+            policy = str(bundle)
         with self.lock:
             for token, (proc, _, selection, _) in list(self.jobs.items()):
                 if proc.poll() is not None:
@@ -174,7 +217,7 @@ class DemoLauncher:
                 elif selection == (model, scenario):
                     return token
             token = uuid.uuid4().hex
-            folder = RUNS / "demo" / f"{Path(model).name}_{scenario}_{token}"
+            folder = MAIN / "demo" / f"{Path(model).name}_{scenario}_{token}"
             folder.parent.mkdir(exist_ok=True, parents=True)
             state = {"phase": "STARTING_GUI"}
             read_fd, write_fd = os.pipe()
@@ -183,7 +226,10 @@ class DemoLauncher:
                 with folder.with_suffix(".log").open("xb") as log:
                     proc = subprocess.Popen([
                         self.python, "-u", "-B", "runner/record_video.py",
-                        "--policy", policy, "--scenario", scenario, "--case-index", "1000000",
+                        "--protocol", str(ROOT / read(EXPERIMENT)["base_contract"]["path"]),
+                        "--namespace", "contract_check", "--policy", policy, "--scenario", scenario,
+                        "--case-index", str(DEMO_CASE[scenario]),
+                        *(["--observe-yield"] if scenario == "C" else []),
                         "--speed", "1", "--output", str(folder), "--status-fd", str(write_fd),
                     ], cwd=ROOT, stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT,
                        pass_fds=(write_fd,), start_new_session=True)
@@ -268,7 +314,7 @@ class Handler(BaseHTTPRequestHandler):
             elif url.path == "/api/log":
                 name = parse_qs(url.query).get("file",[""])[0]
                 path = (RUNS / name).resolve()
-                if not path.is_relative_to(RUNS) or path.suffix != ".log" or not path.is_file():
+                if not path.is_relative_to(MAIN) or path.suffix != ".log" or not path.is_file():
                     return self.send_error(404)
                 with path.open("rb") as f:
                     f.seek(max(0, path.stat().st_size-32768))
@@ -296,7 +342,7 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument("--port", type=int, default=4796)
     parser.add_argument("--demo-python", default=sys.executable, help="Python from the SUMO training environment")
     args = parser.parse_args()
     with ThreadingHTTPServer(("127.0.0.1",args.port), Handler) as server:

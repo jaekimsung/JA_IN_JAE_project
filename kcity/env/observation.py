@@ -1,4 +1,4 @@
-"""62-D policy observation (KC-OBS62-v1) and detected-vehicle list, built from a privileged SUMO snapshot.
+"""63-D policy observation and detected-vehicle list, built from a privileged SUMO snapshot.
 
 Only what a driver can perceive or read from a route-level map: surrounding vehicles, lanes that exist,
 signals, the next turn and road signs. No lane-level route guidance (which lane continues the route) and
@@ -22,7 +22,7 @@ no right-of-way decision: those must be learned from reward.
     45       YIELD_SIGN     the next junction is unsignalized and the ego's approach is the minor road
     46       VIA_LENGTH     path length through the next junction / 50 m
     47-61    CONFLICT       three vehicles approaching or inside the next junction from other approaches,
-                            nearest first: presence, distance to the junction / 50 m, speed / 8.33,
+                            v1 nearest first; v2 prioritizes junction occupants then time to arrival: presence, distance to the junction / 50 m, speed / 8.33,
                             inside the junction, bearing from the ego heading / 180 deg
     62       LANE_ENDS      the current lane physically ends (no connection onward, a lane-drop marking);
                             route-independent road structure
@@ -92,6 +92,17 @@ def junction_vehicles(geometry, link, vehicles, ego_id, lanes_key):
     return sorted(found, key=lambda f: f[:2])
 
 
+def observed_foes(geometry, link, vehicles, ego_id):
+    foes = junction_vehicles(geometry, link, vehicles, ego_id, 'approach_lanes')
+    if link.get('rank_by_arrival'):
+        def order(foe):
+            gap, vid, vehicle, inside = foe
+            eta = gap / vehicle['speed'] if vehicle['speed'] > .5 else math.inf
+            return (not inside, eta, gap, vid)
+        foes.sort(key=order)
+    return foes[:CONFLICT_SLOTS]
+
+
 def build_observation(geometry, ego, vehicles, next_tls, remaining_s, horizon_s, cooldown_s, speed_cap=8.33):
     """(observation, detected vehicles, lane mask)."""
     if ego is None:
@@ -140,7 +151,7 @@ def build_observation(geometry, ego, vehicles, next_tls, remaining_s, horizon_s,
         obs[YIELD_SIGN] = bool(not link['tls'] and link['state'] in 'msw')
         obs[VIA_LENGTH] = link['length'] / 50
         if internal or obs[LANE_LEFT] * 100 <= CONFLICT_RANGE_M:
-            slots = junction_vehicles(geometry, link, vehicles, ego['id'], 'approach_lanes')[:CONFLICT_SLOTS]
+            slots = observed_foes(geometry, link, vehicles, ego['id'])
             for k, (gap, _, v, inside) in enumerate(slots):
                 bearing = math.degrees(math.atan2(v['x'] - ego['x'], v['y'] - ego['y'])) - ego['angle_deg']
                 obs[CONFLICT + 5 * k:CONFLICT + 5 * k + 5] = [1, gap / CONFLICT_RANGE_M, v['speed'] / speed_cap,

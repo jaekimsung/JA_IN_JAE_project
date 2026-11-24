@@ -1,0 +1,26 @@
+Warning: Vehicle '85f92a74670e6990-merge_priority-03' performs emergency braking on lane '-21_0' with decel=8.00, wished=4.50, severity=1.00, time=133.20.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+{
+  "phase": "COMPLETE",
+  "transitions": 2075,
+  "target": 2000,
+  "completed_episodes": 17,
+  "finish_episode": true,
+  "part": 0
+}

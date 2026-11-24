@@ -12,29 +12,5 @@ __pycache__/
 # Stray simulator logs
 MUJOCO_LOG.TXT
 
-# Keep only the result records and logs used by dashboard/server.py.
-/runs/**
-!/runs/**/
-!/runs/**/*.log
-!/runs/**/CONFIG.json
-!/runs/**/STATUS.json
-!/runs/**/COMPLETE.json
-!/runs/**/BEST.json
-!/runs/**/curve.jsonl
-!/runs/**/SAMPLE_EFFICIENCY.json
-!/runs/**/SUMMARY.json
-!/runs/**/EPISODES.json
-!/runs/**/POOL.json
-
-# Raw datasets, model bundles and snapshots are local, including their metadata.
-/runs/**/dataset/
-/runs/**/transitions/
-/runs/**/shards/
-/runs/**/checkpoints/
-/runs/**/update-*/
-/runs/**/source_snapshot/
-/runs/**/__pycache__/
-
-# Collection settings and worker status are outside the dashboard's pool view.
-/runs/main_collection_*/**/CONFIG.json
-/runs/main_collection_*/**/STATUS.json
+# Local experiment runs
+/runs/

@@ -26,9 +26,13 @@ DEFAULT_EXPERT = dict(speed_cap_mps=8.33, cruise_mps=7.5, accel_mps2=2., decel_m
 
 
 class KCityRuleExpert:
+    @classmethod
+    def from_protocol(cls, protocol):
+        return cls(dict(DEFAULT_EXPERT, **protocol.get('expert_parameters', {})))
+
     def __init__(self, config=None):
         self.config = deepcopy(DEFAULT_EXPERT if config is None else config)
-        if set(self.config) != set(DEFAULT_EXPERT) or any(not math.isfinite(v) or v <= 0 for v in self.config.values()):
+        if set(self.config) - {'rolling_yield_buffer_s'} != set(DEFAULT_EXPERT) or any(not math.isfinite(v) or v <= 0 for v in self.config.values()):
             raise ValueError('Invalid expert configuration')
 
     def decision(self, observation):
@@ -85,6 +89,13 @@ class KCityRuleExpert:
             reasons.append('lane_end_wait')
         if o[YIELD_SIGN] > .5 and not inside:
             clear = (entry + float(o[VIA_LENGTH]) * 50 + c['vehicle_length_m']) / max(v, c['yield_min_speed_mps'])
+            if 'rolling_yield_buffer_s' in c:
+                # Arrival from a rolling start, with acceleration bounded by cruise speed.
+                distance = entry + float(o[VIA_LENGTH]) * 50 + c['vehicle_length_m']
+                cruise = max(v, c['cruise_mps'])
+                accel = c['accel_mps2'] / 2
+                peak = min(cruise, math.sqrt(v * v + 2 * accel * distance))
+                clear = (peak - v) / accel + max(0., distance - (peak * peak - v * v) / (2 * accel)) / peak
             for k in range(CONFLICT_SLOTS):
                 present, gap, speed, foe_inside = o[CONFLICT + 5 * k:CONFLICT + 5 * k + 4]
                 if present < .5:
@@ -94,9 +105,17 @@ class KCityRuleExpert:
                 # A vehicle standing on another approach is itself waiting and does not block the ego.
                 arriving = speed > c['waiting_speed_mps'] and gap / speed < clear + c['yield_margin_s']
                 if foe_inside > .5 or arriving:
-                    stops.append(max(0., entry - c['stop_buffer_m']))
+                    room = max(0., entry - c['stop_buffer_m'])
+                    stops.append(room)
                     reasons.append('yield')
-                    break
+                    if 'rolling_yield_buffer_s' in c and speed > c['waiting_speed_mps']:
+                        # Time the approach behind a moving vehicle, retaining the stop envelope.
+                        occupied = c['vehicle_length_m'] + float(o[VIA_LENGTH]) * 50
+                        arrival_s = (gap + occupied) / speed + c['rolling_yield_buffer_s']
+                        approach_speed = room / arrival_s
+                        a = min(a, (approach_speed - v) / max(1., arrival_s / 2))
+                    else:
+                        break
         for distance in stops:
             a = min(a, (math.sqrt(2 * c['following_decel_mps2'] * distance) - v) / .5)
         a = float(np.clip(a, -c['decel_mps2'], c['accel_mps2']))

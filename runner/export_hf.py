@@ -19,7 +19,7 @@ import shutil
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # 저장소 루트
 from kcity.training.experiment import git_info
-from kcity.data.dataset import OBSERVATION_ID, SCHEMA_ID, shard_directories
+from kcity.data.dataset import SCHEMA_ID, shard_directories
 from kcity.data.pool import part_report, pool_parts
 
 DATA_FILES = ('transitions.jsonl.gz', 'numeric.npz', 'events.jsonl.gz')
@@ -69,7 +69,7 @@ if __name__ == '__main__':
 COLUMNS = [
     ('episode', 'int', '-', 'Episode number within the dataset (dataset-local)'),
     ('t', 'int', 'decision', 'Decision index within the Episode (2 Hz policy, 0.5 s per step)'),
-    ('observation', 'float32[63]', 'normalized [-1,1]', 'Partial observation o_t given to the AV policy (KC-OBS63-v1)'),
+    ('observation', 'float32[63]', 'normalized [-1,1]', 'Partial observation o_t given to the AV policy'),
     ('action_raw', 'float32[2]', '-', 'Policy output [acceleration, lane change] before clipping'),
     ('action.accel_raw', 'float', 'normalized [-1,1]', 'Acceleration command passed to SUMO (x2.0 m/s² up, x4.5 m/s² down)'),
     ('action.lane_change_raw', 'float', '-', 'Raw lane command passed to the environment'),
@@ -104,6 +104,7 @@ def card(name, reports):
     splits = Counter()
     for r in reports.values():
         splits.update(r['split_counts'])
+    observations = ", ".join(sorted({r["observation_id"] for r in reports.values()}))
     lines = ['---', f'pretty_name: {name}', 'license: other', 'task_categories:', '- reinforcement-learning',
              'tags:', '- autonomous-driving', '- sumo', '- k-city', '---', '',
              f'# {name}', '',
@@ -111,7 +112,7 @@ def card(name, reports):
              'human-driven vehicles (HV), with traffic signals and route goals. Each transition stores the '
              'policy observation, action, reward, termination flags, the privileged simulator state before and '
              'after the step, detected vehicles and events.', '',
-             f'- Transitions: **{total:,}** (schema `{SCHEMA_ID}`, observation `{OBSERVATION_ID}`)',
+             f'- Transitions: **{total:,}** (schema `{SCHEMA_ID}`, observation `{observations}`)',
              '- Splits: ' + ', '.join(f'{k} {v:,}' for k, v in sorted(splits.items())),
              f'- Code: git `{git_info()["commit"]}`', '', '## Parts', '',
              '| part | source stage | transitions | Episodes | data_id |', '|---|---|---:|---:|---|']
@@ -152,7 +153,9 @@ def main():
             if part in reports:
                 parser.error(f'Duplicate part name {part}; pass distinct run directories')
             report = dict(part_report(root, args.revalidate))
-            report['source_stage'] = json.loads((root / 'RUN.json').read_text())['source_stage']
+            config = json.loads((root / 'RUN.json').read_text())
+            report['source_stage'] = config['source_stage']
+            report['observation_id'] = config['contract']['protocol']['observations']['schema_id']
             for shard in shard_directories(root):
                 for name in DATA_FILES:
                     link(shard / name, args.output / 'data' / part / shard.name / name, args.copy)
@@ -161,7 +164,7 @@ def main():
     (args.output / 'README.md').write_text(card(args.name, reports), encoding='utf-8')
     (args.output / 'load_kcity.py').write_text(READER, encoding='utf-8')
     summary = {part: {k: r[k] for k in ['data_id', 'unique_transitions', 'committed_shards', 'split_counts',
-                                       'event_counts', 'source_stage']} for part, r in reports.items()}
+                                       'event_counts', 'source_stage', 'observation_id']} for part, r in reports.items()}
     (args.output / 'SUMMARY.json').write_text(json.dumps(summary, indent=2, ensure_ascii=False) + '\n')
     print(f"total {sum(r['unique_transitions'] for r in reports.values()):,} transitions -> {args.output}")
 

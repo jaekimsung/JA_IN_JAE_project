@@ -133,6 +133,15 @@ def validate_contract(spec):
                               to_edge=b.getID(), options=options))
         if tls != set(row['required_tls_ids']):
             raise ContractError(sid + ': required TLS set does not match route')
+        if row.get('reserve_background_edge') and (
+                row['reserve_background_edge'] not in {stream['route'][0] for stream in row['interaction']} or
+                not any(row['reserve_background_edge'] not in route for route in background.values())):
+            raise ContractError(sid + ': invalid reserved interaction edge')
+        minimum = row.get('minimum_initial_priority_vehicles', 0)
+        if type(minimum) is not int or not 0 <= minimum <= 3:
+            raise ContractError(sid + ': initial priority traffic must fit the three observation slots')
+        if row.get('require_moving_neighbors') and not row['required_lane_change']:
+            raise ContractError(sid + ': moving neighbors require a target lane')
         for stream in row['interaction']:
             stream_edges = edges_for(stream['route'])
             for a, b in zip(stream_edges, stream_edges[1:]):
@@ -142,6 +151,16 @@ def validate_contract(spec):
             ranges = ['count'] + (['first_position_m', 'spacing_m'] if stream['kind'] == 'placed' else ['first_s', 'headway_s'])
             if any(len(stream[k]) != 2 or stream[k][0] > stream[k][1] or stream[k][0] < 0 for k in ranges):
                 raise ContractError(sid + ': invalid interaction range ' + stream['name'])
+            if 'platoon_size' in stream:
+                size = stream['platoon_size']
+                opening = stream['platoon_break_s']
+                if (stream['kind'] != 'timed' or type(size) is not int or size < 1 or len(opening) != 2
+                        or not 0 < opening[0] <= opening[1] or not all(math.isfinite(x) for x in opening)):
+                    raise ContractError(sid + ': invalid platoon spacing')
+            if 'max_speed_mps' in stream:
+                positive(stream['max_speed_mps'], 'max_speed_mps')
+                if not 0 <= stream['speed_mps'] <= stream['max_speed_mps']:
+                    raise ContractError(sid + ': invalid stream departure speed')
         required = row['required_lane_change']
         if required:
             if (required['edge'], required['next_edge']) != tuple(row['route_edges'][:2]):

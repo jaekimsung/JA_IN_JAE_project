@@ -1,0 +1,33 @@
+[
+  {
+    "scenario": "C",
+    "index": 1004,
+    "case_uid": "f56b5d0de8f306140b98b60497cbeee375fd45a6fe3bc986b348111aaab974ef",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 3.516279069767443,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 2.7325407844395793,
+        "moving_priority": 1,
+        "min_tta_s": 13.00307616830888,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 12.5
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.9996839761734009,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 0,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 0
+  }
+]

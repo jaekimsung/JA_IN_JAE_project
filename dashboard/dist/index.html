@@ -2,19 +2,19 @@
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#18354b"><title>K-CITY 주행 실험실</title><link rel="icon" href="data:,"><link rel="stylesheet" href="/style.css"><script defer src="/app.js"></script></head>
 <body><header><div class="wrap top"><b class="brand">K-CITY <small>주행 실험실</small></b><div class="sync"><span id="stamp" role="status">결과 읽는 중…</span><label><input id="auto" type="checkbox" checked> 30초 자동 갱신</label><button id="refresh">새로고침</button></div></div></header>
 <main class="wrap"><div id="warning" role="alert"></div>
-<div class="hero"><div><h1>자율주행 정책 비교</h1><p>동일한 교통 상황에서 행동 복제와 강화학습 정책의<br>규정 준수, 충돌, 주행 시간을 비교합니다.</p><div id="overview"></div></div><figure><img src="/map.svg" alt="K-CITY SUMO 도로망과 세 평가 경로"><figcaption><i></i>A 신호 통과 <i></i>B 차선 변경 <i></i>C 교차로 양보</figcaption></figure></div>
+<div class="hero"><div><h1>v2.1 자율주행 정책 비교</h1><p>본 학습 seed 11의 BC·SAC·RLPD를 같은 v2.1 사례에서 비교합니다.</p><div id="overview"></div></div><figure><img src="/map.svg" alt="K-CITY SUMO 도로망과 세 평가 경로"><figcaption><i></i>A 신호 통과 <i></i>B 차선 변경 <i></i>C 교차로 양보</figcaption></figure></div>
 <nav aria-label="페이지 영역"><a href="#drive">SUMO 주행</a><a href="#compare">모델 성능</a><a href="#training">학습 과정</a><a href="#cases">주행 분석</a><a href="#archive">데이터와 로그</a></nav>
 <section id="drive" aria-labelledby="drive-title">
   <div class="panel">
     <div class="heading"><div><h2 id="drive-title">SUMO 주행</h2>
-      <p>모델과 시나리오를 선택하면 별도 SUMO 창에서 같은 케이스를 1배속으로 반복 주행합니다. 창을 닫으면 종료됩니다.</p>
+      <p>기존 v1 학습 모델을 선택해 v2.1 시나리오에서 주행할 수 있습니다. 모든 모델은 같은 사례를 1배속으로 반복합니다. C에서는 우선차량이 가까워도 주행을 이어가며 충돌 시 해당 회차가 종료됩니다.</p>
     </div></div>
     <form id="driveForm" class="tools">
       <label>모델<select id="driveModel" required></select></label>
       <label>시나리오<select id="driveScenario">
-        <option value="A">A · 연속 신호 통과</option>
-        <option value="B">B · 필수 차선 변경</option>
-        <option value="C" selected>C · 비신호 교차로 양보</option>
+        <option value="A">A · 연속 신호와 교차 교통</option>
+        <option value="B">B · 차량이 있는 옆 차로로 합류</option>
+        <option value="C" selected>C · 첫 교차로 우선차군 사이로 합류</option>
       </select></label>
       <button id="driveLaunch" type="submit" disabled>SUMO GUI 실행</button>
     </form>
@@ -24,6 +24,18 @@
 <section id="compare"><div class="heading"><div><h2>모델별 성능 비교</h2><p>같은 패널과 케이스 구성의 평가를 비교합니다. RL 대표 결과는 학습 예산 종료 시점입니다.</p></div><label>평가 대상<select id="cohort"></select></label></div><div id="comparison"></div></section>
 <section id="training"><div class="heading"><div><h2>학습 과정</h2><p>저장된 체크포인트를 따라 지표가 어떻게 변했는지 확인합니다.</p></div><label>학습 실행<select id="run"></select></label></div>
 <div class="panel"><div class="heading"><div><h3 id="curveName">학습 곡선</h3><div id="runinfo" class="muted"></div></div><div class="tools"><label>지표<select id="metric"></select></label><button id="save">그래프 저장</button></div></div><div id="chart"></div><p class="muted" id="chartNote"></p></div><details><summary>실행 설정과 체크포인트</summary><pre id="metadata"></pre></details></section>
+<section id="collisionComparison" aria-labelledby="collision-title">
+  <div class="heading"><div><h2 id="collision-title">학습 방법별 충돌률 비교</h2>
+    <p>BC·SAC·RLPD seed 11을 동일한 평가 사례에서 비교합니다.</p>
+  </div><label>평가 대상<select id="collisionCohort"></select></label></div>
+  <div class="panel">
+    <div class="heading"><div><h3>충돌률 변화</h3><p>가로축은 SAC·RLPD의 환경 전이 수입니다. BC는 선택된 모델의 고정 평가값을 점선으로 표시합니다.</p></div>
+      <button id="collisionSave" disabled>그래프 저장</button></div>
+    <div id="collisionChart"></div>
+    <p id="collisionNote" class="foot" role="status"></p>
+    <div id="collisionValues"></div>
+  </div>
+</section>
 <section id="cases"><div class="heading"><div><h2>시나리오별 주행 분석</h2><p>중간 체크포인트와 개별 시나리오 평가까지 조회할 수 있습니다.</p></div><label>평가 기록<select id="evaluation"></select></label></div><div id="scenario"></div><details><summary>전체 평가 지표</summary><pre id="aggregate"></pre></details><details id="caseDetails"><summary>케이스별 주행 기록</summary><div class="tools"><label>시나리오<select id="filter"><option>전체</option></select></label><label><input id="fail" type="checkbox"> 실패 및 무효만</label></div><div id="episodes"></div></details></section>
 <section id="archive"><div class="heading"><div><h2>데이터와 로그</h2><p>수집 데이터, 데모 주행, 터미널 출력의 출처를 확인합니다.</p></div></div><div id="pools"></div><details><summary>데모 주행 기록</summary><div id="demos"></div></details><details id="logDetails"><summary>터미널 로그</summary><label>로그 파일<select id="log"></select></label><p class="muted">최근 32 KiB · 실행 중에는 자동 갱신 주기에 맞춰 업데이트됩니다.</p><pre id="logText"></pre></details></section>
 </main><footer class="wrap">K-CITY SUMO · 로컬 실험 결과</footer></body></html>

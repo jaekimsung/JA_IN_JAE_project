@@ -1,0 +1,109 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - generic [ref=f1e4]: K-CITY 주행 실험실
+      - generic [ref=f1e5]:
+        - status [ref=f1e6]: 결과 읽는 중…
+        - generic [ref=f1e7]:
+          - checkbox "30초 자동 갱신" [checked] [ref=f1e8]
+          - text: 30초 자동 갱신
+        - button "새로고침" [disabled] [ref=f1e9] [cursor=pointer]
+  - main [ref=f1e10]:
+    - alert
+    - generic [ref=f1e11]:
+      - generic [ref=f1e12]:
+        - heading "자율주행 정책 비교" [level=1] [ref=f1e13]
+        - paragraph [ref=f1e14]: 동일한 교통 상황에서 행동 복제와 강화학습 정책의 규정 준수, 충돌, 주행 시간을 비교합니다.
+      - figure "A 신호 통과 B 차선 변경 C 교차로 양보" [ref=f1e15]:
+        - img "K-CITY SUMO 도로망과 세 평가 경로" [ref=f1e16]
+    - navigation "페이지 영역" [ref=f1e17]:
+      - link "SUMO 주행" [ref=f1e18] [cursor=pointer]:
+        - /url: "#drive"
+      - link "모델 성능" [ref=f1e19] [cursor=pointer]:
+        - /url: "#compare"
+      - link "학습 과정" [ref=f1e20] [cursor=pointer]:
+        - /url: "#training"
+      - link "주행 분석" [ref=f1e21] [cursor=pointer]:
+        - /url: "#cases"
+      - link "데이터와 로그" [ref=f1e22] [cursor=pointer]:
+        - /url: "#archive"
+    - region "SUMO 주행" [ref=f1e23]:
+      - generic [ref=f1e24]:
+        - generic [ref=f1e26]:
+          - heading "SUMO 주행" [level=2] [ref=f1e27]
+          - paragraph [ref=f1e28]: 모델과 시나리오를 선택하면 별도 SUMO 창에서 같은 케이스를 1배속으로 반복 주행합니다. 창을 닫으면 종료됩니다.
+        - generic [ref=f1e29]:
+          - generic [ref=f1e30]:
+            - text: 모델
+            - combobox "모델" [ref=f1e31] [cursor=pointer]
+          - generic [ref=f1e32]:
+            - text: 시나리오
+            - combobox "시나리오" [ref=f1e33] [cursor=pointer]:
+              - option "A · 연속 신호 통과"
+              - option "B · 필수 차선 변경"
+              - option "C · 비신호 교차로 양보" [selected]
+          - button "SUMO GUI 실행" [disabled] [ref=f1e34] [cursor=pointer]
+        - status
+    - generic [ref=f1e36]:
+      - generic [ref=f1e37]:
+        - heading "모델별 성능 비교" [level=2] [ref=f1e38]
+        - paragraph [ref=f1e39]: 같은 패널과 케이스 구성의 평가를 비교합니다. RL 대표 결과는 학습 예산 종료 시점입니다.
+      - generic [ref=f1e40]:
+        - text: 평가 대상
+        - combobox "평가 대상" [ref=f1e41] [cursor=pointer]
+    - generic [ref=f1e42]:
+      - generic [ref=f1e43]:
+        - generic [ref=f1e44]:
+          - heading "학습 과정" [level=2] [ref=f1e45]
+          - paragraph [ref=f1e46]: 저장된 체크포인트를 따라 지표가 어떻게 변했는지 확인합니다.
+        - generic [ref=f1e47]:
+          - text: 학습 실행
+          - combobox "학습 실행" [ref=f1e48] [cursor=pointer]
+      - generic [ref=f1e49]:
+        - generic [ref=f1e50]:
+          - heading "학습 곡선" [level=3] [ref=f1e52]
+          - generic [ref=f1e53]:
+            - generic [ref=f1e54]:
+              - text: 지표
+              - combobox "지표" [ref=f1e55] [cursor=pointer]
+            - button "그래프 저장" [ref=f1e56] [cursor=pointer]
+        - paragraph [ref=f1e57]
+      - group [ref=f1e58]:
+        - generic "실행 설정과 체크포인트" [ref=f1e59] [cursor=pointer]
+    - region "학습 방법별 충돌률 비교" [ref=f1e60]:
+      - generic [ref=f1e61]:
+        - generic [ref=f1e62]:
+          - heading "학습 방법별 충돌률 비교" [level=2] [ref=f1e63]
+          - paragraph [ref=f1e64]: BC·SAC·RLPD seed 11을 동일한 평가 사례에서 비교합니다.
+        - generic [ref=f1e65]:
+          - text: 평가 대상
+          - combobox "평가 대상" [ref=f1e66] [cursor=pointer]
+      - generic [ref=f1e67]:
+        - generic [ref=f1e68]:
+          - generic [ref=f1e69]:
+            - heading "충돌률 변화" [level=3] [ref=f1e70]
+            - paragraph [ref=f1e71]: 가로축은 SAC·RLPD의 환경 전이 수입니다. BC는 선택된 모델의 고정 평가값을 점선으로 표시합니다.
+          - button "그래프 저장" [disabled] [ref=f1e72] [cursor=pointer]
+        - status
+    - generic [ref=f1e73]:
+      - generic [ref=f1e74]:
+        - generic [ref=f1e75]:
+          - heading "시나리오별 주행 분석" [level=2] [ref=f1e76]
+          - paragraph [ref=f1e77]: 중간 체크포인트와 개별 시나리오 평가까지 조회할 수 있습니다.
+        - generic [ref=f1e78]:
+          - text: 평가 기록
+          - combobox "평가 기록" [ref=f1e79] [cursor=pointer]
+      - group [ref=f1e80]:
+        - generic "전체 평가 지표" [ref=f1e81] [cursor=pointer]
+      - group [ref=f1e82]:
+        - generic "케이스별 주행 기록" [ref=f1e83] [cursor=pointer]
+        - option "전체" [selected]
+    - generic [ref=f1e84]:
+      - generic [ref=f1e86]:
+        - heading "데이터와 로그" [level=2] [ref=f1e87]
+        - paragraph [ref=f1e88]: 수집 데이터, 데모 주행, 터미널 출력의 출처를 확인합니다.
+      - group [ref=f1e89]:
+        - generic "데모 주행 기록" [ref=f1e90] [cursor=pointer]
+      - group [ref=f1e91]:
+        - generic "터미널 로그" [ref=f1e92] [cursor=pointer]
+  - contentinfo [ref=f1e93]: K-CITY SUMO · 로컬 실험 결과

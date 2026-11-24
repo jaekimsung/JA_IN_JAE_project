@@ -25,6 +25,9 @@ def evaluate_cases(policy, env, panel, *, max_decisions=601, on_transition=None)
         try:
             obs, info=env.reset(options={k:case[k] for k in
                 ['namespace','scenario_id','case_index','demand_multiplier']})
+            if ('contract_sha256' in case and
+                    info['case']['contract_sha256'] != case['contract_sha256']):
+                raise ValueError('Runtime environment contract does not match requested panel')
             if info['case']['seeds'] != case['seeds']:
                 raise ValueError('Runtime seeds do not match requested panel')
             tracker=EpisodeMetrics(case,info)

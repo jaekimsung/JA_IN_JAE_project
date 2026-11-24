@@ -1,0 +1,27 @@
+Warning: Vehicle '1ff710c3209ef76c-lead_platoon-00' performs emergency braking on lane '-13_0' with decel=8.00, wished=4.50, severity=1.00, time=68.80.
+Warning: Vehicle '1ff710c3209ef76c-hv-000003' performs emergency braking on lane '83_0' with decel=8.00, wished=4.50, severity=1.00, time=135.70.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+{
+  "phase": "COMPLETE",
+  "transitions": 2019,
+  "target": 2000,
+  "completed_episodes": 17,
+  "finish_episode": true,
+  "part": 1
+}

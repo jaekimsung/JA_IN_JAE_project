@@ -31,7 +31,7 @@ from kcity.data.collector import PolicyCollector, dataset_config
 from kcity.data.dataset import ShardWriter, atomic_json, validate_dataset
 from kcity.data.pool import part_dir, write_pool
 from kcity.data.plans import GeneratedCasePlan
-from kcity.env.config import file_sha256
+from kcity.env.config import ROOT, file_sha256
 from kcity.env.env import SumoKCityEnv
 from kcity.evaluation.metrics import policy_weights_sha256
 from kcity.policy.checkpoint import load_policy
@@ -40,10 +40,10 @@ from kcity.training.experiment import experiment_sha256, is_pilot, load_experime
 from kcity.training.runs import Owner, install_signals, now, read, stopped
 
 
-def resolve_policy(args):
+def resolve_policy(args, protocol):
     """(actor, case-plan kind, source stage, fixed-policy identity or None)."""
     if args.policy == 'expert':
-        return KCityRuleExpert(), 'expert', 'expert_pool', None
+        return KCityRuleExpert.from_protocol(protocol), 'expert', 'expert_pool', None
     import torch
     torch.set_num_threads(1)
     bundle = Path(args.policy).resolve()
@@ -60,16 +60,16 @@ def resolve_policy(args):
 def collect_part(args, spec, target):
     """One worker: its own SUMO, ShardWriter and resume state under <output>/part-XX."""
     root = part_dir(args.output, args.part)
-    actor, kind, stage, fixed = resolve_policy(args)
+    env = SumoKCityEnv(protocol=ROOT / spec['base_contract']['path'], background=True)
+    actor, kind, stage, fixed = resolve_policy(args, env.contract['protocol'])
     if is_pilot(spec):
         stage = 'pilot_' + stage
     config = training_config(spec, stage + '_part', part=args.part, parts=args.parts, target=target,
                              shard_rows=args.shard_rows, policy=fixed)
     owner = Owner(root, config, args.resume)
-    env = SumoKCityEnv(background=True)
     writer = None
     try:
-        plan = GeneratedCasePlan.for_budget(env.contract, kind, args.target, args.part, args.parts)
+        plan = GeneratedCasePlan.for_budget(env.contract, kind, args.target, args.part, args.parts, case_offset=spec.get('case_offset', 0))
         run_uid = f'{args.output.name}-part{args.part:02d}'
         data = dataset_config(env, run_uid, plan, stage, experiment_sha256=experiment_sha256(spec), fixed_policy=fixed)
         writer = ShardWriter(root / 'dataset', data, resume=args.resume, shard_rows=args.shard_rows)

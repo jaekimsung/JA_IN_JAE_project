@@ -1,0 +1,428 @@
+- generic [active] [ref=f1e1]:
+  - banner [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - generic [ref=f1e4]: K-CITY 주행 실험실
+      - generic [ref=f1e5]:
+        - status [ref=f1e6]: 오전 1:49:53 갱신
+        - generic [ref=f1e7]:
+          - checkbox "30초 자동 갱신" [checked] [ref=f1e8]
+          - text: 30초 자동 갱신
+        - button "새로고침" [ref=f1e9] [cursor=pointer]
+  - main [ref=f1e10]:
+    - alert
+    - generic [ref=f1e11]:
+      - generic [ref=f1e12]:
+        - heading "자율주행 정책 비교" [level=1] [ref=f1e13]
+        - paragraph [ref=f1e14]: 동일한 교통 상황에서 행동 복제와 강화학습 정책의 규정 준수, 충돌, 주행 시간을 비교합니다.
+        - generic [ref=f1e94]:
+          - generic [ref=f1e95]:
+            - strong [ref=f1e96]: "3"
+            - text: 학습 완료
+          - generic [ref=f1e97]:
+            - strong [ref=f1e98]: "28"
+            - text: 평가 기록
+      - figure "A 신호 통과 B 차선 변경 C 교차로 양보" [ref=f1e15]:
+        - img "K-CITY SUMO 도로망과 세 평가 경로" [ref=f1e16]
+    - navigation "페이지 영역" [ref=f1e17]:
+      - link "SUMO 주행" [ref=f1e18] [cursor=pointer]:
+        - /url: "#drive"
+      - link "모델 성능" [ref=f1e19] [cursor=pointer]:
+        - /url: "#compare"
+      - link "학습 과정" [ref=f1e20] [cursor=pointer]:
+        - /url: "#training"
+      - link "주행 분석" [ref=f1e21] [cursor=pointer]:
+        - /url: "#cases"
+      - link "데이터와 로그" [ref=f1e22] [cursor=pointer]:
+        - /url: "#archive"
+    - region "SUMO 주행" [ref=f1e23]:
+      - generic [ref=f1e24]:
+        - generic [ref=f1e26]:
+          - heading "SUMO 주행" [level=2] [ref=f1e27]
+          - paragraph [ref=f1e28]: 모델과 시나리오를 선택하면 별도 SUMO 창에서 같은 케이스를 1배속으로 반복 주행합니다. 창을 닫으면 종료됩니다.
+        - generic [ref=f1e29]:
+          - generic [ref=f1e30]:
+            - text: 모델
+            - combobox "모델" [ref=f1e31] [cursor=pointer]:
+              - option "B0 Expert"
+              - option "B1 BC · seed 11"
+              - option "B2 SAC · seed 11"
+              - option "B3 RLPD · seed 11" [selected]
+          - generic [ref=f1e32]:
+            - text: 시나리오
+            - combobox "시나리오" [ref=f1e33] [cursor=pointer]:
+              - option "A · 연속 신호 통과"
+              - option "B · 필수 차선 변경"
+              - option "C · 비신호 교차로 양보" [selected]
+          - button "SUMO GUI 실행" [ref=f1e34] [cursor=pointer]
+        - status
+    - generic [ref=f1e35]:
+      - generic [ref=f1e36]:
+        - generic [ref=f1e37]:
+          - heading "모델별 성능 비교" [level=2] [ref=f1e38]
+          - paragraph [ref=f1e39]: 같은 패널과 케이스 구성의 평가를 비교합니다. RL 대표 결과는 학습 예산 종료 시점입니다.
+        - generic [ref=f1e40]:
+          - text: 평가 대상
+          - combobox "평가 대상" [ref=f1e41] [cursor=pointer]:
+            - option "dev · A/B/C · 100케이스 · c80a69" [selected]
+            - option "dev · B · 30케이스 · 5b76cf"
+      - generic [ref=f1e99]:
+        - table [ref=f1e101]:
+          - rowgroup [ref=f1e102]:
+            - row [ref=f1e103]:
+              - columnheader "모델 / 학습 seed" [ref=f1e104]
+              - columnheader "유효 / 계획" [ref=f1e105]
+              - columnheader "규정 준수 완주율" [ref=f1e106]
+              - columnheader "충돌률" [ref=f1e107]
+              - columnheader "적색 위반 에피소드" [ref=f1e108]
+              - columnheader "양보 위반 에피소드" [ref=f1e109]
+              - columnheader "평균 정차 (s)" [ref=f1e110]
+              - columnheader "완주 평균 시간 (s)" [ref=f1e111]
+          - rowgroup [ref=f1e112]:
+            - row [ref=f1e113]:
+              - cell [ref=f1e114]:
+                - button "B1 BC · seed 11" [ref=f1e115] [cursor=pointer]
+              - cell "100 / 100" [ref=f1e116]
+              - cell "91%" [ref=f1e117]
+              - cell "2%" [ref=f1e120]
+              - cell "5" [ref=f1e121]
+              - cell "2" [ref=f1e122]
+              - cell "15" [ref=f1e123]
+              - cell "53.7" [ref=f1e124]
+            - row [ref=f1e125]:
+              - cell [ref=f1e126]:
+                - button "B2 SAC · seed 11" [ref=f1e127] [cursor=pointer]
+              - cell "100 / 100" [ref=f1e128]
+              - cell "94%" [ref=f1e129]
+              - cell "4%" [ref=f1e132]
+              - cell "1" [ref=f1e133]
+              - cell "1" [ref=f1e134]
+              - cell "6.5" [ref=f1e135]
+              - cell "49" [ref=f1e136]
+            - row [ref=f1e137]:
+              - cell [ref=f1e138]:
+                - button "B3 RLPD · seed 11" [ref=f1e139] [cursor=pointer]
+              - cell "100 / 100" [ref=f1e140]
+              - cell "97%" [ref=f1e141]
+              - cell "1%" [ref=f1e144]
+              - cell "1" [ref=f1e145]
+              - cell "1" [ref=f1e146]
+              - cell "8.2" [ref=f1e147]
+              - cell "48" [ref=f1e148]
+        - paragraph [ref=f1e149]: 모델을 선택하면 해당 평가의 주행 기록으로 이동합니다. 이 조건의 대표 평가 없음 · B0 Expert
+        - group [ref=f1e150]:
+          - generic "학습 seed 간 평균과 변동" [ref=f1e151] [cursor=pointer]
+    - generic [ref=f1e42]:
+      - generic [ref=f1e43]:
+        - generic [ref=f1e44]:
+          - heading "학습 과정" [level=2] [ref=f1e45]
+          - paragraph [ref=f1e46]: 저장된 체크포인트를 따라 지표가 어떻게 변했는지 확인합니다.
+        - generic [ref=f1e47]:
+          - text: 학습 실행
+          - combobox "학습 실행" [ref=f1e48] [cursor=pointer]:
+            - option "B2 SAC · seed 11 · B2_seed11" [selected]
+            - option "B3 RLPD · seed 11 · B3_seed11"
+            - option "B1 BC · seed 11 · bc_main_seed11"
+      - generic [ref=f1e49]:
+        - generic [ref=f1e50]:
+          - generic [ref=f1e51]:
+            - heading "B2 SAC · seed 11" [level=3] [ref=f1e152]
+            - generic [ref=f1e153]: 완료 · 300,000 전이 · B2_seed11
+          - generic [ref=f1e53]:
+            - generic [ref=f1e54]:
+              - text: 지표
+              - combobox "지표" [ref=f1e55] [cursor=pointer]:
+                - option "Dev 완주율과 충돌률" [selected]
+                - option "critic_loss"
+                - option "q"
+                - option "actor_loss"
+                - option "entropy"
+                - option "temperature"
+            - button "그래프 저장" [ref=f1e56] [cursor=pointer]
+        - img "비율 (%)" [ref=f1e155]:
+          - generic [ref=f1e158]: "0"
+          - generic [ref=f1e159]: "0"
+          - generic [ref=f1e160]: "25"
+          - generic [ref=f1e161]: 75,000
+          - generic [ref=f1e162]: "50"
+          - generic [ref=f1e163]: 150,000
+          - generic [ref=f1e164]: "75"
+          - generic [ref=f1e165]: 225,000
+          - generic [ref=f1e166]: "100"
+          - generic [ref=f1e167]: 300,000
+          - generic [ref=f1e168]: 전이
+          - generic "규정 준수 완주율 · 0 전이 · 0%" [ref=f1e170]
+          - generic "규정 준수 완주율 · 25,000 전이 · 60%" [ref=f1e171]
+          - generic "규정 준수 완주율 · 50,000 전이 · 75%" [ref=f1e172]
+          - generic "규정 준수 완주율 · 75,000 전이 · 80%" [ref=f1e173]
+          - generic "규정 준수 완주율 · 100,000 전이 · 89%" [ref=f1e174]
+          - generic "규정 준수 완주율 · 125,000 전이 · 82%" [ref=f1e175]
+          - generic "규정 준수 완주율 · 150,000 전이 · 84%" [ref=f1e176]
+          - generic "규정 준수 완주율 · 175,000 전이 · 73%" [ref=f1e177]
+          - generic "규정 준수 완주율 · 200,000 전이 · 79%" [ref=f1e178]
+          - generic "규정 준수 완주율 · 225,000 전이 · 86%" [ref=f1e179]
+          - generic "규정 준수 완주율 · 250,000 전이 · 90%" [ref=f1e180]
+          - generic "규정 준수 완주율 · 275,000 전이 · 96%" [ref=f1e181]
+          - generic "규정 준수 완주율 · 300,000 전이 · 94%" [ref=f1e182]
+          - generic [ref=f1e183]: ● 규정 준수 완주율
+          - generic "충돌률 · 0 전이 · 0%" [ref=f1e185]
+          - generic "충돌률 · 25,000 전이 · 23%" [ref=f1e186]
+          - generic "충돌률 · 50,000 전이 · 19%" [ref=f1e187]
+          - generic "충돌률 · 75,000 전이 · 13%" [ref=f1e188]
+          - generic "충돌률 · 100,000 전이 · 9%" [ref=f1e189]
+          - generic "충돌률 · 125,000 전이 · 12%" [ref=f1e190]
+          - generic "충돌률 · 150,000 전이 · 14%" [ref=f1e191]
+          - generic "충돌률 · 175,000 전이 · 22%" [ref=f1e192]
+          - generic "충돌률 · 200,000 전이 · 18%" [ref=f1e193]
+          - generic "충돌률 · 225,000 전이 · 13%" [ref=f1e194]
+          - generic "충돌률 · 250,000 전이 · 6%" [ref=f1e195]
+          - generic "충돌률 · 275,000 전이 · 3%" [ref=f1e196]
+          - generic "충돌률 · 300,000 전이 · 4%" [ref=f1e197]
+          - generic [ref=f1e198]: ● 충돌률
+        - paragraph [ref=f1e57]: 목표 최초 도달 75,000 전이 · 연속 달성 확인 100,000 전이
+      - group [ref=f1e58]:
+        - generic "실행 설정과 체크포인트" [ref=f1e59] [cursor=pointer]
+    - region "학습 방법별 충돌률 비교" [ref=f1e60]:
+      - generic [ref=f1e61]:
+        - generic [ref=f1e62]:
+          - heading "학습 방법별 충돌률 비교" [level=2] [ref=f1e63]
+          - paragraph [ref=f1e64]: BC·SAC·RLPD seed 11을 동일한 평가 사례에서 비교합니다.
+        - generic [ref=f1e65]:
+          - text: 평가 대상
+          - combobox "평가 대상" [ref=f1e66] [cursor=pointer]:
+            - option "dev · A/B/C · 100케이스" [selected]
+      - generic [ref=f1e67]:
+        - generic [ref=f1e68]:
+          - generic [ref=f1e69]:
+            - heading "충돌률 변화" [level=3] [ref=f1e70]
+            - paragraph [ref=f1e71]: 가로축은 SAC·RLPD의 환경 전이 수입니다. BC는 선택된 모델의 고정 평가값을 점선으로 표시합니다.
+          - button "그래프 저장" [ref=f1e72] [cursor=pointer]
+        - img "BC SAC RLPD seed 11 충돌률 비교" [ref=f1e200]:
+          - generic [ref=f1e202]: 충돌률 (%)
+          - generic [ref=f1e203]: "0"
+          - generic [ref=f1e204]: "0"
+          - generic [ref=f1e205]: "5"
+          - generic [ref=f1e206]: 60,000
+          - generic [ref=f1e207]: "10"
+          - generic [ref=f1e208]: 120,000
+          - generic [ref=f1e209]: "15"
+          - generic [ref=f1e210]: 180,000
+          - generic [ref=f1e211]: "20"
+          - generic [ref=f1e212]: 240,000
+          - generic [ref=f1e213]: "25"
+          - generic [ref=f1e214]: 300,000
+          - generic [ref=f1e215]: SAC·RLPD 환경 전이 수
+          - generic [ref=f1e216]: B1 BC · seed 11 (고정)
+          - generic "BC 선택 모델의 고정 충돌률 2%"
+          - generic [ref=f1e217]: B2 SAC · seed 11
+          - generic "B2 SAC · 0 전이 · 충돌률 0%" [ref=f1e219]
+          - generic "B2 SAC · 25,000 전이 · 충돌률 23%" [ref=f1e220]
+          - generic "B2 SAC · 50,000 전이 · 충돌률 19%" [ref=f1e221]
+          - generic "B2 SAC · 75,000 전이 · 충돌률 13%" [ref=f1e222]
+          - generic "B2 SAC · 100,000 전이 · 충돌률 9%" [ref=f1e223]
+          - generic "B2 SAC · 125,000 전이 · 충돌률 12%" [ref=f1e224]
+          - generic "B2 SAC · 150,000 전이 · 충돌률 14%" [ref=f1e225]
+          - generic "B2 SAC · 175,000 전이 · 충돌률 22%" [ref=f1e226]
+          - generic "B2 SAC · 200,000 전이 · 충돌률 18%" [ref=f1e227]
+          - generic "B2 SAC · 225,000 전이 · 충돌률 13%" [ref=f1e228]
+          - generic "B2 SAC · 250,000 전이 · 충돌률 6%" [ref=f1e229]
+          - generic "B2 SAC · 275,000 전이 · 충돌률 3%" [ref=f1e230]
+          - generic "B2 SAC · 300,000 전이 · 충돌률 4%" [ref=f1e231]
+          - generic [ref=f1e232]: B3 RLPD · seed 11
+          - generic "B3 RLPD · 0 전이 · 충돌률 0%" [ref=f1e234]
+          - generic "B3 RLPD · 25,000 전이 · 충돌률 17%" [ref=f1e235]
+          - generic "B3 RLPD · 50,000 전이 · 충돌률 5%" [ref=f1e236]
+          - generic "B3 RLPD · 75,000 전이 · 충돌률 5%" [ref=f1e237]
+          - generic "B3 RLPD · 100,000 전이 · 충돌률 7%" [ref=f1e238]
+          - generic "B3 RLPD · 125,000 전이 · 충돌률 3%" [ref=f1e239]
+          - generic "B3 RLPD · 150,000 전이 · 충돌률 4%" [ref=f1e240]
+          - generic "B3 RLPD · 175,000 전이 · 충돌률 2%" [ref=f1e241]
+          - generic "B3 RLPD · 200,000 전이 · 충돌률 4%" [ref=f1e242]
+          - generic "B3 RLPD · 225,000 전이 · 충돌률 2%" [ref=f1e243]
+          - generic "B3 RLPD · 250,000 전이 · 충돌률 2%" [ref=f1e244]
+          - generic "B3 RLPD · 275,000 전이 · 충돌률 4%" [ref=f1e245]
+          - generic "B3 RLPD · 300,000 전이 · 충돌률 1%" [ref=f1e246]
+        - status [ref=f1e247]: 충돌률 = 충돌 에피소드 / 유효 평가 에피소드. 동일 패널·케이스·지표 버전만 표시합니다.
+        - table [ref=f1e250]:
+          - rowgroup [ref=f1e251]:
+            - row [ref=f1e252]:
+              - columnheader "모델" [ref=f1e253]
+              - columnheader "평가 시점" [ref=f1e254]
+              - columnheader "충돌 / 유효 에피소드" [ref=f1e255]
+              - columnheader "충돌률" [ref=f1e256]
+          - rowgroup [ref=f1e257]:
+            - row [ref=f1e258]:
+              - cell "B1 BC · seed 11" [ref=f1e259]
+              - cell "BC 선택 모델 (고정)" [ref=f1e260]
+              - cell "2 / 100" [ref=f1e261]
+              - cell "2%" [ref=f1e262]
+            - row [ref=f1e263]:
+              - cell "B2 SAC · seed 11" [ref=f1e264]
+              - cell "300,000 전이" [ref=f1e265]
+              - cell "4 / 100" [ref=f1e266]
+              - cell "4%" [ref=f1e267]
+            - row [ref=f1e268]:
+              - cell "B3 RLPD · seed 11" [ref=f1e269]
+              - cell "300,000 전이" [ref=f1e270]
+              - cell "1 / 100" [ref=f1e271]
+              - cell "1%" [ref=f1e272]
+    - generic [ref=f1e73]:
+      - generic [ref=f1e74]:
+        - generic [ref=f1e75]:
+          - heading "시나리오별 주행 분석" [level=2] [ref=f1e76]
+          - paragraph [ref=f1e77]: 중간 체크포인트와 개별 시나리오 평가까지 조회할 수 있습니다.
+        - generic [ref=f1e78]:
+          - text: 평가 기록
+          - combobox "평가 기록" [ref=f1e79] [cursor=pointer]:
+            - option "B1 BC · seed 11 · dev · A/B/C · eval/bc_all_seeds_dev_20261121_163315/BC_seed11" [selected]
+            - option "B1 BC · seed 11 · dev · B · eval/bc_seed11_B_dev_20261121_162549"
+            - option "B2 SAC · seed 11 · dev · A/B/C · 300,000 전이 · B2_seed11/dev/T0300000"
+            - option "B3 RLPD · seed 11 · dev · A/B/C · 300,000 전이 · B3_seed11/dev/T0300000"
+            - option "B2 SAC · seed 11 · dev · A/B/C · 0 전이 · B2_seed11/dev/T0000000"
+            - option "B2 SAC · seed 11 · dev · A/B/C · 100,000 전이 · B2_seed11/dev/T0100000"
+            - option "B2 SAC · seed 11 · dev · A/B/C · 125,000 전이 · B2_seed11/dev/T0125000"
+            - option "B2 SAC · seed 11 · dev · A/B/C · 150,000 전이 · B2_seed11/dev/T0150000"
+            - option "B2 SAC · seed 11 · dev · A/B/C · 175,000 전이 · B2_seed11/dev/T0175000"
+            - option "B2 SAC · seed 11 · dev · A/B/C · 200,000 전이 · B2_seed11/dev/T0200000"
+            - option "B2 SAC · seed 11 · dev · A/B/C · 225,000 전이 · B2_seed11/dev/T0225000"
+            - option "B2 SAC · seed 11 · dev · A/B/C · 25,000 전이 · B2_seed11/dev/T0025000"
+            - option "B2 SAC · seed 11 · dev · A/B/C · 250,000 전이 · B2_seed11/dev/T0250000"
+            - option "B2 SAC · seed 11 · dev · A/B/C · 275,000 전이 · B2_seed11/dev/T0275000"
+            - option "B2 SAC · seed 11 · dev · A/B/C · 50,000 전이 · B2_seed11/dev/T0050000"
+            - option "B2 SAC · seed 11 · dev · A/B/C · 75,000 전이 · B2_seed11/dev/T0075000"
+            - option "B3 RLPD · seed 11 · dev · A/B/C · 0 전이 · B3_seed11/dev/T0000000"
+            - option "B3 RLPD · seed 11 · dev · A/B/C · 100,000 전이 · B3_seed11/dev/T0100000"
+            - option "B3 RLPD · seed 11 · dev · A/B/C · 125,000 전이 · B3_seed11/dev/T0125000"
+            - option "B3 RLPD · seed 11 · dev · A/B/C · 150,000 전이 · B3_seed11/dev/T0150000"
+            - option "B3 RLPD · seed 11 · dev · A/B/C · 175,000 전이 · B3_seed11/dev/T0175000"
+            - option "B3 RLPD · seed 11 · dev · A/B/C · 200,000 전이 · B3_seed11/dev/T0200000"
+            - option "B3 RLPD · seed 11 · dev · A/B/C · 225,000 전이 · B3_seed11/dev/T0225000"
+            - option "B3 RLPD · seed 11 · dev · A/B/C · 25,000 전이 · B3_seed11/dev/T0025000"
+            - option "B3 RLPD · seed 11 · dev · A/B/C · 250,000 전이 · B3_seed11/dev/T0250000"
+            - option "B3 RLPD · seed 11 · dev · A/B/C · 275,000 전이 · B3_seed11/dev/T0275000"
+            - option "B3 RLPD · seed 11 · dev · A/B/C · 50,000 전이 · B3_seed11/dev/T0050000"
+            - option "B3 RLPD · seed 11 · dev · A/B/C · 75,000 전이 · B3_seed11/dev/T0075000"
+      - generic [ref=f1e273]:
+        - generic [ref=f1e274]:
+          - table [ref=f1e276]:
+            - rowgroup [ref=f1e277]:
+              - row [ref=f1e278]:
+                - columnheader "시나리오" [ref=f1e279]
+                - columnheader "유효 / 기록" [ref=f1e280]
+                - columnheader "규정 준수 완주율" [ref=f1e281]
+                - columnheader "충돌률" [ref=f1e282]
+            - rowgroup [ref=f1e283]:
+              - row [ref=f1e284]:
+                - cell "A" [ref=f1e285]
+                - cell "30 / 30" [ref=f1e286]
+                - cell "80%" [ref=f1e287]
+                - cell "3.3%" [ref=f1e288]
+              - row [ref=f1e289]:
+                - cell "B" [ref=f1e290]
+                - cell "30 / 30" [ref=f1e291]
+                - cell "96.7%" [ref=f1e292]
+                - cell "3.3%" [ref=f1e293]
+              - row [ref=f1e294]:
+                - cell "C" [ref=f1e295]
+                - cell "40 / 40" [ref=f1e296]
+                - cell "95%" [ref=f1e297]
+                - cell "0%" [ref=f1e298]
+          - table [ref=f1e300]:
+            - rowgroup [ref=f1e301]:
+              - row [ref=f1e302]:
+                - columnheader "종료 원인" [ref=f1e303]
+                - columnheader "에피소드 수" [ref=f1e304]
+            - rowgroup [ref=f1e305]:
+              - row [ref=f1e306]:
+                - cell "arrival" [ref=f1e307]
+                - cell "91" [ref=f1e308]
+              - row [ref=f1e309]:
+                - cell "red_entry" [ref=f1e310]
+                - cell "5" [ref=f1e311]
+              - row [ref=f1e312]:
+                - cell "collision" [ref=f1e313]
+                - cell "2" [ref=f1e314]
+              - row [ref=f1e315]:
+                - cell "yield_violation" [ref=f1e316]
+                - cell "2" [ref=f1e317]
+        - paragraph [ref=f1e318]: 필수 차선 변경 · 평균 변경 위치 60.93 m · 평균 대기 9.75 s · 출처 · runs/eval/bc_all_seeds_dev_20261121_163315/BC_seed11
+      - group [ref=f1e80]:
+        - generic "전체 평가 지표" [ref=f1e81] [cursor=pointer]
+      - group [ref=f1e82]:
+        - generic "케이스별 주행 기록" [ref=f1e83] [cursor=pointer]
+        - option "전체" [selected]
+        - option "A"
+        - option "B"
+        - option "C"
+    - generic [ref=f1e84]:
+      - generic [ref=f1e86]:
+        - heading "데이터와 로그" [level=2] [ref=f1e87]
+        - paragraph [ref=f1e88]: 수집 데이터, 데모 주행, 터미널 출력의 출처를 확인합니다.
+      - table [ref=f1e321]:
+        - rowgroup [ref=f1e322]:
+          - row [ref=f1e323]:
+            - columnheader "데이터 풀" [ref=f1e324]
+            - columnheader "전이 수" [ref=f1e325]
+            - columnheader "에피소드" [ref=f1e326]
+            - columnheader "학습 전이" [ref=f1e327]
+            - columnheader "검증 전이" [ref=f1e328]
+            - columnheader "파트" [ref=f1e329]
+        - rowgroup [ref=f1e330]:
+          - row [ref=f1e331]:
+            - cell "main_collection_20261119_193244/expert" [ref=f1e332]
+            - cell "4,000,544" [ref=f1e333]
+            - cell "38,485" [ref=f1e334]
+            - cell "3,201,052" [ref=f1e335]
+            - cell "799,492" [ref=f1e336]
+            - cell "8" [ref=f1e337]
+      - group [ref=f1e89]:
+        - generic "데모 주행 기록" [ref=f1e90] [cursor=pointer]
+      - group [ref=f1e91]:
+        - generic "터미널 로그" [ref=f1e92] [cursor=pointer]
+        - option "B2_seed11.log" [selected]
+        - option "B3_seed11.log"
+        - option "bc_main_seed11.log"
+        - option "bc_main_seed22.log"
+        - option "bc_main_seed33.log"
+        - option "demo/B2_seed11_A_7cc0b8b0198e41ba89aef4105ddcc646.log"
+        - option "demo/B2_seed11_A_a77e7c86430043c995734f3380a08faa.log"
+        - option "demo/B2_seed11_B_c91e25be115b41c4b1b4b1dec5cbba42.log"
+        - option "demo/B2_seed11_B_d9212bc9a6a44a8ab0a4a48366749794.log"
+        - option "demo/B2_seed11_C_6b6ff6807754497eafeccda4e07429a7.log"
+        - option "demo/B2_seed11_C_d50044499244490c88eb161a7030d2bb.log"
+        - option "demo/B3_seed11_B_2a3046fc6d264f259ad5c62fd200d416.log"
+        - option "demo/B3_seed11_B_7458dc77b5c34fb4ac348e4c090c540e.log"
+        - option "demo/B3_seed11_B_7f6391c326854010914be18d127f5559.log"
+        - option "demo/B3_seed11_B_e28fd443bdd0491a96c0860f795f7824.log"
+        - option "demo/B3_seed11_B_fb15857485f743f9a661bbc65cdecd62.log"
+        - option "demo/B3_seed11_C_2ae5205ea4b341a683bd5107ca8bda7d.log"
+        - option "demo/bc_main_seed11_B_405104e808b949e59fd033049813e5ec.log"
+        - option "demo/bc_main_seed11_B_8aafe3bc2e5a491fb78a2ad409697b5d.log"
+        - option "demo/bc_seed11_B_20261121_162252.log"
+        - option "demo/bc_seed11_C_20261122_150133.log"
+        - option "demo/expert_B_1f60148b446447cf9607375a0b094311.log"
+        - option "demo/expert_B_20261121_164417.log"
+        - option "demo/expert_B_54b1c156e3484830b62650021295d2cd.log"
+        - option "demo/expert_B_7d59ccd9909d4d59abc82e3f5cfa9d6e.log"
+        - option "demo/expert_B_93d6c3cd20aa42939c04f942b1de55bf.log"
+        - option "demo/rlpd_seed11_B_20261122_144505.log"
+        - option "demo/rlpd_seed11_B_demand2_20261122_144548.log"
+        - option "demo/rlpd_seed11_B_dense_start_20261122_144658.log"
+        - option "demo/rlpd_seed11_B_dense_start_20261122_144658_platoon.log"
+        - option "demo/rlpd_seed11_B_dense_start_20261122_144658_platoon_five.log"
+        - option "demo/rlpd_seed11_C_20261122_150025.log"
+        - option "demo/sac_seed11_B_20261122_144355.log"
+        - option "demo/sac_seed11_C_20261122_145858.log"
+        - option "eval/bc_all_seeds_dev_20261121_163315/plot_evaluation.log"
+        - option "eval/bc_all_seeds_dev_20261121_163315/BC_seed11/evaluation.log"
+        - option "eval/bc_all_seeds_dev_20261121_163315/BC_seed22/evaluation.log"
+        - option "eval/bc_all_seeds_dev_20261121_163315/BC_seed33/evaluation.log"
+        - option "main_collection_20261119_193244/control/collector.log"
+        - option "main_collection_20261119_193244/expert/logs/part-00.log"
+        - option "main_collection_20261119_193244/expert/logs/part-01.log"
+        - option "main_collection_20261119_193244/expert/logs/part-02.log"
+        - option "main_collection_20261119_193244/expert/logs/part-03.log"
+        - option "main_collection_20261119_193244/expert/logs/part-04.log"
+        - option "main_collection_20261119_193244/expert/logs/part-05.log"
+        - option "main_collection_20261119_193244/expert/logs/part-06.log"
+        - option "main_collection_20261119_193244/expert/logs/part-07.log"
+  - contentinfo [ref=f1e93]: K-CITY SUMO · 로컬 실험 결과

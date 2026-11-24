@@ -47,18 +47,19 @@ def main():
     parser.add_argument('--limit', type=int, help='evaluate only the first N cases per demand (smoke test)')
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--device', choices=['cpu', 'cuda'], default='cpu')
+    parser.add_argument('--experiment', type=Path, default=Path('configs/kcity/experiment.json'))
     args = parser.parse_args()
     torch.set_num_threads(1)
-    spec = load_experiment()
+    spec = load_experiment(args.experiment)
+    env = SumoKCityEnv(protocol=ROOT / spec['base_contract']['path'], background=True)
     if args.policy == 'expert':
-        policy, source = KCityRuleExpert(), dict(kind='expert')
+        policy, source = KCityRuleExpert.from_protocol(env.contract['protocol']), dict(kind='expert')
     else:
         policy, meta = load_policy(args.policy, args.device)
         source = dict(kind=meta['kind'], bundle=str(Path(args.policy).resolve()), config=meta['config'])
     cases = json.loads((ROOT / spec['case_panels'][args.panel]['path']).read_text())['cases']
     demands = sorted({c['demand_multiplier'] for c in cases}) if args.demand is None else args.demand
     args.output.mkdir(parents=True, exist_ok=True)
-    env = SumoKCityEnv(background=True)
     rows = []
     try:
         for demand in demands:

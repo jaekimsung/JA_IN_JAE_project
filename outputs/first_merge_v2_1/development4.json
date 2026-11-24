@@ -1,0 +1,746 @@
+[
+  {
+    "scenario": "C",
+    "index": 0,
+    "case_uid": "19799c592355fa5fa68a45dbc40d1a675733ce41830ce08df75a84a6093d3a4e",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 1.6604166666666664,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 2.8332789037735617,
+        "moving_priority": 1,
+        "min_tta_s": 13.845454545454519,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 12.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.8848886489868164,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 3,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 0
+  },
+  {
+    "scenario": "C",
+    "index": 1,
+    "case_uid": "4e50a27ebf672f65432bb9baeafa48dc8ca067648b6864a9a9b660be93000a63",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 1.2833333333333328,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 3.946216411924497,
+        "moving_priority": 1,
+        "min_tta_s": 12.074989322643246,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 11.5
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.9585633873939514,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 0,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 0
+  },
+  {
+    "scenario": "C",
+    "index": 2,
+    "case_uid": "a110e704a79f434ff16baa661f491f87c7165e8337e069ea4227ca7f404f5c07",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 2.252083333333334,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 1.9452722668647766,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 6,
+        "entry_time_s": 53.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 4.787707270268584,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": true,
+        "recent_moving_foe": false
+      }
+    ],
+    "critical_foe_omitted_steps": 0,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 0
+  },
+  {
+    "scenario": "C",
+    "index": 3,
+    "case_uid": "92fa3787e6659a36531af8c890f22d750be0e2e92550d0c7452bb808d8d9099b",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 3.779166666666664,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 1.9468324184417725,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 8,
+        "entry_time_s": 71.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 4.510756602045149,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": true,
+        "recent_moving_foe": false
+      }
+    ],
+    "critical_foe_omitted_steps": 0,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 0
+  },
+  {
+    "scenario": "C",
+    "index": 4,
+    "case_uid": "8f2cf9f534f51a36171fccddcfb1377687f980a22ecd478478e0c237cea9b8af",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 2.035416666666669,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 2.827479107341305,
+        "moving_priority": 1,
+        "min_tta_s": 10.269696969696794,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 12.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.9729889035224915,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": false
+      }
+    ],
+    "critical_foe_omitted_steps": 4,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 1
+  },
+  {
+    "scenario": "C",
+    "index": 5,
+    "case_uid": "c460d546b29874ead2a39aeed917768ff464b71c052f1252326917849835353f",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 3.5458333333333356,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 2.5059938682602203,
+        "moving_priority": 1,
+        "min_tta_s": 10.551858673985244,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 14.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.9958974123001099,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 0,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 1
+  },
+  {
+    "scenario": "C",
+    "index": 6,
+    "case_uid": "f5a64f7631483f97f644b3576f3ee18ff1ad66127827e023680d6e1cf022b944",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 3.4687500000000013,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 2.432028069196776,
+        "moving_priority": 1,
+        "min_tta_s": 10.563552636468692,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 14.5
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.861711323261261,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 4,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 0
+  },
+  {
+    "scenario": "C",
+    "index": 7,
+    "case_uid": "3786b3d30718973afbb2ce0d4936f87e0403fb9456ef29c27e527d1bad75c240",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 2.3145833333333363,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 2.6678731190399683,
+        "moving_priority": 1,
+        "min_tta_s": 12.658651427144761,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 13.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.9908770322799683,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 0,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 1
+  },
+  {
+    "scenario": "C",
+    "index": 8,
+    "case_uid": "4eb2d8d10c059e10353756430a96b5049a0f7e139978cb23ab6464ace72d3131",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 1.7375000000000007,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 3.930525668932632,
+        "moving_priority": 1,
+        "min_tta_s": 8.875979840237381,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 11.5
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.9948024153709412,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 2,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 3
+  },
+  {
+    "scenario": "C",
+    "index": 9,
+    "case_uid": "9ddcd9d2e701020983ba6429a73a973df69c7074c7700e3864b133c08e3297a3",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 1.4187500000000006,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 3.855130743587005,
+        "moving_priority": 1,
+        "min_tta_s": 8.7393939393937,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 12.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.8683717250823975,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 3,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 1
+  },
+  {
+    "scenario": "C",
+    "index": 10,
+    "case_uid": "e2d1a8d6b9e37d1550c6e3a4fdfe8ee54b4ef7a9acf628465ec74338ef3df6ac",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 1.7125,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 3.8500495758266604,
+        "moving_priority": 1,
+        "min_tta_s": 11.963048278154211,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 12.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 0.9986659288406372,
+        "moving_priority": 1,
+        "min_tta_s": 21.6179478135374,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 7,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 1
+  },
+  {
+    "scenario": "C",
+    "index": 11,
+    "case_uid": "696cea63d20ded6facdacd42953586122061a7bb20b483a7a1f553d0db272cbf",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 4.0166666666666675,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 1.946910798549652,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 8,
+        "entry_time_s": 79.5
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.9996839761734009,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 0,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 1
+  },
+  {
+    "scenario": "C",
+    "index": 12,
+    "case_uid": "3dc1d091cb0a4d11c581730b7b3a637b7d50d35b50698bbe89a67d3fc993e63a",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 4.520833333333331,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 1.9527178406715393,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 9,
+        "entry_time_s": 63.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 6.519278392195702,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": true,
+        "recent_moving_foe": false
+      }
+    ],
+    "critical_foe_omitted_steps": 0,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 0
+  },
+  {
+    "scenario": "C",
+    "index": 13,
+    "case_uid": "dd54667652d641b883b01fba2d038eb31cd08f2246005d5fbaa01ea2c21dbf51",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 3.502083333333334,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 2.7335310494886196,
+        "moving_priority": 1,
+        "min_tta_s": 12.975757575757523,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 12.5
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.9996839761734009,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 6,
+    "omitted_within_5m_rolling_steps": 1,
+    "hard_braking_priority_vehicles": 1
+  },
+  {
+    "scenario": "C",
+    "index": 14,
+    "case_uid": "b42f011255f3418eac299973bf7cfe7355fdbf04dfe5abd5a8970d524446971d",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 3.5895833333333313,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 2.6541828941912806,
+        "moving_priority": 1,
+        "min_tta_s": 10.757360351121516,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 13.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.996534824371338,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 0,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 0
+  },
+  {
+    "scenario": "C",
+    "index": 15,
+    "case_uid": "16563d8f90df3b3a81c0722fe5041a9c696cc7ad98b6a6fafee05d5e759bf411",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 3.2583333333333306,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 1.9548081159591675,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 10,
+        "entry_time_s": 73.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 5.925216472707689,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": true,
+        "recent_moving_foe": false
+      }
+    ],
+    "critical_foe_omitted_steps": 0,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 0
+  },
+  {
+    "scenario": "C",
+    "index": 16,
+    "case_uid": "77d8cb42d7a9552d70690a0ef20497abe0020d6272b97d1cf2e550a9c2d38eac",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 4.443750000000003,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 1.9581239819526672,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 8,
+        "entry_time_s": 59.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 5.81816829321906,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 0,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 1
+  },
+  {
+    "scenario": "C",
+    "index": 17,
+    "case_uid": "41b471eb4c1ad2e5ebb3a5e3d0ce146e46fdea2cbb43a1bdc05f353398e0687b",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 2.9812500000000006,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 2.736354823260144,
+        "moving_priority": 1,
+        "min_tta_s": 9.518679548865146,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 12.5
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.9951961040496826,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 2,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 1
+  },
+  {
+    "scenario": "C",
+    "index": 18,
+    "case_uid": "92444e2345bdc894170c9bfa55940ba9c3052bf0ed8ffe25eb4107bbb850a101",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 2.820833333333332,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 1.9519465565681458,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 8,
+        "entry_time_s": 71.5
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 6.513942372053862,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": true,
+        "recent_moving_foe": false
+      }
+    ],
+    "critical_foe_omitted_steps": 0,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 2
+  },
+  {
+    "scenario": "C",
+    "index": 19,
+    "case_uid": "b3f2c04ee1758232ba6acf059f9ea2c063af91f42099daea824ff7352669d608",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 2.3145833333333363,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 2.8271390935765064,
+        "moving_priority": 1,
+        "min_tta_s": 9.893939393939197,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 12.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.9968690872192383,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 2,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 1
+  },
+  {
+    "scenario": "C",
+    "index": 20,
+    "case_uid": "3bf21d8abe64e201c9c5b5690457f62d0c46f05292493e2bf0c0dec43d708e5a",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 2.83541666666667,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 2.6587882982925928,
+        "moving_priority": 1,
+        "min_tta_s": 12.963636363636313,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 13.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.9996839761734009,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 1,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 0
+  },
+  {
+    "scenario": "C",
+    "index": 21,
+    "case_uid": "2afd0c8faca3d77ad093bf5995c2621cc81f4108a0dc16489ce20034d0bf4642",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 2.081250000000002,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 3.856060880272225,
+        "moving_priority": 1,
+        "min_tta_s": 11.157171522723328,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 12.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.972614347934723,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 0,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 0
+  },
+  {
+    "scenario": "C",
+    "index": 22,
+    "case_uid": "fe97aa37205c0075010fff827ac10a10b4bbbd5ee8ee431a22e7abc4d458c0fc",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 1.612500000000002,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 3.826411601191894,
+        "moving_priority": 1,
+        "min_tta_s": 13.127499043263041,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 12.0
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.9996839761734009,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 0,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 0
+  },
+  {
+    "scenario": "C",
+    "index": 23,
+    "case_uid": "7408037a9f1a44014126b110299e45aa3193164205cc8e99ae10174627c17eb0",
+    "initial_visible_moving_priority": 2,
+    "initial_min_tta_s": 3.049999999999997,
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 2.7348358380035913,
+        "moving_priority": 1,
+        "min_tta_s": 8.876299052735494,
+        "rolling_last_3s": true,
+        "recent_moving_foe": true,
+        "priority_entered_before_ego": 2,
+        "entry_time_s": 12.5
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.9791916012763977,
+        "moving_priority": 0,
+        "min_tta_s": null,
+        "rolling_last_3s": false,
+        "recent_moving_foe": true
+      }
+    ],
+    "critical_foe_omitted_steps": 1,
+    "omitted_within_5m_rolling_steps": 0,
+    "hard_braking_priority_vehicles": 0
+  }
+]

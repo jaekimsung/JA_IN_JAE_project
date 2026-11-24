@@ -15,20 +15,23 @@ class GeneratedCasePlan(Sequence):
     Only the most recently requested case is cached; RUN.json stores the recipe.
     """
 
-    def __init__(self, contract, kind, cycles, part=0, parts=1):
+    def __init__(self, contract, kind, cycles, part=0, parts=1, case_offset=0):
         if kind not in ('expert', 'train', 'archive', 'probe'):
             raise ValueError('Unknown case plan kind')
         if any(type(x) is not int for x in (cycles, part, parts)) or cycles < 1 or parts < 1 or not 0 <= part < parts:
             raise ValueError('Invalid generated plan dimensions')
+        if type(case_offset) is not int or case_offset < 0:
+            raise ValueError('Nonnegative case offset required')
+        self.case_offset = case_offset
         self.contract, self.kind = contract, kind
         self.cycles, self.part, self.parts = cycles, part, parts
         self._cached = None
 
     @classmethod
-    def for_budget(cls, contract, kind, target, part=0, parts=1):
+    def for_budget(cls, contract, kind, target, part=0, parts=1, case_offset=0):
         if type(target) is not int or target < 1 or type(parts) is not int or parts < 1:
             raise ValueError('Positive transition budget and part count required')
-        return cls(contract, kind, math.ceil(math.ceil(target / parts) / 10), part, parts)
+        return cls(contract, kind, math.ceil(math.ceil(target / parts) / 10), part, parts, case_offset)
 
     def __len__(self):
         return self.cycles * 10
@@ -52,18 +55,21 @@ class GeneratedCasePlan(Sequence):
             case_index = cursor
             namespace, split = dict(train=('train', 'rl_train'), archive=('archive', 'archive'),
                                     probe=('contract_check', 'ops_probe'))[self.kind]
-        entry = dict(case=resolved_case(self.contract, namespace, scenario, case_index), data_split=split)
+        entry = dict(case=resolved_case(self.contract, namespace, scenario, case_index + self.case_offset), data_split=split)
         self._cached = (index, entry)
         return entry
 
     def descriptor(self):
-        return dict(schema=GENERATED_PLAN_SCHEMA, contract_sha256=digest(self.contract), kind=self.kind,
+        body = dict(schema=GENERATED_PLAN_SCHEMA, contract_sha256=digest(self.contract), kind=self.kind,
                     cycles=self.cycles, part=self.part, parts=self.parts,
                     runtime_variant=self[0]['case']['runtime_variant'])
+        if self.case_offset:
+            body['case_offset'] = self.case_offset
+        return body
 
     @classmethod
     def from_descriptor(cls, contract, spec):
-        plan = cls(contract, spec['kind'], spec['cycles'], spec['part'], spec['parts'])
+        plan = cls(contract, spec['kind'], spec['cycles'], spec['part'], spec['parts'], spec.get('case_offset', 0))
         if spec != plan.descriptor():
             raise ValueError('Generated plan contract/runtime/recipe changed')
         return plan

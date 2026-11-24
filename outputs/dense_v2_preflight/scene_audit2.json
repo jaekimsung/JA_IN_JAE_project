@@ -1,0 +1,1092 @@
+[
+  {
+    "scenario": "A",
+    "index": 0,
+    "case_uid": "534dfb07e95114a4817e0f369d73523cc0f0e71182ce6bcf16e38fcd0ca33d2f",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "g"
+      ],
+      "169": [
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 0,
+    "case_uid": "de3bb41e3132fe99c134cbfc351ed042dbe4091e75602d70b4e8943cfdd75519",
+    "front_gap_m": 11.471337080001831,
+    "rear_gap_m": 9.928662329912186,
+    "merge_s": 0.5,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 0,
+    "case_uid": "e036650803d5fcdab2481be4617ad52682f6bfae58d9dd3a502d8b9e9262420d",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9767890572547913,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 7.386219949927181,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 1,
+    "case_uid": "f08bed9582b76ce58640b6477debde8b221cb6f43ccc6b3d965d860eec3f8f48",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "r",
+        "g"
+      ],
+      "268": [
+        "g"
+      ],
+      "764": [
+        "r",
+        "g"
+      ],
+      "169": [
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 1,
+    "case_uid": "4e0bf661bdc094c7a62ff4b148f130e69607caf4bdfa5a519d30b15f43c822e9",
+    "front_gap_m": 0.0,
+    "rear_gap_m": 14.50866311788559,
+    "merge_s": 10.0,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 1,
+    "case_uid": "acdd4ca7416922262bb0aabd0aad869be05d620e7490bb4d30b577e8b7c6b09f",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9781947731971741,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.0,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 2,
+    "case_uid": "363bbedc1068257e71908180e279ca4773f1d2acbda418883e505f62a609ab42",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "g",
+        "y",
+        "r",
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "y",
+        "r",
+        "g"
+      ],
+      "169": [
+        "r",
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 2,
+    "case_uid": "98ec47e091172d305e0b1b041d31774615e4c032120b6a9587e3ef24b14fb134",
+    "front_gap_m": 9.231337159872055,
+    "rear_gap_m": 10.04866287112236,
+    "merge_s": 0.5,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 2,
+    "case_uid": "0bb4d24bc2a3a5254025075996cf65052bd0b1e2b3be2e7292d83133b3c5d7c4",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9758107662200928,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 6.720559163019061,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 3,
+    "case_uid": "1be0a9a6b29fcbef8b72a116f2c0d67113c3d55eff245e30c229376482e0b606",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "r",
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "r",
+        "g"
+      ],
+      "169": [
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 3,
+    "case_uid": "2971484d994531f55a240fa310535d19c411062a3946fb35d19394d38ebdc686",
+    "front_gap_m": 6.381337344646454,
+    "rear_gap_m": 10.388662666082382,
+    "merge_s": 10.0,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 3,
+    "case_uid": "162b81d53535edf222c3b1bb677b9ccba021470c39ec80cbf5909109dbddb1c8",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9819419384002686,
+        "moving_priority": 1,
+        "min_tta_s": 14.785588396276284
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 6.485467768157832,
+        "moving_priority": 1,
+        "min_tta_s": 5.932273110090365
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 4,
+    "case_uid": "42906e688b2aea4421e5bf5a686961e06ec2b33a41635433e2fa8e81d8f2df50",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "g",
+        "y",
+        "r",
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "r",
+        "g"
+      ],
+      "169": [
+        "r",
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 4,
+    "case_uid": "4586f53fbd81007e105a6a120f1c6b9018d94e8c3a44409ba2b80e5c0ff41fd7",
+    "front_gap_m": 10.431337356567383,
+    "rear_gap_m": 11.42866238951683,
+    "merge_s": 0.5,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 4,
+    "case_uid": "64236232ee355ea2ccb76f6beba4705332058ad157187f8bb800a7c024fc2266",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9783221483230591,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.9887405633926392,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 5,
+    "case_uid": "07d6b3f267d568c642ff7b1000b1e3862f74f57db64ecc334e63cefadee077e7",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "g"
+      ],
+      "169": [
+        "r",
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 5,
+    "case_uid": "77380c6f806d673670fffd65b093ff584716dfc8403eeec75dd5d668f48170bd",
+    "front_gap_m": 3.2713372260332108,
+    "rear_gap_m": 13.148662447929382,
+    "merge_s": 6.5,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 5,
+    "case_uid": "3b27f0496c55ca9de35a4c7a019111d77bf483aa39170f92a4fe95904cc6818c",
+    "end_reason": "collision",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9786152243614197,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 4.886763707501814,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 2
+  },
+  {
+    "scenario": "A",
+    "index": 6,
+    "case_uid": "80cd7ec8ea1cda83898cb3cfb9f16c100d595f1e560395724399a8d08847ce43",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "r",
+        "g"
+      ],
+      "268": [
+        "g"
+      ],
+      "764": [
+        "r",
+        "g"
+      ],
+      "169": [
+        "r",
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 6,
+    "case_uid": "4a0c844a8b657a659df8878214f2bca6e1deddfdb8a8211e82345b7df5670c84",
+    "front_gap_m": 7.81133770942688,
+    "rear_gap_m": 10.408662259578705,
+    "merge_s": 5.5,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 6,
+    "case_uid": "ed246a3f58729f4c55641af1d2fa20e880f4bee7469b593ce195ef62fd64c608",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9772320985794067,
+        "moving_priority": 1,
+        "min_tta_s": 9.711746497402936
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 0.9852538704872131,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 7,
+    "case_uid": "c49db36441ea9e882ca22bd78830bf28ab2d14923b89b07f449062ff5c73e9f6",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "r",
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "r",
+        "g"
+      ],
+      "169": [
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 7,
+    "case_uid": "ae414f2b35efa922b74cfe14ea31d9fe4f3da9c43bf72c57a8f91580d3610832",
+    "front_gap_m": 5.601337552070618,
+    "rear_gap_m": 8.318662643432617,
+    "merge_s": 9.5,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 7,
+    "case_uid": "51be9b7a1f24391428e1492146952e5bf1e840a8cbeaac7d77994b74dd98c724",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9785355925559998,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 0.9219274520874023,
+        "moving_priority": 1,
+        "min_tta_s": 8.17488276414326
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 8,
+    "case_uid": "c839db8813473e94ad270bc6924954a1e04e44f9f39df08009c7f609c0c3c712",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "r",
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "r",
+        "g"
+      ],
+      "169": [
+        "r",
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 8,
+    "case_uid": "527668c859d64fed6c6b538f6e3472975710d49c4f3a740ea620d64e1f161ed2",
+    "front_gap_m": 2.1413374692201614,
+    "rear_gap_m": 13.028661906719208,
+    "merge_s": 10.0,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 8,
+    "case_uid": "6c5796e37461431a515e2d46abc94e4c28205d93d28225779ebbc8b355e3f8b6",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9778281450271606,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 7.446422182139941,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 9,
+    "case_uid": "fd29551d546e62e048094f50b9ce134214e6f1ce41b8daf2c43dd938b1d14d5e",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "r",
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "r",
+        "g"
+      ],
+      "169": [
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 9,
+    "case_uid": "6955d96b3ee36beade1149fe211fad31887aab6fbe01bc7328a98be61153cd5b",
+    "front_gap_m": 3.3413372933864594,
+    "rear_gap_m": 7.978662848472595,
+    "merge_s": 9.5,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 9,
+    "case_uid": "5b340fb0f8c16d022907b843ccb8d0544967b38ffacddd6f049000b2d8d16bed",
+    "end_reason": "collision",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9771609306335449,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 4.619998123496771,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 1
+  },
+  {
+    "scenario": "A",
+    "index": 10,
+    "case_uid": "28e7a2e930ece81effecf0efd58e507187c3f135545c3b98bb4c2c3538ad3d89",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "r",
+        "g"
+      ],
+      "268": [
+        "r",
+        "g",
+        "y"
+      ],
+      "764": [
+        "r",
+        "g"
+      ],
+      "169": [
+        "r",
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 10,
+    "case_uid": "f3901dbbea0b4abac0a0bafd314067b1c3f6cffd7ed96e9036d8c74bc3014f70",
+    "front_gap_m": 5.221337452530861,
+    "rear_gap_m": 9.048662334680557,
+    "merge_s": 9.5,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 10,
+    "case_uid": "283959cdaa096badca16bb37c9fc671ceb63ccb119bba8accca89c2294f2f161",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9751810431480408,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 5.01811334816739,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 11,
+    "case_uid": "722ac0171d966f665a3f2c21e9f150085d9dd79c3d718b5c1d8ba82ed3d95f31",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "r",
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "r",
+        "g"
+      ],
+      "169": [
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 11,
+    "case_uid": "cfbba2641c15c946db58d53a851d0bb68d0aae874e8bfddb75184de7e2afdc3c",
+    "front_gap_m": 0.0,
+    "rear_gap_m": 12.408662587404251,
+    "merge_s": 10.0,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 11,
+    "case_uid": "1a955aff0a00c7ce2eae1161a5b5d5528791df7c6e69aada8d5c02cb711774ab",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9763057231903076,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.0,
+        "moving_priority": 1,
+        "min_tta_s": 35.12888696405378
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 12,
+    "case_uid": "e8e4b1d41a49fd1071b5a8c7dace4df4192ee5a51ae899ae483e32dc70f08e3c",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "y",
+        "r",
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "g"
+      ],
+      "169": [
+        "r",
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 12,
+    "case_uid": "33ce01dbb2f84c813f823952b6c46b84c14f5277227cd9bd3e1c9a7690208ef0",
+    "front_gap_m": 3.641337528824806,
+    "rear_gap_m": 11.078662425279617,
+    "merge_s": 10.0,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 12,
+    "case_uid": "fa05885ae17d407475cdde47a3f649c72488b0f21f5edff55297bec71a0b0557",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9773030281066895,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 7.473565915599465,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 13,
+    "case_uid": "776fff93c980b57588c92fece5bef60dcc3ffedd2813c84875e9933347649d8d",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "r",
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "r",
+        "g"
+      ],
+      "169": [
+        "r",
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 13,
+    "case_uid": "2c30ab7ce98b50c5334bc7f44498a6f27fd82dc77049cb8524ddc88e4c1820d6",
+    "front_gap_m": 12.691336870193481,
+    "rear_gap_m": 10.948662459850311,
+    "merge_s": 0.5,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 13,
+    "case_uid": "26c830fa03b071f171314ef69f6a23f8bc1c22a8f4492f090c97590bb34b1aae",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9761974811553955,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 7.492940234951675,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 14,
+    "case_uid": "e90a81aa2f69be5c57af587b1582be44c34029c0b5a1d12f660c7d7508a8f684",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "r",
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "g"
+      ],
+      "169": [
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 14,
+    "case_uid": "9ecd1cb32a024e24c003487a6d7fa383df9d9902d20e4a3f88bd20f271d9bafa",
+    "front_gap_m": 25.19133687019348,
+    "rear_gap_m": null,
+    "merge_s": 0.5,
+    "moving_pair": false,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 14,
+    "case_uid": "8d310649157e7fef98f995b15086a3ffc4c626ebf078ee91f2fb6c3172167486",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.988166868686676,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 0.9232394695281982,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 1
+  },
+  {
+    "scenario": "A",
+    "index": 15,
+    "case_uid": "d3add59a04cf56ce24cab2d9be981a854c59a303e5f9fe841623d541491aaf88",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "r",
+        "g"
+      ],
+      "169": [
+        "r",
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 15,
+    "case_uid": "87523e4ffac64119f5f365736deb47efbceb4be519d29417f605fe80e2ed6fb9",
+    "front_gap_m": 24.571336805820465,
+    "rear_gap_m": null,
+    "merge_s": 0.5,
+    "moving_pair": false,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 15,
+    "case_uid": "3a8cbcb9826863ff74206e53ddf2b718be98701e95b5333653ca16125db296e9",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9783751964569092,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 1.0,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 16,
+    "case_uid": "9545c6cc9ef3f25e530b9aa5b6ea9b1083fa4a679692ca6145a2438906fefe3b",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "r",
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "r",
+        "g"
+      ],
+      "169": [
+        "r",
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 16,
+    "case_uid": "478cabf550088de4e1b1f17fd757db7b9bb1133ecfd016075da054bd444d09e7",
+    "front_gap_m": 11.95133775472641,
+    "rear_gap_m": 10.61866283416748,
+    "merge_s": 0.5,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 16,
+    "case_uid": "f7f367542940f4ef2e61e96bb5996570ce59626d3b72d5564f99495ba30658db",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.978304922580719,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 7.477742702816613,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 17,
+    "case_uid": "d22d73d28bfafd669ee523f8471720a98c842e2353aa47a0a2a23c1cd9253603",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "r",
+        "g"
+      ],
+      "169": [
+        "r",
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 17,
+    "case_uid": "f914a5d9010799b752d8e143efdb1b7e212cfc9f56866f2d55f631d09934343b",
+    "front_gap_m": 24.001337587833405,
+    "rear_gap_m": null,
+    "merge_s": 0.5,
+    "moving_pair": false,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 17,
+    "case_uid": "32cffe2fee465a83e2b1b65cdad84f130dabff1eacbff9bc6813ffd62e899910",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9768688082695007,
+        "moving_priority": 2,
+        "min_tta_s": 13.839368001563392
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 6.498435025372601,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 18,
+    "case_uid": "127ad1fa8fc2ecc4fd5ea9401fc290cf2933762da2203eb36ed30c73b4cf4377",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "g"
+      ],
+      "268": [
+        "r",
+        "g"
+      ],
+      "764": [
+        "r",
+        "g"
+      ],
+      "169": [
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 18,
+    "case_uid": "538abcf2ffda1ea1386530a4a80dccf9a0e506131302872f8e5ac31a9651aa09",
+    "front_gap_m": 3.4013375639915466,
+    "rear_gap_m": 7.988662272691727,
+    "merge_s": 10.0,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 18,
+    "case_uid": "94311390d07e71cbcc7d2571623a2dced76a529493717727f9cd4b9d28218997",
+    "end_reason": "arrival",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9747457504272461,
+        "moving_priority": 0,
+        "min_tta_s": null
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 7.445173322572373,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  },
+  {
+    "scenario": "A",
+    "index": 19,
+    "case_uid": "0093567e07d01cb734dbf57306d67a29108ba39c5e2c47992fc94dc97fb212eb",
+    "end_reason": "arrival",
+    "approaches_within_40m": {
+      "647": [
+        "g"
+      ],
+      "268": [
+        "r",
+        "g",
+        "y",
+        "r",
+        "g"
+      ],
+      "764": [
+        "r",
+        "g"
+      ],
+      "169": [
+        "r",
+        "g"
+      ]
+    }
+  },
+  {
+    "scenario": "B",
+    "index": 19,
+    "case_uid": "0d1a745d3e9110c9b57423661f57b9ff21a18e96f420f8d1aa6abb37ed6acbd8",
+    "front_gap_m": 5.8013372123241425,
+    "rear_gap_m": 10.878662765026093,
+    "merge_s": 10.0,
+    "moving_pair": true,
+    "end_reason": "arrival"
+  },
+  {
+    "scenario": "C",
+    "index": 19,
+    "case_uid": "f994666c8a44c608efe44e1b544bc29663b7038908b3088ec8a700f154a4d40c",
+    "end_reason": "collision",
+    "entries": [
+      {
+        "edge": "-77",
+        "ego_mps": 0.9813385605812073,
+        "moving_priority": 1,
+        "min_tta_s": 9.60781630329364
+      },
+      {
+        "edge": "-54",
+        "ego_mps": 4.58445362187922,
+        "moving_priority": 0,
+        "min_tta_s": null
+      }
+    ],
+    "critical_foe_omitted_steps": 0
+  }
+]

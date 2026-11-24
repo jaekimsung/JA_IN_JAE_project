@@ -1,0 +1,28 @@
+Warning: Vehicle 'be1136bbf80a61e1-merge_priority-00' performs emergency braking on lane '-54_0' with decel=8.00, wished=4.50, severity=1.00, time=110.00.
+Warning: Vehicle 'b2cbf3dd7ded0be5-hv-000012' performs emergency braking on lane '34_0' with decel=8.00, wished=4.50, severity=1.00, time=145.00.
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+ Retrying in 1 seconds
+{
+  "phase": "COMPLETE",
+  "transitions": 2073,
+  "target": 2000,
+  "completed_episodes": 18,
+  "finish_episode": true,
+  "part": 5
+}
