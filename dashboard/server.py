@@ -93,7 +93,7 @@ def scan():
         try:
             if "CONFIG.json" in files:
                 cfg = read(folder / "CONFIG.json")
-                if (cfg.get("kind") in ("main_bc", "main_rl") and cfg.get("seed") == 11
+                if (cfg.get("kind") in ("main_bc", "main_rl") and cfg.get("seed") in spec["seeds"]
                         and cfg.get("experiment_sha256") == experiment_hash):
                     complete = optional(folder, "COMPLETE.json")
                     curve = {}

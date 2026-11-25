@@ -5,7 +5,6 @@ const num = (v,d=0) => Number.isFinite(v) ? v.toLocaleString("ko-KR",{maximumFra
 const pct = v => Number.isFinite(v) ? num(100*v,1)+"%" : "—";
 const names = {B0:"B0 Expert",B1:"B1 BC",B2:"B2 SAC",B3:"B3 RLPD"};
 const nameOf = r => (names[r.method] || r.method) + (r.seed == null ? "" : " · seed "+r.seed) + (r.training === "v1" ? " · v1 학습 → v2.1 평가" : "");
-const visibleModel = r => !["B1", "B2", "B3"].includes(r.method) || Number(r.seed) === 11;
 const empty = text => '<p class="empty">'+esc(text)+'</p>';
 const table = (headers,rows) => '<div class="scroll"><table><thead><tr>'+headers.map(x=>'<th>'+esc(x)+'</th>').join("")+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+row.map(x=>'<td>'+x+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>';
 function options(id,pairs,fallback) {
@@ -15,7 +14,7 @@ function options(id,pairs,fallback) {
 }
 let data, groups, busy=false;
 const label=e=>nameOf(e)+" · "+e.panel+" · "+Object.keys(e.scenarios).sort().join("/")+(e.step!=null?" · "+num(e.step)+" 전이":"");
-const scope = e=>[e.panel,e.cohort,e.aggregate.metric_version].join("|");
+const scope = e=>[e.panel,e.cohort,e.aggregate.metric_version].join("|")+(e.training==="v1"?"|v1-training":"");
 function comparison(){
   const summaryOpen=el("comparison").querySelector("details")?.open;
   const group=groups.get(el("cohort").value)||[];
@@ -104,8 +103,8 @@ function drawChart(series,yLabel,xLabel,rate){
   });
   el("chart").innerHTML=svg+"</svg>";
 }
-function collisionSeries(evaluations, cohort){
-  const entries=evaluations.filter(e=>scope(e)===cohort&&Number(e.seed)===11);
+function collisionSeries(evaluations, cohort, seed=11){
+  const entries=evaluations.filter(e=>scope(e)===cohort&&Number(e.seed)===seed);
   const valid=e=>Number.isFinite(e.aggregate.collision_rate)&&e.aggregate.collision_rate>=0&&
     e.aggregate.collision_rate<=1&&e.aggregate.n_valid>0&&e.aggregate.n_valid===e.aggregate.n_planned&&
     e.aggregate.data_quality_valid!==false;
@@ -128,8 +127,14 @@ function collisionSeries(evaluations, cohort){
   }
   return {series,issues};
 }
+function collisionSeeds(){
+  const group=groups.get(el("collisionCohort").value)||[];
+  const seeds=[...new Set(group.filter(e=>Number.isFinite(e.step)).map(e=>e.seed))].sort((a,b)=>a-b);
+  options("collisionSeed",seeds.map(s=>[String(s),"seed "+s]));
+}
 function collisionComparison(){
-  const {series,issues}=collisionSeries(data.evaluations,el("collisionCohort").value);
+  const seed=Number(el("collisionSeed").value);
+  const {series,issues}=collisionSeries(data.evaluations,el("collisionCohort").value,seed);
   const points=series.filter(s=>!s.baseline).flatMap(s=>s.points);
   const valid=points.filter(([x,y])=>Number.isFinite(x)&&Number.isFinite(y));
   el("collisionSave").disabled=!valid.length;
@@ -143,7 +148,7 @@ function collisionComparison(){
   const xmin=Math.min(...xs),xmax=Math.max(...xs);
   const ymax=Math.min(100,Math.max(5,Math.ceil(Math.max(...series.flatMap(s=>s.points.map(p=>p[1])).filter(Number.isFinite))/5)*5));
   const X=x=>75+(x-xmin)/(xmax-xmin||1)*810,Y=y=>265-y/ymax*195;
-  let svg='<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="BC SAC RLPD seed 11 충돌률 비교" viewBox="0 0 920 330" font-family="sans-serif" font-size="13" fill="#375467"><rect width="920" height="330" fill="white"/><text x="12" y="57">충돌률 (%)</text>';
+  let svg='<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="BC SAC RLPD seed '+seed+' 충돌률 비교" viewBox="0 0 920 330" font-family="sans-serif" font-size="13" fill="#375467"><rect width="920" height="330" fill="white"/><text x="12" y="57">충돌률 (%)</text>';
   for(let i=0;i<=5;i++){
     const x=75+i*810/5,y=265-i*195/5;
     svg+='<path stroke="#d4e0e5" d="M75 '+y+'H885"/><text text-anchor="end" x="65" y="'+(y+4)+'">'+num(i*ymax/5,1)+'</text><text text-anchor="middle" x="'+x+'" y="290">'+num(xmin+i*(xmax-xmin)/5)+'</text>';
@@ -152,7 +157,7 @@ function collisionComparison(){
   series.forEach((s,i)=>{
     const dash=s.baseline?' stroke-dasharray="8 5"':"";
     const lx=75+i*275;
-    svg+='<path d="M'+lx+' 25h25" stroke="'+s.color+'" stroke-width="3"'+dash+'/><text x="'+(lx+33)+'" y="29">'+esc(names[s.method])+" · seed 11"+(s.baseline?" (고정)":"")+'</text>';
+    svg+='<path d="M'+lx+' 25h25" stroke="'+s.color+'" stroke-width="3"'+dash+'/><text x="'+(lx+33)+'" y="29">'+esc(names[s.method])+" · seed "+seed+(s.baseline?" (고정)":"")+'</text>';
     if(s.baseline){
       const y=Y(100*s.latest.aggregate.collision_rate);
       svg+='<path data-method="'+s.method+'" d="M75 '+y+'H885" stroke="'+s.color+'" stroke-width="2.7"'+dash+'><title>BC 선택 모델의 고정 충돌률 '+pct(s.latest.aggregate.collision_rate)+'</title></path>';
@@ -206,7 +211,7 @@ function demoOptions() {
   const runs = data.demo_models.slice()
     .sort((a,b) => a.method.localeCompare(b.method) || a.seed-b.seed);
   options("driveModel", [["expert", names.B0], ...runs.map(r => [r.id, nameOf(r)+" · "+r.training+" 학습"])],
-          runs.find(r => r.method === "B3")?.id || "expert");
+          runs.find(r => r.method === "B3" && r.training === "v2.1")?.id || "expert");
   el("driveLaunch").disabled = launching;
 }
 
@@ -260,8 +265,6 @@ async function refresh(){
     const res=await fetch("/api/results");
     if(!res.ok)throw Error(res.status);
     data=await res.json();
-    data.runs=data.runs.filter(visibleModel);
-    data.evaluations=data.evaluations.filter(visibleModel);
     el("overview").innerHTML='<span><strong>'+data.runs.filter(r=>Object.keys(r.complete).length).length+'</strong>학습 완료</span><span><strong>'+data.evaluations.length+'</strong>평가 기록</span>';
     groups=new Map();
     for(const e of data.evaluations){
@@ -269,14 +272,14 @@ async function refresh(){
       if(!groups.has(k))groups.set(k,[]);
       groups.get(k).push(e);
     }
-    const ranked=[...groups].sort((a,b)=>b[1].filter(e=>e.representative).length-a[1].filter(e=>e.representative).length);
-    const collisionGroups=ranked.filter(([k,g])=>g.some(e=>["B2","B3"].includes(e.method)&&Number(e.seed)===11&&Number.isFinite(e.step)));
-    options("collisionCohort",collisionGroups.map(([k,g])=>[k,g[0].panel+" · "+Object.keys(g[0].scenarios).sort().join("/")+" · "+g[0].cases.length+"케이스"]));
-    options("cohort",ranked.map(([k,g])=>[k,g[0].panel+" · "+Object.keys(g[0].scenarios).sort().join("/")+" · "+g[0].cases.length+"케이스 · "+g[0].cohort.slice(0,6)]));
+    const ranked=[...groups].sort((a,b)=>Number(a[1][0].training==="v1")-Number(b[1][0].training==="v1")||b[1].filter(e=>e.representative).length-a[1].filter(e=>e.representative).length);
+    const collisionGroups=ranked.filter(([k,g])=>g.some(e=>["B2","B3"].includes(e.method)&&Number.isFinite(e.step)));
+    options("collisionCohort",collisionGroups.map(([k,g])=>[k,(g[0].training||"v2.1")+" 학습 · "+g[0].panel+" · "+Object.keys(g[0].scenarios).sort().join("/")+" · "+g[0].cases.length+"케이스"]));
+    options("cohort",ranked.map(([k,g])=>[k,(g[0].training||"v2.1")+" 학습 · "+g[0].panel+" · "+Object.keys(g[0].scenarios).sort().join("/")+" · "+g[0].cases.length+"케이스 · "+g[0].cohort.slice(0,6)]));
     options("run",data.runs.map(r=>[r.id,nameOf(r)+" · "+r.id]));
     const evals=[...data.evaluations].sort((a,b)=>Number(b.representative)-Number(a.representative)||label(a).localeCompare(label(b))||a.step-b.step);
     options("evaluation",evals.map(e=>[e.id,label(e)+" · "+e.id]));
-    demoOptions();comparison();training(true);collisionComparison();cases();archives();await showLog();
+    collisionSeeds();demoOptions();comparison();training(true);collisionComparison();cases();archives();await showLog();
     el("stamp").textContent=new Date().toLocaleTimeString("ko-KR")+" 갱신";
     el("warning").textContent=data.warnings.join(" / ");
   }catch(err){el("warning").textContent="결과 갱신 실패 · "+err.message+" · 서버 상태를 확인하고 새로고침하세요.";}
@@ -293,12 +296,13 @@ el("save").onclick=()=>{
   const link=document.createElement("a");link.href=url;link.download=el("run").value.replaceAll("/","_")+"-"+el("metric").value+".svg";link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
 el("refresh").onclick=refresh;el("cohort").onchange=comparison;el("run").onchange=()=>training(true);
-el("collisionCohort").onchange=collisionComparison;
+el("collisionCohort").onchange=()=>{collisionSeeds();collisionComparison();};
+el("collisionSeed").onchange=collisionComparison;
 el("collisionSave").onclick=()=>{
   const svg=el("collisionChart").querySelector("svg");
   if(!svg)return;
   const url=URL.createObjectURL(new Blob([svg.outerHTML],{type:"image/svg+xml"}));
-  const link=document.createElement("a");link.href=url;link.download="collision-comparison-seed11.svg";link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  const link=document.createElement("a");link.href=url;link.download="collision-comparison-seed"+el("collisionSeed").value+".svg";link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
 el("metric").onchange=()=>training();el("evaluation").onchange=()=>cases();
 el("filter").onchange=el("fail").onchange=()=>cases(false);

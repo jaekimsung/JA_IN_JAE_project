@@ -7,7 +7,7 @@ const vm=require('node:vm');
 const source=fs.readFileSync(path.join(__dirname,'../dashboard/dist/app.js'),'utf8');
 const nodes=new Map();
 const document={getElementById(id){
-  if(!nodes.has(id))nodes.set(id,{value:'dev|same|v1',innerHTML:'',textContent:'',disabled:false});
+  if(!nodes.has(id))nodes.set(id,{value:id==='collisionSeed'?'11':'dev|same|v1',innerHTML:'',textContent:'',disabled:false});
   return nodes.get(id);
 }};
 const api=vm.runInNewContext(source.split('el("driveForm").onsubmit')[0]+
@@ -64,4 +64,11 @@ test('missing RL evaluations disable export and show the empty state',()=>{
   api.setData({evaluations:[fixture[0]]});api.collisionComparison();
   assert.equal(document.getElementById('collisionSave').disabled,true);
   assert.match(document.getElementById('collisionChart').innerHTML,/평가 기록이 없습니다/);
+});
+
+test('selects v2.1 seed 22 independently of seed 11 and v1 records',()=>{
+  const rows=[...fixture,row('B3',300000,0,{seed:22}),row('B3',300000,.2,{seed:22,training:'v1'})];
+  const {series}=api.collisionSeries(rows,'dev|same|v1',22);
+  assert.equal(series.length,1);
+  assert.equal(series[0].latest.aggregate.collision_rate,0);
 });
