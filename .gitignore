@@ -4,13 +4,16 @@ __pycache__/
 *.py[cod]
 
 # Local research rollout/checkpoint outputs
-/docs/research_checks/**/integration_v*/
-/docs/research_checks/**/early_probe/
-/docs/research_checks/**/resume_probe*/
-/docs/research_checks/**/transitions.jsonl
+/outputs/research_checks/**/integration_v*/
+/outputs/research_checks/**/early_probe/
+/outputs/research_checks/**/resume_probe*/
+/outputs/research_checks/**/transitions.jsonl
 
 # Stray simulator logs
 MUJOCO_LOG.TXT
 
 # Local experiment runs
 /runs/
+
+# Tool snapshots
+.playwright-mcp/

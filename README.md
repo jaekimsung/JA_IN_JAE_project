@@ -37,11 +37,12 @@ K-CITY 도로·신호 구현 → 일반 차량 교통 → AV 환경(관측·행�
 │   ├── training/     #   학습 코드: BC run·RL run·dev 평가 곡선·실험 설정·실행 폴더/STOP 관리
 │   ├── data/         #   데이터: 전문가·정책 수집, 사례 계획, 병렬 pool, shard 저장/검증, RL 전이 기록, 사전 데이터·replay buffer
 │   └── evaluation/   #   평가: Episode 지표·HV 노출·사례 패널 평가
-├── runner/           # 실행: collect · train_bc · train_rl · evaluate · record_video · export_hf · view_kcity
-├── configs/kcity/    # experiment.json(실험 설정), v1/(환경 계약), panels/(dev·final 평가 사례)
+├── runner/           # 실행: collect · train_bc · train_rl · evaluate · record_video · export_hf · view_kcity · plot_* · report, dashboard/(로컬 대시보드)
+├── configs/kcity/    # experiment.json(실험 설정), v1/·v2/·v2_1/(환경 계약·사례 패널), panels/(v1 dev·final 평가 사례)
 ├── maps/             # 맵: kcity/(SUMO 맵·경로·신호·조경, 원본 자료, 검증 보고서), tools/(맵 생성·검증 도구)
 ├── tests/            # 회귀 검사
-└── docs/             # 설명 문서 (docs/README.md)
+├── docs/             # 설명 문서 (docs/README.md)
+└── outputs/          # 결과: 학습 결과·최종 모델(sac_v2_1_main), 검증·감사 결과, 예비 실험 원자료(research_checks), 컨설팅 자료
 ```
 
 `kcity/` 안의 패키지는 한 방향으로만 import합니다.

@@ -4,7 +4,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
-const source=fs.readFileSync(path.join(__dirname,'../dashboard/dist/app.js'),'utf8');
+const source=fs.readFileSync(path.join(__dirname,'../runner/dashboard/dist/app.js'),'utf8');
 const nodes=new Map();
 const document={getElementById(id){
   if(!nodes.has(id))nodes.set(id,{value:'dev|same|v1',innerHTML:'',textContent:'',disabled:false});

@@ -12,4 +12,4 @@
 - 맵 구현과 검증 보고서는 [maps/kcity/](../maps/kcity/README.md)에 있습니다.
 - 환경 계약은 [configs/kcity/v1/](../configs/kcity/v1/README.md)에 있습니다.
 - 수업 원자료와 평가 기준은 [course/](course/0_Project_Introduction.md)에 있습니다.
-- [research_checks/](research_checks/)에는 예비 실험의 원자료(JSON)가 있습니다.
+- 예비 실험 원자료(JSON)는 [outputs/research_checks/](../outputs/research_checks/)에 있습니다.

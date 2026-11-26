@@ -23,7 +23,7 @@ K-CITY(SUMO) 자율주행 의사결정 연구입니다. 세 가지 주행 과제
 
 ## 실행
 
-- **구성:** 코드는 `kcity/` 아래 `env/`(실행환경) · `policy/`(정책·알고리즘) · `training/`(학습 루프·설정) · `data/`(수집·저장) · `evaluation/`(지표·평가)이고, 실행 진입점은 `runner/`입니다. 루트는 kcity·runner·configs·maps·tests·docs 6개입니다.
+- **구성:** 코드는 `kcity/` 아래 `env/`(실행환경) · `policy/`(정책·알고리즘) · `training/`(학습 루프·설정) · `data/`(수집·저장) · `evaluation/`(지표·평가)이고, 실행 진입점은 `runner/`입니다. 루트는 kcity·runner·configs·maps·tests·docs·outputs 7개이고, 결과(평가·학습 곡선·최종 모델·예비 실험 원자료)는 모두 `outputs/`에 둡니다. 로컬 대시보드는 `runner/dashboard/`입니다.
 - **import 방향:** env는 다른 패키지를 쓰지 않고, evaluation·policy → env, data → env·evaluation·policy, training → 나머지 전부입니다. data는 training을 import하지 않습니다.
 - **진입점:** `runner/collect.py --workers N` → `runner/train_bc.py views|train` → `runner/train_rl.py` → `runner/evaluate.py` → `runner/record_video.py` / `runner/export_hf.py`. 장기 실행은 `<output>/STOP` 후 `--resume`으로 이어갑니다.
 - **회귀 검사:** `PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 python -B -m unittest discover -s tests`. 검증 환경은 Linux·SUMO 1.28.0입니다.
@@ -32,7 +32,7 @@ K-CITY(SUMO) 자율주행 의사결정 연구입니다. 세 가지 주행 과제
 ## 문서와 연구 규칙
 
 - md 문서에는 프로젝트 설명(구조·환경·알고리즘·데이터·실험·실행 방법)만 둡니다. 작업·변경 이력은 쓰지 않고 git commit 메시지로 남깁니다.
-- `docs/research_checks/`의 JSON은 예비 실험 원자료이므로 고치지 않습니다.
+- `outputs/research_checks/`의 JSON은 예비 실험 원자료이므로 고치지 않습니다.
 - debug·pilot 자료와 모델은 본 데이터나 본 초기값으로 이월하지 않습니다.
 - 실패 사례를 빼거나 checkpoint를 다시 골라 결과를 좋게 만들지 않습니다. 작은 차이로 방법이 우월하다고 선언하지 않습니다.
 - final 패널은 모델·설정 선택에 쓰지 않습니다.
