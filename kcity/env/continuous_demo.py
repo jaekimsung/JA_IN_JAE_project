@@ -39,11 +39,47 @@ class ContinuousDemoEnv(SumoKCityEnv):
             task='continuous_drive', route_edges=route, goal=cases['C']['scenario']['goal'],
             episode_limit_s=sum(part['scenario']['episode_limit_s'] for part in cases.values()),
             interaction=sum(self.sections.values(), []), priority_gap_observation_only=True))
+        self.signal_escort = scenario_id == 'ABC'
+        if self.signal_escort:
+            # One lead vehicle follows the full route and waits for the ego.
+            self.escort_offset = 15.
+            self.sections['A'] = [stream for stream in self.sections['A']
+                                  if stream['name'] != 'lead_platoon']
+            self.sections['A'].append(dict(
+                kind='placed', name='signal_escort', route=route,
+                lane_index=case['scenario']['start']['lane_index'], count=[1, 1],
+                first_position_m=[case['scenario']['start']['position_m'] + self.escort_offset] * 2,
+                spacing_m=[0., 0.], speed_mps=case['scenario']['start']['speed_mps']))
+            case['scenario']['interaction'] = sum(self.sections.values(), [])
         return case
 
     def _add_interaction_traffic(self):
         self.interaction_ids = []
         self._start_section(self.first_section)
+        if self.signal_escort and self.background:
+            self.escort_id = next(vid for vid in self.interaction_ids if '-signal_escort-' in vid)
+            native_step = self.conn.simulationStep
+
+            def escorted_step(*args, **kwargs):
+                vehicles = self.conn.vehicle
+                active = set(vehicles.getIDList())
+                if self.ego_id in active and self.escort_id in active:
+                    gap = (self.escort_offset + vehicles.getDistance(self.escort_id)
+                           - vehicles.getDistance(self.ego_id) - vehicles.getLength(self.escort_id))
+                    # SUMO controls safety and signals. Release pacing through the
+                    # lane merge and after the final signal to keep junctions clear.
+                    vehicles.setSpeedMode(self.escort_id, 31)
+                    occurrence = vehicles.getRouteIndex(self.ego_id)
+                    if (self.b_entry - 1 <= occurrence < self.c_entry - 3
+                            or occurrence >= self.c_entry):
+                        vehicles.setSpeed(self.escort_id, -1.)
+                    else:
+                        speed = vehicles.getSpeed(self.ego_id) + .5 * (15. - gap)
+                        vehicles.setSpeed(self.escort_id, max(0., min(
+                            self.p['control']['speed_cap_mps'], speed)))
+                return native_step(*args, **kwargs)
+
+            self.conn.simulationStep = escorted_step
         self.conn.simulationStep()
 
     def _start_section(self, section):
