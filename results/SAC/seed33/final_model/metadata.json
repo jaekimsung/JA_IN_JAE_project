@@ -1,0 +1,44 @@
+{
+  "schema": "KC-TRAINING-RESUME-v1",
+  "kind": "rl",
+  "config": {
+    "method": "B2",
+    "seed": 33,
+    "hidden_dims": [
+      256,
+      256
+    ],
+    "hparams": {
+      "actor_lr": 0.0003,
+      "critic_lr": 0.0003,
+      "temp_lr": 0.0003,
+      "hidden_dims": [
+        256,
+        256
+      ],
+      "discount": 0.99,
+      "tau": 0.005,
+      "num_qs": 10,
+      "num_min_qs": 2,
+      "critic_layer_norm": true,
+      "init_temperature": 1.0,
+      "backup_entropy": true,
+      "batch_size": 256,
+      "utd_ratio": 20,
+      "offline_ratio": 0.0,
+      "start_training": 5000
+    },
+    "device_type": "cuda",
+    "contract_sha256": "5b1d4da5a6609677d794cc936364261c403e335d16e58313a370a0665e4c2841"
+  },
+  "runtime": {
+    "git": {
+      "commit": "58aeb4fcd39a7f229f644c98b9ad4e096f09f0e6",
+      "dirty": false
+    },
+    "python": "3.10.12",
+    "numpy": "2.2.6",
+    "torch": "2.8.0+cu128",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35"
+  }
+}
