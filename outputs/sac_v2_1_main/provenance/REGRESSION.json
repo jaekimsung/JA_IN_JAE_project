@@ -1,0 +1,8 @@
+{
+  "tested_at": "2026-11-25T18:18:41.516015+09:00",
+  "tests": 118,
+  "duration_s": 149.048,
+  "result": "OK",
+  "command": "PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 python -B -m unittest discover -s tests",
+  "supervisor_gate_checks": "passed"
+}

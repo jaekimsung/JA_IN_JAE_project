@@ -1,0 +1,25 @@
+{
+  "timestamp_utc": "2026-11-25T09:15:20.581814+00:00",
+  "python": "/home/mobility/JA_IN_JAE_project/.venv/bin/python",
+  "device_nodes": [
+    "/dev/nvidia-modeset",
+    "/dev/nvidia-uvm-tools",
+    "/dev/nvidia-uvm",
+    "/dev/nvidia0",
+    "/dev/nvidiactl"
+  ],
+  "nvidia_smi": {
+    "returncode": 0,
+    "stdout": "NVIDIA GeForce RTX 4090, 580.178.04, 24564 MiB, 519 MiB",
+    "stderr": ""
+  },
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda_build": "12.8",
+  "cuda_available": true,
+  "cuda_device_count": 1,
+  "status": "ok",
+  "device_name": "NVIDIA GeForce RTX 4090",
+  "operation_result": 1048576.0,
+  "operation_sec": 0.36004,
+  "peak_allocated_mib": 4.0
+}

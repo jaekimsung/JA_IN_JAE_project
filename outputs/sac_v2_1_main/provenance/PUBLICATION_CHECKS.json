@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "checks": [
+    "incomplete or failed seeds cannot publish",
+    "main checkout rejected before mutation",
+    "changed HEAD and dirty workspace rejected",
+    "divergent remote train rejected",
+    "only explicit train dry-run before copying",
+    "tag pushing disabled"
+  ],
+  "partial_publication_checks": [
+    "completed seeds 11/22 accepted during seed 33 training",
+    "incomplete seed 33 rejected",
+    "invalid or duplicate scope rejected",
+    "publication uses detached worktree and leaves training HEAD unchanged",
+    "root and nested model manifests are retained"
+  ],
+  "detached_worktree_integration_test": "passed: partial and full publication to isolated local bare Git remote; main and training source preserved"
+}
