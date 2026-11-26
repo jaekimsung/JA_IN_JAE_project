@@ -10,6 +10,6 @@
 | [v2.1 SAC 학습 시작하기](SAC_V2_1_QUICKSTART.md) | 새 PC에서 seed 11 환경 확인, 본 학습 실행, 결과 전달 |
 
 - 맵 구현과 검증 보고서는 [maps/kcity/](../maps/kcity/README.md)에 있습니다.
-- 환경 계약은 [configs/kcity/v1/](../configs/kcity/v1/README.md)에 있습니다.
+- 환경 계약(최종 제출 기준 v2.1)은 [configs/kcity/v2_1/](../configs/kcity/v2_1/README.md)에 있습니다.
 - 수업 원자료와 평가 기준은 [course/](course/0_Project_Introduction.md)에 있습니다.
 - 예비 실험 원자료(JSON)는 [outputs/research_checks/](../outputs/research_checks/)에 있습니다.

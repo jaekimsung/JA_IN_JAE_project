@@ -13,7 +13,7 @@ from kcity.training.experiment import experiment_sha256, is_pilot, run_metadata,
 from kcity.data.dataset import atomic_json, shard_directories
 from kcity.data.pool import pool_data_id, pool_reports
 from kcity.data.storage import verify_bundle
-from kcity.env.config import DEFAULT_PROTOCOL, ROOT, digest, file_sha256, load_contract
+from kcity.env.config import ROOT, digest, file_sha256, load_contract
 from kcity.env.observation import (CONFLICT, INSIDE, LANE_ENDS, LANE_LEFT, SPEED, TLS_DIST,
                                    TLS_GREEN, TLS_RED, TLS_YELLOW, YIELD_SIGN)
 from kcity.training.runs import Owner, now, read, require, stopped
@@ -158,8 +158,6 @@ def run_bc(root,views,seed,spec,device,resume=False):
     require(manifest.get('run_purpose', 'main') == ('pilot' if pilot else 'main'), 'BC view run purpose mismatch')
     contract_hash = digest(load_contract(ROOT / spec['base_contract']['path']))
     view_contract = manifest.get('contract_sha256')
-    if view_contract is None:  # manifests created before multi-contract collection all used v1
-        view_contract = digest(load_contract(DEFAULT_PROTOCOL))
     require(view_contract == contract_hash, 'BC views environment contract mismatch')
     cfg = training_config(spec,'pilot_bc' if pilot else 'main_bc',seed,views=str(Path(views).resolve()),view_id=manifest['view_id'],device=device)
     owner = Owner(root,cfg,resume)

@@ -31,7 +31,7 @@ def main():
     parser.add_argument('--resume', action='store_true')
     parser.add_argument('--report-every', type=float, default=30., metavar='SECONDS',
                         help='terminal progress interval in seconds (default: 30; does not change file/checkpoint cadence)')
-    parser.add_argument('--experiment', type=Path, default=Path('configs/kcity/experiment.json'))
+    parser.add_argument('--experiment', type=Path, default=Path('configs/kcity/v2_1/experiment.json'))
     args = parser.parse_args()
     if not math.isfinite(args.report_every) or args.report_every <= 0:
         parser.error('--report-every must be positive and finite')

@@ -1,6 +1,6 @@
 # 실험 설계
 
-**주제: K-CITY의 세 가지 의사결정 상황에서 BC의 한계를 사전 데이터를 쓰는 강화학습(RLPD)으로 해결할 수 있는가.** 설정은 [experiment.json](../configs/kcity/experiment.json)에 있습니다.
+**주제: K-CITY의 세 가지 의사결정 상황에서 BC의 한계를 사전 데이터를 쓰는 강화학습(RLPD)으로 해결할 수 있는가.** 설정은 [experiment.json](../configs/kcity/v2_1/experiment.json)에 있습니다(환경 `KC-DENSE-v2.1`).
 
 ## 문제 상황
 
@@ -39,7 +39,7 @@
 
 ## 평가 패널
 
-[configs/kcity/panels/](../configs/kcity/panels/)
+[configs/kcity/v2_1/](../configs/kcity/v2_1/) (`cases_dev.json`, `cases_final.json`)
 
 - **dev:** 100개 사례(A 30 / B 30 / C 40), 수요 1.0배. 학습 중 곡선과 목표 도달 판정에만 씁니다.
 - **final:** 수요 1.0·1.5·2.0배 × 100개 사례. 최종 정책이 고정된 뒤에만 실행하며, 모델이나 설정 선택에 쓰지 않습니다.

@@ -1,4 +1,4 @@
-"""Contracts and decisions that must differ between dense scenarios and the v1 baseline."""
+"""Contracts and decisions of the dense v2.1 scenarios."""
 import unittest
 from pathlib import Path
 
@@ -15,7 +15,7 @@ from kcity.training.bc import decision_weights
 class DenseTests(unittest.TestCase):
     def test_panels_and_pilot_seeds(self):
         import json
-        pilot = load_experiment('configs/kcity/v2/pilot.json')
+        pilot = load_experiment('configs/kcity/v2_1/pilot.json')
         spec = load_contract(ROOT / pilot['base_contract']['path'])
         for name, ref in pilot['case_panels'].items():
             panel = json.loads((ROOT / ref['path']).read_text())
@@ -26,14 +26,12 @@ class DenseTests(unittest.TestCase):
         self.assertNotEqual(plan[0], GeneratedCasePlan.for_budget(spec, 'expert', 20)[0])
         self.assertEqual(plan[:], GeneratedCasePlan.from_descriptor(spec, plan.descriptor())[:])
 
-    def test_first_merge_revision_pins_panels_and_preserves_other_scenarios(self):
+    def test_main_panels_match_the_v2_1_contract(self):
         import json
-        previous = load_contract(ROOT / 'configs/kcity/v2/protocol.json')
         pilot = load_experiment('configs/kcity/v2_1/pilot.json')
         main = load_experiment('configs/kcity/v2_1/experiment.json')
         self.assertEqual(pilot['base_contract'], main['base_contract'])
         spec = load_contract(ROOT / pilot['base_contract']['path'])
-        self.assertEqual(previous['scenario_manifest']['scenarios'][:2], spec['scenario_manifest']['scenarios'][:2])
         for name, ref in main['case_panels'].items():
             panel = json.loads((ROOT / ref['path']).read_text())
             self.assertEqual(digest(panel['cases']), panel['cases_sha256'])
@@ -70,7 +68,7 @@ class DenseTests(unittest.TestCase):
                 self.assertFalse(env.ever_collision)
 
     def test_rolling_yield_uses_visible_motion(self):
-        protocol = load_contract(ROOT / 'configs/kcity/v2/protocol.json')['protocol']
+        protocol = load_contract(ROOT / 'configs/kcity/v2_1/protocol.json')['protocol']
         expert = KCityRuleExpert.from_protocol(protocol)
         o = np.zeros(63, np.float32)
         o[1:21:4], o[3:21:4] = 1, -1

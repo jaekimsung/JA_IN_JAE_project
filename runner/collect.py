@@ -152,7 +152,7 @@ def run_workers(args, spec, target):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--output', required=True, type=Path, help='pool directory')
-    parser.add_argument('--experiment', type=Path, default=Path('configs/kcity/experiment.json'),
+    parser.add_argument('--experiment', type=Path, default=Path('configs/kcity/v2_1/experiment.json'),
                         help='experiment settings; a pilot file must set run_purpose=pilot')
     parser.add_argument('--policy', default='expert', help="'expert' (B0) or a BC/RL learner bundle directory")
     parser.add_argument('--policy-method', choices=['B1', 'B2', 'B3'], help='label for a bundle (default: inferred)')

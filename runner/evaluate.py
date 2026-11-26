@@ -47,7 +47,7 @@ def main():
     parser.add_argument('--limit', type=int, help='evaluate only the first N cases per demand (smoke test)')
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--device', choices=['cpu', 'cuda'], default='cpu')
-    parser.add_argument('--experiment', type=Path, default=Path('configs/kcity/experiment.json'))
+    parser.add_argument('--experiment', type=Path, default=Path('configs/kcity/v2_1/experiment.json'))
     args = parser.parse_args()
     torch.set_num_threads(1)
     spec = load_experiment(args.experiment)

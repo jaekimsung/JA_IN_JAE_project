@@ -9,9 +9,9 @@ K-CITY(SUMO) 자율주행 의사결정 연구입니다. 세 가지 주행 과제
 ## 수정 범위
 
 - `maps/kcity/`(원자료·생성 맵·신호·보고서)와 `maps/tools/`는 완성된 맵 구현입니다. 사용자 요청 없이 수정하지 않습니다.
-- `configs/kcity/v1/protocol.json`·`scenarios.json`은 환경 계약입니다. 바꾸면 case_uid가 달라져 `configs/kcity/panels/`의 사례 패널이 무효가 됩니다. 바꿀 때는 패널을 다시 만들고 기존 결과와 섞지 않습니다.
+- 최종 제출 기준은 v2.1입니다. `configs/kcity/v2_1/protocol.json`·`scenarios.json`은 환경 계약입니다. 바꾸면 case_uid가 달라져 같은 폴더의 사례 패널(`cases_dev.json`·`cases_final.json`)이 무효가 됩니다. 바꿀 때는 패널을 다시 만들고 기존 결과와 섞지 않습니다.
 - 데이터·checkpoint에 기록되는 식별자(`IMPLEMENTATION_ID`, `OBSERVATION_ID`, `EXPERT_ID`, `SCHEMA_ID`, `METRIC_VERSION`)는 사례 ID와 데이터 호환에 쓰이므로 바꾸지 않습니다.
-- 실험 설정은 [configs/kcity/experiment.json](configs/kcity/experiment.json) 하나입니다. 실행 폴더의 CONFIG.json에 이 설정의 digest가 들어가므로, 설정을 바꾸면 이전 run은 `--resume`으로 이어지지 않습니다(의도된 동작).
+- 실험 설정은 [configs/kcity/v2_1/experiment.json](configs/kcity/v2_1/experiment.json)(파일럿은 `pilot.json`)입니다. 실행 폴더의 CONFIG.json에 이 설정의 digest가 들어가므로, 설정을 바꾸면 이전 run은 `--resume`으로 이어지지 않습니다(의도된 동작).
 - 코드 버전은 run·bundle·dataset 메타데이터에 git commit으로 기록만 하고, 재개할 때 비교하지 않습니다.
 
 ## 과제 제약 (강의 FAQ)

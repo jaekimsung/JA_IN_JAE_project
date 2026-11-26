@@ -13,6 +13,7 @@ import numpy as np
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from kcity.env.config import ROOT, digest, load_contract
 from kcity.env.observation import OBS_DIM
 from kcity.policy.bc import KCityBC
 from kcity.policy.rlpd import DEFAULT_RLPD, KCityRLPD
@@ -47,7 +48,8 @@ class LoggingTests(unittest.TestCase):
         spec['rlpd']['hidden_dims'] = [4, 4]
         data = dict(observation=np.zeros((4, OBS_DIM), np.float32),
                     action_target=np.ones((4, 2), np.float32) * .2)
-        views = (dict(data_id='fixture', view_id='fixture'), dict(expert_train=data, expert_val=data))
+        views = (dict(data_id='fixture', view_id='fixture', contract_sha256=digest(load_contract(ROOT / spec['base_contract']['path']))),
+                 dict(expert_train=data, expert_val=data))
         models = []
 
         def make_model(*args, **kwargs):

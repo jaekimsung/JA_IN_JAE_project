@@ -80,7 +80,7 @@ class KCityContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ContractError, 'No passenger connection'):
             validate_contract(bad)
         bad = deepcopy(self.spec)
-        bad['scenario_manifest']['scenarios'][2]['interaction'][0]['headway_s'] = [4.0, 2.0]
+        bad['scenario_manifest']['scenarios'][2]['interaction'][2]['headway_s'] = [4.0, 2.0]  # a timed stream
         with self.assertRaisesRegex(ContractError, 'invalid interaction range'):
             validate_contract(bad)
 

@@ -1,10 +1,10 @@
-"""Experiment settings (configs/kcity/experiment.json) and run provenance."""
+"""Experiment settings (configs/kcity/v2_1/experiment.json) and run provenance."""
 import json
 
 from kcity.env.config import ROOT, digest, file_sha256, git_info  # noqa: F401  (re-exported)
 from kcity.policy.checkpoint import run_metadata  # noqa: F401  (re-exported)
 
-EXPERIMENT = ROOT / 'configs/kcity/experiment.json'
+EXPERIMENT = ROOT / 'configs/kcity/v2_1/experiment.json'
 
 
 def load_experiment(path=EXPERIMENT):
