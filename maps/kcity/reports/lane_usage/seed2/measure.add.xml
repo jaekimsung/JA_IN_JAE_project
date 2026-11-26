@@ -1,1 +1,1 @@
-<additional><laneData id="coverage" file="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/reports/lane_usage/seed2/lanes.xml" period="1800" begin="0" end="1800" excludeEmpty="false" withInternal="true" minSamples="0" /></additional>
+<additional><laneData id="coverage" file="maps/kcity/reports/lane_usage/seed2/lanes.xml" period="1800" begin="0" end="1800" excludeEmpty="false" withInternal="true" minSamples="0" /></additional>

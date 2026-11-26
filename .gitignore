@@ -12,3 +12,6 @@ MUJOCO_LOG.TXT
 
 # Tool snapshots
 .playwright-mcp/
+
+# Map build intermediates (maps/tools recreates them)
+/maps/kcity/audit/

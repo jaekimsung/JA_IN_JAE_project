@@ -27276,9 +27276,9 @@
       "command": [
         "sumo",
         "-c",
-        "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.sumocfg",
+        "maps/kcity/kcity.sumocfg",
         "--additional-files",
-        "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.add.xml,/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/reports/lane_usage/seed0/measure.add.xml",
+        "maps/kcity/kcity.add.xml,maps/kcity/reports/lane_usage/seed0/measure.add.xml",
         "--seed",
         "0",
         "--end",
@@ -27290,7 +27290,7 @@
         "--precision",
         "6",
         "--tripinfo-output",
-        "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/reports/lane_usage/seed0/trips.xml"
+        "maps/kcity/reports/lane_usage/seed0/trips.xml"
       ]
     },
     {
@@ -27300,9 +27300,9 @@
       "command": [
         "sumo",
         "-c",
-        "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.sumocfg",
+        "maps/kcity/kcity.sumocfg",
         "--additional-files",
-        "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.add.xml,/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/reports/lane_usage/seed1/measure.add.xml",
+        "maps/kcity/kcity.add.xml,maps/kcity/reports/lane_usage/seed1/measure.add.xml",
         "--seed",
         "1",
         "--end",
@@ -27314,7 +27314,7 @@
         "--precision",
         "6",
         "--tripinfo-output",
-        "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/reports/lane_usage/seed1/trips.xml"
+        "maps/kcity/reports/lane_usage/seed1/trips.xml"
       ]
     },
     {
@@ -27324,9 +27324,9 @@
       "command": [
         "sumo",
         "-c",
-        "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.sumocfg",
+        "maps/kcity/kcity.sumocfg",
         "--additional-files",
-        "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.add.xml,/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/reports/lane_usage/seed2/measure.add.xml",
+        "maps/kcity/kcity.add.xml,maps/kcity/reports/lane_usage/seed2/measure.add.xml",
         "--seed",
         "2",
         "--end",
@@ -27338,7 +27338,7 @@
         "--precision",
         "6",
         "--tripinfo-output",
-        "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/reports/lane_usage/seed2/trips.xml"
+        "maps/kcity/reports/lane_usage/seed2/trips.xml"
       ]
     }
   ]

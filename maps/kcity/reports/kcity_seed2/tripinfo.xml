@@ -4,13 +4,13 @@
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.net.xml"/>
-        <route-files value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.rou.xml"/>
-        <additional-files value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.add.xml,/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.signals.add.xml"/>
+        <net-file value="maps/kcity/kcity.net.xml"/>
+        <route-files value="maps/kcity/kcity.rou.xml"/>
+        <additional-files value="maps/kcity/kcity.add.xml,maps/kcity/kcity.signals.add.xml"/>
     </input>
 
     <output>
-        <tripinfo-output value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/reports/kcity_seed2/tripinfo.xml"/>
+        <tripinfo-output value="maps/kcity/reports/kcity_seed2/tripinfo.xml"/>
         <tripinfo-output.write-unfinished value="true"/>
     </output>
 
@@ -26,7 +26,7 @@
     </processing>
 
     <report>
-        <error-log value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/reports/kcity_seed2/warnings.log"/>
+        <error-log value="maps/kcity/reports/kcity_seed2/warnings.log"/>
         <duration-log.disable value="true"/>
         <no-step-log value="true"/>
     </report>
@@ -40,7 +40,7 @@
     </random_number>
 
     <gui_only>
-        <gui-settings-file value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.gui.xml"/>
+        <gui-settings-file value="maps/kcity/kcity.gui.xml"/>
     </gui_only>
 
 </sumoConfiguration>

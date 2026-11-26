@@ -1,8 +1,0 @@
-Warning: Vehicle 'hv_006'; junction collision with vehicle 'hv_011', lane=':176_13_0', gap=-1.00, time=148.50, stage=move.
-Warning: Vehicle 'hv_026' performs emergency braking on lane '-44_0' with decel=8.00, wished=4.50, severity=1.00, time=186.30.
-Warning: Vehicle 'hv_029' performs emergency braking on lane ':780_5_0' with decel=8.00, wished=4.50, severity=1.00, time=278.60.
-Warning: Vehicle 'hv_077' performs emergency braking on lane '-78_0' with decel=8.00, wished=4.50, severity=1.00, time=339.40.
-Warning: Vehicle 'hv_077' performs emergency braking on lane '-78_0' with decel=8.00, wished=4.50, severity=1.00, time=339.80.
-Warning: Vehicle 'hv_077' performs emergency braking on lane '-78_0' with decel=8.00, wished=4.50, severity=1.00, time=340.10.
-Warning: Vehicle 'hv_118' performs emergency braking on lane '49_0' with decel=8.00, wished=4.50, severity=1.00, time=504.00.
-Warning: Vehicle 'hv_133' performs emergency braking on lane '-44_0' with decel=8.00, wished=4.50, severity=1.00, time=584.00.
