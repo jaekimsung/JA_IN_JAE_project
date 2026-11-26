@@ -14,6 +14,7 @@ from pathlib import Path
 import argparse
 import json
 from importlib.util import find_spec
+from itertools import count
 import os
 from datetime import datetime
 import shutil
@@ -51,6 +52,7 @@ import torch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # 저장소 루트
 from kcity.data.dataset import atomic_json
 from kcity.env.config import DEFAULT_PROTOCOL, ROOT
+from kcity.env.continuous_demo import ContinuousDemoEnv
 from kcity.env.env import SumoKCityEnv
 from kcity.policy.rule_expert import KCityRuleExpert
 from kcity.policy.checkpoint import load_policy
@@ -71,7 +73,7 @@ def encode(frames, fps, target):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--policy', required=True, help="'expert' or a learner bundle directory")
-    ap.add_argument('--scenario', choices=['A', 'B', 'C'], default='C')
+    ap.add_argument('--scenario', choices=['A', 'B', 'C', 'ABC', 'BAC'], default='C')
     ap.add_argument('--namespace', choices=['dev', 'contract_check'], default='dev')
     ap.add_argument('--case-index', type=int, default=1000000)
     ap.add_argument('--output', type=Path, required=True)
@@ -108,7 +110,8 @@ def main():
     torch.set_num_threads(1)
     args.output.mkdir(parents=True, exist_ok=False)
     warmup = 60. if args.namespace == 'dev' and args.warmup is None else args.warmup
-    env = SumoKCityEnv(protocol=args.protocol, gui=True, background=True, scenario_id=args.scenario, debug_warmup_s=warmup)
+    env_class = ContinuousDemoEnv if args.scenario in ('ABC', 'BAC') else SumoKCityEnv
+    env = env_class(protocol=args.protocol, gui=True, background=True, scenario_id=args.scenario, debug_warmup_s=warmup)
     if args.policy == 'expert':
         model, source = KCityRuleExpert.from_protocol(env.contract['protocol']), 'expert'
     else:
@@ -169,7 +172,7 @@ def main():
                 conn.gui.trackVehicle(view_id, env.ego_id)
                 conn.gui.setZoom(view_id, args.zoom)
             colored = set()
-            for t in range(601):
+            for t in count():
                 current = set(conn.vehicle.getIDList())
                 for vid in current - colored:
                     conn.vehicle.setColor(vid, AV_COLOR if vid == env.ego_id else HV_COLOR)

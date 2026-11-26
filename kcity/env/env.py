@@ -92,6 +92,9 @@ class SumoKCityEnv(gym.Env):
         ET.indent(out)
         ET.ElementTree(out).write(self.run_dir/'traffic.rou.xml',encoding='utf-8',xml_declaration=True)
 
+    def _make_case(self, namespace, scenario_id, index, demand):
+        return make_case(self.contract, namespace, scenario_id, index, demand)
+
     def reset(self, *, seed=None, options=None):
         super().reset(seed=seed)
         self._close_connection();self._done=True
@@ -99,7 +102,7 @@ class SumoKCityEnv(gym.Env):
         unknown=set(options)-{'scenario_id','namespace','case_index','demand_multiplier'}
         if unknown:raise ValueError('Unknown reset option: '+str(sorted(unknown)))
         index=options.get('case_index',seed if seed is not None else int(self.np_random.integers(0,2**31-1)))
-        self.case=make_case(self.contract,options.get('namespace','contract_check'),
+        self.case=self._make_case(options.get('namespace','contract_check'),
             options.get('scenario_id',self.scenario_id),index,options.get('demand_multiplier',1.0))
         self.p=self.contract['protocol'];self.dt=self.p['timing']['sumo_step_s']
         self.warmup=self.p['timing']['warmup_s'] if self.debug_warmup_s is None else self.debug_warmup_s
@@ -300,9 +303,14 @@ class SumoKCityEnv(gym.Env):
         Both are ordinary HV types driven by SUMO; only their insertion is scripted.
         """
         rng=random.Random(self.case['seeds']['initialization'])
-        now=self.conn.simulation.getTime();traffic=self.p['traffic']
         self.interaction_ids=[]
-        for stream in self.case['scenario']['interaction'] if self.background else []:
+        if self.background:
+            self._insert_streams(self.case['scenario']['interaction'], rng)
+        self.conn.simulationStep(0)  # insert the placed vehicles before the first observation
+
+    def _insert_streams(self, streams, rng):
+        now=self.conn.simulation.getTime();traffic=self.p['traffic']
+        for stream in streams:
             count=rng.randint(*stream['count'])
             if stream['kind']=='placed':
                 positions=[rng.uniform(*stream['first_position_m'])]
@@ -325,7 +333,6 @@ class SumoKCityEnv(gym.Env):
                 if 'max_speed_mps' in stream:
                     self.conn.vehicle.setMaxSpeed(vid, stream['max_speed_mps'])
                 self.interaction_ids.append(vid)
-        self.conn.simulationStep(0)  # insert the placed vehicles before the first observation
 
     def _tick(self):
         return round(self.conn.simulation.getTime()/self.dt)

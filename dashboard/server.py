@@ -19,16 +19,20 @@ ROOT = HERE.parent
 RUNS = ROOT / "runs"
 MAIN = RUNS / "dense_v2_1_main"
 EXPERIMENT = ROOT / "configs/kcity/v2_1/experiment.json"
-DEMO_CASE = {"A": 1000, "B": 1005, "C": 1004}
+DEMO_CASE = {"A": 1000, "B": 1005, "C": 1004, "ABC": 1000, "BAC": 1005}
 
 
 def read(path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def has_content(path):
+    return path.is_file() and path.stat().st_size > 0
+
+
 def optional(folder, name):
     path = folder / name
-    return read(path) if path.is_file() else {}
+    return read(path) if has_content(path) else {}
 
 
 def rel(path):
@@ -46,7 +50,7 @@ def demo_bundle(folder, cfg, best, complete):
     else:
         return None
     if bundle and bundle.resolve().is_relative_to(folder.resolve()) and all(
-        (bundle / f).is_file() for f in ("training.pt", "metadata.json", "SHA256.json")
+        has_content(bundle / f) for f in ("training.pt", "metadata.json", "SHA256.json")
     ):
         return bundle
     return None
@@ -79,16 +83,26 @@ def scan():
                                                  seed=model["seed"], training="v1",
                                                  complete=optional(folder, "COMPLETE.json"))
     folders = []
+    empty_model_configs = []
     for base, dirs, files in os.walk(RUNS):
         if Path(base) == RUNS:
             dirs[:] = [d for d in dirs if d in (MAIN.name, "eval")]
+        elif Path(base) == MAIN:
+            # Publication staging and worktrees contain copies of the training runs.
+            dirs[:] = [d for d in dirs if d not in ("publication_stage", "publication_worktrees")]
         dirs[:] = sorted(d for d in dirs if d not in {
             "dataset", "shards", "checkpoints", "source_snapshot", "transitions", "__pycache__"
         } and not d.startswith("update-"))
         folder = Path(base)
-        folders.append((folder, set(files)))
+        present = {name for name in files if name.endswith((".json", ".log")) and has_content(folder / name)}
+        if (folder.parent == MAIN and folder.name.split("_seed")[0] in spec["methods"]
+                and "CONFIG.json" in files and "CONFIG.json" not in present):
+            empty_model_configs.append(folder.name)
+        folders.append((folder, present | ({"curve.jsonl"} if "curve.jsonl" in files else set())))
         if folder.is_relative_to(MAIN):
-            data["logs"].extend(rel(folder / f) for f in sorted(files) if f.endswith(".log"))
+            data["logs"].extend(rel(folder / f) for f in sorted(present) if f.endswith(".log"))
+    if empty_model_configs:
+        data["warnings"].append("모델 설정 파일이 비어 있습니다 (0바이트) · " + ", ".join(empty_model_configs))
     for folder, files in folders:
         try:
             if "CONFIG.json" in files:
@@ -198,7 +212,7 @@ class DemoLauncher:
         self.lock = threading.Lock()
 
     def start(self, model, scenario):
-        if scenario not in ("A", "B", "C") or not isinstance(model, str):
+        if not isinstance(scenario, str) or scenario not in DEMO_CASE or not isinstance(model, str):
             raise ValueError("모델과 시나리오를 다시 선택하세요.")
         policy = "expert"
         if model != "expert":
@@ -229,7 +243,7 @@ class DemoLauncher:
                         "--protocol", str(ROOT / read(EXPERIMENT)["base_contract"]["path"]),
                         "--namespace", "contract_check", "--policy", policy, "--scenario", scenario,
                         "--case-index", str(DEMO_CASE[scenario]),
-                        *(["--observe-yield"] if scenario == "C" else []),
+                        *(["--observe-yield"] if scenario in ("C", "ABC", "BAC") else []),
                         "--speed", "1", "--output", str(folder), "--status-fd", str(write_fd),
                     ], cwd=ROOT, stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT,
                        pass_fds=(write_fd,), start_new_session=True)

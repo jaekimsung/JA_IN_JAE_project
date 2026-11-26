@@ -55,6 +55,14 @@ function metricList(r){
 }
 function training(reset=false){
   const r=data.runs.find(o=>o.id===el("run").value);
+  const logFile=r && [r.id+".log", r.id+"/train.log"].find(path=>data.logs.includes(path));
+  el("runLog").hidden=!logFile;
+  el("runLog").onclick=()=>{
+    el("log").value=logFile;
+    el("logDetails").open=true;
+    el("logDetails").scrollIntoView();
+    showLog();
+  };
   const metrics=metricList(r);
   if(reset)options("metric",metrics);
   if(!r){el("chart").innerHTML=empty("저장된 학습 기록이 없습니다.");el("runinfo").textContent="";el("save").disabled=true;return;}
