@@ -8,7 +8,9 @@ from pathlib import Path
 import numpy as np
 
 from kcity.data.dataset import shard_directories
-from kcity.data.pool import pool_parts
+from kcity.data.pool import pool_parts, pool_reports
+from kcity.env.config import digest
+import json
 from kcity.env.observation import OBS_DIM
 
 KEYS = ('observation', 'action', 'reward', 'next_observation', 'mask')
@@ -69,10 +71,24 @@ def load_store(folders, capacity, split=None):
     return store
 
 
-def load_prior(pool, limit):
+def load_prior(pool, limit, *, pilot=False, minimum_pool_rows=None, contract=None):
     """First `limit` expert_train transitions of an expert pool (all Episodes, including failures)."""
-    folders = [folder for part in pool_parts(pool) for folder in shard_directories(part)]
+    if type(limit) is not int or limit < 1:
+        raise ValueError('Positive prior transition count required')
+    parts, reports = pool_reports(pool, revalidate=True)
+    for part in parts:
+        config = json.loads((part / 'RUN.json').read_text())
+        release = json.loads((part / 'RELEASE.json').read_text())
+        if (config['source_stage'] != ('pilot_expert_pool' if pilot else 'expert_pool')
+                or config['eligible_for_research_training'] is not (not pilot)
+                or release['eligible_for_research_training'] is not (not pilot)):
+            raise ValueError('Prior must be a validated expert pool matching the run purpose')
+        if contract is not None and digest(config['contract']) != digest(contract):
+            raise ValueError('Prior environment contract mismatch')
+    if minimum_pool_rows is not None and sum(r['unique_transitions'] for r in reports) < minimum_pool_rows:
+        raise ValueError('Expert pool budget not met')
+    folders = [folder for part in parts for folder in shard_directories(part)]
     store = load_store(folders, limit, 'expert_train')
-    if not len(store):
-        raise ValueError('Expert pool has no expert_train transitions')
+    if len(store) != limit:
+        raise ValueError(f'Insufficient expert_train transitions: {len(store)} < {limit}')
     return store

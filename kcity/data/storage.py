@@ -100,7 +100,7 @@ def verify_bundle(path, manifest_sha=None):
         require(file_sha256(path / 'SHA256.json') == manifest_sha, 'Retained checkpoint manifest changed')
     expected = json.loads((path / 'SHA256.json').read_text())
     actual = {
-        str(p.relative_to(path)): file_sha256(p)
+        p.relative_to(path).as_posix(): file_sha256(p)
         for p in path.rglob('*')
         if p.is_file() and p.name != 'SHA256.json'
     }
@@ -138,7 +138,7 @@ def save_external(root, stub, save, transitions):
     stub.mkdir()
     ref = dict(
         schema=CHECKPOINT_MODE,
-        path=str(path.relative_to(root)),
+        path=path.relative_to(root).as_posix(),
         manifest_sha256=checksum,
         transitions=transitions,
     )
@@ -188,7 +188,7 @@ def sync_retention(root, folders, policy):
     atomic(root / 'CHECKPOINTS.json', registry)
     removed = []
     for path in sorted((root / 'checkpoints').glob('T*')):
-        if str(path.relative_to(root)) in keep:
+        if path.relative_to(root).as_posix() in keep:
             continue
         owned_name = re.fullmatch(r'T\d{12}-[0-9a-f]{32}', path.name) or re.fullmatch(
             r'T\d{12}-[0-9a-f]{32}\.partial-[A-Za-z0-9_-]+', path.name
@@ -199,7 +199,7 @@ def sync_retention(root, folders, policy):
         )
         removed.append(
             dict(
-                path=str(path.relative_to(root)),
+                path=path.relative_to(root).as_posix(),
                 bytes=sum(p.stat().st_size for p in path.rglob('*') if p.is_file()),
             )
         )

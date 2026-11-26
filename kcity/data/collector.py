@@ -11,8 +11,9 @@ import numpy as np
 
 from kcity.data.dataset import atomic_json, now
 from kcity.data.recorder import EpisodeRecorder
+from kcity.data.plans import GeneratedCasePlan
 from kcity.data.storage import CHECKPOINT_MODE, NEXT_CODEC, require
-from kcity.env.config import DEFAULT_PROTOCOL, ROOT, digest, file_sha256, git_info, make_case, repository_path
+from kcity.env.config import ROOT, digest, file_sha256, git_info, make_case, repository_path
 from kcity.env.env import IMPLEMENTATION_ID
 from kcity.policy.rule_expert import EXPERT_ID, KCityRuleExpert
 
@@ -115,17 +116,18 @@ def dataset_config(
 ):
     """ShardWriter config. Rows come from the B0 expert, online RL (method B2/B3) or a fixed learned policy."""
     require(isinstance(run_uid, str) and run_uid, 'Stable run UID required')
-    require(len({r['case']['case_uid'] for r in plan}) == len(plan), 'Duplicate planned case')
+    if not isinstance(plan, GeneratedCasePlan):
+        require(len({r['case']['case_uid'] for r in plan}) == len(plan), 'Duplicate planned case')
     require(
-        json.loads(DEFAULT_PROTOCOL.read_text()) == env.contract['protocol'],
-        'Collector requires the default environment contract (configs/kcity/v1/protocol.json)',
+        json.loads(env.protocol_path.read_text()) == env.contract['protocol'],
+        'Collector requires the selected on-disk environment contract',
     )
-    teacher = dict(id=EXPERT_ID, config=deepcopy(KCityRuleExpert().config))
+    teacher = dict(id=EXPERT_ID, config=KCityRuleExpert.from_protocol(env.contract['protocol']).config)
     teacher['fingerprint'] = digest(teacher)
     assets = deepcopy(env.contract['protocol']['assets'])
     assets['scenarios'] = deepcopy(env.contract['protocol']['scenario_manifest'])
     assets['protocol'] = dict(
-        path=str(DEFAULT_PROTOCOL.relative_to(ROOT)), sha256=file_sha256(DEFAULT_PROTOCOL)
+        path=str(env.protocol_path.relative_to(ROOT)), sha256=file_sha256(env.protocol_path)
     )
     location = ET.parse(repository_path(assets['network']['path'])).getroot().find('location')
     sumo = subprocess.check_output([env.sumolib.checkBinary('sumo'), '--version'], text=True).splitlines()[0]

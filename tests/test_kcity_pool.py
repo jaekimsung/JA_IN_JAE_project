@@ -26,7 +26,7 @@ def fake_part(root, k, *, rows=6, eligible=True, stale=False):
     """A minimal committed dataset part: RUN/RELEASE/QUALITY and one shard with numeric.npz."""
     dataset = root / f'part-{k:02d}' / 'dataset'
     run_uid, data_id = f'pool-part{k:02d}', f'data-{k}'
-    write(dataset / 'RUN.json', dict(run_uid=run_uid, source_stage='expert_pool', eligible_for_research_training=eligible))
+    write(dataset / 'RUN.json', dict(run_uid=run_uid, contract=load_contract(), source_stage='expert_pool', eligible_for_research_training=eligible))
     write(dataset / 'RELEASE.json', dict(data_id=data_id, eligible_for_research_training=eligible))
     splits = ['expert_train'] * (rows - 2) + ['expert_val'] * 2
     episodes = [dict(episode_uid=f'ep{k}-{s}', case_uid=f'case{k}-{s}', data_split=s,

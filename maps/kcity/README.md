@@ -123,7 +123,7 @@ python maps/tools/lane_usage.py
 | `reports/validation_kcity.json` | 최종 3개 seed의 정량 검증 |
 | `reports/kcity_seed*/` | 차량별 tripinfo, 경고, seed별 결과 |
 | `reports/sumo_gui.png` | 실제 SUMO GUI 렌더링 확인 |
-| `audit/` | 원본 내부 곡선 변환 경고, 초기 교통 시험과 수정 전 증거 |
+| `audit/` | 원본 내부 곡선 변환 경고, 초기 교통 시험과 수정 전 증거. `maps/tools`가 재생성 시 다시 만들며, 저장소에는 포함하지 않습니다(이전 내용은 git 기록에 있음) |
 
 ## 출처와 사용 범위
 

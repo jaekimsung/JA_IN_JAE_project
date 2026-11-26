@@ -1,6 +1,6 @@
 # 정책과 학습 알고리즘
 
-같은 환경·관측·행동에서 네 가지를 비교합니다. 알고리즘은 [policy/](../kcity/policy), 학습 루프는 [training/](../kcity/training), 설정값은 [experiment.json](../configs/kcity/experiment.json)에 있습니다.
+같은 환경·관측·행동에서 네 가지를 비교합니다. 알고리즘은 [policy/](../kcity/policy), 학습 루프는 [training/](../kcity/training), 설정값은 [experiment.json](../configs/kcity/v2_1/experiment.json)에 있습니다.
 
 | 방법 | 내용 |
 |---|---|

@@ -3,14 +3,15 @@
 __pycache__/
 *.py[cod]
 
-# Local research rollout/checkpoint outputs
-/docs/research_checks/**/integration_v*/
-/docs/research_checks/**/early_probe/
-/docs/research_checks/**/resume_probe*/
-/docs/research_checks/**/transitions.jsonl
 
 # Stray simulator logs
 MUJOCO_LOG.TXT
 
-# Local run outputs (datasets, checkpoints, videos, HF exports)
+# Local experiment runs
 /runs/
+
+# Tool snapshots
+.playwright-mcp/
+
+# Map build intermediates (maps/tools recreates them)
+/maps/kcity/audit/

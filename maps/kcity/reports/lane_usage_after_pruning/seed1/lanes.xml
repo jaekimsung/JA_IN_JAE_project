@@ -4,9 +4,9 @@
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.net.xml"/>
-        <route-files value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.rou.xml"/>
-        <additional-files value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.add.xml,/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.signals.add.xml,/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/reports/lane_usage_after_pruning/seed1/measure.add.xml"/>
+        <net-file value="maps/kcity/kcity.net.xml"/>
+        <route-files value="maps/kcity/kcity.rou.xml"/>
+        <additional-files value="maps/kcity/kcity.add.xml,maps/kcity/kcity.signals.add.xml,maps/kcity/reports/lane_usage_after_pruning/seed1/measure.add.xml"/>
     </input>
 
     <output>
@@ -34,7 +34,7 @@
     </random_number>
 
     <gui_only>
-        <gui-settings-file value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.gui.xml"/>
+        <gui-settings-file value="maps/kcity/kcity.gui.xml"/>
     </gui_only>
 
 </sumoConfiguration>

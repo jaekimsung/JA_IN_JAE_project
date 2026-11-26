@@ -20,7 +20,7 @@ import numpy as np
 from kcity.env.config import (DEFAULT_PROTOCOL, ContractError, digest, load_contract,
     make_case, positive, repository_path, traffic_requests)
 from kcity.env.route import RouteGeometry
-from kcity.env.observation import OBS_DIM, build_observation, junction_vehicles
+from kcity.env.observation import OBS_DIM, build_observation, junction_vehicles, observed_foes, next_link
 from kcity.env.scenarios import internal_chain, sumo_library, validate_contract
 
 IMPLEMENTATION_ID='KC-ENV-v5-noassist'
@@ -40,7 +40,8 @@ class SumoKCityEnv(gym.Env):
     def __init__(self, protocol=DEFAULT_PROTOCOL, scenario_id='A', *, background=True,
                  gui=False, artifact_dir=None, debug_warmup_s=None, debug_episode_limit_s=None):
         super().__init__()
-        self.contract=load_contract(protocol)
+        self.protocol_path=Path(protocol).resolve()
+        self.contract=load_contract(self.protocol_path)
         self.structural,self.background_routes=validate_contract(self.contract)
         self.sumolib=sumo_library()
         import traci
@@ -110,8 +111,15 @@ class SumoKCityEnv(gym.Env):
             warmup_s=self.warmup,horizon_s=self.horizon,debug_override=self.debug_warmup_s is not None or self.debug_episode_limit_s is not None)
         self.case['case_uid']=digest({k:v for k,v in self.case.items() if k!='case_uid'})
         self.geometry=RouteGeometry(self.net,self.case['scenario'])
-        self.requests=traffic_requests(self.contract,self.case,self.background_routes,
+        routes = self.background_routes
+        reserved = self.case['scenario'].get('reserve_background_edge')
+        if reserved:
+            routes = [name for name, edges in routes.items() if reserved not in edges]
+        self.requests=traffic_requests(self.contract,self.case,routes,
             duration_s=self.warmup+self.horizon+30) if self.background else []
+        return self._start_case()
+
+    def _start_case(self, *, priority_fallback=False):
         self.label='kcity_'+uuid.uuid4().hex
         if self.artifact_root:
             self.run_dir=Path(tempfile.mkdtemp(prefix=self.label+'_',dir=self.artifact_root))
@@ -135,6 +143,13 @@ class SumoKCityEnv(gym.Env):
             self.traci.start(cmd,label=self.label,stdout=self._stdout)
             self.conn=self.traci.getConnection(self.label)
             self._attach_foes()
+            if self.case['scenario'].get('seed_signal_phases_before_warmup'):
+                rng = random.Random(self.case['seeds']['initialization'])
+                for tid in self.case['scenario']['required_tls_ids']:
+                    tls = self.conn.trafficlight
+                    program = next(p for p in tls.getAllProgramLogics(tid) if p.programID == tls.getProgram(tid))
+                    greens = [i for i, phase in enumerate(program.phases) if 'G' in phase.state]
+                    tls.setPhase(tid, rng.choice(greens))
             for _ in range(round(self.warmup/self.dt)):self.conn.simulationStep()
             start=self.case['scenario']['start'];goal=self.case['scenario']['goal']
             self.conn.vehicle.add(self.ego_id,'research_task',typeID='research_ego',
@@ -149,6 +164,24 @@ class SumoKCityEnv(gym.Env):
             if self.ego_id not in self.conn.vehicle.getIDList():
                 raise RuntimeError('Ego insertion failed after 30s; no Episode was silently dropped')
             self._add_interaction_traffic()
+            if self.background and self.case['scenario'].get('require_moving_neighbors'):
+                self._await_merge_neighbors()
+            minimum = self.case['scenario'].get('minimum_initial_priority_vehicles', 0)
+            initial_priority = None
+            if self.background and minimum:
+                initial_priority = self._await_priority_traffic(minimum, wait=not priority_fallback)
+                moving, on_start = initial_priority
+                if not priority_fallback and (moving < minimum or not on_start):
+                    if self.p['protocol_id'] != 'KC-DENSE-v2.1' or self.case['scenario_id'] != 'C':
+                        raise RuntimeError('Initial moving priority traffic missing: ' + self.case['case_uid'])
+                    # Replay the identical placement so the policy controls the approach from
+                    # its first observation, including the ticks spent probing visibility.
+                    self._close_connection()
+                    return self._start_case(priority_fallback=True)
+                if not on_start:
+                    raise RuntimeError('Ego outside start edge: ' + self.case['case_uid'])
+                if priority_fallback:
+                    print(f"priority_visibility_fallback case={self.case['case_uid']} moving={moving}", flush=True)
             self.episode_start_tick=self._tick();self.deadline_tick=self.episode_start_tick+round(self.horizon/self.dt)
             self.cooldown_until=self.episode_start_tick;self.step_count=0;self._lane_request=None;self._action_history=[]
             self.ever_collision=False;self.ever_red=False;self._done=False
@@ -158,9 +191,45 @@ class SumoKCityEnv(gym.Env):
             return self._obs.copy(),dict(case=deepcopy(self.case),state=deepcopy(self._state),
                 action_mask=list(self._mask),initial_state_sha256=self.initial_state_sha256,
                 insertion_wait_s=insertion_wait*self.dt,implementation_id=IMPLEMENTATION_ID,
-                training_ready=False,connection_label=self.label)
+                training_ready=False,connection_label=self.label,
+                initial_visible_moving_priority=initial_priority[0] if initial_priority else None,
+                priority_visibility_fallback=priority_fallback)
         except BaseException:
             self._close_connection();raise
+
+    def _await_priority_traffic(self, minimum, *, wait=True):
+        # SUMO may defer one of the requested departures to a subsequent setup tick.
+        max_ticks = round(1 / self.dt) if wait else 0
+        for tick in range(max_ticks + 1):
+            vehicles = [self._vehicle(vid) for vid in self.conn.vehicle.getIDList()]
+            ego = next(v for v in vehicles if v['is_ego'])
+            _, link = next_link(self.geometry, ego)
+            visible = observed_foes(self.geometry, link, vehicles, self.ego_id)
+            moving = sum(not inside and v['speed'] > .5 and v['lane_id'] in link['priority_lanes']
+                         for _, _, v, inside in visible)
+            on_start = ego['road_id'] == self.geometry.edges[0]
+            if moving >= minimum and on_start:
+                break
+            if tick < max_ticks:
+                self.conn.simulationStep()
+        return moving, on_start
+
+    def _await_merge_neighbors(self):
+        # A queued SUMO departure can arrive a few ticks after the insertion command.
+        task = self.case['scenario']['required_lane_change']
+        edge = self.net.getEdge(task['edge'])
+        lane = edge.getLane(task['required_exit_lanes'][0])
+        source_length = edge.getLane(task['depart_lane']).getLength()
+        vehicles = self.conn.vehicle
+        for tick in range(round(3 / self.dt) + 1):
+            position = vehicles.getLanePosition(self.ego_id) * lane.getLength() / source_length
+            neighbors = [vehicles.getLanePosition(vid) for vid in self.conn.lane.getLastStepVehicleIDs(lane.getID())
+                         if vehicles.getSpeed(vid) > .5]
+            if neighbors and min(neighbors) < position < max(neighbors):
+                return
+            if tick < round(3 / self.dt):
+                self.conn.simulationStep()
+        raise RuntimeError('Moving target-lane neighbors missing at reset: ' + self.case['case_uid'])
 
     def _attach_foes(self):
         """Junction facts of every route connection.
@@ -178,7 +247,11 @@ class SumoKCityEnv(gym.Env):
             inside={l.getID() for e in self.net.getEdges(withInternal=True) if e.getFunction()=='internal'
                     and e.getID().startswith(':'+node.getID()+'_') for l in e.getLanes()}-own
             for o in options:
-                o['approach_lanes']=self._approach_lanes(others|inside)
+                visible_inside = inside
+                if self.p['observations']['schema_id'] == 'KC-OBS63-v2':
+                    visible_inside = inside | (own - set(o['via']))
+                    o['rank_by_arrival'] = True
+                o['approach_lanes']=self._approach_lanes(others|visible_inside)
                 crossing={f for v in o['via'] for f in self.conn.lane.getInternalFoes(v)}-own
                 o['priority_lanes']=self._approach_lanes(set(self.conn.lane.getFoes(o['from_lane'],o['to_lane']))|crossing)
 
@@ -216,7 +289,8 @@ class SumoKCityEnv(gym.Env):
         vehicles=[self._vehicle(v) for v in self.conn.vehicle.getIDList()]
         cut=[v['id'] for gap,_,v,inside in junction_vehicles(self.geometry,link,vehicles,self.ego_id,'priority_lanes')
              if inside or (v['speed']>.5 and gap/v['speed']<YIELD_GAP_S)]
-        return [dict(type='yield_violation',sim_tick=tick,route_occurrence=index,
+        event_type = 'yield_observation' if self.case['scenario'].get('priority_gap_observation_only') else 'yield_violation'
+        return [dict(type=event_type,sim_tick=tick,route_occurrence=index,
             junction=new_ego['road_id'][1:].rsplit('_',1)[0],priority_vehicles=sorted(cut))] if cut else []
 
     def _add_interaction_traffic(self):
@@ -237,13 +311,19 @@ class SumoKCityEnv(gym.Env):
                 plan=[(now,p) for p in sorted(positions,reverse=True) if p<limit]
             else:
                 times=[now+rng.uniform(*stream['first_s'])]
-                for _ in range(count-1):times.append(times[-1]+rng.uniform(*stream['headway_s']))
+                for i in range(1, count):
+                    gap = stream['headway_s']
+                    if 'platoon_size' in stream and i % stream['platoon_size'] == 0:
+                        gap = stream['platoon_break_s']
+                    times.append(times[-1] + rng.uniform(*gap))
                 plan=[(t,stream['position_m']) for t in times]
             for k,(depart,position) in enumerate(plan):
                 vid='%s-%s-%02d'%(self.case['case_uid'][:16],stream['name'],k)
                 kind=rng.choices(traffic['vehicle_types'],weights=traffic['vehicle_type_weights'])[0]
                 self.conn.vehicle.add(vid,'interaction_'+stream['name'],typeID=kind,depart=str(round(depart,1)),
                     departLane=str(stream['lane_index']),departPos=str(round(position,2)),departSpeed=str(stream['speed_mps']))
+                if 'max_speed_mps' in stream:
+                    self.conn.vehicle.setMaxSpeed(vid, stream['max_speed_mps'])
                 self.interaction_ids.append(vid)
         self.conn.simulationStep(0)  # insert the placed vehicles before the first observation
 

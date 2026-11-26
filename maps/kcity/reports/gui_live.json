@@ -1,6 +1,6 @@
 {
   "pid": 1517435,
-  "config": "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.sumocfg",
+  "config": "maps/kcity/kcity.sumocfg",
   "view": "landscaped, no aerial photograph",
   "signal_controllers": 14,
   "running_demo": true

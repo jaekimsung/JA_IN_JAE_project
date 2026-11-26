@@ -4,19 +4,19 @@
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.net.xml"/>
-        <route-files value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/reports/signals_validation/after_1_seed1/traffic.rou.xml"/>
-        <additional-files value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.add.xml,/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/kcity.signals.add.xml"/>
+        <net-file value="maps/kcity/kcity.net.xml"/>
+        <route-files value="maps/kcity/reports/signals_validation/after_1_seed1/traffic.rou.xml"/>
+        <additional-files value="maps/kcity/kcity.add.xml,maps/kcity/kcity.signals.add.xml"/>
     </input>
 
     <output>
-        <queue-output value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/reports/signals_validation/after_1_seed1/queues.xml"/>
+        <queue-output value="maps/kcity/reports/signals_validation/after_1_seed1/queues.xml"/>
         <queue-output.period value="5"/>
-        <tripinfo-output value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/reports/signals_validation/after_1_seed1/trips.xml"/>
+        <tripinfo-output value="maps/kcity/reports/signals_validation/after_1_seed1/trips.xml"/>
         <tripinfo-output.write-unfinished value="true"/>
         <tripinfo-output.write-undeparted value="true"/>
-        <collision-output value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/reports/signals_validation/after_1_seed1/collisions.xml"/>
-        <statistic-output value="/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/maps/kcity/reports/signals_validation/after_1_seed1/statistics.xml"/>
+        <collision-output value="maps/kcity/reports/signals_validation/after_1_seed1/collisions.xml"/>
+        <statistic-output value="maps/kcity/reports/signals_validation/after_1_seed1/statistics.xml"/>
     </output>
 
     <time>

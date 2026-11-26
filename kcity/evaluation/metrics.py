@@ -139,7 +139,8 @@ class EpisodeMetrics:
             completion=bool(completion),
             compliant_completion=None if unknown else bool(completion and not collision and not reds and not yields),
             signal_classification_valid=not unknown,
-            supported_rule_checks=['red_entry', 'yield_violation'], yield_violation_count=yields,
+            supported_rule_checks=(['red_entry'] if self.case['scenario'].get('priority_gap_observation_only')
+                                   else ['red_entry', 'yield_violation']), yield_violation_count=yields,
             ever_AV_collision=collision, arrival_event=bool(counts['arrival']), correct_goal=correct_goal,
             correct_route=not wrong, red_entry_count=reds, tls_crossing_count=len(crossings),
             tls_crossing_unknown_count=unknown, valid_tls_crossing_count=len(crossings)-unknown,

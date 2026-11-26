@@ -1,4 +1,4 @@
-"""Environment contract (configs/kcity/v1), case/seed generation and file hashing. Starts no SUMO process."""
+"""Environment contract (configs/kcity/v2_1), case/seed generation and file hashing. Starts no SUMO process."""
 from copy import deepcopy
 import hashlib
 import json
@@ -7,7 +7,7 @@ from pathlib import Path
 import random
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_PROTOCOL = ROOT / 'configs/kcity/v1/protocol.json'
+DEFAULT_PROTOCOL = ROOT / 'configs/kcity/v2_1/protocol.json'
 
 
 class ContractError(ValueError):
@@ -81,7 +81,7 @@ def validate_settings(spec):
         if isinstance(value, bool) or not isinstance(value, int) or not 0 <= value <= upper:
             raise ContractError('Invalid control bitset: ' + name)
     if p['training']['enabled'] or p['research_settings_frozen']:
-        raise ContractError('Environment contract must not set training/frozen flags; experiment settings live in configs/kcity/experiment.json')
+        raise ContractError('Environment contract must not set training/frozen flags; experiment settings live in configs/kcity/v2_1/experiment.json')
     if p['control']['longitudinal_adapter'] != 'setAcceleration':
         raise ContractError('Longitudinal adapter must be setAcceleration')
     if p['seed']['algorithm'] != 'sha256_component_streams_v1':
