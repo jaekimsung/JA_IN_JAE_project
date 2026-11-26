@@ -27,6 +27,33 @@ K-CITY 도로·신호 구현 → 일반 차량 교통 → AV 환경(관측·행�
 | 데이터 | POMDP 전이 + SUMO 전체 State, JSONL·NPZ shard, 병렬 수집, 목표 10^7 전이 이상 | [DATASET](docs/DATASET.md) |
 | 평가 | dev/final 고정 사례 패널, 수요 1.0·1.5·2.0배, 충돌률·완주율·규칙 준수 완주·교통 노출 | [EXPERIMENT](docs/EXPERIMENT.md) |
 
+## 결과
+
+v2.1 환경의 dev 패널(100사례, 수요 1.0배)에서 300,000 전이 학습을 마친 시점의 결과입니다. 그래프와 최종 모델은 [outputs/](outputs/README.md)에 있습니다.
+
+| 방법 | seed | 규칙 준수 완주 | 완주 | 충돌 | 최종 모델 |
+|---|---|---:|---:|---:|---|
+| SAC (B2) | 11 | 97.0% | 97.0% | 1.0% | [final_model](outputs/SAC/seed11/final_model) |
+| SAC (B2) | 22 | 95.0% | 95.0% | 3.0% | [final_model](outputs/SAC/seed22/final_model) |
+| BC (B1) | 11·22·33 | – | – | – | 결과 대기 |
+| RLPD (B3) | 11·22·33 | – | – | – | 결과 대기 |
+
+![SAC dev 평가 곡선](outputs/SAC/dev_evaluation_all_seeds.png)
+
+- dev 결과는 학습 중 평가이며, 모델이나 설정 선택에 쓰지 않는 final 패널(수요 1.0·1.5·2.0배 × 100사례)은 아직 실행하지 않았습니다.
+- v2.1의 C 시나리오는 우선 차량 앞 진입을 위반으로 종료하지 않고 기록만 합니다(`priority_gap_observation_only`). 그래서 C의 완주율은 충돌 없이 통과했는지를 뜻합니다.
+
+## 제출 자료
+
+| 자료 | 위치 | 상태 |
+|---|---|---|
+| 코드 | 이 저장소 | 완료 |
+| 학습한 모델 | [outputs/](outputs/README.md) | SAC seed 11·22 완료, BC·RLPD·SAC seed 33 대기 |
+| 주행 데이터 (10^7 전이 이상) | Hugging Face (`runner/export_hf.py`로 폴더 준비 후 업로드) | 업로드 전 |
+| 주행 영상 (30초 이상) | `runner/record_video.py --video` | 녹화 전 |
+| 발표자료 (PDF) | Google Drive 등 | 준비 중 |
+| 프로젝트 페이지 | GitHub Pages 등 (코드·발표자료·데이터 링크 포함) | 준비 중 |
+
 ## 저장소 구성
 
 ```text
@@ -37,12 +64,12 @@ K-CITY 도로·신호 구현 → 일반 차량 교통 → AV 환경(관측·행�
 │   ├── training/     #   학습 코드: BC run·RL run·dev 평가 곡선·실험 설정·실행 폴더/STOP 관리
 │   ├── data/         #   데이터: 전문가·정책 수집, 사례 계획, 병렬 pool, shard 저장/검증, RL 전이 기록, 사전 데이터·replay buffer
 │   └── evaluation/   #   평가: Episode 지표·HV 노출·사례 패널 평가
-├── runner/           # 실행: collect · train_bc · train_rl · evaluate · record_video · export_hf · view_kcity · plot_* · report, dashboard/(로컬 대시보드)
+├── runner/           # 실행: collect · train_bc · train_rl · evaluate · record_video · export_hf · view_kcity · check_scenarios · plot_training · plot_evaluation · report, dashboard/(로컬 대시보드)
 ├── configs/kcity/v2_1/  # 최종 제출 기준: experiment.json·pilot.json(실험 설정), protocol.json·scenarios.json(환경 계약), cases_dev·final(평가 사례)
 ├── maps/             # 맵: kcity/(SUMO 맵·경로·신호·조경, 원본 자료, 검증 보고서), tools/(맵 생성·검증 도구)
 ├── tests/            # 회귀 검사
 ├── docs/             # 설명 문서 (docs/README.md)
-└── outputs/          # 결과: BC/·SAC/·RLPD/ 아래 seed별 학습 그래프와 최종 모델
+└── outputs/          # 결과: BC/·SAC/·RLPD/ 아래 seed별 학습 그래프와 최종 모델 (실행 중 산출물은 runs/, git 제외)
 ```
 
 `kcity/` 안의 패키지는 한 방향으로만 import합니다.
