@@ -30,7 +30,7 @@ def write_bundle(path,kind,config,payload,env=None):
         torch.save(payload,staging/'training.pt')
         meta=dict(schema='KC-TRAINING-RESUME-v1',kind=kind,config=config,runtime=run_metadata())
         (staging/'metadata.json').write_text(json.dumps(meta,indent=2,allow_nan=False)+'\n')
-        manifest={str(p.relative_to(staging)):file_sha256(p) for p in sorted(staging.rglob('*')) if p.is_file()}
+        manifest={p.relative_to(staging).as_posix():file_sha256(p) for p in sorted(staging.rglob('*')) if p.is_file()}
         (staging/'SHA256.json').write_text(json.dumps(manifest,indent=2)+'\n')
         for p in staging.rglob('*'):
             if p.is_file():
@@ -48,7 +48,7 @@ def write_bundle(path,kind,config,payload,env=None):
 
 def read_bundle(path,kind,config):
     path=Path(path).resolve();manifest=json.loads((path/'SHA256.json').read_text())
-    actual={str(p.relative_to(path)):file_sha256(p) for p in path.rglob('*') if p.is_file() and p.name!='SHA256.json'}
+    actual={p.relative_to(path).as_posix():file_sha256(p) for p in path.rglob('*') if p.is_file() and p.name!='SHA256.json'}
     if actual!=manifest:raise ValueError('Checkpoint file set/SHA256 mismatch')
     meta=json.loads((path/'metadata.json').read_text())
     if meta['schema']!='KC-TRAINING-RESUME-v1' or meta['kind']!=kind or meta['config']!=config:

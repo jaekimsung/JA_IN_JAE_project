@@ -42,7 +42,7 @@ K-CITY 도로·신호 구현 → 일반 차량 교통 → AV 환경(관측·행�
 ├── maps/             # 맵: kcity/(SUMO 맵·경로·신호·조경, 원본 자료, 검증 보고서), tools/(맵 생성·검증 도구)
 ├── tests/            # 회귀 검사
 ├── docs/             # 설명 문서 (docs/README.md)
-└── outputs/          # 결과: 학습 결과·최종 모델(sac_v2_1_main), 검증·감사 결과, 예비 실험 원자료(research_checks), 컨설팅 자료
+└── outputs/          # 결과: BC/·SAC/·RLPD/ 아래 seed별 학습 그래프와 최종 모델
 ```
 
 `kcity/` 안의 패키지는 한 방향으로만 import합니다.

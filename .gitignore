@@ -3,11 +3,6 @@
 __pycache__/
 *.py[cod]
 
-# Local research rollout/checkpoint outputs
-/outputs/research_checks/**/integration_v*/
-/outputs/research_checks/**/early_probe/
-/outputs/research_checks/**/resume_probe*/
-/outputs/research_checks/**/transitions.jsonl
 
 # Stray simulator logs
 MUJOCO_LOG.TXT

@@ -556,7 +556,7 @@ def read_shard(folder):
     folder = Path(folder)
     manifest = json.loads((folder / 'SHARD.json').read_text())
     files = {
-        str(p.relative_to(folder)): file_sha256(p)
+        p.relative_to(folder).as_posix(): file_sha256(p)
         for p in folder.rglob('*')
         if p.is_file() and p.name != 'SHARD.json'
     }
@@ -713,7 +713,7 @@ class ShardWriter:
             completed_episodes=completed_episodes,
             run_config_sha256=self.config_sha256,
             storage_codec=NEXT_CODEC,
-            files={str(p.relative_to(staging)): file_sha256(p) for p in staging.rglob('*') if p.is_file()},
+            files={p.relative_to(staging).as_posix(): file_sha256(p) for p in staging.rglob('*') if p.is_file()},
         )
         atomic_json(staging / 'SHARD.json', manifest)
         for file in staging.rglob('*'):
@@ -737,7 +737,7 @@ class ShardWriter:
 
     def refresh_release(self):
         shards = [
-            dict(path=str(p.relative_to(self.root)), manifest_sha256=sha)
+            dict(path=p.relative_to(self.root).as_posix(), manifest_sha256=sha)
             for p, sha in zip(self.folders, self.shard_sha256)
         ]
         body = dict(
@@ -777,7 +777,7 @@ def validate_dataset(root):
         raise ValueError('Release/run manifest mismatch')
     folders = shard_directories(root)
     if release['shards'] != [
-        dict(path=str(p.relative_to(root)), manifest_sha256=file_sha256(p / 'SHARD.json')) for p in folders
+        dict(path=p.relative_to(root).as_posix(), manifest_sha256=file_sha256(p / 'SHARD.json')) for p in folders
     ]:
         raise ValueError('Release index is stale or incomplete; recover writer before reading')
     situations = Counter()
