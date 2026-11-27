@@ -62,7 +62,7 @@ BC 학습은 시작·재개 시 설정을, 기본 1,000 update마다 진행률·
 ### 학습 로그 그래프
 
 Matplotlib이 설치된 데스크톱 터미널에서 실행합니다. 기본 명령은 `runs/` 아래의 모든
-`curve.jsonl`을 찾아 BC·RL 학습 지표와 RL dev 평가 비율을 각각 그래프 창으로 엽니다.
+`curve.jsonl`을 찾아 BC·RL 학습 지표와 RL 평가 비율을 각각 그래프 창으로 엽니다.
 Pilot 로그도 해당 폴더 아래에 있으면 포함되므로 본 학습만 비교할 때는 `--run`을 지정합니다.
 
 ```bash
@@ -92,7 +92,7 @@ for s in 11 22 33; do
 done; wait
 ```
 
-각 run은 300,000 전이를 학습하고, 25,000마다 dev 평가를 `dev/T*/SUMMARY.json`, 학습 곡선을 `curve.jsonl`, 목표 도달 전이 수를 `SAMPLE_EFFICIENCY.json`에 남깁니다. B3는 `--prior`로 준 전문가 pool에서 100만 전이를 사전 데이터로 읽습니다. 환경 1 step마다 critic을 20회 update하므로 GPU 사용을 권장합니다.
+각 run은 300,000 전이를 학습하고, 25,000마다 평가 결과를 `dev/T*/SUMMARY.json`, 학습 곡선을 `curve.jsonl`, 목표 도달 전이 수를 `SAMPLE_EFFICIENCY.json`에 남깁니다. B3는 `--prior`로 준 전문가 pool에서 100만 전이를 사전 데이터로 읽습니다.
 
 B3는 시작할 때 전문가 pool 전체의 파일·전이 일치와 part 중복을 다시 검증합니다.
 환경 계약·본/Pilot 구분·전체 pool 예산이 맞고, `expert_train` 전이가 설정된 사전 데이터
@@ -108,9 +108,9 @@ entropy·temperature·경과 시간·처리 속도·대략적인 남은 시간�
 손실은 마지막 저장 이후의 누적 구간 평균이고 학습 update가 없으면 `n/a`입니다.
 처리 속도·예상 시간은 초기화와 평가 시간을 포함한 현재 실행 세션 기준의 추정치입니다.
 
-시작 시 T=0에서도 dev 100개를 평가하며 이때는 학습하지 않습니다. 평가 시작·10개 사례마다의
+시작 시 T=0에서도 평가 사례 100개를 평가하며 이때는 학습하지 않습니다. 평가 시작·10개 사례마다의
 진행·종료·규칙 준수 완주율·충돌률을 출력합니다. 이후에도 25,000 전이마다 같은 평가를 합니다.
-파일 로그 `curve.jsonl`·`STATUS.json`과 dev 결과는 기존 주기로 계속 저장됩니다.
+파일 로그 `curve.jsonl`·`STATUS.json`과 평가 결과는 기존 주기로 계속 저장됩니다.
 
 ```bash
 set -o pipefail
@@ -138,7 +138,7 @@ actor loss·entropy·temperature는 learner update별 값을 평균합니다.
 
 ```bash
 python -B runner/evaluate.py --policy expert --panel dev --output runs/eval/expert_dev
-python -B runner/evaluate.py --policy <COMPLETE.json의 checkpoint> --panel final --output runs/eval/B3_seed11
+python -B runner/evaluate.py --policy <COMPLETE.json의 checkpoint> --panel dev --output runs/eval/B3_seed11
 python -B runner/evaluate.py --policy <bundle> --panel dev --limit 3 --output runs/eval/smoke   # 작은 확인
 ```
 

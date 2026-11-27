@@ -19,7 +19,7 @@ import numpy as np
 def load_evaluations(root):
     root = Path(root)
     summaries = [root/'SUMMARY.json'] if (root/'SUMMARY.json').exists() else []
-    summaries += sorted(root.rglob('SUMMARY.json'))
+    summaries += sorted(root.rglob('SUMMARY.json'), key=lambda p: (len(p.parts), p))  # parents before demand copies
     found, runs = set(), []
     for path in summaries:
         if path.resolve() in found:

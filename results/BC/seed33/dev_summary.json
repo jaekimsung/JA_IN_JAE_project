@@ -3,7 +3,7 @@
   "demand_multiplier": 1.0,
   "policy": {
     "kind": "bc",
-    "bundle": "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/runs/dense_v2_1_main/B1_seed33/update-018000",
+    "bundle": "runs/dense_v2_1_main/B1_seed33/update-018000",
     "config": {
       "method": "B1",
       "hidden_dims": [

@@ -38,6 +38,7 @@ def main():
     if not (args.baseline or args.reference or args.netedit):
         if args.nogui and args.seconds is None:
             parser.error("Use --seconds with --nogui to bound the continuous simulation")
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "maps" / "tools"))
         from live_demo import run
         print("K-City live: persistent red IDM demo_ego; replenished yellow traffic.", flush=True)
         run(args)
