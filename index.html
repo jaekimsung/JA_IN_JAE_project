@@ -17,7 +17,7 @@
        ========================================================= */
     window.PROJECT_LINKS = {
       github:  "https://github.com/jaekimsung/JA_IN_JAE_project",
-      slides:  "",   // 발표자료 PDF 링크 (예: 구글 드라이브 '링크가 있는 모든 사용자' 공유 링크)
+      slides:  "static/slides/TEAM2_final_presentation.pdf",
       dataset: "https://huggingface.co/datasets/BinJinYe/JA_IN_JAE_TEAM2"
     };
   </script>
@@ -263,6 +263,24 @@
       .pair .arrow { transform: rotate(90deg); justify-self: center; }
     }
 
+
+    /* ---------- v5: 대시보드 · 방법별 영상 비교 ---------- */
+    .dashfeat { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; margin: 22px 0 26px; }
+    .dashfeat > div { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 14px 13px; }
+    .dashfeat strong { display: block; font-size: 15px; margin-bottom: 4px; }
+    .dashfeat span { display: block; font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+    figure.shot { max-width: 760px; margin: 0 auto; }
+    figure.shot img { border-radius: 12px; }
+    .cmp3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+    .cmp3 figure { margin: 0; }
+    .cmp3 .mhead { display: flex; align-items: center; gap: 7px; font-weight: 800; font-size: 15px; margin-bottom: 7px; }
+    .cmp3 .mhead .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .cmpbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+    .cmpbar .speed { font-size: 13.5px; font-weight: 700; color: var(--muted); }
+    .cmpbar .replay { font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; border: 1px solid var(--line); background: #fff; color: var(--ink, #111); padding: 7px 14px; border-radius: 999px; }
+    .cmpbar .replay:hover { border-color: var(--dark); }
+    @media (max-width: 860px) { .dashfeat { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 600px) { .dashfeat, .cmp3 { grid-template-columns: minmax(0,1fr); } }
     footer { border-top: 1px solid var(--line); padding: 34px 0 48px; font-size: 14px; color: var(--muted); text-align: center; }
 
     @media (max-width: 860px) {
@@ -322,6 +340,7 @@
     <a href="#model">모델 설계</a>
     <a href="#data">데이터셋</a>
     <a href="#run">실행 방법</a>
+    <a href="#dashboard">대시보드</a>
     <a href="#results">실험 결과</a>
   </div>
 </nav>
@@ -330,8 +349,8 @@
 <section style="padding-top:20px">
   <div class="wrap">
     <figure>
-      <video src="static/videos/hero_A.mp4" poster="static/images/poster_hero_A.jpg" autoplay muted loop playsinline></video>
-      <figcaption>학습한 RLPD 정책이 연속 감응식 신호 구간(시나리오 A)을 주행하는 SUMO 화면</figcaption>
+      <video src="static/videos/rlpd_C.mp4" poster="static/images/poster_vC.jpg" autoplay muted loop playsinline></video>
+      <figcaption>학습한 RLPD 정책이 비신호 교차로 합류 구간(시나리오 C)을 주행하는 SUMO 화면 (2배속)</figcaption>
     </figure>
     <div class="seemore grid4">
       <a class="jumpcard" href="#what"><strong>프로젝트 개요</strong><span>모델과 비교 방법 →</span></a>
@@ -348,7 +367,7 @@
     <div class="eyebrow">01</div>
     <h2>프로젝트 개요</h2>
     <p class="lead">
-      실제 한국 도로인 <strong>K-CITY</strong>를 SUMO로 구현하고, 일반 차량과 AV가 함께 주행하는 환경을 만들었습니다.
+      국내 실제 도로 중 가장 다양한 도로 기하구조와 교통 요소를 갖춘 <strong>K-City</strong>를 교통 시뮬레이터 SUMO(Simulation of Urban MObility) 상에 구현하였으며, 일반 차량(HV)과 자율주행 차량(AV)이 함께 주행하는 <strong>혼합 교통류(Mixed-Traffic)</strong> 시뮬레이션 환경을 구축하였습니다.
       그 위에서 주변 차량 · 교통신호 · 목적지 경로를 고려해 안전하고 효율적으로 주행하는 <strong>자율주행 차량(AV)의 의사결정 정책</strong>을 개발했습니다.
     </p>
     <p>
@@ -473,7 +492,7 @@
       <div class="scn">
         <img src="static/images/poster_C.jpg" alt="시나리오 C 화면">
         <div class="body">
-          <div class="head"><span class="letter" style="background:var(--taskC)">C</span><h4>비신호 교차로 양보</h4></div>
+          <div class="head"><span class="letter" style="background:var(--taskC)">C</span><h4>비신호 교차로 합류</h4></div>
           <div class="axis" style="color:#b4472f;background:#fcece8">⤴ 우선권</div>
           <div class="sub">도로 구조</div>
           <ul><li>우선 도로 합류</li><li>비보호 좌회전</li></ul>
@@ -689,15 +708,49 @@ python runner/record_video.py --policy &lt;학습된 모델&gt; --scenario C --v
   </div>
 </section>
 
-<!-- ======================= 7. 실험 결과 ======================= -->
-<section id="results" class="alt">
+<!-- ======================= 7. 결과 대시보드 ======================= -->
+<section id="dashboard" class="alt">
   <div class="wrap">
     <div class="eyebrow">07</div>
+    <h2>결과 대시보드</h2>
+    <p class="lead">
+      학습과 평가 결과를 브라우저 한 화면에서 확인하는 <strong>로컬 대시보드</strong>를 만들었습니다.
+      학습 프로세스와 따로 동작하며, 페이지를 열어 두면 30초마다 결과를 다시 읽습니다.
+    </p>
+    <pre><code>python3 runner/dashboard/server.py    <span class="c"># 브라우저에서 http://localhost:4796</span></code></pre>
+    <p class="small" style="margin-top:8px">Python 3.9 이상 표준 라이브러리만으로 실행되고, 포트는 <code class="inline">--port</code>로 바꿀 수 있습니다. 자세한 내용은 저장소의 <a href="https://github.com/jaekimsung/JA_IN_JAE_project/blob/main/runner/dashboard/README.md" target="_blank" rel="noopener">대시보드 README</a>에 있습니다.</p>
+
+    <div class="dashfeat">
+      <div><strong>SUMO 주행</strong><span>모델(학습 seed 포함)과 시나리오를 골라 SUMO GUI로 바로 주행</span></div>
+      <div><strong>모델 성능</strong><span>방법 3개 × seed 3개의 완주율 · 충돌률 · 적색 위반 · 정차 · 완주 시간</span></div>
+      <div><strong>학습 과정</strong><span>체크포인트별 loss와 방법별 충돌률 곡선</span></div>
+      <div><strong>주행 분석</strong><span>시나리오별 완주율 · 충돌률과 종료 원인</span></div>
+      <div><strong>데이터와 로그</strong><span>데이터 풀별 전이 수, 데모 주행 · 터미널 로그</span></div>
+    </div>
+
+    <div class="tabgroup">
+      <div class="tabs" role="tablist">
+        <button class="on" data-tab="d1">SUMO 주행 · 모델 성능</button>
+        <button data-tab="d2">학습 과정</button>
+        <button data-tab="d3">주행 분석 · 데이터와 로그</button>
+      </div>
+      <div class="tabpanel on" id="d1"><figure class="shot"><a href="static/images/dashboard/dashboard_1.png" target="_blank" rel="noopener"><img src="static/images/dashboard/dashboard_1.png" alt="대시보드: SUMO 주행 실행과 모델별 성능 비교 표"></a><figcaption>모델과 시나리오를 골라 SUMO GUI를 실행하고, 9개 모델의 성능을 같은 평가 사례에서 비교합니다.</figcaption></figure></div>
+      <div class="tabpanel" id="d2"><figure class="shot"><a href="static/images/dashboard/dashboard_2.png" target="_blank" rel="noopener"><img src="static/images/dashboard/dashboard_2.png" alt="대시보드: BC 학습 loss 곡선과 학습 방법별 충돌률 비교 그래프"></a><figcaption>체크포인트별 loss와, seed 11의 BC · SAC · RLPD 충돌률 변화를 한 그래프로 봅니다.</figcaption></figure></div>
+      <div class="tabpanel" id="d3"><figure class="shot"><a href="static/images/dashboard/dashboard_3.png" target="_blank" rel="noopener"><img src="static/images/dashboard/dashboard_3.png" alt="대시보드: 시나리오별 주행 분석과 데이터 풀 표"></a><figcaption>시나리오별 완주율 · 충돌률과 종료 원인, 데이터 풀별 전이 수를 확인합니다.</figcaption></figure></div>
+    </div>
+    <p class="cap">이미지를 누르면 원본 크기로 볼 수 있습니다.</p>
+  </div>
+</section>
+
+<!-- ======================= 7. 실험 결과 ======================= -->
+<section id="results">
+  <div class="wrap">
+    <div class="eyebrow">08</div>
     <h2>실험 결과</h2>
 
     <div class="stats s3 big">
       <div class="stat"><div class="num">1.7%</div><div class="lbl">RLPD 최종 충돌률<br>(seed 3개 평균, SAC 2.0% · BC 6.7%)</div></div>
-      <div class="stat"><div class="num">98%</div><div class="lbl">RLPD 최종 완주율<br>(30만 전이, SAC 96%)</div></div>
+      <div class="stat"><div class="num">98%</div><div class="lbl">RLPD 최종 완주율<br>(30만 전이/seed, SAC 96%)</div></div>
       <div class="stat"><div class="num">2배</div><div class="lbl">빠른 학습<br>(완주율 80% 도달: 3.3만 vs 6.7만 전이)</div></div>
     </div>
 
@@ -728,7 +781,7 @@ python runner/record_video.py --policy &lt;학습된 모델&gt; --scenario C --v
     <p class="cap">dev 평가 (100사례 · 수요 1.0배). 점선은 BC 선택 모델이고, 0 지점은 학습 전 정책입니다.</p>
     <ul class="points">
       <li>학습 중 평균 충돌률(5만~30만 전이)은 <b>SAC 7.0% → RLPD 3.4%</b>로, RLPD가 더 빨리 안전해졌습니다.</li>
-      <li>다만 학습 초반 2.5만 전이에서는 RLPD의 충돌이 일시적으로 늘었습니다 (최대 39%).</li>
+      <li>학습 초기 구간(약 2.5만 전이 부근)에서는 오프라인 사전 데이터에서 온라인 탐험 정책으로 적응하는 과정에서 충돌률이 일시적으로 최대 39%까지 상승하였으나, 이후 학습이 진행됨에 따라 빠르게 안정화되었습니다.</li>
     </ul>
 
     <h3>학습 과정</h3>
@@ -748,14 +801,14 @@ python runner/record_video.py --policy &lt;학습된 모델&gt; --scenario C --v
         <ul class="points">
           <li>완주율 80% 도달: <b>RLPD 평균 3.3만 vs SAC 6.7만 전이</b></li>
           <li>5만 전이 시점: RLPD 93% vs SAC 79%</li>
-          <li>최종(30만 전이): RLPD 98% vs SAC 96%. 최종 결과는 비슷하지만 <b>RLPD가 약 2배 빨리 도달</b>했습니다.</li>
+          <li>최종(30만 전이/seed): RLPD 98% vs SAC 96%. 최종 결과는 비슷하지만 <b>RLPD가 약 2배 빨리 도달</b>했습니다.</li>
         </ul>
       </div>
     </div>
 
     <h3>문제와 해결</h3>
     <div class="pair">
-      <div class="box prob"><b>문제</b><p>처음 학습한 모델(v1)을 보강한 시나리오(v2)에서 평가하자 충돌률이 11~19%로 올라갔습니다.</p></div>
+      <div class="box prob"><b>문제</b><p>초기 학습 모델(v1)의 일반화 성능을 검증하기 위해 일반 차량(HV)의 밀도를 높이고 주행 상황을 다변화한 확장 시나리오(v2)에서 기존 정책을 평가한 결과, 복잡한 교통 상호작용에 충분히 대응하지 못해 충돌률이 11~19% 수준으로 상승하였습니다.</p></div>
       <div class="arrow">→</div>
       <div class="box sol"><b>해결</b><p>보강한 시나리오(v2)로 BC · SAC · RLPD를 다시 학습해 충돌률 1~4%, 완주율 96~97%가 되었습니다 (seed 11 기준).</p></div>
     </div>
@@ -792,18 +845,39 @@ python runner/record_video.py --policy &lt;학습된 모델&gt; --scenario C --v
     </div>
     <div class="note blue">이 환경에서는 <b>전문가 데이터를 함께 쓰는 것이 강화학습을 더 빠르게</b> 만들었습니다.</div>
 
-    <h3>RLPD 시나리오별 주행 영상</h3>
-    <div class="tabgroup">
+    <h3>시나리오별 주행 영상 (BC · SAC · RLPD)</h3>
+    <div class="tabgroup cmpgroup">
       <div class="tabs" role="tablist">
-        <button class="on" data-tab="vA"><span class="letter" style="background:var(--taskA)">A</span>연속 감응식 신호</button>
-        <button data-tab="vB"><span class="letter" style="background:var(--taskB)">B</span>필수 차선 변경</button>
-        <button data-tab="vC"><span class="letter" style="background:var(--taskC)">C</span>비신호 교차로 양보</button>
+        <button class="on" data-tab="cA"><span class="letter" style="background:var(--taskA)">A</span>연속 감응식 신호</button>
+        <button data-tab="cB"><span class="letter" style="background:var(--taskB)">B</span>필수 차선 변경</button>
+        <button data-tab="cC"><span class="letter" style="background:var(--taskC)">C</span>비신호 교차로 합류</button>
       </div>
-      <div class="tabpanel on" id="vA"><figure><video src="static/videos/rlpd_A.mp4" poster="static/images/poster_A.jpg" controls muted loop playsinline preload="metadata"></video></figure></div>
-      <div class="tabpanel" id="vB"><figure><video src="static/videos/rlpd_B.mp4" poster="static/images/poster_B.jpg" controls muted loop playsinline preload="none"></video></figure></div>
-      <div class="tabpanel" id="vC"><figure><video src="static/videos/rlpd_C.mp4" poster="static/images/poster_C_video.jpg" controls muted loop playsinline preload="none"></video></figure></div>
+      <div class="tabpanel on" id="cA">
+        <div class="cmp3">
+          <figure><div class="mhead"><span class="dot" style="background:var(--bc)"></span>BC</div><video src="static/videos/cmp_A_bc.mp4" poster="static/images/cmp_A_bc.jpg" muted playsinline preload="metadata"></video></figure>
+          <figure><div class="mhead"><span class="dot" style="background:var(--sac)"></span>SAC</div><video src="static/videos/cmp_A_sac.mp4" poster="static/images/cmp_A_sac.jpg" muted playsinline preload="metadata"></video></figure>
+          <figure><div class="mhead"><span class="dot" style="background:var(--rlpd)"></span>RLPD</div><video src="static/videos/cmp_A_rlpd.mp4" poster="static/images/cmp_A_rlpd.jpg" muted playsinline preload="metadata"></video></figure>
+        </div>
+        <div class="cmpbar"><span class="speed">5배속 · 세 영상 동시 재생</span><button class="replay" type="button">↺ 처음부터 다시 재생</button></div>
+      </div>
+      <div class="tabpanel" id="cB">
+        <div class="cmp3">
+          <figure><div class="mhead"><span class="dot" style="background:var(--bc)"></span>BC</div><video src="static/videos/cmp_B_bc.mp4" poster="static/images/cmp_B_bc.jpg" muted playsinline preload="none"></video></figure>
+          <figure><div class="mhead"><span class="dot" style="background:var(--sac)"></span>SAC</div><video src="static/videos/cmp_B_sac.mp4" poster="static/images/cmp_B_sac.jpg" muted playsinline preload="none"></video></figure>
+          <figure><div class="mhead"><span class="dot" style="background:var(--rlpd)"></span>RLPD</div><video src="static/videos/cmp_B_rlpd.mp4" poster="static/images/cmp_B_rlpd.jpg" muted playsinline preload="none"></video></figure>
+        </div>
+        <div class="cmpbar"><span class="speed">3배속 · 세 영상 동시 재생</span><button class="replay" type="button">↺ 처음부터 다시 재생</button></div>
+      </div>
+      <div class="tabpanel" id="cC">
+        <div class="cmp3">
+          <figure><div class="mhead"><span class="dot" style="background:var(--bc)"></span>BC</div><video src="static/videos/cmp_C_bc.mp4" poster="static/images/cmp_C_bc.jpg" muted playsinline preload="none"></video></figure>
+          <figure><div class="mhead"><span class="dot" style="background:var(--sac)"></span>SAC</div><video src="static/videos/cmp_C_sac.mp4" poster="static/images/cmp_C_sac.jpg" muted playsinline preload="none"></video></figure>
+          <figure><div class="mhead"><span class="dot" style="background:var(--rlpd)"></span>RLPD</div><video src="static/videos/cmp_C_rlpd.mp4" poster="static/images/cmp_C_rlpd.jpg" muted playsinline preload="none"></video></figure>
+        </div>
+        <div class="cmpbar"><span class="speed">3배속 · 세 영상 동시 재생</span><button class="replay" type="button">↺ 처음부터 다시 재생</button></div>
+      </div>
     </div>
-    <p class="cap">빨간 차량이 학습한 RLPD 정책으로 움직이는 AV, 노란 차량이 일반 차량입니다.</p>
+    <p class="cap">세 영상은 같은 시각 · 같은 위치에서 출발하고, 같은 지점에 도착하면 멈춥니다. 배속은 SUMO 시뮬레이션 시간 기준으로 A 5배속, B · C 3배속이며, C는 합류와 교차로 통과까지 보여줍니다. 빨간 차량이 AV, 노란 차량이 일반 차량입니다.</p>
   </div>
 </section>
 
@@ -948,6 +1022,30 @@ python runner/record_video.py --policy &lt;학습된 모델&gt; --scenario C --v
     });
   })();
 
+  /* ---------- 방법별 영상 동시 재생 ---------- */
+  (function () {
+    function play(panel) {
+      if (!panel) return;
+      panel.querySelectorAll('video').forEach(function (v) {
+        try { v.currentTime = 0; } catch (e) {}
+        var p = v.play(); if (p && p.catch) p.catch(function () {});
+      });
+    }
+    document.querySelectorAll('.cmpgroup').forEach(function (g) {
+      g.querySelectorAll('.tabs button').forEach(function (btn) {
+        btn.addEventListener('click', function () { play(document.getElementById(btn.dataset.tab)); });
+      });
+      g.querySelectorAll('.replay').forEach(function (b) {
+        b.addEventListener('click', function () { play(b.closest('.tabpanel')); });
+      });
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (es) {
+          es.forEach(function (e) { if (e.isIntersecting) { play(g.querySelector('.tabpanel.on')); io.disconnect(); } });
+        }, { threshold: 0.35 });
+        io.observe(g);
+      }
+    });
+  })();
 </script>
 </body>
 </html>
