@@ -1,0 +1,17 @@
+# Local editor/cache state
+.vscode/
+__pycache__/
+*.py[cod]
+
+
+# Stray simulator logs
+MUJOCO_LOG.TXT
+
+# Local experiment runs
+/runs/
+
+# Tool snapshots
+.playwright-mcp/
+
+# Map build intermediates (maps/tools recreates them)
+/maps/kcity/audit/

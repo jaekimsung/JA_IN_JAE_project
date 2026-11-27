@@ -1,0 +1,8 @@
+# K-CITY driving decision project (Python 3.10+)
+eclipse-sumo==1.28.0
+traci==1.28.0
+sumolib==1.28.0
+numpy
+torch
+gymnasium
+matplotlib  # runner/plot_training.py, runner/plot_evaluation.py

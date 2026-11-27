@@ -1,0 +1,2903 @@
+{
+  "candidates": [
+    {
+      "junction": "340",
+      "xy": [
+        9.21,
+        -285.21
+      ],
+      "approaches": [
+        "-33",
+        "-9",
+        "0",
+        "65"
+      ],
+      "minimum_approach_length_m": 34.56,
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000699",
+          "signal_id": "C1256W000093",
+          "xy": [
+            -9.189003638439903,
+            -278.77207477078747
+          ],
+          "nearest_lane": "-33_0",
+          "endpoint_distance_m": 11.762124566924783,
+          "junction": "340",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000700",
+          "signal_id": "C1256W000078",
+          "xy": [
+            1.7093966106423466,
+            -305.72534432080056
+          ],
+          "nearest_lane": "-9_0",
+          "endpoint_distance_m": 14.275971170740808,
+          "junction": "340",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000691",
+          "signal_id": "C1256W000040",
+          "xy": [
+            15.608279437786681,
+            -268.5772100360517
+          ],
+          "nearest_lane": "65_0",
+          "endpoint_distance_m": 9.968115504172449,
+          "junction": "340",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000688",
+          "signal_id": "C1256W000069",
+          "xy": [
+            27.730029661248793,
+            -294.4789511290752
+          ],
+          "nearest_lane": "0_0",
+          "endpoint_distance_m": 13.250032954326942,
+          "junction": "340",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ]
+    },
+    {
+      "junction": "169",
+      "xy": [
+        53.15,
+        -307.3
+      ],
+      "approaches": [
+        "-0",
+        "-42",
+        "77"
+      ],
+      "minimum_approach_length_m": 28.93,
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000777",
+          "signal_id": "C1256W000003",
+          "xy": [
+            40.422080264063716,
+            -304.77461390652775
+          ],
+          "nearest_lane": "-0_0",
+          "endpoint_distance_m": 6.6067652387862905,
+          "junction": "169",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000614",
+          "signal_id": "C1256W000051",
+          "xy": [
+            46.739568939858174,
+            -325.7504513362825
+          ],
+          "nearest_lane": "77_0",
+          "endpoint_distance_m": 12.511461466376439,
+          "junction": "169",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000751",
+          "signal_id": "C1256W000106",
+          "xy": [
+            59.16865889228874,
+            -295.1298987155669
+          ],
+          "nearest_lane": "-42_0",
+          "endpoint_distance_m": 5.5183998803182694,
+          "junction": "169",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ]
+    },
+    {
+      "junction": "414",
+      "xy": [
+        78.41,
+        -113.43
+      ],
+      "approaches": [
+        "-1",
+        "-10",
+        "17",
+        "61"
+      ],
+      "minimum_approach_length_m": 25.12,
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000854",
+          "signal_id": "C1256W000046",
+          "xy": [
+            55.10169138009434,
+            -120.78449277625924
+          ],
+          "nearest_lane": "-10_0",
+          "endpoint_distance_m": 14.138630040815256,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000857",
+          "signal_id": "C1256W000045",
+          "xy": [
+            75.48065311913889,
+            -131.32912942784878
+          ],
+          "nearest_lane": "-1_2",
+          "endpoint_distance_m": 10.54841521344863,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000858",
+          "signal_id": "C1256W000046",
+          "xy": [
+            55.0139013866405,
+            -117.51596657261074
+          ],
+          "nearest_lane": "-10_0",
+          "endpoint_distance_m": 13.31510110006773,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000499",
+          "signal_id": "C1256W000066",
+          "xy": [
+            71.95229197977673,
+            -131.4310407845546
+          ],
+          "nearest_lane": "-1_2",
+          "endpoint_distance_m": 11.827023128942923,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000520",
+          "signal_id": "C1256W000072",
+          "xy": [
+            64.18490647554246,
+            -102.19735899005506
+          ],
+          "nearest_lane": "61_0",
+          "endpoint_distance_m": 10.274899092983835,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000524",
+          "signal_id": "C1256W000072",
+          "xy": [
+            68.033115883016,
+            -102.09468259674135
+          ],
+          "nearest_lane": "61_0",
+          "endpoint_distance_m": 6.865489215907638,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000641",
+          "signal_id": "C1256W000067",
+          "xy": [
+            91.6649789503446,
+            -109.70129610756892
+          ],
+          "nearest_lane": "17_0",
+          "endpoint_distance_m": 2.2746883602955976,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000690",
+          "signal_id": "C1256W000067",
+          "xy": [
+            91.7477756819934,
+            -113.14931546990039
+          ],
+          "nearest_lane": "17_0",
+          "endpoint_distance_m": 2.3974309978137174,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000672",
+          "signal_id": "C1256W000045",
+          "xy": [
+            78.97827457774922,
+            -131.228105938874
+          ],
+          "nearest_lane": "-1_2",
+          "endpoint_distance_m": 10.368395712695698,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ]
+    },
+    {
+      "junction": "565",
+      "xy": [
+        14.79,
+        -114.84
+      ],
+      "approaches": [
+        "-55",
+        "-85",
+        "10",
+        "58"
+      ],
+      "minimum_approach_length_m": 44.91,
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000828",
+          "signal_id": "C1256W000115",
+          "xy": [
+            9.350726388949884,
+            -101.8877279630237
+          ],
+          "nearest_lane": "10_0",
+          "endpoint_distance_m": 17.62393755919723,
+          "junction": "565",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000807",
+          "signal_id": "C1256W000091",
+          "xy": [
+            13.884898158083743,
+            -132.45726307876382
+          ],
+          "nearest_lane": "58_0",
+          "endpoint_distance_m": 10.247799970187044,
+          "junction": "565",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000573",
+          "signal_id": "C1256W000075",
+          "xy": [
+            27.162380503496607,
+            -115.01643156659404
+          ],
+          "nearest_lane": "10_0",
+          "endpoint_distance_m": 4.548887309436721,
+          "junction": "565",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000575",
+          "signal_id": "C1256W000075",
+          "xy": [
+            27.09536645975804,
+            -111.78804545826242
+          ],
+          "nearest_lane": "10_0",
+          "endpoint_distance_m": 4.034344950490271,
+          "junction": "565",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ]
+    },
+    {
+      "junction": "617",
+      "xy": [
+        -104.25,
+        -450.74
+      ],
+      "approaches": [
+        "-19",
+        "-44",
+        "11"
+      ],
+      "minimum_approach_length_m": 6.95,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "627",
+      "xy": [
+        117.66,
+        7.22
+      ],
+      "approaches": [
+        "-59",
+        "12",
+        "62"
+      ],
+      "minimum_approach_length_m": 24.23,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "353",
+      "xy": [
+        74.55,
+        6.93
+      ],
+      "approaches": [
+        "-12",
+        "-61",
+        "38",
+        "66"
+      ],
+      "minimum_approach_length_m": 24.23,
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000833",
+          "signal_id": "C1256W000024",
+          "xy": [
+            94.03658767746616,
+            8.207092145311
+          ],
+          "nearest_lane": "-12_1",
+          "endpoint_distance_m": 4.916654153817112,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000835",
+          "signal_id": "C1256W000033",
+          "xy": [
+            71.5090037211643,
+            24.37558083894489
+          ],
+          "nearest_lane": "66_2",
+          "endpoint_distance_m": 6.556458588940942,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000852",
+          "signal_id": "C1256W000033",
+          "xy": [
+            68.08410080816198,
+            24.279181422493103
+          ],
+          "nearest_lane": "66_1",
+          "endpoint_distance_m": 6.651598789293562,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000491",
+          "signal_id": "C1256W000037",
+          "xy": [
+            61.04935581538487,
+            24.08117717268882
+          ],
+          "nearest_lane": "66_0",
+          "endpoint_distance_m": 7.84126257167023,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000487",
+          "signal_id": "C1256W000033",
+          "xy": [
+            64.52376100290935,
+            24.178969913224076
+          ],
+          "nearest_lane": "66_0",
+          "endpoint_distance_m": 6.758104747316778,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000605",
+          "signal_id": "C1256W000081",
+          "xy": [
+            76.01239457494884,
+            -13.446033935248009
+          ],
+          "nearest_lane": "-61_2",
+          "endpoint_distance_m": 9.256862003308301,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000607",
+          "signal_id": "C1256W000009",
+          "xy": [
+            79.52554884805065,
+            -13.335559583350891
+          ],
+          "nearest_lane": "-61_1",
+          "endpoint_distance_m": 9.175850384535783,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000597",
+          "signal_id": "C1256W000081",
+          "xy": [
+            72.7356932397527,
+            -13.549072810030754
+          ],
+          "nearest_lane": "-61_2",
+          "endpoint_distance_m": 10.063579047817928,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000669",
+          "signal_id": "C1256W000050",
+          "xy": [
+            93.94715763706138,
+            11.778351790457387
+          ],
+          "nearest_lane": "-12_0",
+          "endpoint_distance_m": 4.830239805757298,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000747",
+          "signal_id": "C1256W000011",
+          "xy": [
+            50.932913553074115,
+            2.4760271966140848
+          ],
+          "nearest_lane": "38_1",
+          "endpoint_distance_m": 9.494076455863496,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000797",
+          "signal_id": "C1256W000009",
+          "xy": [
+            83.07340802047155,
+            -13.22399390232528
+          ],
+          "nearest_lane": "-61_0",
+          "endpoint_distance_m": 9.09221637314679,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ]
+    },
+    {
+      "junction": "640",
+      "xy": [
+        -32.94,
+        -261.39
+      ],
+      "approaches": [
+        "-68",
+        "13",
+        "33"
+      ],
+      "minimum_approach_length_m": 26.6,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "647",
+      "xy": [
+        -13.44,
+        -225.6
+      ],
+      "approaches": [
+        "-13",
+        "-58",
+        "71"
+      ],
+      "minimum_approach_length_m": 26.37,
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000682",
+          "signal_id": "C1256W000077",
+          "xy": [
+            -17.87712419806271,
+            -233.5814825696904
+          ],
+          "nearest_lane": "-13_0",
+          "endpoint_distance_m": 1.4982931892727658,
+          "junction": "647",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000762",
+          "signal_id": "C1256W000076",
+          "xy": [
+            -6.020175040017058,
+            -204.08978500100716
+          ],
+          "nearest_lane": "-58_0",
+          "endpoint_distance_m": 8.74267449932782,
+          "junction": "647",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000760",
+          "signal_id": "C1256W000092",
+          "xy": [
+            2.901343738368456,
+            -224.95187515931738
+          ],
+          "nearest_lane": "71_0",
+          "endpoint_distance_m": 7.512893032892156,
+          "junction": "647",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ]
+    },
+    {
+      "junction": "176",
+      "xy": [
+        -97.27,
+        120.36
+      ],
+      "approaches": [
+        "-23",
+        "-25",
+        "-64",
+        "14",
+        "45"
+      ],
+      "minimum_approach_length_m": 47.69,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "112",
+      "xy": [
+        -96.1,
+        1.68
+      ],
+      "approaches": [
+        "-14",
+        "-45",
+        "-75",
+        "30",
+        "44"
+      ],
+      "minimum_approach_length_m": 17.32,
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000837",
+          "signal_id": "C1256W000122",
+          "xy": [
+            -97.89482765744184,
+            -7.5008740026622345
+          ],
+          "nearest_lane": "-45_0",
+          "endpoint_distance_m": 12.973366292874514,
+          "junction": "112",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ]
+    },
+    {
+      "junction": "726",
+      "xy": [
+        -28.43,
+        29.78
+      ],
+      "approaches": [
+        "-22",
+        "-43",
+        "15"
+      ],
+      "minimum_approach_length_m": 0.2,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "742",
+      "xy": [
+        122.41,
+        -101.17
+      ],
+      "approaches": [
+        "-17",
+        "-73",
+        "59"
+      ],
+      "minimum_approach_length_m": 26.28,
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000805",
+          "signal_id": "C1256W000100",
+          "xy": [
+            120.48853146091471,
+            -98.63691150101995
+          ],
+          "nearest_lane": "59_0",
+          "endpoint_distance_m": 4.829918855978746,
+          "junction": "742",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000859",
+          "signal_id": "C1256W000007",
+          "xy": [
+            124.63401981825773,
+            -127.51942840863997
+          ],
+          "nearest_lane": "-73_0",
+          "endpoint_distance_m": 11.31247866633348,
+          "junction": "742",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000001",
+          "signal_id": "C1256W000118",
+          "xy": [
+            107.42048537237571,
+            -116.10767345101412
+          ],
+          "nearest_lane": "-17_0",
+          "endpoint_distance_m": 9.70430636039809,
+          "junction": "742",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ]
+    },
+    {
+      "junction": "747",
+      "xy": [
+        91.72,
+        -235.04
+      ],
+      "approaches": [
+        "-48",
+        "-87",
+        "18"
+      ],
+      "minimum_approach_length_m": 22.14,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "477",
+      "xy": [
+        121.79,
+        -147.57
+      ],
+      "approaches": [
+        "-18",
+        "48",
+        "73"
+      ],
+      "minimum_approach_length_m": 26.49,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "457",
+      "xy": [
+        -86.48,
+        -455.26
+      ],
+      "approaches": [
+        "-49",
+        "19",
+        "3#0"
+      ],
+      "minimum_approach_length_m": 6.87,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "333",
+      "xy": [
+        -94.48,
+        364.82
+      ],
+      "approaches": [
+        "-27",
+        "20",
+        "47"
+      ],
+      "minimum_approach_length_m": 17.05,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "240",
+      "xy": [
+        -148.83,
+        357.94
+      ],
+      "approaches": [
+        "-20",
+        "-39",
+        "26"
+      ],
+      "minimum_approach_length_m": 41.04,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "759",
+      "xy": [
+        20.83,
+        -346.9
+      ],
+      "approaches": [
+        "-21",
+        "-77",
+        "54"
+      ],
+      "minimum_approach_length_m": 24.05,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "537",
+      "xy": [
+        64.62,
+        124.58
+      ],
+      "approaches": [
+        "-62",
+        "-66",
+        "24",
+        "35"
+      ],
+      "minimum_approach_length_m": 31.97,
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000083",
+          "signal_id": "C1256W000047",
+          "xy": [
+            80.01807048686038,
+            127.00635964153724
+          ],
+          "nearest_lane": "-62_0",
+          "endpoint_distance_m": 3.099683129812641,
+          "junction": "537",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000569",
+          "signal_id": "C1256W000014",
+          "xy": [
+            62.23863896668546,
+            138.49803161720712
+          ],
+          "nearest_lane": "24_0",
+          "endpoint_distance_m": 5.352866496341581,
+          "junction": "537",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000593",
+          "signal_id": "C1256W000052",
+          "xy": [
+            55.1114613271021,
+            118.83414226524245
+          ],
+          "nearest_lane": "35_0",
+          "endpoint_distance_m": 6.195932360040928,
+          "junction": "537",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000587",
+          "signal_id": "C1256W000015",
+          "xy": [
+            71.4334593542264,
+            114.75959586469202
+          ],
+          "nearest_lane": "-66_1",
+          "endpoint_distance_m": 3.512507077950506,
+          "junction": "537",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000758",
+          "signal_id": "C1256W000015",
+          "xy": [
+            74.94919737226378,
+            114.79632036369469
+          ],
+          "nearest_lane": "-66_0",
+          "endpoint_distance_m": 4.16427461842719,
+          "junction": "537",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000743",
+          "signal_id": "C1256W000014",
+          "xy": [
+            65.6203902801671,
+            138.6213723518643
+          ],
+          "nearest_lane": "24_0",
+          "endpoint_distance_m": 6.061188454768051,
+          "junction": "537",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000742",
+          "signal_id": "C1256W000052",
+          "xy": [
+            55.02609956478975,
+            122.88651883629409
+          ],
+          "nearest_lane": "35_0",
+          "endpoint_distance_m": 3.7858855927798585,
+          "junction": "537",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ]
+    },
+    {
+      "junction": "752",
+      "xy": [
+        -33.66,
+        118.08
+      ],
+      "approaches": [
+        "-70",
+        "-83",
+        "25"
+      ],
+      "minimum_approach_length_m": 8.0,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "581",
+      "xy": [
+        -64.3,
+        5.46
+      ],
+      "approaches": [
+        "-74",
+        "28",
+        "75"
+      ],
+      "minimum_approach_length_m": 3.7,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "482",
+      "xy": [
+        -60.77,
+        29.31
+      ],
+      "approaches": [
+        "-28",
+        "-57",
+        "43",
+        "78"
+      ],
+      "minimum_approach_length_m": 3.52,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "464",
+      "xy": [
+        -13.85,
+        -329.27
+      ],
+      "approaches": [
+        "-3#8",
+        "-54",
+        "68",
+        "9"
+      ],
+      "minimum_approach_length_m": 8.12,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "268",
+      "xy": [
+        34.92,
+        -240.71
+      ],
+      "approaches": [
+        "-65",
+        "-71",
+        "31",
+        "36#0"
+      ],
+      "minimum_approach_length_m": 5.12,
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000087",
+          "signal_id": "C1256W000082",
+          "xy": [
+            26.920012222190593,
+            -257.7797384569891
+          ],
+          "nearest_lane": "-65_0",
+          "endpoint_distance_m": 10.764206887395988,
+          "junction": "268",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000066",
+          "signal_id": "C1256W000085",
+          "xy": [
+            51.057508956837665,
+            -250.26085669662788
+          ],
+          "nearest_lane": "31_0",
+          "endpoint_distance_m": 8.794916237196622,
+          "junction": "268",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000802",
+          "signal_id": "C1256W000084",
+          "xy": [
+            16.175774706651126,
+            -235.59061399743734
+          ],
+          "nearest_lane": "-71_0",
+          "endpoint_distance_m": 10.726790986915972,
+          "junction": "268",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ]
+    },
+    {
+      "junction": "764",
+      "xy": [
+        73.45,
+        -266.99
+      ],
+      "approaches": [
+        "-31",
+        "42",
+        "87"
+      ],
+      "minimum_approach_length_m": 21.69,
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000753",
+          "signal_id": "C1256W000002",
+          "xy": [
+            82.03049248089724,
+            -251.56451396960207
+          ],
+          "nearest_lane": "87_0",
+          "endpoint_distance_m": 7.513546943873327,
+          "junction": "764",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000779",
+          "signal_id": "C1256W000004",
+          "xy": [
+            61.914664671722775,
+            -259.6808690601409
+          ],
+          "nearest_lane": "-31_0",
+          "endpoint_distance_m": 4.64600925717798,
+          "junction": "764",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000773",
+          "signal_id": "C1256W000022",
+          "xy": [
+            72.59800184666628,
+            -276.63894824880487
+          ],
+          "nearest_lane": "42_0",
+          "endpoint_distance_m": 1.4791266635798732,
+          "junction": "764",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ]
+    },
+    {
+      "junction": "780",
+      "xy": [
+        -50.0,
+        58.08
+      ],
+      "approaches": [
+        "-78",
+        "34",
+        "56",
+        "76"
+      ],
+      "minimum_approach_length_m": 0.77,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "662",
+      "xy": [
+        10.92,
+        118.06
+      ],
+      "approaches": [
+        "-35",
+        "41",
+        "67",
+        "70"
+      ],
+      "minimum_approach_length_m": 22.77,
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000199",
+          "signal_id": "C1256W000020",
+          "xy": [
+            -10.749264811521272,
+            121.16022506322706
+          ],
+          "nearest_lane": "70_0",
+          "endpoint_distance_m": 6.966690716314869,
+          "junction": "662",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000582",
+          "signal_id": "C1256W000123",
+          "xy": [
+            10.538288049397927,
+            102.11571187671447
+          ],
+          "nearest_lane": "41_1",
+          "endpoint_distance_m": 5.7082464224262575,
+          "junction": "662",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000755",
+          "signal_id": "C1256W000096",
+          "xy": [
+            26.56599556948071,
+            125.34801321301477
+          ],
+          "nearest_lane": "-35_0",
+          "endpoint_distance_m": 7.946784672473913,
+          "junction": "662",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000757",
+          "signal_id": "C1256W000123",
+          "xy": [
+            7.321676321974523,
+            102.13403270429414
+          ],
+          "nearest_lane": "41_1",
+          "endpoint_distance_m": 5.830067018956198,
+          "junction": "662",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ]
+    },
+    {
+      "junction": "286",
+      "xy": [
+        10.35,
+        3.52
+      ],
+      "approaches": [
+        "-38",
+        "-41",
+        "55",
+        "74"
+      ],
+      "minimum_approach_length_m": 38.86,
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000208",
+          "signal_id": "C1256W000016",
+          "xy": [
+            10.718801516588574,
+            -11.624987510707092
+          ],
+          "nearest_lane": "55_1",
+          "endpoint_distance_m": 4.447120643389951,
+          "junction": "286",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000330",
+          "signal_id": "C1256W000074",
+          "xy": [
+            21.708625457837208,
+            6.0670180809576575
+          ],
+          "nearest_lane": "-38_1",
+          "endpoint_distance_m": 0.5891279401486765,
+          "junction": "286",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000320",
+          "signal_id": "C1256W000017",
+          "xy": [
+            -6.830744294893955,
+            0.8541843223261988
+          ],
+          "nearest_lane": "74_0",
+          "endpoint_distance_m": 5.994738182393768,
+          "junction": "286",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000772",
+          "signal_id": "C1256W000023",
+          "xy": [
+            6.009402115542253,
+            16.530077013105
+          ],
+          "nearest_lane": "-41_0",
+          "endpoint_distance_m": 2.5541422053310376,
+          "junction": "286",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ]
+    },
+    {
+      "junction": "89",
+      "xy": [
+        -37.13,
+        94.96
+      ],
+      "approaches": [
+        "-79",
+        "-82",
+        "40",
+        "83"
+      ],
+      "minimum_approach_length_m": 1.73,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "233",
+      "xy": [
+        -90.37,
+        -474.43
+      ],
+      "approaches": [
+        "-80",
+        "49",
+        "84"
+      ],
+      "minimum_approach_length_m": 7.02,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "253",
+      "xy": [
+        6.16,
+        370.44
+      ],
+      "approaches": [
+        "-52",
+        "-63",
+        "81"
+      ],
+      "minimum_approach_length_m": 12.69,
+      "mgeo_matches": []
+    },
+    {
+      "junction": "655",
+      "xy": [
+        -44.1,
+        76.24
+      ],
+      "approaches": [
+        "-72",
+        "-76",
+        "82"
+      ],
+      "minimum_approach_length_m": 0.77,
+      "mgeo_matches": []
+    }
+  ],
+  "unmatched_mgeo_signal_nodes": [
+    {
+      "mgeo_node": "A1256W000831",
+      "signal_id": "LCS01",
+      "xy": [
+        111.08943504509884,
+        -462.4927303007557
+      ],
+      "nearest_lane": "88_0",
+      "endpoint_distance_m": 132.98848585291125,
+      "junction": "853",
+      "status": "spatial candidate only; cross-edition identity not established"
+    },
+    {
+      "mgeo_node": "A1256W000823",
+      "signal_id": "C1256W000089",
+      "xy": [
+        -316.7363844324589,
+        75.28997962050536
+      ],
+      "nearest_lane": "64_0",
+      "endpoint_distance_m": 194.1019743441621,
+      "junction": "454",
+      "status": "spatial candidate only; cross-edition identity not established"
+    },
+    {
+      "mgeo_node": "A1256W000813",
+      "signal_id": "C1256W000115",
+      "xy": [
+        1.9621843734906816,
+        -102.57551071138519
+      ],
+      "nearest_lane": "-85_0",
+      "endpoint_distance_m": 22.813395838587574,
+      "junction": "565",
+      "status": "spatial candidate only; cross-edition identity not established"
+    },
+    {
+      "mgeo_node": "A1256W000815",
+      "signal_id": "C1256W000115",
+      "xy": [
+        5.476021869191403,
+        -102.24841548953242
+      ],
+      "nearest_lane": "10_0",
+      "endpoint_distance_m": 20.61846155512832,
+      "junction": "565",
+      "status": "spatial candidate only; cross-edition identity not established"
+    },
+    {
+      "mgeo_node": "A1256W000804",
+      "signal_id": "C1256W000089",
+      "xy": [
+        -313.234363436348,
+        75.42074032525656
+      ],
+      "nearest_lane": "64_0",
+      "endpoint_distance_m": 190.62498934798043,
+      "junction": "454",
+      "status": "spatial candidate only; cross-edition identity not established"
+    },
+    {
+      "mgeo_node": "A1256W000840",
+      "signal_id": "LCS02",
+      "xy": [
+        9.620543799333975,
+        -525.0021414164644
+      ],
+      "nearest_lane": "84_0",
+      "endpoint_distance_m": 104.90074171607289,
+      "junction": "233",
+      "status": "spatial candidate only; cross-edition identity not established"
+    },
+    {
+      "mgeo_node": "A1256W000371",
+      "signal_id": "C1256W000062",
+      "xy": [
+        -324.95499935618267,
+        111.53592846922211
+      ],
+      "nearest_lane": "64_0",
+      "endpoint_distance_m": 199.85845577128867,
+      "junction": "454",
+      "status": "spatial candidate only; cross-edition identity not established"
+    },
+    {
+      "mgeo_node": "A1256W000356",
+      "signal_id": "C1256W000062",
+      "xy": [
+        -321.46361028016213,
+        111.65823347456009
+      ],
+      "nearest_lane": "64_0",
+      "endpoint_distance_m": 196.37136955677587,
+      "junction": "454",
+      "status": "spatial candidate only; cross-edition identity not established"
+    },
+    {
+      "mgeo_node": "A1256W000516",
+      "signal_id": "C1256W000054",
+      "xy": [
+        70.34895063718078,
+        -39.65312437926214
+      ],
+      "nearest_lane": "-61_2",
+      "endpoint_distance_m": 35.97594964092323,
+      "junction": "353",
+      "status": "spatial candidate only; cross-edition identity not established"
+    }
+  ],
+  "carla_scenario_positions": [
+    {
+      "id": "Q_TL1",
+      "xy": [
+        36.4,
+        -248.3
+      ],
+      "junction": "268",
+      "distance_m": 7.732948984701764,
+      "evidence": "scenario actor location; not field signal timing"
+    },
+    {
+      "id": "Q_TL2",
+      "xy": [
+        45.4,
+        -309.5
+      ],
+      "junction": "169",
+      "distance_m": 8.056208785775102,
+      "evidence": "scenario actor location; not field signal timing"
+    }
+  ],
+  "mgeo_stop_nodes": 150,
+  "mgeo_signal_nodes": 73,
+  "related_signal_counts": {
+    "straight": 191,
+    "None": 371,
+    "uturn_normal": 2,
+    "left": 30,
+    "right_unprotected": 32,
+    "left_unprotected": 8
+  },
+  "limitations": [
+    "20 m endpoint proximity is not a surveyed alignment",
+    "MGEO traffic_light_set and intersection_controller files are absent locally",
+    "CARLA server was not running; actor group/timing could not be read",
+    "MORAI tlList state snapshots do not provide a complete phase schedule",
+    "source OpenDRIVE has no signal or controller definitions"
+  ],
+  "selected": [
+    {
+      "junction_id": "112",
+      "sumo_xy": [
+        -96.1,
+        1.68
+      ],
+      "rationale": "Five-leg conflicting movements; one MGEO signal candidate; replaces assumed all-way stop",
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000837",
+          "signal_id": "C1256W000122",
+          "xy": [
+            -97.89482765744184,
+            -7.5008740026622345
+          ],
+          "nearest_lane": "-45_0",
+          "endpoint_distance_m": 12.973366292874514,
+          "junction": "112",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ],
+      "groups": [
+        {
+          "name": "approach_-75",
+          "indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "longest_internal_path_m": 48.62,
+          "all_red_s": 7
+        },
+        {
+          "name": "approach_44",
+          "indices": [
+            4,
+            5,
+            6
+          ],
+          "longest_internal_path_m": 51.65,
+          "all_red_s": 7
+        },
+        {
+          "name": "approach_30",
+          "indices": [
+            7,
+            8
+          ],
+          "longest_internal_path_m": 51.73,
+          "all_red_s": 7
+        },
+        {
+          "name": "approach_-45",
+          "indices": [
+            9,
+            10
+          ],
+          "longest_internal_path_m": 47.88,
+          "all_red_s": 7
+        },
+        {
+          "name": "approach_-14",
+          "indices": [
+            11,
+            12,
+            13,
+            14
+          ],
+          "longest_internal_path_m": 51.56,
+          "all_red_s": 7
+        }
+      ],
+      "program": {
+        "id": "112",
+        "type": "actuated",
+        "programID": "assumed_actuated_v1",
+        "offset": "0"
+      },
+      "phase_status": "assumed demand-actuated, not measured field timing"
+    },
+    {
+      "junction_id": "169",
+      "sumo_xy": [
+        53.15,
+        -307.3
+      ],
+      "rationale": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000777",
+          "signal_id": "C1256W000003",
+          "xy": [
+            40.422080264063716,
+            -304.77461390652775
+          ],
+          "nearest_lane": "-0_0",
+          "endpoint_distance_m": 6.6067652387862905,
+          "junction": "169",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000614",
+          "signal_id": "C1256W000051",
+          "xy": [
+            46.739568939858174,
+            -325.7504513362825
+          ],
+          "nearest_lane": "77_0",
+          "endpoint_distance_m": 12.511461466376439,
+          "junction": "169",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000751",
+          "signal_id": "C1256W000106",
+          "xy": [
+            59.16865889228874,
+            -295.1298987155669
+          ],
+          "nearest_lane": "-42_0",
+          "endpoint_distance_m": 5.5183998803182694,
+          "junction": "169",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ],
+      "groups": [
+        {
+          "name": "approach_-42",
+          "indices": [
+            0,
+            1
+          ],
+          "longest_internal_path_m": 14.91,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_77",
+          "indices": [
+            2,
+            3
+          ],
+          "longest_internal_path_m": 14.99,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_-0",
+          "indices": [
+            4,
+            5
+          ],
+          "longest_internal_path_m": 14.86,
+          "all_red_s": 3
+        }
+      ],
+      "program": {
+        "id": "169",
+        "type": "actuated",
+        "programID": "assumed_actuated_v1",
+        "offset": "0"
+      },
+      "phase_status": "assumed demand-actuated, not measured field timing"
+    },
+    {
+      "junction_id": "176",
+      "sumo_xy": [
+        -97.27,
+        120.36
+      ],
+      "rationale": "Five-leg conflicting movements and historical collision; engineering assumption; replaces assumed all-way stop",
+      "mgeo_matches": [],
+      "groups": [
+        {
+          "name": "approach_-23",
+          "indices": [
+            0,
+            1,
+            2
+          ],
+          "longest_internal_path_m": 19.86,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_-25",
+          "indices": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "longest_internal_path_m": 15.13,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_14",
+          "indices": [
+            7,
+            8,
+            9,
+            10
+          ],
+          "longest_internal_path_m": 19.77,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_45",
+          "indices": [
+            11,
+            12,
+            13
+          ],
+          "longest_internal_path_m": 19.58,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_-64",
+          "indices": [
+            14,
+            15
+          ],
+          "longest_internal_path_m": 21.11,
+          "all_red_s": 4
+        }
+      ],
+      "program": {
+        "id": "176",
+        "type": "actuated",
+        "programID": "assumed_actuated_v1",
+        "offset": "0"
+      },
+      "phase_status": "assumed demand-actuated, not measured field timing"
+    },
+    {
+      "junction_id": "268",
+      "sumo_xy": [
+        34.92,
+        -240.71
+      ],
+      "rationale": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000087",
+          "signal_id": "C1256W000082",
+          "xy": [
+            26.920012222190593,
+            -257.7797384569891
+          ],
+          "nearest_lane": "-65_0",
+          "endpoint_distance_m": 10.764206887395988,
+          "junction": "268",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000066",
+          "signal_id": "C1256W000085",
+          "xy": [
+            51.057508956837665,
+            -250.26085669662788
+          ],
+          "nearest_lane": "31_0",
+          "endpoint_distance_m": 8.794916237196622,
+          "junction": "268",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000802",
+          "signal_id": "C1256W000084",
+          "xy": [
+            16.175774706651126,
+            -235.59061399743734
+          ],
+          "nearest_lane": "-71_0",
+          "endpoint_distance_m": 10.726790986915972,
+          "junction": "268",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ],
+      "groups": [
+        {
+          "name": "approach_36#0",
+          "indices": [
+            0,
+            1,
+            2
+          ],
+          "longest_internal_path_m": 18.08,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_31",
+          "indices": [
+            3,
+            4
+          ],
+          "longest_internal_path_m": 18.08,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_-65",
+          "indices": [
+            5,
+            6
+          ],
+          "longest_internal_path_m": 15.34,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_-71",
+          "indices": [
+            7,
+            8,
+            9
+          ],
+          "longest_internal_path_m": 18.7,
+          "all_red_s": 3
+        }
+      ],
+      "program": {
+        "id": "268",
+        "type": "actuated",
+        "programID": "assumed_actuated_v1",
+        "offset": "0"
+      },
+      "phase_status": "assumed demand-actuated, not measured field timing"
+    },
+    {
+      "junction_id": "286",
+      "sumo_xy": [
+        10.35,
+        3.52
+      ],
+      "rationale": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000208",
+          "signal_id": "C1256W000016",
+          "xy": [
+            10.718801516588574,
+            -11.624987510707092
+          ],
+          "nearest_lane": "55_1",
+          "endpoint_distance_m": 4.447120643389951,
+          "junction": "286",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000330",
+          "signal_id": "C1256W000074",
+          "xy": [
+            21.708625457837208,
+            6.0670180809576575
+          ],
+          "nearest_lane": "-38_1",
+          "endpoint_distance_m": 0.5891279401486765,
+          "junction": "286",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000320",
+          "signal_id": "C1256W000017",
+          "xy": [
+            -6.830744294893955,
+            0.8541843223261988
+          ],
+          "nearest_lane": "74_0",
+          "endpoint_distance_m": 5.994738182393768,
+          "junction": "286",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000772",
+          "signal_id": "C1256W000023",
+          "xy": [
+            6.009402115542253,
+            16.530077013105
+          ],
+          "nearest_lane": "-41_0",
+          "endpoint_distance_m": 2.5541422053310376,
+          "junction": "286",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ],
+      "groups": [
+        {
+          "name": "approach_-38",
+          "indices": [
+            0,
+            1,
+            2
+          ],
+          "longest_internal_path_m": 22.17,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_55",
+          "indices": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "longest_internal_path_m": 22.05,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_74",
+          "indices": [
+            7,
+            8,
+            9
+          ],
+          "longest_internal_path_m": 22.31,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_-41",
+          "indices": [
+            10,
+            11,
+            12
+          ],
+          "longest_internal_path_m": 22.13,
+          "all_red_s": 4
+        }
+      ],
+      "program": {
+        "id": "286",
+        "type": "actuated",
+        "programID": "assumed_actuated_v1",
+        "offset": "0"
+      },
+      "phase_status": "assumed demand-actuated, not measured field timing"
+    },
+    {
+      "junction_id": "340",
+      "sumo_xy": [
+        9.21,
+        -285.21
+      ],
+      "rationale": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000699",
+          "signal_id": "C1256W000093",
+          "xy": [
+            -9.189003638439903,
+            -278.77207477078747
+          ],
+          "nearest_lane": "-33_0",
+          "endpoint_distance_m": 11.762124566924783,
+          "junction": "340",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000700",
+          "signal_id": "C1256W000078",
+          "xy": [
+            1.7093966106423466,
+            -305.72534432080056
+          ],
+          "nearest_lane": "-9_0",
+          "endpoint_distance_m": 14.275971170740808,
+          "junction": "340",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000691",
+          "signal_id": "C1256W000040",
+          "xy": [
+            15.608279437786681,
+            -268.5772100360517
+          ],
+          "nearest_lane": "65_0",
+          "endpoint_distance_m": 9.968115504172449,
+          "junction": "340",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000688",
+          "signal_id": "C1256W000069",
+          "xy": [
+            27.730029661248793,
+            -294.4789511290752
+          ],
+          "nearest_lane": "0_0",
+          "endpoint_distance_m": 13.250032954326942,
+          "junction": "340",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ],
+      "groups": [
+        {
+          "name": "approach_65",
+          "indices": [
+            0,
+            1,
+            2
+          ],
+          "longest_internal_path_m": 15.18,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_0",
+          "indices": [
+            3,
+            4,
+            5
+          ],
+          "longest_internal_path_m": 15.08,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_-9",
+          "indices": [
+            6,
+            7,
+            8
+          ],
+          "longest_internal_path_m": 15.08,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_-33",
+          "indices": [
+            9,
+            10,
+            11
+          ],
+          "longest_internal_path_m": 15.25,
+          "all_red_s": 3
+        }
+      ],
+      "program": {
+        "id": "340",
+        "type": "actuated",
+        "programID": "assumed_actuated_v1",
+        "offset": "0"
+      },
+      "phase_status": "assumed demand-actuated, not measured field timing"
+    },
+    {
+      "junction_id": "353",
+      "sumo_xy": [
+        74.55,
+        6.93
+      ],
+      "rationale": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000833",
+          "signal_id": "C1256W000024",
+          "xy": [
+            94.03658767746616,
+            8.207092145311
+          ],
+          "nearest_lane": "-12_1",
+          "endpoint_distance_m": 4.916654153817112,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000835",
+          "signal_id": "C1256W000033",
+          "xy": [
+            71.5090037211643,
+            24.37558083894489
+          ],
+          "nearest_lane": "66_2",
+          "endpoint_distance_m": 6.556458588940942,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000852",
+          "signal_id": "C1256W000033",
+          "xy": [
+            68.08410080816198,
+            24.279181422493103
+          ],
+          "nearest_lane": "66_1",
+          "endpoint_distance_m": 6.651598789293562,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000491",
+          "signal_id": "C1256W000037",
+          "xy": [
+            61.04935581538487,
+            24.08117717268882
+          ],
+          "nearest_lane": "66_0",
+          "endpoint_distance_m": 7.84126257167023,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000487",
+          "signal_id": "C1256W000033",
+          "xy": [
+            64.52376100290935,
+            24.178969913224076
+          ],
+          "nearest_lane": "66_0",
+          "endpoint_distance_m": 6.758104747316778,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000605",
+          "signal_id": "C1256W000081",
+          "xy": [
+            76.01239457494884,
+            -13.446033935248009
+          ],
+          "nearest_lane": "-61_2",
+          "endpoint_distance_m": 9.256862003308301,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000607",
+          "signal_id": "C1256W000009",
+          "xy": [
+            79.52554884805065,
+            -13.335559583350891
+          ],
+          "nearest_lane": "-61_1",
+          "endpoint_distance_m": 9.175850384535783,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000597",
+          "signal_id": "C1256W000081",
+          "xy": [
+            72.7356932397527,
+            -13.549072810030754
+          ],
+          "nearest_lane": "-61_2",
+          "endpoint_distance_m": 10.063579047817928,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000669",
+          "signal_id": "C1256W000050",
+          "xy": [
+            93.94715763706138,
+            11.778351790457387
+          ],
+          "nearest_lane": "-12_0",
+          "endpoint_distance_m": 4.830239805757298,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000747",
+          "signal_id": "C1256W000011",
+          "xy": [
+            50.932913553074115,
+            2.4760271966140848
+          ],
+          "nearest_lane": "38_1",
+          "endpoint_distance_m": 9.494076455863496,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000797",
+          "signal_id": "C1256W000009",
+          "xy": [
+            83.07340802047155,
+            -13.22399390232528
+          ],
+          "nearest_lane": "-61_0",
+          "endpoint_distance_m": 9.09221637314679,
+          "junction": "353",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ],
+      "groups": [
+        {
+          "name": "approach_-12",
+          "indices": [
+            0,
+            1,
+            2
+          ],
+          "longest_internal_path_m": 29.13,
+          "all_red_s": 5
+        },
+        {
+          "name": "approach_-61",
+          "indices": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "longest_internal_path_m": 23.42,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_38",
+          "indices": [
+            7,
+            8,
+            9
+          ],
+          "longest_internal_path_m": 28.75,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_66",
+          "indices": [
+            10,
+            11,
+            12
+          ],
+          "longest_internal_path_m": 23.68,
+          "all_red_s": 4
+        }
+      ],
+      "program": {
+        "id": "353",
+        "type": "actuated",
+        "programID": "assumed_actuated_v1",
+        "offset": "0"
+      },
+      "phase_status": "assumed demand-actuated, not measured field timing"
+    },
+    {
+      "junction_id": "414",
+      "sumo_xy": [
+        78.41,
+        -113.43
+      ],
+      "rationale": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000854",
+          "signal_id": "C1256W000046",
+          "xy": [
+            55.10169138009434,
+            -120.78449277625924
+          ],
+          "nearest_lane": "-10_0",
+          "endpoint_distance_m": 14.138630040815256,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000857",
+          "signal_id": "C1256W000045",
+          "xy": [
+            75.48065311913889,
+            -131.32912942784878
+          ],
+          "nearest_lane": "-1_2",
+          "endpoint_distance_m": 10.54841521344863,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000858",
+          "signal_id": "C1256W000046",
+          "xy": [
+            55.0139013866405,
+            -117.51596657261074
+          ],
+          "nearest_lane": "-10_0",
+          "endpoint_distance_m": 13.31510110006773,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000499",
+          "signal_id": "C1256W000066",
+          "xy": [
+            71.95229197977673,
+            -131.4310407845546
+          ],
+          "nearest_lane": "-1_2",
+          "endpoint_distance_m": 11.827023128942923,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000520",
+          "signal_id": "C1256W000072",
+          "xy": [
+            64.18490647554246,
+            -102.19735899005506
+          ],
+          "nearest_lane": "61_0",
+          "endpoint_distance_m": 10.274899092983835,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000524",
+          "signal_id": "C1256W000072",
+          "xy": [
+            68.033115883016,
+            -102.09468259674135
+          ],
+          "nearest_lane": "61_0",
+          "endpoint_distance_m": 6.865489215907638,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000641",
+          "signal_id": "C1256W000067",
+          "xy": [
+            91.6649789503446,
+            -109.70129610756892
+          ],
+          "nearest_lane": "17_0",
+          "endpoint_distance_m": 2.2746883602955976,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000690",
+          "signal_id": "C1256W000067",
+          "xy": [
+            91.7477756819934,
+            -113.14931546990039
+          ],
+          "nearest_lane": "17_0",
+          "endpoint_distance_m": 2.3974309978137174,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000672",
+          "signal_id": "C1256W000045",
+          "xy": [
+            78.97827457774922,
+            -131.228105938874
+          ],
+          "nearest_lane": "-1_2",
+          "endpoint_distance_m": 10.368395712695698,
+          "junction": "414",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ],
+      "groups": [
+        {
+          "name": "approach_17",
+          "indices": [
+            0,
+            1
+          ],
+          "longest_internal_path_m": 22.04,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_-1",
+          "indices": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "longest_internal_path_m": 15.17,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_-10",
+          "indices": [
+            7,
+            8,
+            9
+          ],
+          "longest_internal_path_m": 22.06,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_61",
+          "indices": [
+            10,
+            11,
+            12
+          ],
+          "longest_internal_path_m": 20.98,
+          "all_red_s": 4
+        }
+      ],
+      "program": {
+        "id": "414",
+        "type": "actuated",
+        "programID": "assumed_actuated_v1",
+        "offset": "0"
+      },
+      "phase_status": "assumed demand-actuated, not measured field timing"
+    },
+    {
+      "junction_id": "537",
+      "sumo_xy": [
+        64.62,
+        124.58
+      ],
+      "rationale": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000083",
+          "signal_id": "C1256W000047",
+          "xy": [
+            80.01807048686038,
+            127.00635964153724
+          ],
+          "nearest_lane": "-62_0",
+          "endpoint_distance_m": 3.099683129812641,
+          "junction": "537",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000569",
+          "signal_id": "C1256W000014",
+          "xy": [
+            62.23863896668546,
+            138.49803161720712
+          ],
+          "nearest_lane": "24_0",
+          "endpoint_distance_m": 5.352866496341581,
+          "junction": "537",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000593",
+          "signal_id": "C1256W000052",
+          "xy": [
+            55.1114613271021,
+            118.83414226524245
+          ],
+          "nearest_lane": "35_0",
+          "endpoint_distance_m": 6.195932360040928,
+          "junction": "537",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000587",
+          "signal_id": "C1256W000015",
+          "xy": [
+            71.4334593542264,
+            114.75959586469202
+          ],
+          "nearest_lane": "-66_1",
+          "endpoint_distance_m": 3.512507077950506,
+          "junction": "537",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000758",
+          "signal_id": "C1256W000015",
+          "xy": [
+            74.94919737226378,
+            114.79632036369469
+          ],
+          "nearest_lane": "-66_0",
+          "endpoint_distance_m": 4.16427461842719,
+          "junction": "537",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000743",
+          "signal_id": "C1256W000014",
+          "xy": [
+            65.6203902801671,
+            138.6213723518643
+          ],
+          "nearest_lane": "24_0",
+          "endpoint_distance_m": 6.061188454768051,
+          "junction": "537",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000742",
+          "signal_id": "C1256W000052",
+          "xy": [
+            55.02609956478975,
+            122.88651883629409
+          ],
+          "nearest_lane": "35_0",
+          "endpoint_distance_m": 3.7858855927798585,
+          "junction": "537",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ],
+      "groups": [
+        {
+          "name": "approach_-62",
+          "indices": [
+            0,
+            1
+          ],
+          "longest_internal_path_m": 18.95,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_-66",
+          "indices": [
+            2,
+            3,
+            4
+          ],
+          "longest_internal_path_m": 22.09,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_35",
+          "indices": [
+            5,
+            6,
+            7
+          ],
+          "longest_internal_path_m": 25.87,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_24",
+          "indices": [
+            8,
+            9,
+            10
+          ],
+          "longest_internal_path_m": 18.85,
+          "all_red_s": 3
+        }
+      ],
+      "program": {
+        "id": "537",
+        "type": "actuated",
+        "programID": "assumed_actuated_v1",
+        "offset": "0"
+      },
+      "phase_status": "assumed demand-actuated, not measured field timing"
+    },
+    {
+      "junction_id": "565",
+      "sumo_xy": [
+        14.79,
+        -114.84
+      ],
+      "rationale": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000828",
+          "signal_id": "C1256W000115",
+          "xy": [
+            9.350726388949884,
+            -101.8877279630237
+          ],
+          "nearest_lane": "10_0",
+          "endpoint_distance_m": 17.62393755919723,
+          "junction": "565",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000807",
+          "signal_id": "C1256W000091",
+          "xy": [
+            13.884898158083743,
+            -132.45726307876382
+          ],
+          "nearest_lane": "58_0",
+          "endpoint_distance_m": 10.247799970187044,
+          "junction": "565",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000573",
+          "signal_id": "C1256W000075",
+          "xy": [
+            27.162380503496607,
+            -115.01643156659404
+          ],
+          "nearest_lane": "10_0",
+          "endpoint_distance_m": 4.548887309436721,
+          "junction": "565",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000575",
+          "signal_id": "C1256W000075",
+          "xy": [
+            27.09536645975804,
+            -111.78804545826242
+          ],
+          "nearest_lane": "10_0",
+          "endpoint_distance_m": 4.034344950490271,
+          "junction": "565",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ],
+      "groups": [
+        {
+          "name": "approach_10",
+          "indices": [
+            0,
+            1,
+            2
+          ],
+          "longest_internal_path_m": 42.35,
+          "all_red_s": 6
+        },
+        {
+          "name": "approach_58",
+          "indices": [
+            3,
+            4,
+            5
+          ],
+          "longest_internal_path_m": 46.33,
+          "all_red_s": 7
+        },
+        {
+          "name": "approach_-85",
+          "indices": [
+            6,
+            7
+          ],
+          "longest_internal_path_m": 47.52,
+          "all_red_s": 7
+        },
+        {
+          "name": "approach_-55",
+          "indices": [
+            8,
+            9
+          ],
+          "longest_internal_path_m": 46.21,
+          "all_red_s": 7
+        }
+      ],
+      "program": {
+        "id": "565",
+        "type": "actuated",
+        "programID": "assumed_actuated_v1",
+        "offset": "0"
+      },
+      "phase_status": "assumed demand-actuated, not measured field timing"
+    },
+    {
+      "junction_id": "647",
+      "sumo_xy": [
+        -13.44,
+        -225.6
+      ],
+      "rationale": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000682",
+          "signal_id": "C1256W000077",
+          "xy": [
+            -17.87712419806271,
+            -233.5814825696904
+          ],
+          "nearest_lane": "-13_0",
+          "endpoint_distance_m": 1.4982931892727658,
+          "junction": "647",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000762",
+          "signal_id": "C1256W000076",
+          "xy": [
+            -6.020175040017058,
+            -204.08978500100716
+          ],
+          "nearest_lane": "-58_0",
+          "endpoint_distance_m": 8.74267449932782,
+          "junction": "647",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000760",
+          "signal_id": "C1256W000092",
+          "xy": [
+            2.901343738368456,
+            -224.95187515931738
+          ],
+          "nearest_lane": "71_0",
+          "endpoint_distance_m": 7.512893032892156,
+          "junction": "647",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ],
+      "groups": [
+        {
+          "name": "approach_-58",
+          "indices": [
+            0
+          ],
+          "longest_internal_path_m": 21.34,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_71",
+          "indices": [
+            1
+          ],
+          "longest_internal_path_m": 21.3,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_-13",
+          "indices": [
+            2,
+            3
+          ],
+          "longest_internal_path_m": 21.43,
+          "all_red_s": 4
+        }
+      ],
+      "program": {
+        "id": "647",
+        "type": "actuated",
+        "programID": "assumed_actuated_v1",
+        "offset": "0"
+      },
+      "phase_status": "assumed demand-actuated, not measured field timing"
+    },
+    {
+      "junction_id": "662",
+      "sumo_xy": [
+        10.92,
+        118.06
+      ],
+      "rationale": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000199",
+          "signal_id": "C1256W000020",
+          "xy": [
+            -10.749264811521272,
+            121.16022506322706
+          ],
+          "nearest_lane": "70_0",
+          "endpoint_distance_m": 6.966690716314869,
+          "junction": "662",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000582",
+          "signal_id": "C1256W000123",
+          "xy": [
+            10.538288049397927,
+            102.11571187671447
+          ],
+          "nearest_lane": "41_1",
+          "endpoint_distance_m": 5.7082464224262575,
+          "junction": "662",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000755",
+          "signal_id": "C1256W000096",
+          "xy": [
+            26.56599556948071,
+            125.34801321301477
+          ],
+          "nearest_lane": "-35_0",
+          "endpoint_distance_m": 7.946784672473913,
+          "junction": "662",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000757",
+          "signal_id": "C1256W000123",
+          "xy": [
+            7.321676321974523,
+            102.13403270429414
+          ],
+          "nearest_lane": "41_1",
+          "endpoint_distance_m": 5.830067018956198,
+          "junction": "662",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ],
+      "groups": [
+        {
+          "name": "approach_-35",
+          "indices": [
+            0,
+            1,
+            2
+          ],
+          "longest_internal_path_m": 24.07,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_41",
+          "indices": [
+            3,
+            4,
+            5
+          ],
+          "longest_internal_path_m": 23.31,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_70",
+          "indices": [
+            6,
+            7,
+            8
+          ],
+          "longest_internal_path_m": 23.52,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_67",
+          "indices": [
+            9,
+            10,
+            11
+          ],
+          "longest_internal_path_m": 21.98,
+          "all_red_s": 4
+        }
+      ],
+      "program": {
+        "id": "662",
+        "type": "actuated",
+        "programID": "assumed_actuated_v1",
+        "offset": "0"
+      },
+      "phase_status": "assumed demand-actuated, not measured field timing"
+    },
+    {
+      "junction_id": "742",
+      "sumo_xy": [
+        122.41,
+        -101.17
+      ],
+      "rationale": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000805",
+          "signal_id": "C1256W000100",
+          "xy": [
+            120.48853146091471,
+            -98.63691150101995
+          ],
+          "nearest_lane": "59_0",
+          "endpoint_distance_m": 4.829918855978746,
+          "junction": "742",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000859",
+          "signal_id": "C1256W000007",
+          "xy": [
+            124.63401981825773,
+            -127.51942840863997
+          ],
+          "nearest_lane": "-73_0",
+          "endpoint_distance_m": 11.31247866633348,
+          "junction": "742",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000001",
+          "signal_id": "C1256W000118",
+          "xy": [
+            107.42048537237571,
+            -116.10767345101412
+          ],
+          "nearest_lane": "-17_0",
+          "endpoint_distance_m": 9.70430636039809,
+          "junction": "742",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ],
+      "groups": [
+        {
+          "name": "approach_-73",
+          "indices": [
+            0
+          ],
+          "longest_internal_path_m": 22.11,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_-17",
+          "indices": [
+            1
+          ],
+          "longest_internal_path_m": 22.19,
+          "all_red_s": 4
+        },
+        {
+          "name": "approach_59",
+          "indices": [
+            2,
+            3
+          ],
+          "longest_internal_path_m": 22.01,
+          "all_red_s": 4
+        }
+      ],
+      "program": {
+        "id": "742",
+        "type": "actuated",
+        "programID": "assumed_actuated_v1",
+        "offset": "0"
+      },
+      "phase_status": "assumed demand-actuated, not measured field timing"
+    },
+    {
+      "junction_id": "764",
+      "sumo_xy": [
+        73.45,
+        -266.99
+      ],
+      "rationale": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "mgeo_matches": [
+        {
+          "mgeo_node": "A1256W000753",
+          "signal_id": "C1256W000002",
+          "xy": [
+            82.03049248089724,
+            -251.56451396960207
+          ],
+          "nearest_lane": "87_0",
+          "endpoint_distance_m": 7.513546943873327,
+          "junction": "764",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000779",
+          "signal_id": "C1256W000004",
+          "xy": [
+            61.914664671722775,
+            -259.6808690601409
+          ],
+          "nearest_lane": "-31_0",
+          "endpoint_distance_m": 4.64600925717798,
+          "junction": "764",
+          "status": "spatial candidate only; cross-edition identity not established"
+        },
+        {
+          "mgeo_node": "A1256W000773",
+          "signal_id": "C1256W000022",
+          "xy": [
+            72.59800184666628,
+            -276.63894824880487
+          ],
+          "nearest_lane": "42_0",
+          "endpoint_distance_m": 1.4791266635798732,
+          "junction": "764",
+          "status": "spatial candidate only; cross-edition identity not established"
+        }
+      ],
+      "groups": [
+        {
+          "name": "approach_87",
+          "indices": [
+            0,
+            1
+          ],
+          "longest_internal_path_m": 18.6,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_42",
+          "indices": [
+            2,
+            3
+          ],
+          "longest_internal_path_m": 20.03,
+          "all_red_s": 3
+        },
+        {
+          "name": "approach_-31",
+          "indices": [
+            4,
+            5
+          ],
+          "longest_internal_path_m": 15.78,
+          "all_red_s": 3
+        }
+      ],
+      "program": {
+        "id": "764",
+        "type": "actuated",
+        "programID": "assumed_actuated_v1",
+        "offset": "0"
+      },
+      "phase_status": "assumed demand-actuated, not measured field timing"
+    }
+  ],
+  "policy": {
+    "basis": "Spatial MGEO stop-line/signal evidence plus assumed traffic engineering; not surveyed K-City operation",
+    "min_green_s": 6,
+    "max_green_s": 25,
+    "yellow_s": 3,
+    "vehicle_length_m": 4.5,
+    "clearance_speed_mps": 8.33,
+    "junctions": {
+      "169": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "268": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "340": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "353": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "414": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "537": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "565": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "647": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "662": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "742": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "764": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "286": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+      "112": "Five-leg conflicting movements; one MGEO signal candidate; replaces assumed all-way stop",
+      "176": "Five-leg conflicting movements and historical collision; engineering assumption; replaces assumed all-way stop"
+    },
+    "phase_selection": "demand-based after mandatory yellow/all-red; aging threshold 60 s"
+  },
+  "command": [
+    "netconvert",
+    "-s",
+    "maps/kcity/kcity.net.xml",
+    "-n",
+    "maps/kcity/audit/signal_design/signals.nod.xml",
+    "-o",
+    "maps/kcity/audit/signal_design/signalized.net.xml",
+    "--tls.rebuild",
+    "true",
+    "--tls.default-type",
+    "actuated",
+    "--tls.layout",
+    "incoming",
+    "--tls.green.time",
+    "15",
+    "--tls.min-dur",
+    "6",
+    "--tls.max-dur",
+    "25",
+    "--tls.yellow.time",
+    "3",
+    "--tls.allred.time",
+    "2"
+  ],
+  "topology_and_regular_lanes_unchanged": true,
+  "network_sha256": "cfc9be136736b5f5e7874fce34992e90f9ac7d8d76422a7f67a27e2deb3e4894",
+  "programs_sha256": "0643c2047f47f032ad0f88fc2fea1dda5f9c49e93f4d3e24cc438ba1a2616489"
+}

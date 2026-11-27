@@ -1,0 +1,14 @@
+source_bag: jj_20260912_003556
+source_topic: /jj/sensors/gnss/fix
+csv: 20260912_003556_gnss.csv
+columns: [latitude_deg, longitude_deg]
+header: false
+points: 3001
+reference_point: gnss_antenna
+smoothed: false
+# Must match jj_localization/config/localization.yaml when visualized/tracked.
+origin_latitude_deg: 37.2388873
+origin_longitude_deg: 126.7729325
+frame_id: map
+# A recorded trace; no artificial last-to-first segment was added.
+closed: false

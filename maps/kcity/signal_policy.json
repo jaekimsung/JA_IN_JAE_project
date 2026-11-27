@@ -1,0 +1,25 @@
+{
+  "basis": "Spatial MGEO stop-line/signal evidence plus assumed traffic engineering; not surveyed K-City operation",
+  "min_green_s": 6,
+  "max_green_s": 25,
+  "yellow_s": 3,
+  "vehicle_length_m": 4.5,
+  "clearance_speed_mps": 8.33,
+  "junctions": {
+    "169": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+    "268": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+    "340": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+    "353": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+    "414": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+    "537": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+    "565": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+    "647": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+    "662": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+    "742": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+    "764": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+    "286": "MGEO signal-ID stop nodes within 20 m of approach endpoints",
+    "112": "Five-leg conflicting movements; one MGEO signal candidate; replaces assumed all-way stop",
+    "176": "Five-leg conflicting movements and historical collision; engineering assumption; replaces assumed all-way stop"
+  },
+  "phase_selection": "demand-based after mandatory yellow/all-red; aging threshold 60 s"
+}

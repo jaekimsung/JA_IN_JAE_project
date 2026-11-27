@@ -1,0 +1,31 @@
+{
+  "simulation_time": 120.2,
+  "vehicles": 19,
+  "programs": {
+    "112": "assumed_actuated_v1",
+    "169": "assumed_actuated_v1",
+    "176": "assumed_actuated_v1",
+    "268": "assumed_actuated_v1",
+    "286": "assumed_actuated_v1",
+    "340": "assumed_actuated_v1",
+    "353": "assumed_actuated_v1",
+    "414": "assumed_actuated_v1",
+    "537": "assumed_actuated_v1",
+    "565": "assumed_actuated_v1",
+    "647": "assumed_actuated_v1",
+    "662": "assumed_actuated_v1",
+    "742": "assumed_actuated_v1",
+    "764": "assumed_actuated_v1"
+  },
+  "screenshots": [
+    "sumo_gui.png",
+    "sumo_signals_gui.png"
+  ],
+  "version": [
+    22,
+    "SUMO 1.28.0"
+  ],
+  "aerial_settings_loaded": true,
+  "network_sha256": "cfc9be136736b5f5e7874fce34992e90f9ac7d8d76422a7f67a27e2deb3e4894",
+  "signals_sha256": "0643c2047f47f032ad0f88fc2fea1dda5f9c49e93f4d3e24cc438ba1a2616489"
+}

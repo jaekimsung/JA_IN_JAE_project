@@ -1,0 +1,43 @@
+{
+  "profile": "before",
+  "demand": "2",
+  "seed": 0,
+  "expected": 177,
+  "arrived": 177,
+  "unfinished": [],
+  "collisions": [
+    {
+      "time": "148.60",
+      "type": "junction",
+      "lane": ":176_13_0",
+      "pos": "0.09",
+      "collider": "hv_006",
+      "victim": "hv_011",
+      "colliderType": "hv_EIDM",
+      "victimType": "hv_ACC",
+      "colliderSpeed": "0.96",
+      "victimSpeed": "7.76",
+      "colliderFront": "-99.36,113.86",
+      "colliderBack": "-101.19,109.92",
+      "victimFront": "-99.27,112.70",
+      "victimBack": "-100.39,117.03"
+    }
+  ],
+  "teleports": {
+    "total": "0",
+    "jam": "0",
+    "yield": "0",
+    "wrongLane": "0"
+  },
+  "mean_duration_s": 205.63559322033893,
+  "mean_wait_s": 31.171186440677957,
+  "mean_time_loss_s": 68.57999999999998,
+  "mean_depart_delay_s": 0.24632768361581925,
+  "maximum_trip_wait_s": 287.4,
+  "max_sampled_queue_m": 44.25,
+  "emergency_braking_warnings": 12,
+  "network_sha256": "a96277df594a2db91511f4b5e71850cc901455862ea381376a6220fb4ac68ba0",
+  "routes_sha256": "69b0a1b5da7333fa2bf12f70e84ea5b0bc44430dd9d23c9a096435183eb15437",
+  "signals_sha256": null,
+  "passed": false
+}

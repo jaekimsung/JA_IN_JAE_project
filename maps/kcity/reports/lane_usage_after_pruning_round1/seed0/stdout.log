@@ -1,0 +1,11 @@
+Warning: Environment variable SUMO_HOME is not set properly, disabling XML validation. Set 'auto' or 'always' for web lookups.
+Warning: Vehicle 'hv_065' performs emergency braking on lane '-65_0' with decel=8.000000, wished=4.500000, severity=1.000286, time=520.000.
+Warning: Vehicle 'hv_069' performs emergency braking on lane ':752_6_0' with decel=8.000000, wished=4.500000, severity=1.000286, time=529.500.
+Warning: Vehicle 'hv_069' performs emergency braking on lane ':89_1_0' with decel=8.000000, wished=4.500000, severity=1.000286, time=534.400.
+Warning: Vehicle 'hv_069' performs emergency braking on lane ':89_1_0' with decel=8.000000, wished=4.500000, severity=1.000286, time=534.900.
+Warning: Vehicle 'hv_069' performs emergency braking on lane ':89_1_0' with decel=8.000000, wished=4.500000, severity=1.000286, time=535.200.
+Warning: Vehicle 'hv_069' performs emergency braking on lane '82_0' with decel=7.999493, wished=4.500000, severity=1.000141, time=540.100.
+Warning: Vehicle 'hv_069' performs emergency braking on lane '82_0' with decel=8.000000, wished=4.500000, severity=1.000286, time=540.800.
+Warning: Vehicle 'hv_077' performs emergency braking on lane ':482_6_0' with decel=8.000000, wished=4.500000, severity=1.000286, time=551.400.
+Warning: Vehicle 'hv_077' performs emergency braking on lane '-78_0' with decel=8.000000, wished=4.500000, severity=1.000286, time=552.000.
+Warning: Vehicle 'hv_109' performs emergency braking on lane '56_0' with decel=8.000000, wished=4.500000, severity=1.000286, time=708.500.

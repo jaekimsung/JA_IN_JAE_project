@@ -1,0 +1,573 @@
+{
+  "basis": "No occupancy or vehicle events in fixed 177-vehicle demo, seeds 0/1/2; not a claim about real-world lane use.",
+  "baseline_network_sha256": "6a5704f3711fdb243ab0bb8245c7c4fc03e42cb2d7d820f0fe9523a3e14baeae",
+  "baseline_routes_sha256": "dfb35f886fa2b5b669109122e50666e1a784d47e938cdbf0fd817e429756a2db",
+  "source_xodr_sha256": "24b6dd916c236891b039cc7aea13390e6c87989c5eff4d7153151efccb24a72b",
+  "regular_lanes": {
+    "-3#2_0": "3_-2",
+    "-3#3_0": "3_-2",
+    "-3#5_0": "3_-2",
+    "-3#6_0": "3_-2",
+    "-36#1_1": "36_-2",
+    "3#1_0": "3_2",
+    "3#2_0": "3_2",
+    "3#3_0": "3_2",
+    "3#4_0": "3_2",
+    "3#5_0": "3_2",
+    "3#6_0": "3_2",
+    "32_0": "32_5",
+    "32_4": "32_1",
+    "84_1": "84_1",
+    "88_1": "88_1",
+    "-51_0": "51_-3",
+    "-51_2": "51_-1"
+  },
+  "internal_lanes": [
+    ":112_7_0",
+    ":112_8_0",
+    ":112_11_0",
+    ":112_12_0",
+    ":112_15_0",
+    ":176_0_0",
+    ":176_15_0",
+    ":176_16_0",
+    ":176_19_0",
+    ":233_2_0",
+    ":253_0_0",
+    ":253_5_0",
+    ":268_4_0",
+    ":268_8_0",
+    ":268_14_0",
+    ":286_11_0",
+    ":3#2_0_0",
+    ":3#3_0_0",
+    ":3#3_2_0",
+    ":3#4_0_0",
+    ":3#4_2_0",
+    ":3#5_0_0",
+    ":3#5_2_0",
+    ":3#6_0_0",
+    ":3#6_2_0",
+    ":353_1_0",
+    ":353_9_1",
+    ":36#2_1_1",
+    ":414_2_0",
+    ":414_3_0",
+    ":464_10_0",
+    ":482_4_0",
+    ":482_10_0",
+    ":482_11_0",
+    ":537_1_0",
+    ":594_0_0",
+    ":603_1_0",
+    ":603_3_0",
+    ":627_5_0",
+    ":726_1_0",
+    ":726_2_0",
+    ":736_0_0",
+    ":736_0_1",
+    ":736_0_3",
+    ":780_0_0",
+    ":780_2_0",
+    ":780_12_0",
+    ":780_4_0",
+    ":780_5_0",
+    ":780_10_0",
+    ":853_0_1",
+    ":89_4_0",
+    ":89_5_0",
+    ":89_8_0",
+    ":89_13_0",
+    ":89_10_0"
+  ],
+  "connections": [
+    {
+      "from_edge": "-12",
+      "to_edge": "-38",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":353_1_0"
+      ]
+    },
+    {
+      "from_edge": "-22",
+      "to_edge": "-15",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":726_1_0"
+      ]
+    },
+    {
+      "from_edge": "-23",
+      "to_edge": "64",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":176_0_0"
+      ]
+    },
+    {
+      "from_edge": "-3#2",
+      "to_edge": "-3#3",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":3#3_2_0"
+      ]
+    },
+    {
+      "from_edge": "-3#3",
+      "to_edge": "-3#4",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":3#4_2_0"
+      ]
+    },
+    {
+      "from_edge": "-3#4",
+      "to_edge": "-3#5",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":3#5_2_0"
+      ]
+    },
+    {
+      "from_edge": "-3#5",
+      "to_edge": "-3#6",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":3#6_2_0"
+      ]
+    },
+    {
+      "from_edge": "-36#1",
+      "to_edge": "-36#2",
+      "from_lane": 1,
+      "to_lane": 1,
+      "internal_lanes": [
+        ":36#2_1_1"
+      ]
+    },
+    {
+      "from_edge": "-41",
+      "to_edge": "-55",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":286_11_0"
+      ]
+    },
+    {
+      "from_edge": "-45",
+      "to_edge": "-30",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":112_12_0"
+      ]
+    },
+    {
+      "from_edge": "-45",
+      "to_edge": "14",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":112_15_0"
+      ]
+    },
+    {
+      "from_edge": "-51",
+      "to_edge": "32",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":736_0_0"
+      ]
+    },
+    {
+      "from_edge": "-51",
+      "to_edge": "32",
+      "from_lane": 0,
+      "to_lane": 1,
+      "internal_lanes": [
+        ":736_0_1"
+      ]
+    },
+    {
+      "from_edge": "-51",
+      "to_edge": "32",
+      "from_lane": 2,
+      "to_lane": 3,
+      "internal_lanes": [
+        ":736_0_3"
+      ]
+    },
+    {
+      "from_edge": "-57",
+      "to_edge": "-43",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":482_10_0"
+      ]
+    },
+    {
+      "from_edge": "-57",
+      "to_edge": "-78",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":482_11_0"
+      ]
+    },
+    {
+      "from_edge": "-62",
+      "to_edge": "-35",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":537_1_0"
+      ]
+    },
+    {
+      "from_edge": "-63",
+      "to_edge": "-81",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":253_5_0"
+      ]
+    },
+    {
+      "from_edge": "-64",
+      "to_edge": "-45",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":176_16_0"
+      ]
+    },
+    {
+      "from_edge": "-64",
+      "to_edge": "23",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":176_19_0"
+      ]
+    },
+    {
+      "from_edge": "-65",
+      "to_edge": "71",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":268_8_0",
+        ":268_14_0"
+      ]
+    },
+    {
+      "from_edge": "-79",
+      "to_edge": "-40",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":89_4_0"
+      ]
+    },
+    {
+      "from_edge": "-79",
+      "to_edge": "82",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":89_5_0"
+      ]
+    },
+    {
+      "from_edge": "-82",
+      "to_edge": "-40",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":89_8_0",
+        ":89_13_0"
+      ]
+    },
+    {
+      "from_edge": "15",
+      "to_edge": "22",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":726_2_0"
+      ]
+    },
+    {
+      "from_edge": "17",
+      "to_edge": "1",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":414_2_0"
+      ]
+    },
+    {
+      "from_edge": "17",
+      "to_edge": "-17",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":414_3_0"
+      ]
+    },
+    {
+      "from_edge": "3#2",
+      "to_edge": "3#1",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":3#2_0_0"
+      ]
+    },
+    {
+      "from_edge": "3#3",
+      "to_edge": "3#2",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":3#3_0_0"
+      ]
+    },
+    {
+      "from_edge": "3#4",
+      "to_edge": "3#3",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":3#4_0_0"
+      ]
+    },
+    {
+      "from_edge": "3#5",
+      "to_edge": "3#4",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":3#5_0_0"
+      ]
+    },
+    {
+      "from_edge": "3#6",
+      "to_edge": "3#5",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":3#6_0_0"
+      ]
+    },
+    {
+      "from_edge": "30",
+      "to_edge": "-44",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":112_8_0"
+      ]
+    },
+    {
+      "from_edge": "30",
+      "to_edge": "45",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":112_11_0"
+      ]
+    },
+    {
+      "from_edge": "31",
+      "to_edge": "71",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":268_4_0"
+      ]
+    },
+    {
+      "from_edge": "32",
+      "to_edge": "88",
+      "from_lane": 1,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":603_1_0"
+      ]
+    },
+    {
+      "from_edge": "32",
+      "to_edge": "88",
+      "from_lane": 3,
+      "to_lane": 1,
+      "internal_lanes": [
+        ":603_3_0"
+      ]
+    },
+    {
+      "from_edge": "34",
+      "to_edge": "-56",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":780_4_0"
+      ]
+    },
+    {
+      "from_edge": "34",
+      "to_edge": "78",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":780_5_0"
+      ]
+    },
+    {
+      "from_edge": "38",
+      "to_edge": "12",
+      "from_lane": 1,
+      "to_lane": 1,
+      "internal_lanes": [
+        ":353_9_1"
+      ]
+    },
+    {
+      "from_edge": "40",
+      "to_edge": "79",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":89_10_0"
+      ]
+    },
+    {
+      "from_edge": "43",
+      "to_edge": "57",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":482_4_0"
+      ]
+    },
+    {
+      "from_edge": "44",
+      "to_edge": "-30",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":112_7_0"
+      ]
+    },
+    {
+      "from_edge": "45",
+      "to_edge": "64",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":176_15_0"
+      ]
+    },
+    {
+      "from_edge": "51",
+      "to_edge": "16",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":594_0_0"
+      ]
+    },
+    {
+      "from_edge": "56",
+      "to_edge": "-34",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":780_10_0"
+      ]
+    },
+    {
+      "from_edge": "62",
+      "to_edge": "59",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":627_5_0"
+      ]
+    },
+    {
+      "from_edge": "68",
+      "to_edge": "54",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":464_10_0"
+      ]
+    },
+    {
+      "from_edge": "76",
+      "to_edge": "-56",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":780_0_0"
+      ]
+    },
+    {
+      "from_edge": "76",
+      "to_edge": "-34",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":780_2_0",
+        ":780_12_0"
+      ]
+    },
+    {
+      "from_edge": "81",
+      "to_edge": "63",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":253_0_0"
+      ]
+    },
+    {
+      "from_edge": "84",
+      "to_edge": "80",
+      "from_lane": 0,
+      "to_lane": 0,
+      "internal_lanes": [
+        ":233_2_0"
+      ]
+    },
+    {
+      "from_edge": "88",
+      "to_edge": "84",
+      "from_lane": 1,
+      "to_lane": 1,
+      "internal_lanes": [
+        ":853_0_1"
+      ]
+    }
+  ],
+  "followup_evidence": {
+    "lanes": [
+      "-51_0",
+      "-51_2"
+    ],
+    "reason": "After first pruning, all occupancy and vehicle events remained zero in seeds 0/1/2; their outgoing turns were already removed.",
+    "report": "reports/lane_usage_after_pruning_round1/summary.json"
+  }
+}
