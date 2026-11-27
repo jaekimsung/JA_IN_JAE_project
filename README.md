@@ -34,8 +34,7 @@ K-CITY 도로·신호 구현 → 일반 차량 교통 → AV 환경(관측·행�
 | 프로젝트 페이지 | https://jaekimsung.github.io/JA_IN_JAE_project/ |
 | 코드 | https://github.com/jaekimsung/JA_IN_JAE_project |
 | 발표 자료 (PDF) | https://jaekimsung.github.io/JA_IN_JAE_project/ |
-| 주행 데이터 (Hugging Face) | 추가 예정 |
-| 주행 영상 | 추가 예정 |
+| 주행 데이터 (Hugging Face) | https://huggingface.co/datasets/BinJinYe/JA_IN_JAE_TEAM2 |
 
 ## 결과
 
