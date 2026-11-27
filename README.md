@@ -65,9 +65,29 @@ v2.1 환경의 고정 평가 사례 100개(A 30 / B 30 / C 40, 배경 수요 1.0
 └── results/          # 결과: BC/·SAC/·RLPD/ 아래 seed별 학습 그래프·평가 요약·최종 모델
 ```
 
+## 실행 환경
+
+- Python 3.10 이상, SUMO **1.28.0**(Python 패키지 `eclipse-sumo`로 함께 설치), NumPy, PyTorch, Gymnasium
+- 학습·수집·평가 검증 환경은 Linux입니다. 학습은 NVIDIA GPU를 권장하며, 평가와 주행 영상은 CPU로도 실행됩니다.
+
+```bash
+git clone https://github.com/jaekimsung/JA_IN_JAE_project.git
+cd JA_IN_JAE_project
+python -m pip install -r requirements.txt   # GPU용 PyTorch는 https://pytorch.org 안내에 따라 설치
+```
+
+`eclipse-sumo` 대신 시스템에 SUMO 1.28.0을 설치했다면 `SUMO_HOME`을 설정합니다. 모든 명령은 저장소 루트에서 실행합니다.
+
 ## 실행
 
-SUMO **1.28.0**, Python 3.10 이상, NumPy, PyTorch, Gymnasium이 필요합니다. 자세한 옵션은 [RUNNING](docs/RUNNING.md)에 있습니다.
+학습된 모델로 바로 평가하거나 주행 화면을 볼 수 있습니다.
+
+```bash
+python runner/evaluate.py --policy results/RLPD/seed11/final_model --panel dev --output runs/eval/RLPD_seed11
+python runner/record_video.py --policy results/RLPD/seed11/final_model --scenario C --once --output runs/video/RLPD_C
+```
+
+처음부터 수집·학습하는 전체 순서입니다. 자세한 옵션은 [RUNNING](docs/RUNNING.md)에 있습니다.
 
 ```bash
 python runner/view_kcity.py                                              # 맵·교통 데모 (GUI)
