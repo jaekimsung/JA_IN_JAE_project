@@ -1,0 +1,132 @@
+{
+  "panel": "dev",
+  "demand_multiplier": 1.0,
+  "policy": {
+    "kind": "bc",
+    "bundle": "/home/heven/Artificial-Intelligence-and-Control-for-Autonomous-Driving/runs/dense_v2_1_main/B1_seed11/update-020000",
+    "config": {
+      "method": "B1",
+      "hidden_dims": [
+        256,
+        256
+      ],
+      "seed": 11,
+      "lr": 0.0003,
+      "device_type": "cuda"
+    }
+  },
+  "evaluated_at": "2026-11-26T01:37:31.668636+09:00",
+  "aggregate": {
+    "metric_version": "KC-METRICS-v1-candidate",
+    "n_planned": 100,
+    "n_valid": 100,
+    "n_invalid_attempts": 0,
+    "n_unattempted": 0,
+    "n_missing_valid": 0,
+    "n_completed": 95,
+    "n_compliant_completed": 95,
+    "n_collision": 3,
+    "n_red_episode": 2,
+    "n_yield_violation": 0,
+    "n_teleport": 0,
+    "n_removal": 0,
+    "n_deadline": 0,
+    "primary_end_reason_counts": {
+      "arrival": 95,
+      "red_entry": 2,
+      "collision": 3
+    },
+    "completion_rate": 0.95,
+    "collision_rate": 0.03,
+    "compliant_completion_rate": 0.95,
+    "n_red_crossings": 2,
+    "n_valid_tls_crossings": 114,
+    "n_unknown_tls_crossings": 0,
+    "signal_compliance": 0.9824561403508771,
+    "signal_metric_supported": true,
+    "data_quality_valid": true,
+    "observed_collision_rate_below_5pct": true,
+    "evaluation_complete": true,
+    "n_elapsed_observed": 100,
+    "mean_elapsed_all": 62.03300000000001,
+    "mean_elapsed_completed": 63.916842105263164,
+    "penalized_time_all": 75.721,
+    "exposure": {
+      "n_episodes": 100,
+      "HV_start_mean": 12.89,
+      "HV_start_min": 5,
+      "n_HV_start_below_10": 16,
+      "HV_time_weighted_mean": 22.65668502784596,
+      "HV_min": 5,
+      "near_HV_50m_mean": 4.4489915872074475,
+      "near_HV_50m_max": 13,
+      "near_HV_50m_presence_mean": 0.9856700530717947,
+      "leader_present_fraction_mean": 0.7625583694743089
+    },
+    "stops": {
+      "standstill_s_mean": 18.67000000000011,
+      "standstill_s_max": 65.10000000000058,
+      "n_standstill_over_60s": 2,
+      "n_deadline": 0,
+      "mean_speed_mps": 3.5312673865095174
+    },
+    "situations": {
+      "signal_chain": {
+        "title": "① 연속 감응식 신호 통과",
+        "n_exposed": 30,
+        "n_failed_here": 2,
+        "failure_rate": 0.06666666666666667,
+        "failure_reasons": {
+          "red_entry": 2
+        },
+        "crossings": 114,
+        "red_entries": 2,
+        "yellow_entry_fraction": 0.008771929824561403,
+        "wait_s_mean": 18.796666666666756,
+        "box_stop_s_mean": 2.3333333333333335
+      },
+      "lane_drop": {
+        "title": "② 혼잡 속 필수 차선 변경",
+        "n_exposed": 30,
+        "n_failed_here": 0,
+        "failure_rate": 0.0,
+        "failure_reasons": {},
+        "n_required": 30,
+        "done_rate": 1.0,
+        "position_m_mean": 57.679401364010985,
+        "requests_mean": 1.0,
+        "rejected_mean": 0.0,
+        "wait_s_mean": 1.8833333333333333,
+        "target_lane_hv_mean": 2.253393711551607
+      },
+      "unsignalized": {
+        "title": "③ 비신호 교차로 교차 차량 양보",
+        "n_exposed": 98,
+        "n_failed_here": 3,
+        "failure_rate": 0.030612244897959183,
+        "failure_reasons": {
+          "collision": 3
+        },
+        "passes": 109,
+        "cross_traffic_fraction": 0.06422018348623854,
+        "min_distance_m": 0.586324863000806,
+        "collisions": 3,
+        "yield_violations": 0
+      },
+      "other": {
+        "title": "그 외 구간",
+        "n_failed_here": 0
+      }
+    },
+    "final_ready": false,
+    "training_ready": false,
+    "collision_rate_wilson95": [
+      0.010254338223414816,
+      0.08452078080402699
+    ],
+    "completion_rate_wilson95": [
+      0.8882480347279118,
+      0.9784566385436864
+    ]
+  }
+}
