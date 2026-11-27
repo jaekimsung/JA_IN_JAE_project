@@ -265,12 +265,50 @@
 
 
     /* ---------- v5: 대시보드 · 방법별 영상 비교 ---------- */
-    .dashfeat { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; margin: 22px 0 26px; }
-    .dashfeat > div { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 14px 13px; }
-    .dashfeat strong { display: block; font-size: 15px; margin-bottom: 4px; }
-    .dashfeat span { display: block; font-size: 13.5px; color: var(--muted); line-height: 1.5; }
-    figure.shot { max-width: 760px; margin: 0 auto; }
-    figure.shot img { border-radius: 12px; }
+    /* ---------- 결과 대시보드 (브라우저 화면 투어) ---------- */
+    .dash-cmd { display: inline-flex; align-items: center; gap: 10px; max-width: 100%; margin: 20px 0 34px; padding: 8px 8px 8px 18px; background: #14161b; color: #e6e8eb; border-radius: 999px; font-family: var(--mono); font-size: 13.5px; white-space: nowrap; overflow-x: auto; box-shadow: 0 10px 24px -12px rgba(16,24,40,.45); }
+    .dash-cmd .pr, .dash-cmd .ar { color: #7d8595; }
+    .dash-cmd code { color: #fff; font-family: inherit; }
+    .dash-cmd .url { color: #ffb38a; }
+    .dash-copy { font: inherit; font-size: 12.5px; font-weight: 700; background: #2b2f38; color: #e6e8eb; border: 0; border-radius: 999px; padding: 6px 13px; cursor: pointer; }
+    .dash-copy:hover { background: #3a3f4a; }
+    .dash-steps { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 8px; margin-bottom: 18px; }
+    .dash-steps button { position: relative; text-align: left; font: inherit; cursor: pointer; background: transparent; border: 0; border-radius: 12px; padding: 12px 14px 18px; color: var(--muted); transition: background .2s ease, box-shadow .2s ease; }
+    .dash-steps button:hover { background: rgba(21,23,28,.04); }
+    .dash-steps .n { display: block; font-size: 12px; font-weight: 800; color: var(--faint); letter-spacing: .04em; margin-bottom: 5px; }
+    .dash-steps strong { display: block; font-size: 15.5px; color: var(--text); margin-bottom: 3px; }
+    .dash-steps small { display: block; font-size: 12.5px; line-height: 1.45; }
+    .dash-steps i { position: absolute; left: 14px; right: 14px; bottom: 8px; height: 3px; border-radius: 3px; background: var(--line); overflow: hidden; }
+    .dash-steps i::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 0; background: var(--accent); border-radius: 3px; }
+    .dash-steps button.on { background: #fff; box-shadow: 0 0 0 1px var(--line), 0 6px 16px -10px rgba(16,24,40,.25); }
+    .dash-steps button.on .n { color: var(--accent); }
+    .dash-steps button.on i::after { width: 100%; }
+    .dash-tour.auto .dash-steps button.on i::after { width: 0; animation: dashfill 5s linear forwards; }
+    @keyframes dashfill { to { width: 100%; } }
+    .browser { background: #fff; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 60px -28px rgba(16,24,40,.35), 0 2px 6px rgba(16,24,40,.05); }
+    .browser .bar { display: flex; align-items: center; gap: 14px; height: 42px; padding: 0 16px; background: #f3f4f6; border-bottom: 1px solid var(--line); }
+    .browser .dots { display: flex; gap: 7px; flex: 0 0 auto; }
+    .browser .dots b { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+    .browser .dots b:nth-child(2) { background: #febc2e; }
+    .browser .dots b:nth-child(3) { background: #28c840; }
+    .browser .addr { flex: 0 1 340px; margin: 0 auto; text-align: center; font-size: 12.5px; color: var(--muted); background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 4px 12px; }
+    .browser .full { flex: 0 0 auto; font-size: 12.5px; font-weight: 700; color: var(--muted); text-decoration: none; }
+    .browser .full:hover { color: var(--accent); }
+    .browser .screen { position: relative; aspect-ratio: 1156 / 640; background: #f2f5f7; }
+    .browser .screen img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; object-position: top center; opacity: 0; transition: opacity .35s ease; }
+    .browser .screen img.on { opacity: 1; }
+    @media (max-width: 860px) {
+      .dash-steps { grid-template-columns: repeat(5, minmax(150px, 1fr)); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 2px; }
+      .dash-steps button { scroll-snap-align: start; }
+    }
+    @media (max-width: 600px) {
+      .dash-steps { grid-template-columns: repeat(5, minmax(112px, 1fr)); }
+      .dash-steps small { display: none; }
+      .browser .addr { display: none; }
+      .browser .full { margin-left: auto; }
+      .dash-cmd { font-size: 12px; gap: 8px; padding-left: 14px; }
+      .dash-cmd .ar, .dash-cmd .url { display: none; }
+    }
     .cmp3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
     .cmp3 figure { margin: 0; }
     .cmp3 .mhead { display: flex; align-items: center; gap: 7px; font-weight: 800; font-size: 15px; margin-bottom: 7px; }
@@ -279,8 +317,7 @@
     .cmpbar .speed { font-size: 13.5px; font-weight: 700; color: var(--muted); }
     .cmpbar .replay { font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; border: 1px solid var(--line); background: #fff; color: var(--ink, #111); padding: 7px 14px; border-radius: 999px; }
     .cmpbar .replay:hover { border-color: var(--dark); }
-    @media (max-width: 860px) { .dashfeat { grid-template-columns: repeat(2, minmax(0,1fr)); } }
-    @media (max-width: 600px) { .dashfeat, .cmp3 { grid-template-columns: minmax(0,1fr); } }
+    @media (max-width: 600px) { .cmp3 { grid-template-columns: minmax(0,1fr); } }
     footer { border-top: 1px solid var(--line); padding: 34px 0 48px; font-size: 14px; color: var(--muted); text-align: center; }
 
     @media (max-width: 860px) {
@@ -715,30 +752,38 @@ python runner/record_video.py --policy &lt;학습된 모델&gt; --scenario C --v
     <h2>결과 대시보드</h2>
     <p class="lead">
       학습과 평가 결과를 브라우저 한 화면에서 확인하는 <strong>로컬 대시보드</strong>를 만들었습니다.
-      학습 프로세스와 따로 동작하며, 페이지를 열어 두면 30초마다 결과를 다시 읽습니다.
+      학습과 따로 동작하며, 열어 두면 30초마다 최신 결과를 다시 읽습니다.
     </p>
-    <pre><code>python3 runner/dashboard/server.py    <span class="c"># 브라우저에서 http://localhost:4796</span></code></pre>
-    <p class="small" style="margin-top:8px">Python 3.9 이상 표준 라이브러리만으로 실행되고, 포트는 <code class="inline">--port</code>로 바꿀 수 있습니다. 자세한 내용은 저장소의 <a href="https://github.com/jaekimsung/JA_IN_JAE_project/blob/main/runner/dashboard/README.md" target="_blank" rel="noopener">대시보드 README</a>에 있습니다.</p>
 
-    <div class="dashfeat">
-      <div><strong>SUMO 주행</strong><span>모델(학습 seed 포함)과 시나리오를 골라 SUMO GUI로 바로 주행</span></div>
-      <div><strong>모델 성능</strong><span>방법 3개 × seed 3개의 완주율 · 충돌률 · 적색 위반 · 정차 · 완주 시간</span></div>
-      <div><strong>학습 과정</strong><span>체크포인트별 loss와 방법별 충돌률 곡선</span></div>
-      <div><strong>주행 분석</strong><span>시나리오별 완주율 · 충돌률과 종료 원인</span></div>
-      <div><strong>데이터와 로그</strong><span>데이터 풀별 전이 수, 데모 주행 · 터미널 로그</span></div>
+    <div class="dash-cmd">
+      <span class="pr">$</span><code>python3 runner/dashboard/server.py</code><span class="ar">→</span><span class="url">localhost:4796</span>
+      <button type="button" class="dash-copy" data-copy="python3 runner/dashboard/server.py">복사</button>
     </div>
 
-    <div class="tabgroup">
-      <div class="tabs" role="tablist">
-        <button class="on" data-tab="d1">SUMO 주행 · 모델 성능</button>
-        <button data-tab="d2">학습 과정</button>
-        <button data-tab="d3">주행 분석 · 데이터와 로그</button>
+    <div class="dash-tour" id="dashTour">
+      <div class="dash-steps" role="tablist" aria-label="대시보드 화면">
+        <button type="button" role="tab" data-i="0" class="on" aria-selected="true"><span class="n">01</span><strong>SUMO 주행</strong><small>모델과 시나리오를 골라 SUMO GUI 실행</small><i></i></button>
+        <button type="button" role="tab" data-i="1" aria-selected="false"><span class="n">02</span><strong>모델 성능</strong><small>9개 모델의 완주율 · 충돌률 · 완주 시간</small><i></i></button>
+        <button type="button" role="tab" data-i="2" aria-selected="false"><span class="n">03</span><strong>학습 과정</strong><small>체크포인트별 loss와 방법별 충돌률 곡선</small><i></i></button>
+        <button type="button" role="tab" data-i="3" aria-selected="false"><span class="n">04</span><strong>주행 분석</strong><small>시나리오별 완주율 · 충돌률과 종료 원인</small><i></i></button>
+        <button type="button" role="tab" data-i="4" aria-selected="false"><span class="n">05</span><strong>데이터와 로그</strong><small>데이터 풀별 전이 수와 실행 로그</small><i></i></button>
       </div>
-      <div class="tabpanel on" id="d1"><figure class="shot"><a href="static/images/dashboard/dashboard_1.png" target="_blank" rel="noopener"><img src="static/images/dashboard/dashboard_1.png" alt="대시보드: SUMO 주행 실행과 모델별 성능 비교 표"></a><figcaption>모델과 시나리오를 골라 SUMO GUI를 실행하고, 9개 모델의 성능을 같은 평가 사례에서 비교합니다.</figcaption></figure></div>
-      <div class="tabpanel" id="d2"><figure class="shot"><a href="static/images/dashboard/dashboard_2.png" target="_blank" rel="noopener"><img src="static/images/dashboard/dashboard_2.png" alt="대시보드: BC 학습 loss 곡선과 학습 방법별 충돌률 비교 그래프"></a><figcaption>체크포인트별 loss와, seed 11의 BC · SAC · RLPD 충돌률 변화를 한 그래프로 봅니다.</figcaption></figure></div>
-      <div class="tabpanel" id="d3"><figure class="shot"><a href="static/images/dashboard/dashboard_3.png" target="_blank" rel="noopener"><img src="static/images/dashboard/dashboard_3.png" alt="대시보드: 시나리오별 주행 분석과 데이터 풀 표"></a><figcaption>시나리오별 완주율 · 충돌률과 종료 원인, 데이터 풀별 전이 수를 확인합니다.</figcaption></figure></div>
+      <div class="browser">
+        <div class="bar">
+          <span class="dots"><b></b><b></b><b></b></span>
+          <span class="addr">localhost:4796</span>
+          <a class="full" href="static/images/dashboard/dashboard_1.png" target="_blank" rel="noopener">원본 보기 ↗</a>
+        </div>
+        <div class="screen">
+          <img class="on" src="static/images/dashboard/dash_1.png" data-full="static/images/dashboard/dashboard_1.png" alt="대시보드의 SUMO 주행 화면: 모델과 시나리오를 고르고 SUMO GUI를 실행">
+          <img src="static/images/dashboard/dash_2.png" data-full="static/images/dashboard/dashboard_1.png" alt="대시보드의 모델별 성능 비교 표" loading="lazy">
+          <img src="static/images/dashboard/dash_3.png" data-full="static/images/dashboard/dashboard_2.png" alt="대시보드의 학습 방법별 충돌률 비교 그래프" loading="lazy">
+          <img src="static/images/dashboard/dash_4.png" data-full="static/images/dashboard/dashboard_3.png" alt="대시보드의 시나리오별 주행 분석 표" loading="lazy">
+          <img src="static/images/dashboard/dash_5.png" data-full="static/images/dashboard/dashboard_3.png" alt="대시보드의 데이터 풀 표와 로그" loading="lazy">
+        </div>
+      </div>
     </div>
-    <p class="cap">이미지를 누르면 원본 크기로 볼 수 있습니다.</p>
+    <p class="cap">Python 3.9 이상 표준 라이브러리만으로 실행되고, 포트는 <code class="inline">--port</code>로 바꿀 수 있습니다. 자세한 사용법은 저장소의 <a href="https://github.com/jaekimsung/JA_IN_JAE_project/blob/main/runner/dashboard/README.md" target="_blank" rel="noopener">대시보드 README</a>에 있습니다.</p>
   </div>
 </section>
 
@@ -1044,6 +1089,38 @@ python runner/record_video.py --policy &lt;학습된 모델&gt; --scenario C --v
         }, { threshold: 0.35 });
         io.observe(g);
       }
+    });
+  })();
+  /* ---------- 결과 대시보드 화면 투어 ---------- */
+  (function () {
+    var t = document.getElementById('dashTour'); if (!t) return;
+    var btns = t.querySelectorAll('.dash-steps button'), imgs = t.querySelectorAll('.screen img'), full = t.querySelector('.browser .full');
+    var cur = 0, timer = null;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function show(k) {
+      cur = k;
+      btns.forEach(function (b, j) { b.classList.toggle('on', j === k); b.setAttribute('aria-selected', j === k ? 'true' : 'false'); });
+      imgs.forEach(function (im, j) { im.classList.toggle('on', j === k); });
+      full.href = imgs[k].getAttribute('data-full');
+      var bar = btns[k].querySelector('i'); bar.style.display = 'none'; void bar.offsetWidth; bar.style.display = '';
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } t.classList.remove('auto'); }
+    function start() {
+      if (reduce) return;
+      t.classList.add('auto'); show(cur);
+      timer = setInterval(function () { show((cur + 1) % btns.length); }, 5000);
+    }
+    btns.forEach(function (b, j) { b.addEventListener('click', function () { stop(); show(j); }); });
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { start(); io.disconnect(); } });
+      }, { threshold: 0.3 });
+      io.observe(t);
+    }
+    var cp = document.querySelector('.dash-copy');
+    if (cp) cp.addEventListener('click', function () {
+      var done = function () { cp.textContent = '복사됨'; setTimeout(function () { cp.textContent = '복사'; }, 1500); };
+      if (navigator.clipboard) navigator.clipboard.writeText(cp.getAttribute('data-copy')).then(done, done); else done();
     });
   })();
 </script>
